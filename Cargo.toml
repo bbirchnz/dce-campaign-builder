@@ -1,0 +1,2 @@
+[workspace]
+members = ["dce-lib", "ui"]

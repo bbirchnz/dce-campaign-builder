@@ -1,17 +1,35 @@
 use dce_lib::{db_airbases::DBAirbases, serde_utils::LuaFileBased};
 use dioxus::prelude::*;
-use dioxus_desktop::use_window;
+use dioxus_desktop::{use_window, wry::http::Response, Config};
 use fermi::use_init_atom_root;
+use log::{info, warn};
 use simple_logger::SimpleLogger;
 
-use crate::rsx::menu_bar;
+use crate::rsx::{menu_bar, MapPoint};
 
 mod rsx;
 
 fn main() {
     SimpleLogger::new().init().unwrap();
     // launch the dioxus app in a webview
-    dioxus_desktop::launch(app);
+    dioxus_desktop::launch_cfg(
+        app,
+        Config::default().with_custom_protocol("testprotocol".into(), |req| {
+            let obj =
+                serde_json::from_str::<MapPoint>(&String::from_utf8(req.body().to_vec()).unwrap());
+            if let Ok(map_point) = obj {
+                info!("{:?}", map_point);
+            } else {
+                warn!(
+                    "Failed to parse {:?} with error {:?}",
+                    String::from_utf8(req.body().to_vec()).unwrap(),
+                    obj.err().unwrap()
+                );
+            }
+
+            Ok(Response::new(vec![]))
+        }),
+    )
 }
 
 fn app(cx: Scope) -> Element {
@@ -27,6 +45,7 @@ fn app(cx: Scope) -> Element {
         // TODO: replace this script inclusion
         script { include_str!("./js/tailwind_3.3.1.js") }
         script { include_str!("./js/leaflet.js") }
+        script { include_str!("./js/leaflet_utils.js") }
         style { include_str!("./css/base.css") }
         link {
             rel: "stylesheet",

@@ -8,21 +8,29 @@ use dioxus::prelude::*;
 use dioxus_desktop::{use_window, DesktopContext};
 use log::info;
 use rand::Rng;
+use serde::{Deserialize, Serialize};
+use serde_json;
 
 #[derive(PartialEq, Props)]
 pub struct MapProps {
     db_airbases: DBAirbases,
 }
 
+#[derive(Serialize, Deserialize, PartialEq, Debug)]
+pub struct MapPoint {
+    x: f64,
+    y: f64,
+    name: String,
+}
+
 pub fn map(cx: Scope<MapProps>) -> Element {
     let div_id = use_state(cx, || random_id("map_"));
 
-    let filtered = cx
+    let map_points = cx
         .props
         .db_airbases
         .0
         .iter()
-        .clone()
         .filter(|(_, v)| matches!(v, AirBase::Fixed(_)))
         .map(|(k, v)| match v {
             AirBase::Fixed(ab) => Some((k.to_owned(), convert_dcs_lat_lon(ab.x, ab.y, &PG))),
@@ -30,19 +38,20 @@ pub fn map(cx: Scope<MapProps>) -> Element {
         })
         .map(|item| {
             let (name, (lon, lat)) = item.unwrap();
-            format!(
-                "L.marker([{}, {}]).addTo(map).bindPopup('{}');",
-                lat, lon, name
-            )
+            MapPoint {
+                x: lon,
+                y: lat,
+                name: name,
+            }
         })
-        .collect::<Vec<String>>()
-        .join("\n");
+        .collect::<Vec<_>>();
 
     let code = format!(
-        "var map = L.map('{}').setView([51.505, -0.09], 13); L.tileLayer('https://tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png', {{
-            attribution: '&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors'
-        }}).addTo(map);{}",
-        &div_id, filtered
+        "data_{} = {}; drawmap('{}', data_{})",
+        &div_id,
+        serde_json::to_string(&map_points).unwrap(),
+        &div_id,
+        &div_id
     );
 
     let w = use_window(cx).clone();
@@ -56,7 +65,7 @@ async fn delayed_js(dcx: DesktopContext, code: String, duration_ms: u64) {
     tokio::time::sleep(Duration::from_millis(duration_ms)).await;
     info!("Drawing Map");
     let code = code.to_owned();
-    dcx.eval(&code);
+    dcx.eval(&code).await.unwrap();
 }
 
 pub fn random_id(base: &str) -> String {

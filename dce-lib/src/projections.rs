@@ -1,4 +1,3 @@
-
 use proj::Proj;
 
 pub struct TranverseMercator {
@@ -30,9 +29,9 @@ pub fn convert_dcs_lat_lon(x: f64, y: f64, map: &TranverseMercator) -> (f64, f64
 
 #[cfg(test)]
 mod tests {
+    use super::convert_dcs_lat_lon;
     use crate::projections::PG;
     use approx_eq::assert_approx_eq;
-    use super::convert_dcs_lat_lon;
 
     #[test]
     fn can_convert_to_lat_lon() {

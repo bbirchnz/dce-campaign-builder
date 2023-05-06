@@ -5,9 +5,11 @@ use serde_utils::LuaFileBased;
 pub mod db_airbases;
 pub mod dce_utils;
 pub mod lua_utils;
+pub mod mission;
 pub mod oob_air;
 pub mod projections;
 pub mod serde_utils;
+pub mod target_list;
 
 pub struct DCEInstance {
     pub oob_air: OobAir,

@@ -41,7 +41,7 @@ pub struct FixedAirBase {
     #[serde(rename = "ATC_frequency")]
     atc_frequency: String,
     startup: Option<f64>,
-    side: String,
+    pub side: String,
     divert: bool,
     #[serde(rename = "VOR")]
     vor: Option<String>,

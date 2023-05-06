@@ -21,6 +21,7 @@ pub struct MapPoint {
     x: f64,
     y: f64,
     name: String,
+    side: String,
 }
 
 pub fn map(cx: Scope<MapProps>) -> Element {
@@ -33,15 +34,20 @@ pub fn map(cx: Scope<MapProps>) -> Element {
         .iter()
         .filter(|(_, v)| matches!(v, AirBase::Fixed(_)))
         .map(|(k, v)| match v {
-            AirBase::Fixed(ab) => Some((k.to_owned(), convert_dcs_lat_lon(ab.x, ab.y, &PG))),
+            AirBase::Fixed(ab) => Some((
+                k.to_owned(),
+                convert_dcs_lat_lon(ab.x, ab.y, &PG),
+                ab.side.to_owned(),
+            )),
             _ => None,
         })
         .map(|item| {
-            let (name, (lon, lat)) = item.unwrap();
+            let (name, (lon, lat), side) = item.unwrap();
             MapPoint {
                 x: lon,
                 y: lat,
-                name: name,
+                name,
+                side,
             }
         })
         .collect::<Vec<_>>();

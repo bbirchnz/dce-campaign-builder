@@ -8,8 +8,22 @@ function drawmap(div_id, markers) {
 
   var airfield_group = new L.featureGroup([]);
 
+  var blue_airfield_icon = L.icon({
+    iconUrl: "/images/airfield_blue.png",
+    iconSize: [32, 32],
+    iconAnchor: [16, 16],
+    popupAnchor: [0, -16],
+  });
+
+  var red_airfield_icon = L.icon({
+    iconUrl: "/images/airfield_red.png",
+    iconSize: [32, 32],
+    iconAnchor: [16, 16],
+    popupAnchor: [0, -16],
+  });
+
   markers.forEach((m) => {
-    mark = L.marker([m.y, m.x])
+    mark = L.marker([m.y, m.x], { icon: m.side.toLowerCase() == "blue" ? blue_airfield_icon : red_airfield_icon })
       .addTo(airfield_group)
       .bindPopup(m.name)
       .on("click", function (e) {

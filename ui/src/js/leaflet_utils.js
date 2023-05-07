@@ -7,6 +7,7 @@ function drawmap(div_id, markers) {
   }).addTo(map);
 
   var airfield_group = new L.featureGroup([]);
+  var target_group = new L.featureGroup([]);
 
   var blue_airfield_icon = L.icon({
     iconUrl: "/images/airfield_blue.png",
@@ -22,22 +23,68 @@ function drawmap(div_id, markers) {
     popupAnchor: [0, -16],
   });
 
+  // var target_icon = L.icon
+
   markers.forEach((m) => {
-    mark = L.marker([m.y, m.x], { icon: m.side.toLowerCase() == "blue" ? blue_airfield_icon : red_airfield_icon })
-      .addTo(airfield_group)
-      .bindPopup(m.name)
-      .on("click", function (e) {
-        fetch("https://testprotocol.example/", {
-          method: "POST",
-          body: JSON.stringify(m),
+    if (m.class == "FixedAirBase") {
+      L.marker([m.lat, m.lon], {
+        icon:
+          m.side.toLowerCase() == "blue"
+            ? blue_airfield_icon
+            : red_airfield_icon,
+      })
+        .addTo(airfield_group)
+        .bindPopup(m.name)
+        .on("click", function (e) {
+          fetch("https://testprotocol.example/", {
+            method: "POST",
+            body: JSON.stringify(m),
+          });
         });
-      });
+    }
+    if (m.class == "TargetCAP") {
+      L.polyline(
+        [
+          [m.lat, m.lon],
+          [m.lat2, m.lon2],
+        ],
+        { color: "red" }
+      )
+        .addTo(target_group)
+        .bindPopup(m.name)
+        .on("click", function (e) {
+          fetch("https://testprotocol.example/", {
+            method: "POST",
+            body: JSON.stringify(m),
+          });
+        });
+      console.log(JSON.stringify(m));
+    }
+    if (m.class == "TargetRefuel") {
+      L.polyline(
+        [
+          [m.lat, m.lon],
+          [m.lat2, m.lon2],
+        ],
+        { color: "blue" }
+      )
+        .addTo(target_group)
+        .bindPopup(m.name)
+        .on("click", function (e) {
+          fetch("https://testprotocol.example/", {
+            method: "POST",
+            body: JSON.stringify(m),
+          });
+        });
+    }
   });
   // display airfields
   airfield_group.addTo(map);
+  target_group.addTo(map);
 
   var overlays = {
     Airfields: airfield_group,
+    Targets: target_group,
   };
 
   // reset zoom:

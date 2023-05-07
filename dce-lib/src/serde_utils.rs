@@ -7,11 +7,14 @@ use crate::lua_utils::load_utils;
 
 pub trait LuaFileBased<'a>: Deserialize<'a> + Serialize {
     fn from_lua_file(filename: String, key: String) -> Result<Self, anyhow::Error> {
-        let lua = Lua::new();
-
         // load file:
         let lua_str = fs::read_to_string(filename)?;
-        lua.load(&lua_str).exec()?;
+        Self::from_lua_str(&lua_str, key)
+    }
+
+    fn from_lua_str(lua_str: &str, key: String) -> Result<Self, anyhow::Error> {
+        let lua = Lua::new();
+        lua.load(lua_str).exec()?;
 
         let oob_de = de::Deserializer::new(lua.globals().get(key)?);
 

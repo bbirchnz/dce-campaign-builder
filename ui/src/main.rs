@@ -1,13 +1,17 @@
-use dce_lib::{db_airbases::DBAirbases, serde_utils::LuaFileBased};
+use dce_lib::{
+    mappable::MapPoint, DCEInstance,
+};
 use dioxus::prelude::*;
 use dioxus_desktop::{use_window, wry::http::Response, Config};
-use fermi::use_init_atom_root;
+use fermi::{use_atom_ref, use_init_atom_root, AtomRef};
 use log::{info, warn};
 use simple_logger::SimpleLogger;
 
-use crate::rsx::{menu_bar, MapPoint};
+use crate::rsx::menu_bar;
 
 mod rsx;
+
+static INSTANCE: AtomRef<Option<DCEInstance>> = |_| None;
 
 fn main() {
     SimpleLogger::new().init().unwrap();
@@ -39,7 +43,11 @@ fn app(cx: Scope) -> Element {
     w.set_title("DCE");
     w.set_decorations(false);
 
-    let db_airbase = DBAirbases::from_lua_file("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\War over Tchad 1987-Blue-Mirage-F1EE-3-30 Lorraine\\Init\\db_airbases.lua".into(), "db_airbases".into()).unwrap();
+    let atom_instance = use_atom_ref(cx, INSTANCE);
+    if atom_instance.read().is_none() {
+        let instance = DCEInstance::new("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\War over Tchad 1987-Blue-Mirage-F1EE-3-30 Lorraine\\Init".into()).unwrap();
+        _ = atom_instance.write().insert(instance);
+    }
 
     cx.render(rsx! {
         // TODO: replace this script inclusion
@@ -59,7 +67,7 @@ fn app(cx: Scope) -> Element {
             div { class: "top-8 grid grid-cols-4 absolute inset-0 bg-red-100",
                 div { class: "col-span-1 min-h-0 bg-sky-100", div {
                 } }
-                div { class: "col-span-3 min-h-0 bg-slate-50 flex flex-col", rsx::map { db_airbases: db_airbase } }
+                div { class: "col-span-3 min-h-0 bg-slate-50 flex flex-col", rsx::map { } }
             }
         }
     })

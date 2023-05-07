@@ -1,61 +1,30 @@
 use std::time::Duration;
 
-use dce_lib::{
-    db_airbases::{AirBase, DBAirbases},
-    projections::{convert_dcs_lat_lon, PG},
-};
+use dce_lib::mappable::Mappables;
 use dioxus::prelude::*;
 use dioxus_desktop::{use_window, DesktopContext};
+use fermi::use_atom_ref;
 use log::info;
 use rand::Rng;
-use serde::{Deserialize, Serialize};
+
 use serde_json;
 
-#[derive(PartialEq, Props)]
-pub struct MapProps {
-    db_airbases: DBAirbases,
-}
+use crate::INSTANCE;
 
-#[derive(Serialize, Deserialize, PartialEq, Debug)]
-pub struct MapPoint {
-    x: f64,
-    y: f64,
-    name: String,
-    side: String,
-}
-
-pub fn map(cx: Scope<MapProps>) -> Element {
+pub fn map(cx: Scope) -> Element {
     let div_id = use_state(cx, || random_id("map_"));
+    let atom = use_atom_ref(cx, INSTANCE).read();
 
-    let map_points = cx
-        .props
-        .db_airbases
-        .0
-        .iter()
-        .filter(|(_, v)| matches!(v, AirBase::Fixed(_)))
-        .map(|(k, v)| match v {
-            AirBase::Fixed(ab) => Some((
-                k.to_owned(),
-                convert_dcs_lat_lon(ab.x, ab.y, &PG),
-                ab.side.to_owned(),
-            )),
-            _ => None,
-        })
-        .map(|item| {
-            let (name, (lon, lat), side) = item.unwrap();
-            MapPoint {
-                x: lon,
-                y: lat,
-                name,
-                side,
-            }
-        })
-        .collect::<Vec<_>>();
+    let instance = atom.as_ref().unwrap();
+    let mut airbases = instance.airbases.to_mappables(instance);
+    let targets = instance.target_list.to_mappables(instance);
+
+    airbases.extend(targets);
 
     let code = format!(
         "data_{} = {}; drawmap('{}', data_{})",
         &div_id,
-        serde_json::to_string(&map_points).unwrap(),
+        serde_json::to_string(&airbases).unwrap(),
         &div_id,
         &div_id
     );

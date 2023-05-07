@@ -1,13 +1,18 @@
-use std::collections::HashMap;
+use std::fs::File;
 
 use serde::{Deserialize, Serialize};
 
 use crate::serde_utils::LuaFileBased;
 
+use std::io::prelude::*;
+use zip::ZipArchive;
+
+use anyhow::anyhow;
+
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 pub struct Mission {
     pub theatre: String,
-    pub coalition: HashMap<String, Coalition>,
+    pub coalition: CoalitionCollection,
     pub triggers: Triggers,
 }
 
@@ -27,6 +32,13 @@ pub struct TriggerZone {
     pub name: String,
     #[serde(rename = "type")]
     pub _type: u64,
+}
+
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+pub struct CoalitionCollection {
+    blue: Coalition,
+    red: Coalition,
+    neutrals: Coalition,
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
@@ -121,6 +133,44 @@ pub struct StaticUnit {
 
 impl LuaFileBased<'_> for Mission {}
 
+impl Mission {
+    pub fn from_miz(miz_filename: String) -> Result<Mission, anyhow::Error> {
+        let zipfile = File::open(miz_filename)?;
+        let mut archive = ZipArchive::new(zipfile)?;
+
+        let mut mission: String = Default::default();
+
+        archive.by_name("mission")?.read_to_string(&mut mission)?;
+
+        Mission::from_lua_str(&mission, "mission".into())
+    }
+
+    pub fn get_vehicle_groups(&self) -> Vec<&VehicleGroup> {
+        let result = self
+            .coalition
+            .blue
+            .countries
+            .iter()
+            .chain(self.coalition.red.countries.iter())
+            .filter_map(|c| c.vehicle.as_ref())
+            .map(|i| i.groups.as_slice())
+            .map(|i| i.as_ref())
+            .flat_map(|f| f)
+            .collect::<Vec<_>>();
+
+        return result;
+    }
+
+    pub fn get_zone_by_name(&self, name: &String) -> Result<&TriggerZone, anyhow::Error> {
+        self.triggers
+            .zones
+            .iter()
+            .filter(|z| &z.name == name)
+            .next()
+            .ok_or(anyhow!("Can't find a refpoint/zone with name {}", name))
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::serde_utils::LuaFileBased;
@@ -139,6 +189,14 @@ mod tests {
         let loaded = Mission::from_lua_file("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\War over Tchad 1987-Blue-Mirage-F1EE-3-30 Lorraine\\Init\\base_mission\\mission".into(), "mission".into()).unwrap();
         loaded
             .to_lua_file("mission".into(), "mission".into())
+            .unwrap();
+    }
+
+    #[test]
+    fn load_from_miz() {
+        let loaded = Mission::from_miz("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\War over Tchad 1987-Blue-Mirage-F1EE-3-30 Lorraine\\Init\\base_mission.miz".into()).unwrap();
+        loaded
+            .to_lua_file("mission2".into(), "mission".into())
             .unwrap();
     }
 }

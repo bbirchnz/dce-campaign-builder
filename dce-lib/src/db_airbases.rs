@@ -2,7 +2,12 @@ use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
 
-use crate::{dce_utils::ValidateSelf, serde_utils::LuaFileBased};
+use crate::{
+    dce_utils::ValidateSelf,
+    mappable::{MapPoint, Mappables},
+    serde_utils::LuaFileBased,
+    DCEInstance,
+};
 
 use anyhow::anyhow;
 
@@ -28,6 +33,42 @@ impl ValidateSelf for AirBase {
             AirBase::Reserve(a) => a.validate_self(),
             AirBase::AirStart(a) => a.validate_self(),
         }
+    }
+}
+
+impl Mappables for DBAirbases {
+    fn to_mappables(&self, instance: &DCEInstance) -> Vec<crate::mappable::MapPoint> {
+        self.0
+            .iter()
+            .filter_map(|(name, ab)| match ab {
+                AirBase::Fixed(fixed) => Some(MapPoint::new_from_dcs(
+                    fixed.x,
+                    fixed.y,
+                    name.to_owned(),
+                    fixed.side.to_owned(),
+                    "FixedAirBase".into(),
+                    &instance.projection,
+                )),
+                AirBase::Ship(_) => {
+                    let groups = instance.mission.get_vehicle_groups();
+                    let group = groups.iter().filter(|g| &g.name == name).next();
+                    if let Some(ship_group) = group {
+                        return Some(MapPoint::new_from_dcs(
+                            ship_group.x,
+                            ship_group.y,
+                            name.to_owned(),
+                            "blue".to_owned(),
+                            "ShipAirBase".to_owned(),
+                            &instance.projection,
+                        ));
+                    }
+                    None
+                }
+                AirBase::Farp(_) => None,
+                AirBase::Reserve(_) => None,
+                AirBase::AirStart(_) => None,
+            })
+            .collect()
     }
 }
 
@@ -71,6 +112,12 @@ pub struct ShipBase {
     #[serde(rename = "ATC_frequency")]
     atc_frequency: String,
 }
+
+// impl ShipBase {
+//     pub fn to_mappable(&self, mission: Mission) -> MapPoint {
+//         let miz_ship = mission.coalition
+//     }
+// }
 
 impl ValidateSelf for ShipBase {
     fn validate_self(&self) -> Result<(), anyhow::Error> {

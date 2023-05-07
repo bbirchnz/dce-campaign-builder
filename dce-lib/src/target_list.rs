@@ -2,12 +2,94 @@ use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
 
-use crate::serde_utils::LuaFileBased;
+use crate::{
+    mappable::{MapPoint, Mappables},
+    projections::{convert_dcs_lat_lon, offset},
+    serde_utils::LuaFileBased,
+};
+
+use log::info;
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 pub struct TargetList {
     blue: HashMap<String, Target>,
     red: HashMap<String, Target>,
+}
+
+impl Mappables for TargetList {
+    fn to_mappables(&self, instance: &crate::DCEInstance) -> Vec<crate::mappable::MapPoint> {
+        let results = self
+            .blue
+            .iter()
+            .filter_map(|(name, target)| match target {
+                Target::CAP(cap) => {
+                    let zone = instance.mission.get_zone_by_name(&cap.ref_point);
+                    match zone {
+                        Ok(zone) => {
+                            let (x2, y2) = offset(zone.x, zone.y, cap.axis, cap.radius);
+                            info!("{} {}, {} {}", zone.x, zone.y, x2, y2);
+                            let (lon2, lat2) = convert_dcs_lat_lon(x2, y2, &instance.projection);
+                            Some(
+                                MapPoint::new_from_dcs(
+                                    zone.x,
+                                    zone.y,
+                                    name.to_owned(),
+                                    "blue".into(),
+                                    "TargetCAP".into(),
+                                    &instance.projection,
+                                )
+                                .add_extras(HashMap::from([
+                                    ("radius".to_string(), cap.radius),
+                                    ("axis".to_string(), cap.axis),
+                                    ("lat2".to_string(), lat2),
+                                    ("lon2".to_string(), lon2),
+                                ])),
+                            )
+                        }
+                        Err(e) => {
+                            info!("{:?}", e);
+                            None
+                        }
+                    }
+                }
+                Target::Refueling(refuel) => {
+                    let zone = instance.mission.get_zone_by_name(&refuel.ref_point);
+                    match zone {
+                        Ok(zone) => {
+                            let (x2, y2) = offset(zone.x, zone.y, refuel.axis, refuel.radius);
+                            info!("{} {}, {} {}", zone.x, zone.y, x2, y2);
+                            let (lon2, lat2) = convert_dcs_lat_lon(x2, y2, &instance.projection);
+                            Some(
+                                MapPoint::new_from_dcs(
+                                    zone.x,
+                                    zone.y,
+                                    name.to_owned(),
+                                    "blue".into(),
+                                    "TargetRefuel".into(),
+                                    &instance.projection,
+                                )
+                                .add_extras(HashMap::from([
+                                    ("radius".to_string(), refuel.radius),
+                                    ("axis".to_string(), refuel.axis),
+                                    ("lat2".to_string(), lat2),
+                                    ("lon2".to_string(), lon2),
+                                ])),
+                            )
+                        }
+                        Err(e) => {
+                            info!("{:?}", e);
+                            None
+                        }
+                    }
+                }
+                Target::Intercept(_) => None,
+                Target::FighterSweep(_) => None,
+                Target::Strike(_) => None,
+            })
+            .collect::<Vec<_>>();
+
+        return results;
+    }
 }
 
 impl LuaFileBased<'_> for TargetList {}

@@ -1,20 +1,27 @@
 use proj::Proj;
 
-pub struct TranverseMercator {
+pub struct TransverseMercator {
     central_meridian: i16,
     false_easting: f64,
     false_northing: f64,
     scale_factor: f64,
 }
 
-pub const PG: TranverseMercator = TranverseMercator {
+pub const PG: TransverseMercator = TransverseMercator {
     central_meridian: 57,
     false_easting: 75755.99999999645,
     false_northing: -2894933.0000000377,
     scale_factor: 0.9996,
 };
 
-pub fn convert_dcs_lat_lon(x: f64, y: f64, map: &TranverseMercator) -> (f64, f64) {
+pub const SA: TransverseMercator = TransverseMercator {
+    central_meridian: -57,
+    false_easting: 147639.99999997593,
+    false_northing: 5815417.000000032,
+    scale_factor: 0.9996,
+};
+
+pub fn convert_dcs_lat_lon(x: f64, y: f64, map: &TransverseMercator) -> (f64, f64) {
     let proj = Proj::new_known_crs(
         &format!(
             "+proj=tmerc +lat_0=0 +lon_0={} +k_0={} +x_0={} +y_0={}",

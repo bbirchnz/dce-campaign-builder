@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 
 use crate::{
-    projections::{convert_dcs_lat_lon, TranverseMercator},
+    projections::{convert_dcs_lat_lon, TransverseMercator},
     DCEInstance,
 };
 
@@ -26,7 +26,7 @@ impl MapPoint {
         name: String,
         side: String,
         class: String,
-        map: &TranverseMercator,
+        map: &TransverseMercator,
     ) -> MapPoint {
         let (lon, lat) = convert_dcs_lat_lon(x, y, map);
         MapPoint {

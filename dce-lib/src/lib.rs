@@ -2,7 +2,7 @@ use anyhow::anyhow;
 use db_airbases::DBAirbases;
 use mission::Mission;
 use oob_air::OobAir;
-use projections::{TranverseMercator, PG};
+use projections::{TransverseMercator, PG, SA};
 use serde_utils::LuaFileBased;
 use target_list::TargetList;
 
@@ -21,7 +21,7 @@ pub struct DCEInstance {
     pub airbases: DBAirbases,
     pub mission: Mission,
     pub target_list: TargetList,
-    pub projection: TranverseMercator,
+    pub projection: TransverseMercator,
     pub base_path: String,
 }
 
@@ -41,6 +41,7 @@ impl DCEInstance {
 
         let projection = match &*mission.theatre {
             "PersianGulf" => PG,
+            "SouthAtlantic" => SA,
             _ => {
                 return Err(anyhow!(
                     "TransverseMercator not known for {}",
@@ -62,6 +63,12 @@ impl DCEInstance {
     pub fn validate(&self) -> Result<(), anyhow::Error> {
         Ok(())
     }
+}
+
+trait NewFromMission {
+    fn new_from_mission(mission: &Mission) -> Result<Self, anyhow::Error>
+    where
+        Self: Sized;
 }
 
 #[cfg(test)]

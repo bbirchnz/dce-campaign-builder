@@ -36,9 +36,9 @@ pub struct TriggerZone {
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 pub struct CoalitionCollection {
-    blue: Coalition,
-    red: Coalition,
-    neutrals: Coalition,
+    pub blue: Coalition,
+    pub red: Coalition,
+    pub neutrals: Coalition,
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
@@ -54,6 +54,8 @@ pub struct Country {
     #[serde(rename = "static")]
     pub _static: Option<StaticGroupDummy>,
     pub vehicle: Option<VehicleGroupDummy>,
+    pub ship: Option<ShipGroupDummy>,
+    pub plane: Option<PlaneGroupDummy>,
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
@@ -96,6 +98,98 @@ pub struct VehicleGroup {
     pub y: f64,
     pub name: String,
     pub start_time: f64,
+}
+
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+pub struct ShipGroupDummy {
+    #[serde[rename="group"]]
+    pub groups: Vec<ShipGroup>,
+}
+
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+pub struct ShipGroup {
+    pub visible: bool,
+    pub uncontrollable: bool,
+    #[serde(default)]
+    #[serde(rename = "lateActivation")]
+    pub late_activation: bool,
+    // pub route: Route,
+    #[serde(rename = "groupId")]
+    pub group_id: u64,
+    pub hidden: bool,
+    pub x: f64,
+    pub y: f64,
+    pub name: String,
+    pub start_time: f64,
+    pub units: Vec<ShipUnit>,
+}
+
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+pub struct ShipUnit {
+    pub skill: String,
+    #[serde(rename = "type")]
+    pub _type: String,
+    #[serde(rename = "unitId")]
+    pub unit_id: u64,
+    pub x: f64,
+    pub y: f64,
+    pub name: String,
+    pub heading: f64,
+    pub frequency: u64,
+    pub modulation: u8,
+}
+
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+pub struct PlaneGroupDummy {
+    #[serde[rename="group"]]
+    pub groups: Vec<PlaneGroup>,
+}
+
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+pub struct PlaneGroup {
+    pub uncontrollable: bool,
+    pub uncontrolled: bool,
+    pub modulation: u8,
+    pub frequency: f64,
+    #[serde(default)]
+    #[serde(rename = "lateActivation")]
+    pub late_activation: bool,
+    pub task: String,
+    // pub route: Route,
+    #[serde(rename = "groupId")]
+    pub group_id: u64,
+    pub hidden: bool,
+    pub x: f64,
+    pub y: f64,
+    pub name: String,
+    pub start_time: f64,
+    pub units: Vec<PlaneUnit>,
+}
+
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+pub struct PlaneUnit {
+    pub skill: String,
+    #[serde(rename = "type")]
+    pub _type: String,
+    pub livery_id: String,
+    #[serde(rename = "unitId")]
+    pub unit_id: u64,
+    pub x: f64,
+    pub y: f64,
+    pub name: String,
+    pub heading: f64,
+    pub payload: Payload,
+}
+
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+pub struct Payload {
+    pub pylons: Vec<Pylon>,
+}
+
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+pub struct Pylon {
+    #[serde(rename = "CLSID")]
+    pub cls_id: String,
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
@@ -197,6 +291,15 @@ mod tests {
         let loaded = Mission::from_miz("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\War over Tchad 1987-Blue-Mirage-F1EE-3-30 Lorraine\\Init\\base_mission.miz".into()).unwrap();
         loaded
             .to_lua_file("mission2".into(), "mission".into())
+            .unwrap();
+    }
+
+    #[test]
+    
+    fn save_sa_example() {
+        let loaded = Mission::from_miz("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\Falklands v1\\Init\\base_mission.miz".into()).unwrap();
+        loaded
+            .to_lua_file("mission_sa".into(), "mission".into())
             .unwrap();
     }
 }

@@ -6,9 +6,10 @@ use crate::{
     mappable::{MapPoint, Mappables},
     projections::{convert_dcs_lat_lon, offset},
     serde_utils::LuaFileBased,
+    NewFromMission,
 };
 
-use log::info;
+use log::{info, warn};
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 pub struct TargetList {
@@ -93,6 +94,94 @@ impl Mappables for TargetList {
 }
 
 impl LuaFileBased<'_> for TargetList {}
+
+impl NewFromMission for TargetList {
+    fn new_from_mission(mission: &crate::mission::Mission) -> Result<Self, anyhow::Error>
+    where
+        Self: Sized,
+    {
+        let mut caps = mission
+            .triggers
+            .zones
+            .iter()
+            .filter_map(|z| {
+                let name_splits = z.name.split("_").collect::<Vec<_>>();
+                if name_splits.len() < 2 {
+                    warn!("Expect zone names to be of form <SIDE>_<TYPE>");
+                    return None;
+                }
+                match name_splits[1] {
+                    "CAP" => Some((
+                        z.name.to_owned(),
+                        Target::CAP(CAP {
+                            priority: 1.,
+                            ref_point: z.name.to_owned(),
+                            radius: name_splits[3].parse().expect("Failed to parse radius"),
+                            axis: name_splits[2].parse().expect("Failed to parse axis"),
+                            text: z.name.to_owned(),
+                            inactive: false,
+                            firepower: TargetFirepower { min: 1., max: 1. },
+                        }),
+                    )),
+                    "AAR" => Some((
+                        z.name.to_owned(),
+                        Target::Refueling(Refueling {
+                            priority: 1.,
+                            ref_point: z.name.to_owned(),
+                            radius: name_splits[3].parse().expect("Failed to parse radius"),
+                            axis: name_splits[2].parse().expect("Failed to parse axis"),
+                            text: z.name.to_owned(),
+                            inactive: false,
+                            firepower: TargetFirepower { min: 1., max: 1. },
+                        }),
+                    )),
+                    _ => {
+                        warn!("Didn't know what to do with zone {}", z.name);
+                        None
+                    }
+                }
+            })
+            .collect::<HashMap<String, Target>>();
+
+        let strike_groups = mission
+            .coalition
+            .red
+            .countries
+            .iter()
+            .filter_map(|c| c.vehicle.as_ref())
+            .flat_map(|vgd| vgd.groups.as_slice())
+            .filter_map(|vg| {
+                let name_splits = vg.name.split("_").collect::<Vec<_>>();
+                if name_splits.len() < 2 {
+                    warn!("Expect zone names to be of form <SIDE>_<TYPE>");
+                    return None;
+                }
+                match name_splits[0] {
+                    "STRIKE" => Some((
+                        name_splits[1].to_owned(),
+                        Target::Strike(Strike {
+                            priority: 1.,
+                            text: name_splits[1].to_owned(),
+                            inactive: false,
+                            firepower: TargetFirepower { min: 1., max: 1. },
+                            class: "vehicle".to_owned(),
+                            class_template: Some(name_splits[1].to_owned()),
+                            elements: None,
+                        }),
+                    )),
+                    _ => None,
+                }
+            })
+            .collect::<HashMap<String, Target>>();
+
+        caps.extend(strike_groups);
+
+        Ok(TargetList {
+            blue: caps,
+            red: HashMap::default(),
+        })
+    }
+}
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 #[serde(tag = "task")]
@@ -200,7 +289,7 @@ fn default_class() -> String {
 
 #[cfg(test)]
 mod tests {
-    use crate::serde_utils::LuaFileBased;
+    use crate::{mission::Mission, serde_utils::LuaFileBased, NewFromMission};
 
     use super::TargetList;
 
@@ -216,6 +305,16 @@ mod tests {
         let loaded = TargetList::from_lua_file("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\War over Tchad 1987-Blue-Mirage-F1EE-3-30 Lorraine\\Init\\targetlist_init.lua".into(), "targetlist".into()).unwrap();
         loaded
             .to_lua_file("targetlist_init.lua".into(), "targetlist".into())
+            .unwrap();
+    }
+
+    #[test]
+    fn from_miz() {
+        let mission = Mission::from_miz("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\Falklands v1\\Init\\base_mission.miz".into()).unwrap();
+        let targets = TargetList::new_from_mission(&mission).unwrap();
+
+        targets
+            .to_lua_file("targetlist_sa.lua".into(), "target_list".into())
             .unwrap();
     }
 }

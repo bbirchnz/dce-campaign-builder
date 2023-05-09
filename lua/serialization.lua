@@ -63,7 +63,7 @@ function TableSerialization(t, i)
             text = text .. tab .. "[" .. k .. "] = "
         end
         if type(v) == "string" then
-            text = text .. '"' .. v .. '",\n'
+            text = text .. "'" .. v .. "',\n"
         elseif type(v) == "number" then
             text = text .. v .. ",\n"
         elseif type(v) == "table" then

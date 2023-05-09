@@ -1,4 +1,5 @@
 use anyhow::anyhow;
+use campaign_header::Header;
 use db_airbases::DBAirbases;
 use mission::Mission;
 use oob_air::OobAir;
@@ -6,6 +7,7 @@ use projections::{TransverseMercator, PG, SA};
 use serde_utils::LuaFileBased;
 use target_list::TargetList;
 
+pub mod campaign_header;
 pub mod db_airbases;
 pub mod dce_utils;
 pub mod lua_utils;
@@ -15,6 +17,7 @@ pub mod oob_air;
 pub mod projections;
 pub mod serde_utils;
 pub mod target_list;
+pub mod trigger;
 
 pub struct DCEInstance {
     pub oob_air: OobAir,
@@ -23,6 +26,7 @@ pub struct DCEInstance {
     pub target_list: TargetList,
     pub projection: TransverseMercator,
     pub base_path: String,
+    pub campaign_header: Header,
 }
 
 impl DCEInstance {
@@ -41,7 +45,7 @@ impl DCEInstance {
 
         let projection = match &*mission.theatre {
             "PersianGulf" => PG,
-            "SouthAtlantic" => SA,
+            "Falklands" => SA,
             _ => {
                 return Err(anyhow!(
                     "TransverseMercator not known for {}",
@@ -50,6 +54,8 @@ impl DCEInstance {
             }
         };
 
+        let header = Header::from_lua_file(format!("{}/camp_init.lua", path), "camp".into())?;
+
         Ok(DCEInstance {
             oob_air,
             airbases,
@@ -57,6 +63,7 @@ impl DCEInstance {
             target_list,
             projection,
             base_path: path,
+            campaign_header: header,
         })
     }
 

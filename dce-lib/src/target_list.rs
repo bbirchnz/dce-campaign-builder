@@ -165,7 +165,7 @@ impl NewFromMission for TargetList {
                             inactive: false,
                             firepower: TargetFirepower { min: 1., max: 1. },
                             class: "vehicle".to_owned(),
-                            class_template: Some(name_splits[1].to_owned()),
+                            class_template: Some(vg.name.to_owned()),
                             elements: None,
                         }),
                     )),

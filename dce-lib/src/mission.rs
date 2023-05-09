@@ -1,4 +1,4 @@
-use std::fs::File;
+use std::{fs::File, collections::HashMap};
 
 use serde::{Deserialize, Serialize};
 
@@ -181,12 +181,16 @@ pub struct PlaneUnit {
     pub payload: Payload,
 }
 
-#[derive(Deserialize, Serialize, Debug, PartialEq)]
+#[derive(Deserialize, Serialize, Debug, PartialEq, Clone)]
 pub struct Payload {
-    pub pylons: Vec<Pylon>,
+    pub pylons: HashMap<u32, Pylon>,
+    pub fuel: f64,
+    pub flare: f64,
+    pub chaff: f64,
+    pub gun: f64
 }
 
-#[derive(Deserialize, Serialize, Debug, PartialEq)]
+#[derive(Deserialize, Serialize, Debug, PartialEq, Clone)]
 pub struct Pylon {
     #[serde(rename = "CLSID")]
     pub cls_id: String,

@@ -1,10 +1,14 @@
 use std::collections::HashMap;
 
+use mlua::Lua;
 use serde::{Deserialize, Serialize};
 
-use crate::{serde_utils::LuaFileBased, NewFromMission};
+use crate::{
+    dce_utils::ValidateSelf, lua_utils::load_trigger_mocks, serde_utils::LuaFileBased,
+    NewFromMission,
+};
 
-type Triggers = HashMap<String, Trigger>;
+pub type Triggers = HashMap<String, Trigger>;
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct Trigger {
@@ -13,54 +17,68 @@ pub struct Trigger {
     #[serde(default)]
     pub once: bool,
     pub condition: String,
-    pub action: Actions
+    pub action: Actions,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 #[serde(untagged)]
 pub enum Actions {
     One(String),
-    Many(Vec<String>)
+    Many(Vec<String>),
 }
 impl LuaFileBased<'_> for Triggers {}
 
-// impl NewFromMission for Triggers {
-//     fn new_from_mission(_mission: &crate::mission::Mission) -> Result<Self, anyhow::Error>
-//     where
-//         Self: Sized,
-//     {
-//         Ok(Header {
-//             original: true,
-//             title: "New Campaign".into(),
-//             version: "V0.1".into(),
-//             mission: 1,
-//             date: Date {
-//                 day: 9,
-//                 month: 5,
-//                 year: 2023,
-//             },
-//             time: 11700,
-//             dawn: 19800,
-//             dusk: 68880,
-//             mission_duration: 5400,
-//             idle_time_min: 10800,
-//             idle_time_max: 14400,
-//             startup: 600,
-//             units: "imperial".into(),
-//             weather: Weather {
-//                 high_prob: 20.,
-//                 low_prob: 80.,
-//                 reference_temp: 8.,
-//             },
-//             mag_var: 2.,
-//             debug: true,
-//         })
-//     }
-// }
+impl ValidateSelf for Trigger {
+    fn validate_self(&self) -> Result<(), anyhow::Error> {
+        let lua = Lua::new();
+        load_trigger_mocks(&lua)?;
+
+        let condition = "local condition = ".to_string();
+        let condition = condition + &self.condition;
+
+        lua.load(&condition).exec()?;
+
+        match &self.action {
+            Actions::One(action) => lua.load(action).exec()?,
+            Actions::Many(actions) => actions
+                .iter()
+                .for_each(|action| lua.load(action).exec().unwrap()),
+        }
+
+        Ok(())
+    }
+}
+
+impl ValidateSelf for Triggers {
+    fn validate_self(&self) -> Result<(), anyhow::Error> {
+        self.iter()
+            .for_each(|(_, trigger)| trigger.validate_self().unwrap());
+        Ok(())
+    }
+}
+
+impl NewFromMission for Triggers {
+    fn new_from_mission(_mission: &crate::mission::Mission) -> Result<Self, anyhow::Error>
+    where
+        Self: Sized,
+    {
+        Ok(HashMap::from([(
+            "Campaign Briefing".into(),
+            Trigger {
+                active: true,
+                once: true,
+                condition: "true".into(),
+                action: Actions::One("Action.Text(\"Welcome to your new campaign\")".into()),
+            },
+        )]))
+    }
+}
 
 #[cfg(test)]
 mod tests {
-    use crate::{mission::Mission, serde_utils::LuaFileBased, NewFromMission};
+    use crate::{
+        dce_utils::ValidateSelf, mission::Mission, serde_utils::LuaFileBased, NewFromMission,
+    };
 
     use super::Triggers;
 
@@ -68,7 +86,8 @@ mod tests {
     fn load_example() {
         let result = Triggers::from_lua_file("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\War over Tchad 1987-Blue-Mirage-F1EE-3-30 Lorraine\\Init\\camp_triggers_init.lua".into(), "camp_triggers".into());
 
-        result.unwrap();
+        let result = result.unwrap();
+        result.validate_self().unwrap();
     }
 
     #[test]
@@ -79,13 +98,13 @@ mod tests {
             .unwrap();
     }
 
-    // #[test]
-    // fn from_miz() {
-    //     let mission = Mission::from_miz("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\Falklands v1\\Init\\base_mission.miz".into()).unwrap();
-    //     let header = Header::new_from_mission(&mission).unwrap();
+    #[test]
+    fn from_miz() {
+        let mission = Mission::from_miz("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\Falklands v1\\Init\\base_mission.miz".into()).unwrap();
+        let triggers = Triggers::new_from_mission(&mission).unwrap();
 
-    //     header
-    //         .to_lua_file("camp_init_sa.lua".into(), "camp".into())
-    //         .unwrap();
-    // }
+        triggers
+            .to_lua_file("camp_trigger_init_sa.lua".into(), "camp_triggers".into())
+            .unwrap();
+    }
 }

@@ -1,18 +1,18 @@
-use std::collections::HashMap;
-
+use itertools::Itertools;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 use crate::{
     dce_utils::ValidateSelf,
+    dcs_airbase_export::dcs_airbases_for_theatre,
     mappable::{MapPoint, Mappables},
     serde_utils::LuaFileBased,
-    DCEInstance,
+    DCEInstance, NewFromMission,
 };
 
 use anyhow::anyhow;
 
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
-pub struct DBAirbases(pub HashMap<String, AirBase>);
+pub type DBAirbases = HashMap<String, AirBase>;
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 #[serde(untagged)]
@@ -38,8 +38,7 @@ impl ValidateSelf for AirBase {
 
 impl Mappables for DBAirbases {
     fn to_mappables(&self, instance: &DCEInstance) -> Vec<crate::mappable::MapPoint> {
-        self.0
-            .iter()
+        self.iter()
             .filter_map(|(name, ab)| match ab {
                 AirBase::Fixed(fixed) => Some(MapPoint::new_from_dcs(
                     fixed.x,
@@ -78,7 +77,7 @@ pub struct FixedAirBase {
     pub y: f64,
     pub elevation: f64,
     #[serde(rename = "airdromeId")]
-    airdrome_id: u16,
+    airdrome_id: u32,
     #[serde(rename = "ATC_frequency")]
     atc_frequency: String,
     startup: Option<f64>,
@@ -110,7 +109,7 @@ pub struct ShipBase {
     unitname: String,
     startup: Option<f64>,
     #[serde(rename = "ATC_frequency")]
-    atc_frequency: String,
+    atc_frequency: Option<String>,
 }
 
 // impl ShipBase {
@@ -121,7 +120,7 @@ pub struct ShipBase {
 
 impl ValidateSelf for ShipBase {
     fn validate_self(&self) -> Result<(), anyhow::Error> {
-        if self.atc_frequency.len() < 3 {
+        if self.atc_frequency.is_some() && self.atc_frequency.as_ref().unwrap().len() < 3 {
             return Err(anyhow!("ATC Frequency must be set"));
         }
         Ok(())
@@ -216,9 +215,78 @@ impl ValidateSelf for ReserveBase {
 
 impl LuaFileBased<'_> for DBAirbases {}
 
+impl NewFromMission for DBAirbases {
+    fn new_from_mission(mission: &crate::mission::Mission) -> Result<Self, anyhow::Error>
+    where
+        Self: Sized,
+    {
+        let dcs_airbases = dcs_airbases_for_theatre(&mission.theatre)?;
+
+        let mut fixed = dcs_airbases
+            .iter()
+            .map(|(_, dcs_ab)| {
+                (
+                    dcs_ab.frequencies.name.to_owned(),
+                    AirBase::Fixed(FixedAirBase {
+                        x: dcs_ab.frequencies.x,
+                        y: dcs_ab.frequencies.y,
+                        elevation: dcs_ab.frequencies.height,
+                        airdrome_id: dcs_ab.frequencies.airdrome_number,
+                        atc_frequency: dcs_ab
+                            .frequencies
+                            .frequency_list
+                            .iter()
+                            .sorted()
+                            .collect::<Vec<_>>()
+                            .last()
+                            .copied()
+                            .copied()
+                            .unwrap_or_default()
+                            .to_string(),
+                        startup: Some(600.),
+                        side: "red".into(),
+                        divert: false,
+                        vor: None,
+                        ndb: None,
+                        tacan: None,
+                        ils: None,
+                        limited_park_number: dcs_ab.stands.len() as u16,
+                    }),
+                )
+            })
+            .collect::<HashMap<_, _>>();
+
+        let ships_blue = mission
+            .coalition
+            .blue
+            .countries
+            .iter()
+            .filter_map(|i| i.ship.as_ref())
+            .flat_map(|i| i.groups.as_slice())
+            .flat_map(|i| i.units.as_slice())
+            .filter_map(|s| {
+                let parts = s.name.split("_").collect::<Vec<_>>();
+                if parts.len() < 2 || parts[0] != "CV" {
+                    return None;
+                }
+                Some((
+                    s.name.to_owned(),
+                    AirBase::Ship(ShipBase {
+                        unitname: s.name.to_owned(),
+                        startup: Some(600.),
+                        atc_frequency: None,
+                    }),
+                ))
+            })
+            .collect::<HashMap<_, _>>();
+        fixed.extend(ships_blue);
+        Ok(fixed)
+    }
+}
+
 #[cfg(test)]
 mod tests {
-    use crate::serde_utils::LuaFileBased;
+    use crate::{mission::Mission, serde_utils::LuaFileBased, NewFromMission};
 
     use super::DBAirbases;
 
@@ -233,6 +301,16 @@ mod tests {
     fn save_example() {
         let oob = DBAirbases::from_lua_file("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\War over Tchad 1987-Blue-Mirage-F1EE-3-30 Lorraine\\Init\\db_airbases.lua".into(), "db_airbases".into()).unwrap();
         oob.to_lua_file("db_airbases.lua".into(), "db_airbases".into())
+            .unwrap();
+    }
+
+    #[test]
+    fn from_miz() {
+        let mission = Mission::from_miz("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\Falklands v1\\Init\\base_mission.miz".into()).unwrap();
+        let airbases = DBAirbases::new_from_mission(&mission).unwrap();
+
+        airbases
+            .to_lua_file("db_airbases_sa.lua".into(), "db_airbases".into())
             .unwrap();
     }
 }

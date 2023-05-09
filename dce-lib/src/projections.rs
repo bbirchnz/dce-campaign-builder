@@ -1,3 +1,4 @@
+use anyhow::anyhow;
 use proj::Proj;
 
 pub struct TransverseMercator {
@@ -20,6 +21,14 @@ pub const SA: TransverseMercator = TransverseMercator {
     false_northing: 5815417.000000032,
     scale_factor: 0.9996,
 };
+
+pub fn projection_from_theatre(theatre: &str) -> Result<TransverseMercator, anyhow::Error> {
+    match theatre {
+        "PersianGulf" => Ok(PG),
+        "Falklands" => Ok(SA),
+        _ => return Err(anyhow!("TransverseMercator not known for {}", theatre)),
+    }
+}
 
 pub fn convert_dcs_lat_lon(x: f64, y: f64, map: &TransverseMercator) -> (f64, f64) {
     let proj = Proj::new_known_crs(

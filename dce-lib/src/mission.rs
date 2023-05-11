@@ -1,4 +1,4 @@
-use std::{fs::File, collections::HashMap};
+use std::{collections::HashMap, fs::File};
 
 use serde::{Deserialize, Serialize};
 
@@ -147,7 +147,9 @@ pub struct PlaneGroupDummy {
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 pub struct PlaneGroup {
+    #[serde(default)]
     pub uncontrollable: bool,
+    #[serde(default)]
     pub uncontrolled: bool,
     pub modulation: u8,
     pub frequency: f64,
@@ -187,7 +189,7 @@ pub struct Payload {
     pub fuel: f64,
     pub flare: f64,
     pub chaff: f64,
-    pub gun: f64
+    pub gun: f64,
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq, Clone)]

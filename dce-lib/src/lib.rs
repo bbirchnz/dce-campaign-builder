@@ -1,10 +1,11 @@
-use std::{
-    fs,
-    path::{Path},
-};
+use std::{fs, path::Path};
 
 use campaign_header::Header;
+use cmp_file::CMPFile;
+use conf_mod::ConfMod;
 use db_airbases::DBAirbases;
+// use itertools::Itertools;
+use loadouts::Loadouts;
 use mission::Mission;
 use oob_air::OobAir;
 use projections::{projection_from_theatre, TransverseMercator};
@@ -13,9 +14,12 @@ use target_list::TargetList;
 use trigger::Triggers;
 
 pub mod campaign_header;
+pub mod cmp_file;
+pub mod conf_mod;
 pub mod db_airbases;
 pub mod dce_utils;
 pub mod dcs_airbase_export;
+pub mod loadouts;
 pub mod lua_utils;
 pub mod mappable;
 pub mod mission;
@@ -24,7 +28,6 @@ pub mod projections;
 pub mod serde_utils;
 pub mod target_list;
 pub mod trigger;
-pub mod loadouts;
 
 pub struct DCEInstance {
     pub oob_air: OobAir,
@@ -32,9 +35,11 @@ pub struct DCEInstance {
     pub mission: Mission,
     pub target_list: TargetList,
     pub triggers: Triggers,
+    pub loadouts: Loadouts,
     pub projection: TransverseMercator,
     pub base_path: String,
     pub campaign_header: Header,
+    pub conf_mod: ConfMod,
 }
 
 impl DCEInstance {
@@ -56,6 +61,14 @@ impl DCEInstance {
             "camp_triggers".into(),
         )?;
 
+        let conf_mod = ConfMod::from_lua_file(
+            format!("{}/conf_mod.lua", path).into(),
+            "mission_ini".into(),
+        )?;
+
+        let loadouts =
+            Loadouts::from_lua_file(format!("{}/db_loadouts.lua", path), "db_loadouts".into())?;
+
         let projection = projection_from_theatre(&mission.theatre)?;
 
         let header = Header::from_lua_file(format!("{}/camp_init.lua", path), "camp".into())?;
@@ -66,7 +79,9 @@ impl DCEInstance {
             mission,
             triggers,
             target_list,
+            loadouts,
             projection,
+            conf_mod,
             base_path: path,
             campaign_header: header,
         })
@@ -86,48 +101,102 @@ impl DCEInstance {
             campaign_header: Header::new_from_mission(&mission)?,
             airbases: DBAirbases::new_from_mission(&mission)?,
             triggers: Triggers::new_from_mission(&mission)?,
+            loadouts: Loadouts::new_from_mission(&mission)?,
+            conf_mod: ConfMod::new(),
             mission,
         })
     }
 
     pub fn generate_lua(self, dir: String) -> Result<(), anyhow::Error> {
-        let path = Path::new(&dir);
-        fs::create_dir_all(path)?;
+        let base_path = Path::new(&dir);
+        let camp_name = self.campaign_header.title.to_owned();
+        let camp_path = base_path.join(&camp_name);
+
+        vec!["Init", "Active", "Debug", "Images", "Debriefing", "Sounds"]
+            .iter()
+            .map(|d| fs::create_dir_all(camp_path.join(d)))
+            .collect::<Result<_, _>>()?;
+
+        let init_path = camp_path.join("Init");
+
+        // create cmp file:
+        CMPFile::new(camp_name.to_string()).to_lua_file(
+            base_path
+                .join(format!("{}.cmp", &camp_name))
+                .to_string_lossy()
+                .to_string(),
+            "campaign".into(),
+        )?;
+
+        // create placeholder first and ongoings as copies of the base_mission
+        fs::copy(
+            Path::new(&self.base_path).join("base_mission.miz"),
+            base_path.join(format!("{}_first.miz", &camp_name)),
+        )?;
+        fs::copy(
+            Path::new(&self.base_path).join("base_mission.miz"),
+            base_path.join(format!("{}_ongoing.miz", &camp_name)),
+        )?;
+        fs::copy(
+            Path::new(&self.base_path).join("base_mission.miz"),
+            init_path.join("base_mission.miz"),
+        )?;
+
         self.airbases.to_lua_file(
-            path.join("db_airbases.lua")
+            init_path
+                .join("db_airbases.lua")
                 .to_string_lossy()
                 .to_string(),
             "db_airbases".into(),
         )?;
         self.campaign_header.to_lua_file(
-            path.join("camp_init.lua")
+            init_path
+                .join("camp_init.lua")
                 .to_string_lossy()
                 .to_string(),
             "camp".into(),
         )?;
         self.oob_air.to_lua_file(
-            path.join("oob_air_init.lua")
+            init_path
+                .join("oob_air_init.lua")
                 .to_string_lossy()
                 .to_string(),
             "oob_air".into(),
         )?;
         self.target_list.to_lua_file(
-            path.join("targetlist_init.lua")
+            init_path
+                .join("targetlist_init.lua")
                 .to_string_lossy()
                 .to_string(),
             "targetlist".into(),
         )?;
         self.triggers.to_lua_file(
-            path.join("camp_triggers_init.lua")
+            init_path
+                .join("camp_triggers_init.lua")
                 .to_string_lossy()
                 .to_string(),
             "camp_triggers".into(),
+        )?;
+        self.loadouts.to_lua_file(
+            init_path
+                .join("db_loadouts.lua")
+                .to_string_lossy()
+                .to_string(),
+            "db_loadouts".into(),
+        )?;
+        self.conf_mod.to_lua_file(
+            init_path.join("conf_mod.lua").to_string_lossy().to_string(),
+            "mission_ini".into(),
         )?;
         Ok(())
     }
 
     pub fn validate(&self) -> Result<(), anyhow::Error> {
         Ok(())
+    }
+
+    pub fn set_mission_name(&mut self, name: String) {
+        self.campaign_header.title = name;
     }
 }
 
@@ -148,8 +217,9 @@ mod tests {
 
     #[test]
     fn load_from_miz_and_generate() {
-        let new_instance = DCEInstance::new_from_miz("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\Falklands v1\\Init\\base_mission.miz".into()).unwrap();
-
+        let mut new_instance = DCEInstance::new_from_miz("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\Falklands v1\\Init\\base_mission.miz".into()).unwrap();
+        new_instance.set_mission_name("Falklands v1".into());
+        new_instance.oob_air.set_player_defaults();
         new_instance.generate_lua("test_run\\".into()).unwrap();
     }
 }

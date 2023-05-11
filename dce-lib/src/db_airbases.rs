@@ -24,6 +24,18 @@ pub enum AirBase {
     AirStart(AirStartBase),
 }
 
+impl AirBase {
+    pub fn get_side(&self) -> String {
+        match self {
+            AirBase::Fixed(a) => a.side.to_owned(),
+            AirBase::Ship(a) => a.side.to_owned(),
+            AirBase::Farp(a) => a.side.to_owned(),
+            AirBase::Reserve(a) => a.side.to_owned(),
+            AirBase::AirStart(a) => a.side.to_owned(),
+        }
+    }
+}
+
 impl ValidateSelf for AirBase {
     fn validate_self(&self) -> Result<(), anyhow::Error> {
         match self {
@@ -110,6 +122,9 @@ pub struct ShipBase {
     startup: Option<f64>,
     #[serde(rename = "ATC_frequency")]
     atc_frequency: Option<String>,
+    side: String,
+    #[serde(rename = "LimitedParkNb")]
+    limited_park_number: u16,
 }
 
 // impl ShipBase {
@@ -153,7 +168,8 @@ impl ValidateSelf for FarpBase {
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct AirStartBase {
-    inactive: Option<bool>,
+    #[serde(default)]
+    inactive: bool,
     x: f64,
     y: f64,
     elevation: f64,
@@ -161,8 +177,9 @@ pub struct AirStartBase {
     atc_frequency: String,
     #[serde(rename = "BaseAirStart")]
     base_air_start: bool,
-    #[serde(rename = "airdromeId")]
-    airdrome_id: Option<u16>,
+    // #[serde(rename = "airdromeId")]
+    // airdrome_id: Option<u16>,
+    pub side: String,
 }
 
 impl ValidateSelf for AirStartBase {
@@ -176,9 +193,9 @@ impl ValidateSelf for AirStartBase {
         if !self.base_air_start {
             return Err(anyhow!("BaseAirStart must be true"));
         }
-        if self.airdrome_id.is_some() {
-            return Err(anyhow!("airdromeId must be nil"));
-        }
+        // if self.airdrome_id.is_some() {
+        //     return Err(anyhow!("airdromeId must be nil"));
+        // }
 
         Ok(())
     }
@@ -192,6 +209,7 @@ pub struct ReserveBase {
     elevation: f64,
     #[serde(rename = "ATC_frequency")]
     atc_frequency: String,
+    pub side: String,
 }
 
 impl ValidateSelf for ReserveBase {
@@ -275,11 +293,34 @@ impl NewFromMission for DBAirbases {
                         unitname: s.name.to_owned(),
                         startup: Some(600.),
                         atc_frequency: None,
+                        side: "blue".into(),
+                        limited_park_number: 4,
                     }),
                 ))
             })
             .collect::<HashMap<_, _>>();
+
+        let air_starts = mission.triggers.zones.iter().filter_map(|z| {
+            let parts = z.name.split("_").collect::<Vec<_>>();
+            if parts.len() < 3 || parts[1] != "AIRSTART" {
+                return None;
+            }
+            Some((
+                parts[2].to_owned(),
+                AirBase::AirStart(AirStartBase {
+                    inactive: false,
+                    x: z.x,
+                    y: z.y,
+                    elevation: 6000.,
+                    atc_frequency: "".into(),
+                    base_air_start: true,
+                    side: "red".into(),
+                }),
+            ))
+        });
+
         fixed.extend(ships_blue);
+        fixed.extend(air_starts);
         Ok(fixed)
     }
 }

@@ -10,6 +10,8 @@ pub type Loadouts = HashMap<String, AirframeLoadout>;
 pub struct AirframeLoadout {
     #[serde(rename = "Strike")]
     pub strike: Option<HashMap<String, StrikeLoadout>>,
+    #[serde(rename = "CAP")]
+    pub cap: Option<HashMap<String, CAPLoadout>>,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
@@ -107,6 +109,7 @@ impl NewFromMission for Loadouts {
                     .entry(u._type.to_owned())
                     .or_insert(AirframeLoadout {
                         strike: Some(HashMap::default()),
+                        cap: Some(HashMap::default()),
                     });
                 match name_parts[1] {
                     "Strike" => {
@@ -136,6 +139,27 @@ impl NewFromMission for Loadouts {
                                 ldsd: false,
                                 stores: u.payload.clone(),
                                 self_escort: false,
+                                sortie_rate: 6,
+                            },
+                        );
+                    }
+                    "CAP" => {
+                        unit_record.cap.as_mut().unwrap().insert(
+                            u.name.to_owned(),
+                            CAPLoadout {
+                                day: true,
+                                night: true,
+                                adverse_weather: true,
+                                range: 2000000.,
+                                capability: 1.,
+                                firepower: 1.,
+                                v_cruise: 225.,
+                                v_attack: 246.,
+                                h_cruise: 6096.,
+                                h_attack: 6096.,
+                                t_station: Some(1200.),
+                                ldsd: false,
+                                stores: u.payload.clone(),
                                 sortie_rate: 6,
                             },
                         );

@@ -14,6 +14,7 @@ function drawmap(div_id, markers) {
     iconSize: [32, 32],
     iconAnchor: [16, 16],
     popupAnchor: [0, -16],
+    tooltipAnchor: [16, 0],
   });
 
   var red_airfield_icon = L.icon({
@@ -21,9 +22,24 @@ function drawmap(div_id, markers) {
     iconSize: [32, 32],
     iconAnchor: [16, 16],
     popupAnchor: [0, -16],
+    tooltipAnchor: [16, 0],
   });
 
-  // var target_icon = L.icon
+  var red_target_icon = L.icon({
+    iconUrl: "/images/target_red.png",
+    iconSize: [32, 32],
+    iconAnchor: [16, 16],
+    popupAnchor: [0, -16],
+    tooltipAnchor: [16, 0],
+  });
+
+  var blue_target_icon = L.icon({
+    iconUrl: "/images/target_blue.png",
+    iconSize: [32, 32],
+    iconAnchor: [16, 16],
+    popupAnchor: [0, -16],
+    tooltipAnchor: [16, 0],
+  });
 
   markers.forEach((m) => {
     if (m.class == "FixedAirBase") {
@@ -34,7 +50,21 @@ function drawmap(div_id, markers) {
             : red_airfield_icon,
       })
         .addTo(airfield_group)
-        .bindPopup(m.name)
+        .bindTooltip(m.name)
+        .on("click", function (e) {
+          fetch("https://testprotocol.example/", {
+            method: "POST",
+            body: JSON.stringify(m),
+          });
+        });
+    }
+    if (m.class == "TargetStrike") {
+      L.marker([m.lat, m.lon], {
+        icon:
+          m.side.toLowerCase() == "blue" ? blue_target_icon : red_target_icon,
+      })
+        .addTo(airfield_group)
+        .bindTooltip(m.name)
         .on("click", function (e) {
           fetch("https://testprotocol.example/", {
             method: "POST",
@@ -48,10 +78,10 @@ function drawmap(div_id, markers) {
           [m.lat, m.lon],
           [m.lat2, m.lon2],
         ],
-        { color: "red" }
+        { color: m.side }
       )
         .addTo(target_group)
-        .bindPopup(m.name)
+        .bindTooltip(m.name)
         .on("click", function (e) {
           fetch("https://testprotocol.example/", {
             method: "POST",
@@ -69,7 +99,7 @@ function drawmap(div_id, markers) {
         { color: "blue" }
       )
         .addTo(target_group)
-        .bindPopup(m.name)
+        .bindTooltip(m.name)
         .on("click", function (e) {
           fetch("https://testprotocol.example/", {
             method: "POST",

@@ -51,7 +51,20 @@ fn app(cx: Scope) -> Element {
     let instance = atom_instance.read();
     let headers = Squadron::get_header();
     let squadrons = instance.as_ref().unwrap().oob_air.red.as_slice();
-    let squad = &squadrons[0];
+    let squad_orig = squadrons[0].clone();
+    let squad_copy = squadrons[0].clone();
+
+    let on_submit = move |ev: FormEvent| {
+        let mut instance_refmut = atom_instance.write();
+        let w_instance = instance_refmut.as_mut().unwrap();
+        let squad_to_change = w_instance
+            .oob_air
+            .red
+            .iter_mut()
+            .find(|s| s.name == squad_orig.name)
+            .unwrap();
+        squad_to_change.name = ev.values["Name"].to_owned();
+    };
 
     cx.render(rsx! {
         // TODO: replace this script inclusion
@@ -68,15 +81,15 @@ fn app(cx: Scope) -> Element {
                 div { class: "col-span-1 row-span-full min-h-0 bg-sky-100",
                     div {
                         form {
-                            onsubmit: move |ev| println!("Submitted {:?}", ev.values),
+                            onsubmit: on_submit,
                             oninput: move |ev| println!("Input {:?}", ev.values),
-                            input { r#type: "text", name: "Name", value: "{squad.name}" }
+                            input { r#type: "text", name: "Name", value: "{squad_copy.name}" }
                             button { r#type: "submit", value: "Submit", "Submit changes" }
                         }
                     }
                 }
                 div { class: "col-span-3 row-span-4 min-h-0 bg-slate-50 flex flex-col", rsx::map {} }
-                div { class: "col-span-3 row-span-2 pl-2 pr-2",
+                div { class: "col-span-3 row-span-2 pl-2 pr-2 overflow-clip",
                     EmptyDialog { visible: false, onclose: move |_| {}, div { "hello" } }
                     table { class: "bg-slate-50 border-collapse divide-y border-slate-400 w-full",
                         thead {

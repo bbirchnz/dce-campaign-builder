@@ -119,7 +119,7 @@ impl NewFromMission for Loadouts {
                         unit_record.strike.as_mut().unwrap().insert(
                             u.name.to_owned(),
                             StrikeLoadout {
-                                minscore: 1.0,
+                                minscore: 0.3,
                                 support: Support {
                                     escort: true,
                                     sead: true,
@@ -167,11 +167,11 @@ impl NewFromMission for Loadouts {
                             },
                         );
                     }
-                    "Antiship" => {
+                    "Anti-ship Strike" => {
                         unit_record.anti_ship.as_mut().unwrap().insert(
                             u.name.to_owned(),
                             StrikeLoadout {
-                                minscore: 1.0,
+                                minscore: 0.3,
                                 support: Support {
                                     escort: true,
                                     sead: true,

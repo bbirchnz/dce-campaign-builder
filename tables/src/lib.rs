@@ -1,5 +1,3 @@
-use std::fmt::Debug;
-
 use bevy_reflect::Struct;
 
 pub fn add(left: usize, right: usize) -> usize {
@@ -41,8 +39,7 @@ where
                     "Failed to get field {} as Vec<String>",
                     &header.field
                 ))
-                .join(", ")
-                .to_owned(),
+                .join(", "),
             FieldType::Debug => {
                 let v = self
                     .field(&header.field)

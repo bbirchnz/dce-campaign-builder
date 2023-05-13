@@ -26,7 +26,7 @@ pub fn projection_from_theatre(theatre: &str) -> Result<TransverseMercator, anyh
     match theatre {
         "PersianGulf" => Ok(PG),
         "Falklands" => Ok(SA),
-        _ => return Err(anyhow!("TransverseMercator not known for {}", theatre)),
+        _ => Err(anyhow!("TransverseMercator not known for {}", theatre)),
     }
 }
 

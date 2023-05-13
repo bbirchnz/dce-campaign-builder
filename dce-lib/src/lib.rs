@@ -49,20 +49,20 @@ impl DCEInstance {
         let airbases =
             DBAirbases::from_lua_file(format!("{}/db_airbases.lua", path), "db_airbases".into())?;
 
-        let mission = Mission::from_miz(format!("{}/base_mission.miz", path).into())?;
+        let mission = Mission::from_miz(format!("{}/base_mission.miz", path))?;
 
         let target_list = TargetList::from_lua_file(
-            format!("{}/targetlist_init.lua", path).into(),
+            format!("{}/targetlist_init.lua", path),
             "targetlist".into(),
         )?;
 
         let triggers = Triggers::from_lua_file(
-            format!("{}/camp_triggers_init.lua", path).into(),
+            format!("{}/camp_triggers_init.lua", path),
             "camp_triggers".into(),
         )?;
 
         let conf_mod = ConfMod::from_lua_file(
-            format!("{}/conf_mod.lua", path).into(),
+            format!("{}/conf_mod.lua", path),
             "mission_ini".into(),
         )?;
 
@@ -114,8 +114,7 @@ impl DCEInstance {
 
         vec!["Init", "Active", "Debug", "Images", "Debriefing", "Sounds"]
             .iter()
-            .map(|d| fs::create_dir_all(camp_path.join(d)))
-            .collect::<Result<_, _>>()?;
+            .try_for_each(|d| fs::create_dir_all(camp_path.join(d)))?;
 
         let init_path = camp_path.join("Init");
 

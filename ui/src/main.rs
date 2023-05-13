@@ -1,5 +1,5 @@
 use dce_lib::{mappable::MapPoint, oob_air::Squadron, DCEInstance};
-use dioxus::{html::table, prelude::*};
+use dioxus::{prelude::*};
 use dioxus_desktop::{use_window, wry::http::Response, Config};
 use fermi::{use_atom_ref, use_init_atom_root, AtomRef};
 use log::{info, warn};

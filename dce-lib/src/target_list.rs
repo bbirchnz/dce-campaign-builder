@@ -137,7 +137,7 @@ impl Mappables for TargetList {
             })
             .collect::<Vec<_>>();
 
-        return results;
+        results
     }
 }
 
@@ -152,7 +152,7 @@ impl NewFromMission for TargetList {
         let mut red_targets: HashMap<String, Target> = HashMap::default();
 
         mission.triggers.zones.iter().for_each(|z| {
-            let name_splits = z.name.split("_").collect::<Vec<_>>();
+            let name_splits = z.name.split('_').collect::<Vec<_>>();
             if name_splits.len() < 2 {
                 warn!("Expect zone names to be of form <SIDE>_<TYPE>");
             }
@@ -217,7 +217,7 @@ impl NewFromMission for TargetList {
             .filter_map(|(c, side)| c.vehicle.as_ref().zip(Some(side)))
             .flat_map(|(vgd, side)| vgd.groups.as_slice().iter().zip(repeat(side)))
             .for_each(|(vg, side)| {
-                let name_splits = vg.name.split("_").collect::<Vec<_>>();
+                let name_splits = vg.name.split('_').collect::<Vec<_>>();
                 if name_splits.len() < 2 {
                     return warn!("Expect zone names to be of form <SIDE>_<TYPE>");
                 }

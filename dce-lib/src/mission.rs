@@ -253,12 +253,10 @@ impl Mission {
             .iter()
             .chain(self.coalition.red.countries.iter())
             .filter_map(|c| c.vehicle.as_ref())
-            .map(|i| i.groups.as_slice())
-            .map(|i| i.as_ref())
-            .flat_map(|f| f)
+            .flat_map(|i| i.groups.as_slice())
             .collect::<Vec<_>>();
 
-        return result;
+        result
     }
 
     pub fn get_ship_groups(&self) -> Vec<&ShipGroup> {
@@ -269,20 +267,17 @@ impl Mission {
             .iter()
             .chain(self.coalition.red.countries.iter())
             .filter_map(|c| c.ship.as_ref())
-            .map(|i| i.groups.as_slice())
-            .map(|i| i.as_ref())
-            .flat_map(|f| f)
+            .flat_map(|i| i.groups.as_slice())
             .collect::<Vec<_>>();
 
-        return result;
+        result
     }
 
     pub fn get_zone_by_name(&self, name: &String) -> Result<&TriggerZone, anyhow::Error> {
         self.triggers
             .zones
             .iter()
-            .filter(|z| &z.name == name)
-            .next()
+            .find(|z| &z.name == name)
             .ok_or(anyhow!("Can't find a refpoint/zone with name {}", name))
     }
 }

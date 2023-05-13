@@ -62,7 +62,7 @@ impl Mappables for DBAirbases {
                 )),
                 AirBase::Ship(_) => {
                     let groups = instance.mission.get_vehicle_groups();
-                    let group = groups.iter().filter(|g| &g.name == name).next();
+                    let group = groups.iter().find(|g| &g.name == name);
                     if let Some(ship_group) = group {
                         return Some(MapPoint::new_from_dcs(
                             ship_group.x,
@@ -241,8 +241,8 @@ impl NewFromMission for DBAirbases {
         let dcs_airbases = dcs_airbases_for_theatre(&mission.theatre)?;
 
         let mut fixed = dcs_airbases
-            .iter()
-            .map(|(_, dcs_ab)| {
+            .values()
+            .map(|dcs_ab| {
                 (
                     dcs_ab.frequencies.name.to_owned(),
                     AirBase::Fixed(FixedAirBase {
@@ -283,7 +283,7 @@ impl NewFromMission for DBAirbases {
             .flat_map(|i| i.groups.as_slice())
             .flat_map(|i| i.units.as_slice())
             .filter_map(|s| {
-                let parts = s.name.split("_").collect::<Vec<_>>();
+                let parts = s.name.split('_').collect::<Vec<_>>();
                 if parts.len() < 2 || parts[0] != "CV" {
                     return None;
                 }
@@ -301,7 +301,7 @@ impl NewFromMission for DBAirbases {
             .collect::<HashMap<_, _>>();
 
         let air_starts = mission.triggers.zones.iter().filter_map(|z| {
-            let parts = z.name.split("_").collect::<Vec<_>>();
+            let parts = z.name.split('_').collect::<Vec<_>>();
             if parts.len() < 3 || parts[1] != "AIRSTART" {
                 return None;
             }

@@ -73,10 +73,11 @@ impl OobAir {
 impl NewFromMission for OobAir {
     fn new_from_mission(mission: &Mission) -> Result<Self, anyhow::Error> {
         // get first airbase for each side:
-        let airbases = DBAirbases::new_from_mission(&mission)?;
+        let airbases = DBAirbases::new_from_mission(mission)?;
+        
         let blue_airbases = airbases
             .iter()
-            .filter(|(_, ab)| ab.get_side() == "blue".to_string())
+            .filter(|(_, ab)| ab.get_side() == *"blue")
             .map(|(a, _)| a)
             .collect::<Vec<&String>>();
         let first_blue_name = blue_airbases
@@ -85,7 +86,7 @@ impl NewFromMission for OobAir {
 
         let red_airbases = airbases
             .iter()
-            .filter(|(_, ab)| ab.get_side() == "red".to_string())
+            .filter(|(_, ab)| ab.get_side() == *"red")
             .map(|(a, _)| a)
             .collect::<Vec<&String>>();
         let first_red_name = red_airbases
@@ -127,7 +128,7 @@ fn side_to_squadrons(countries: &[Country], base: String) -> Vec<Squadron> {
                     .map(|u| {
                         (
                             u.name
-                                .split("_")
+                                .split('_')
                                 .map(|s| s.to_owned())
                                 .collect::<Vec<String>>()[1]
                                 .to_owned(),
@@ -141,7 +142,7 @@ fn side_to_squadrons(countries: &[Country], base: String) -> Vec<Squadron> {
                         .map(|u| {
                             (
                                 u.name
-                                    .split("_")
+                                    .split('_')
                                     .map(|s| s.to_owned())
                                     .collect::<Vec<String>>()[1]
                                     .to_owned(),

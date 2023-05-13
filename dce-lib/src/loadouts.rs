@@ -10,6 +10,8 @@ pub type Loadouts = HashMap<String, AirframeLoadout>;
 pub struct AirframeLoadout {
     #[serde(rename = "Strike")]
     pub strike: Option<HashMap<String, StrikeLoadout>>,
+    #[serde(rename = "Anti-ship Strike")]
+    pub anti_ship: Option<HashMap<String, StrikeLoadout>>,
     #[serde(rename = "CAP")]
     pub cap: Option<HashMap<String, CAPLoadout>>,
 }
@@ -110,13 +112,14 @@ impl NewFromMission for Loadouts {
                     .or_insert(AirframeLoadout {
                         strike: Some(HashMap::default()),
                         cap: Some(HashMap::default()),
+                        anti_ship: Some(HashMap::default()),
                     });
                 match name_parts[1] {
                     "Strike" => {
                         unit_record.strike.as_mut().unwrap().insert(
                             u.name.to_owned(),
                             StrikeLoadout {
-                                minscore: 0.3,
+                                minscore: 1.0,
                                 support: Support {
                                     escort: true,
                                     sead: true,
@@ -164,6 +167,37 @@ impl NewFromMission for Loadouts {
                             },
                         );
                     }
+                    "Antiship" => {
+                        unit_record.anti_ship.as_mut().unwrap().insert(
+                            u.name.to_owned(),
+                            StrikeLoadout {
+                                minscore: 1.0,
+                                support: Support {
+                                    escort: true,
+                                    sead: true,
+                                    escort_jammer: false,
+                                },
+                                weapon_type: "Bombs".into(),
+                                expend: "All".into(),
+                                day: true,
+                                night: true,
+                                adverse_weather: true,
+                                range: 500000.,
+                                capability: 1.,
+                                firepower: 1.,
+                                v_cruise: 225.,
+                                v_attack: 277.5,
+                                h_cruise: 7000.,
+                                h_attack: 6706.,
+                                standoff: None,
+                                t_station: None,
+                                ldsd: false,
+                                stores: u.payload.clone(),
+                                self_escort: false,
+                                sortie_rate: 6,
+                            },
+                        );
+                    }
                     _ => {}
                 }
             });
@@ -177,20 +211,6 @@ mod tests {
     use crate::{mission::Mission, serde_utils::LuaFileBased, NewFromMission};
 
     use super::Loadouts;
-
-    // #[test]
-    // fn load_example() {
-    //     let result = Loadouts::from_lua_file("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\War over Tchad 1987-Blue-Mirage-F1EE-3-30 Lorraine\\Init\\db_airbases.lua".into(), "db_airbases".into());
-
-    //     result.unwrap();
-    // }
-
-    // #[test]
-    // fn save_example() {
-    //     let loadouts = Loadouts::from_lua_file("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\War over Tchad 1987-Blue-Mirage-F1EE-3-30 Lorraine\\Init\\db_airbases.lua".into(), "db_airbases".into()).unwrap();
-    //     loadouts.to_lua_file("db_airbases.lua".into(), "db_airbases".into())
-    //         .unwrap();
-    // }
 
     #[test]
     fn from_miz() {

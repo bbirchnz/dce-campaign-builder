@@ -48,7 +48,7 @@ impl CMPFile {
                     name: "Stage 2".into(),
                     missions: vec![Mission {
                         interval: vec![0, 100],
-                        file: name.to_string() + "_ongoing.miz",
+                        file: name + "_ongoing.miz",
                         description: "".into(),
                     }],
                 },

@@ -7,8 +7,6 @@ use fermi::use_atom_ref;
 use log::info;
 use rand::Rng;
 
-use serde_json;
-
 use crate::INSTANCE;
 
 pub fn map(cx: Scope) -> Element {

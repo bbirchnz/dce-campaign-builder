@@ -1,13 +1,12 @@
-use dce_lib::{
-    mappable::MapPoint, DCEInstance,
-};
-use dioxus::prelude::*;
+use dce_lib::{mappable::MapPoint, oob_air::Squadron, DCEInstance};
+use dioxus::{html::table, prelude::*};
 use dioxus_desktop::{use_window, wry::http::Response, Config};
 use fermi::{use_atom_ref, use_init_atom_root, AtomRef};
 use log::{info, warn};
 use simple_logger::SimpleLogger;
+use tables::Table;
 
-use crate::rsx::menu_bar;
+use crate::rsx::{menu_bar, EmptyDialog};
 
 mod rsx;
 
@@ -49,26 +48,57 @@ fn app(cx: Scope) -> Element {
         let instance = DCEInstance::new_from_miz("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\Falklands v1\\Init\\base_mission.miz".into()).unwrap();
         _ = atom_instance.write().insert(instance);
     }
+    let instance = atom_instance.read();
+    let headers = Squadron::get_header();
+    let squadrons = instance.as_ref().unwrap().oob_air.red.as_slice();
+    let squad = &squadrons[0];
 
     cx.render(rsx! {
         // TODO: replace this script inclusion
         script { include_str!("./js/tailwind_3.3.1.js") }
         script { include_str!("./js/leaflet.js") }
+        script { include_str!("./js/leaflet-corridor.js") }
         script { include_str!("./js/leaflet_utils.js") }
         style { include_str!("./css/base.css") }
-        link {
-            rel: "stylesheet",
-            href: "https://unpkg.com/leaflet@1.9.3/dist/leaflet.css",
-            integrity: "sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=",
-            crossorigin: ""
-        }
         style { include_str!("./css/leaflet.css") }
+
         div { class: "h-full select-none",
             menu_bar { title: "DCE" }
-            div { class: "top-8 grid grid-cols-4 absolute inset-0 bg-red-100",
-                div { class: "col-span-1 min-h-0 bg-sky-100", div {
+            div { class: "top-8 grid grid-cols-4 grid-rows-6 absolute inset-0 bg-slate-50",
+                div { class: "col-span-1 row-span-full min-h-0 bg-sky-100", div {
+                    form {
+                        onsubmit: move |ev| println!("Submitted {:?}", ev.values),
+                        oninput: move |ev| println!("Input {:?}", ev.values),
+                        input { r#type: "text", name: "Name", value: "{squad.name}"}
+                        button { r#type: "submit", value: "Submit", "Submit changes" }
+                    }
                 } }
-                div { class: "col-span-3 min-h-0 bg-slate-50 flex flex-col", rsx::map { } }
+                div { class: "col-span-3 row-span-4 min-h-0 bg-slate-50 flex flex-col", rsx::map {} }
+                div { class: "col-span-3 row-span-2 pl-2 pr-2",
+                    EmptyDialog {
+                        visible: false,
+                        onclose: move |_| {},
+                        div { "hello"}
+                    }
+                    table { class: "bg-slate-50 border-collapse divide-y border-slate-400 w-full",
+                        thead {
+                            tr { class: "divide-x",
+                                for h in headers.iter() {
+                                    th { class: "p-1 border-slate-300", "{h.display}" }
+                                }
+                            }
+                        }
+                        tbody {
+                            for squad in squadrons.iter() {
+                                tr { class: "divide-x hover:bg-slate-200",
+                                    for h in headers.iter() {
+                                        td { class: "p-1 border-slate-300", "{squad.get_field(h)}" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     })

@@ -63,7 +63,7 @@ function drawmap(div_id, markers) {
         icon:
           m.side.toLowerCase() == "blue" ? blue_target_icon : red_target_icon,
       })
-        .addTo(airfield_group)
+        .addTo(target_group)
         .bindTooltip(m.name)
         .on("click", function (e) {
           fetch("https://testprotocol.example/", {
@@ -73,12 +73,16 @@ function drawmap(div_id, markers) {
         });
     }
     if (m.class == "TargetCAP") {
-      L.polyline(
+      L.corridor(
         [
           [m.lat, m.lon],
           [m.lat2, m.lon2],
         ],
-        { color: m.side }
+        {
+          color: m.side == "blue" ? "#0066ff44" : "#ff330044",
+          corridor: m.radius, // meters
+          className: "route-corridor",
+        }
       )
         .addTo(target_group)
         .bindTooltip(m.name)

@@ -112,6 +112,28 @@ impl Mappables for TargetList {
                     }
                     None
                 }
+                Target::AntiShipStrike(strike) => {
+                    if strike.class == "ship" && strike.class_template.is_some() {
+                        let all_groups = instance.mission.get_ship_groups();
+
+                        let groups = all_groups
+                            .iter()
+                            .filter(|g| &g.name == strike.class_template.as_ref().unwrap())
+                            .collect::<Vec<_>>();
+
+                        if groups.len() == 1 {
+                            return Some(MapPoint::new_from_dcs(
+                                groups[0].x,
+                                groups[0].y,
+                                strike.text.to_owned(),
+                                side.into(),
+                                "TargetAntiShipStrike".into(),
+                                &instance.projection,
+                            ));
+                        }
+                    }
+                    None
+                }
             })
             .collect::<Vec<_>>();
 
@@ -184,12 +206,14 @@ impl NewFromMission for TargetList {
             }
         });
 
+        // add vehicle groups
         mission
             .coalition
             .red
             .countries
             .iter()
             .zip(repeat("red"))
+            .chain(mission.coalition.blue.countries.iter().zip(repeat("blue")))
             .filter_map(|(c, side)| c.vehicle.as_ref().zip(Some(side)))
             .flat_map(|(vgd, side)| vgd.groups.as_slice().iter().zip(repeat(side)))
             .for_each(|(vg, side)| {
@@ -221,6 +245,36 @@ impl NewFromMission for TargetList {
                 }
             });
 
+        // add ship groups:
+        mission
+            .coalition
+            .red
+            .countries
+            .iter()
+            .zip(repeat("red"))
+            .chain(mission.coalition.blue.countries.iter().zip(repeat("blue")))
+            .filter_map(|(c, side)| c.ship.as_ref().zip(Some(side)))
+            .flat_map(|(sgd, side)| sgd.groups.as_slice().iter().zip(repeat(side)))
+            .for_each(|(sg, side)| {
+                let targets = match side {
+                    "red" => &mut blue_targets,
+                    _ => &mut red_targets,
+                };
+
+                targets.insert(
+                    sg.name.to_owned(),
+                    Target::AntiShipStrike(Strike {
+                        priority: 2,
+                        text: sg.name.to_owned(),
+                        inactive: false,
+                        firepower: TargetFirepower { min: 2, max: 4 },
+                        class: "ship".to_owned(),
+                        class_template: Some(sg.name.to_owned()),
+                        elements: None,
+                    }),
+                );
+            });
+
         Ok(TargetList {
             blue: blue_targets,
             red: red_targets,
@@ -237,6 +291,8 @@ pub enum Target {
     #[serde(rename = "Fighter Sweep")]
     FighterSweep(FighterSweep),
     Strike(Strike),
+    #[serde(rename = "Anti-ship Strike")]
+    AntiShipStrike(Strike),
 }
 
 impl Validate for Target {
@@ -247,6 +303,7 @@ impl Validate for Target {
             Target::Intercept(i) => i.validate(),
             Target::FighterSweep(i) => i.validate(),
             Target::Strike(i) => i.validate(),
+            Target::AntiShipStrike(i) => i.validate(),
         }
     }
 }

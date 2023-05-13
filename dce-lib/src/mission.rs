@@ -261,6 +261,22 @@ impl Mission {
         return result;
     }
 
+    pub fn get_ship_groups(&self) -> Vec<&ShipGroup> {
+        let result = self
+            .coalition
+            .blue
+            .countries
+            .iter()
+            .chain(self.coalition.red.countries.iter())
+            .filter_map(|c| c.ship.as_ref())
+            .map(|i| i.groups.as_slice())
+            .map(|i| i.as_ref())
+            .flat_map(|f| f)
+            .collect::<Vec<_>>();
+
+        return result;
+    }
+
     pub fn get_zone_by_name(&self, name: &String) -> Result<&TriggerZone, anyhow::Error> {
         self.triggers
             .zones
@@ -301,7 +317,7 @@ mod tests {
     }
 
     #[test]
-    
+
     fn save_sa_example() {
         let loaded = Mission::from_miz("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\Falklands v1\\Init\\base_mission.miz".into()).unwrap();
         loaded

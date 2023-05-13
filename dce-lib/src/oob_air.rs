@@ -1,6 +1,9 @@
 use anyhow::anyhow;
+
+use bevy_reflect::{FromReflect, Reflect};
 use serde::{Deserialize, Serialize};
 use std::{collections::HashMap, iter::repeat};
+use tables::{FieldType, HeaderField};
 
 use crate::{
     db_airbases::DBAirbases,
@@ -9,43 +12,44 @@ use crate::{
     NewFromMission,
 };
 
-#[derive(Deserialize, Serialize, Debug, PartialEq)]
+#[derive(Deserialize, Serialize, Debug, PartialEq, Reflect, FromReflect)]
 pub struct OobAir {
-    blue: Vec<Squadron>,
-    red: Vec<Squadron>,
+    pub blue: Vec<Squadron>,
+    pub red: Vec<Squadron>,
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Reflect, FromReflect, Clone)]
 #[serde(untagged)]
 
-enum LiveryEnum {
+pub enum LiveryEnum {
     One(String),
     Many(Vec<String>),
 }
 
-#[derive(Deserialize, Serialize, Debug, PartialEq)]
+#[derive(Deserialize, Serialize, Debug, PartialEq, Reflect, FromReflect, Clone)]
+#[reflect(Debug)]
 pub struct Squadron {
-    name: String,
+    pub name: String,
 
     #[serde(default)]
-    inactive: bool,
+    pub inactive: bool,
     #[serde(default)]
-    player: bool,
+    pub player: bool,
 
     #[serde(rename = "type")]
-    _type: String,
-    country: String,
+    pub _type: String,
+    pub country: String,
 
-    livery: LiveryEnum,
+    pub livery: LiveryEnum,
 
-    base: String,
-    skill: String,
-    tasks: HashMap<String, bool>,
+    pub base: String,
+    pub skill: String,
+    pub tasks: HashMap<String, bool>,
 
     #[serde(rename = "tasksCoef")]
-    tasks_coef: Option<HashMap<String, f32>>,
-    number: u16,
-    reserve: u16,
+    pub tasks_coef: Option<HashMap<String, f32>>,
+    pub number: u32,
+    pub reserve: u32,
 }
 
 impl LuaFileBased<'_> for OobAir {}
@@ -153,11 +157,74 @@ fn side_to_squadrons(countries: &[Country], base: String) -> Vec<Squadron> {
         .collect::<Vec<_>>()
 }
 
+impl tables::Table for Squadron {
+    fn get_header() -> Vec<tables::HeaderField> {
+        vec![
+            HeaderField {
+                display: "Name".into(),
+                field: "name".into(),
+                type_: FieldType::String,
+            },
+            HeaderField {
+                display: "Country".into(),
+                field: "country".into(),
+                type_: FieldType::String,
+            },
+            HeaderField {
+                display: "Airframe".into(),
+                field: "_type".into(),
+                type_: FieldType::String,
+            },
+            HeaderField {
+                display: "Number".into(),
+                field: "number".into(),
+                type_: FieldType::Int,
+            },
+            HeaderField {
+                display: "Reserve".into(),
+                field: "reserve".into(),
+                type_: FieldType::Int,
+            },
+            HeaderField {
+                display: "Tasks".into(),
+                field: "tasks".into(),
+                type_: FieldType::Debug,
+            },
+            HeaderField {
+                display: "Base".into(),
+                field: "base".into(),
+                type_: FieldType::String,
+            },
+        ]
+    }
+}
+
 #[cfg(test)]
 mod tests {
+
+    use bevy_reflect::Struct;
+
     use crate::{mission::Mission, serde_utils::LuaFileBased, NewFromMission};
 
     use super::OobAir;
+
+    #[test]
+    fn introspection() {
+        let oob =  OobAir::from_lua_file("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\War over Tchad 1987-Blue-Mirage-F1EE-3-30 Lorraine\\Init\\oob_air_init.lua".into(), "oob_air".into()).unwrap();
+
+        for (i, value) in oob.iter_fields().enumerate() {
+            let field_name = oob.name_at(i).unwrap();
+            if let Some(value) = value.downcast_ref::<u32>() {
+                println!("{} is a u32 with the value: {}", field_name, *value);
+            }
+
+            println!(
+                "{} is type {}",
+                field_name,
+                value.get_type_info().type_name()
+            );
+        }
+    }
 
     #[test]
     fn load_example() {

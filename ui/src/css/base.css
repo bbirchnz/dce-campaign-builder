@@ -14,3 +14,7 @@ body {
 .icon {
     font-family: Segoe MDL2 Assets;
 }
+
+.z_dialog {
+    z-index: 10000;
+}

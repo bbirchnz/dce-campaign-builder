@@ -1,5 +1,5 @@
 use dce_lib::{mappable::MapPoint, oob_air::Squadron, DCEInstance};
-use dioxus::{prelude::*};
+use dioxus::prelude::*;
 use dioxus_desktop::{use_window, wry::http::Response, Config};
 use fermi::{use_atom_ref, use_init_atom_root, AtomRef};
 use log::{info, warn};
@@ -65,21 +65,19 @@ fn app(cx: Scope) -> Element {
         div { class: "h-full select-none",
             menu_bar { title: "DCE" }
             div { class: "top-8 grid grid-cols-4 grid-rows-6 absolute inset-0 bg-slate-50",
-                div { class: "col-span-1 row-span-full min-h-0 bg-sky-100", div {
-                    form {
-                        onsubmit: move |ev| println!("Submitted {:?}", ev.values),
-                        oninput: move |ev| println!("Input {:?}", ev.values),
-                        input { r#type: "text", name: "Name", value: "{squad.name}"}
-                        button { r#type: "submit", value: "Submit", "Submit changes" }
+                div { class: "col-span-1 row-span-full min-h-0 bg-sky-100",
+                    div {
+                        form {
+                            onsubmit: move |ev| println!("Submitted {:?}", ev.values),
+                            oninput: move |ev| println!("Input {:?}", ev.values),
+                            input { r#type: "text", name: "Name", value: "{squad.name}" }
+                            button { r#type: "submit", value: "Submit", "Submit changes" }
+                        }
                     }
-                } }
+                }
                 div { class: "col-span-3 row-span-4 min-h-0 bg-slate-50 flex flex-col", rsx::map {} }
                 div { class: "col-span-3 row-span-2 pl-2 pr-2",
-                    EmptyDialog {
-                        visible: false,
-                        onclose: move |_| {},
-                        div { "hello"}
-                    }
+                    EmptyDialog { visible: false, onclose: move |_| {}, div { "hello" } }
                     table { class: "bg-slate-50 border-collapse divide-y border-slate-400 w-full",
                         thead {
                             tr { class: "divide-x",

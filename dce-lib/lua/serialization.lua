@@ -58,12 +58,12 @@ function TableSerialization(t, i)
 
     for k, v in pairs(t) do
         if type(k) == "string" then
-            text = text .. tab .. '["' .. k .. '"] = '
+            text = text .. tab .. '["' .. k:gsub("[']", "\\'") .. '"] = '
         else
             text = text .. tab .. "[" .. k .. "] = "
         end
         if type(v) == "string" then
-            text = text .. "'" .. v .. "',\n"
+            text = text .. "'" .. v:gsub("[']", "\\'") .. "',\n"
         elseif type(v) == "number" then
             text = text .. v .. ",\n"
         elseif type(v) == "table" then

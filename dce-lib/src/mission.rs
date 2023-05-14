@@ -234,7 +234,7 @@ pub struct StaticUnit {
 impl LuaFileBased<'_> for Mission {}
 
 impl Mission {
-    pub fn from_miz(miz_filename: String) -> Result<Mission, anyhow::Error> {
+    pub fn from_miz(miz_filename: &str) -> Result<Mission, anyhow::Error> {
         let zipfile = File::open(miz_filename)?;
         let mut archive = ZipArchive::new(zipfile)?;
 

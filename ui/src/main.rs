@@ -4,7 +4,7 @@ use dioxus_desktop::{use_window, wry::http::Response, Config};
 use fermi::{use_atom_ref, use_init_atom_root, AtomRef};
 use log::{info, warn};
 use simple_logger::SimpleLogger;
-use tables::Table;
+use tables::TableHeader;
 
 use crate::rsx::{menu_bar, EmptyDialog};
 
@@ -18,6 +18,7 @@ fn main() {
     dioxus_desktop::launch_cfg(
         app,
         Config::default().with_custom_protocol("testprotocol".into(), |req| {
+            // this handle callbacks of clicked objects in leaflet
             let obj =
                 serde_json::from_str::<MapPoint>(&String::from_utf8(req.body().to_vec()).unwrap());
             if let Ok(map_point) = obj {
@@ -43,14 +44,46 @@ fn app(cx: Scope) -> Element {
     w.set_decorations(false);
 
     let atom_instance = use_atom_ref(cx, INSTANCE);
-    if atom_instance.read().is_none() {
-        // let instance = DCEInstance::new("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\War over Tchad 1987-Blue-Mirage-F1EE-3-30 Lorraine\\Init".into()).unwrap();
-        let instance = DCEInstance::new_from_miz("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\Falklands v1\\Init\\base_mission.miz".into()).unwrap();
-        _ = atom_instance.write().insert(instance);
-    }
+
+    let instance_loaded = atom_instance.read().is_some();
+
+    cx.render(rsx! {
+        // TODO: replace this script inclusion
+        script { include_str!("./js/tailwind_3.3.1.js") }
+        script { include_str!("./js/leaflet.js") }
+        script { include_str!("./js/leaflet-corridor.js") }
+        script { include_str!("./js/leaflet_utils.js") }
+        style { include_str!("./css/base.css") }
+        style { include_str!("./css/leaflet.css") }
+
+        div { class: "h-full select-none",
+            menu_bar { title: "DCE" }
+            if instance_loaded {
+                rsx! {
+                    main_body {}
+                }
+            }
+            else {
+                rsx! {
+                    "Help"
+                }
+            }
+        }
+    })
+}
+
+fn main_body(cx: Scope) -> Element {
+    let atom_instance = use_atom_ref(cx, INSTANCE);
+
     let instance = atom_instance.read();
-    let headers = Squadron::get_header();
-    let squadrons = instance.as_ref().unwrap().oob_air.red.as_slice();
+    let squadrons = instance
+        .as_ref()
+        .unwrap()
+        .oob_air
+        .red
+        .iter()
+        .map(|i| i.clone())
+        .collect::<Vec<_>>();
     let squad_orig = squadrons[0].clone();
     let squad_copy = squadrons[0].clone();
 
@@ -67,49 +100,21 @@ fn app(cx: Scope) -> Element {
     };
 
     cx.render(rsx! {
-        // TODO: replace this script inclusion
-        script { include_str!("./js/tailwind_3.3.1.js") }
-        script { include_str!("./js/leaflet.js") }
-        script { include_str!("./js/leaflet-corridor.js") }
-        script { include_str!("./js/leaflet_utils.js") }
-        style { include_str!("./css/base.css") }
-        style { include_str!("./css/leaflet.css") }
-
-        div { class: "h-full select-none",
-            menu_bar { title: "DCE" }
-            div { class: "top-8 grid grid-cols-4 grid-rows-6 absolute inset-0 bg-slate-50",
-                div { class: "col-span-1 row-span-full min-h-0 bg-sky-100",
-                    div {
-                        form {
-                            onsubmit: on_submit,
-                            oninput: move |ev| println!("Input {:?}", ev.values),
-                            input { r#type: "text", name: "Name", value: "{squad_copy.name}" }
-                            button { r#type: "submit", value: "Submit", "Submit changes" }
-                        }
+        div { class: "top-8 grid grid-cols-4 grid-rows-6 absolute inset-0 bg-slate-50",
+            div { class: "col-span-1 row-span-full min-h-0 bg-sky-100",
+                div {
+                    form {
+                        onsubmit: on_submit,
+                        oninput: move |ev| println!("Input {:?}", ev.values),
+                        input { r#type: "text", name: "Name", value: "{squad_copy.name}" }
+                        button { r#type: "submit", value: "Submit", "Submit changes" }
                     }
                 }
-                div { class: "col-span-3 row-span-4 min-h-0 bg-slate-50 flex flex-col", rsx::map {} }
-                div { class: "col-span-3 row-span-2 pl-2 pr-2 overflow-clip",
-                    EmptyDialog { visible: false, onclose: move |_| {}, div { "hello" } }
-                    table { class: "bg-slate-50 border-collapse divide-y border-slate-400 w-full",
-                        thead {
-                            tr { class: "divide-x",
-                                for h in headers.iter() {
-                                    th { class: "p-1 border-slate-300", "{h.display}" }
-                                }
-                            }
-                        }
-                        tbody {
-                            for squad in squadrons.iter() {
-                                tr { class: "divide-x hover:bg-slate-200",
-                                    for h in headers.iter() {
-                                        td { class: "p-1 border-slate-300", "{squad.get_field(h)}" }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+            }
+            div { class: "col-span-3 row-span-4 min-h-0 bg-slate-50 flex flex-col", rsx::map {} }
+            div { class: "col-span-3 row-span-2 pl-2 pr-2 overflow-clip",
+                EmptyDialog { visible: false, onclose: move |_| {}, div { "hello" } }
+                rsx::table { headers: Squadron::get_header(), data: squadrons }
             }
         }
     })

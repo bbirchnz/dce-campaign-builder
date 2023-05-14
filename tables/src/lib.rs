@@ -4,12 +4,14 @@ pub fn add(left: usize, right: usize) -> usize {
     left + right
 }
 
+pub trait TableHeader {
+    fn get_header() -> Vec<HeaderField>;
+}
+
 pub trait Table
 where
-    Self: Struct + std::fmt::Debug,
+    Self: Struct + std::fmt::Debug + PartialEq,
 {
-    fn get_header() -> Vec<HeaderField>;
-
     fn get_field(&self, header: &HeaderField) -> String {
         match header.type_ {
             FieldType::String => self
@@ -41,21 +43,60 @@ where
                 ))
                 .join(", "),
             FieldType::Debug => {
-                let v = self
-                    .field(&header.field)
-                    .unwrap();
+                let v = self.field(&header.field).unwrap();
                 format!("{:?}", v)
             }
         }
     }
 }
 
+#[derive(PartialEq)]
 pub struct HeaderField {
     pub field: String,
     pub display: String,
     pub type_: FieldType,
 }
 
+impl HeaderField {
+    pub fn get_value_string(&self, item: &dyn Struct) -> String {
+        match self.type_ {
+            FieldType::String => item
+                .field(&self.field)
+                .unwrap()
+                .downcast_ref::<String>()
+                .unwrap()
+                .to_string(),
+            FieldType::Float => item
+                .field(&self.field)
+                .unwrap()
+                .downcast_ref::<f64>()
+                .unwrap()
+                .to_string(),
+            FieldType::Int => item
+                .field(&self.field)
+                .unwrap()
+                .downcast_ref::<u32>()
+                .expect(&format!("Failed to get field {} as u32", &self.field))
+                .to_string(),
+            FieldType::Enum => "".into(),
+            FieldType::VecString => item
+                .field(&self.field)
+                .unwrap()
+                .downcast_ref::<Vec<String>>()
+                .expect(&format!(
+                    "Failed to get field {} as Vec<String>",
+                    &self.field
+                ))
+                .join(", "),
+            FieldType::Debug => {
+                let v = item.field(&self.field).unwrap();
+                format!("{:?}", v)
+            }
+        }
+    }
+}
+
+#[derive(PartialEq)]
 pub enum FieldType {
     String,
     Float,

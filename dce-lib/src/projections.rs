@@ -1,6 +1,8 @@
 use anyhow::anyhow;
 use proj::Proj;
+use serde::{Serialize, Deserialize};
 
+#[derive(Deserialize, Serialize)]
 pub struct TransverseMercator {
     central_meridian: i16,
     false_easting: f64,

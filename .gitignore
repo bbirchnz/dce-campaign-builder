@@ -3,3 +3,4 @@
 **/*.lua
 !/dce-lib/lua/*.lua
 dce-lib/test_run/
+*.json

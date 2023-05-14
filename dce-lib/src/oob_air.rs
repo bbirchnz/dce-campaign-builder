@@ -158,7 +158,7 @@ fn side_to_squadrons(countries: &[Country], base: String) -> Vec<Squadron> {
         .collect::<Vec<_>>()
 }
 
-impl tables::Table for Squadron {
+impl tables::TableHeader for Squadron {
     fn get_header() -> Vec<tables::HeaderField> {
         vec![
             HeaderField {

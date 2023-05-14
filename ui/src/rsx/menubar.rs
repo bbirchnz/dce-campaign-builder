@@ -88,9 +88,8 @@ pub fn menu_bar(cx: Scope<MenuBarProps>) -> Element {
         match result {
             Ok(Some(path)) => {
                 if let Some(instance) = atom_instance.read().as_ref() {
-                    match instance.save_to_json(&path.to_string_lossy()) {
-                        Err(e) => warn!("Failed to save instance with error: {}", e),
-                        Ok(()) => {}
+                    if let Err(e) = instance.save_to_json(&path.to_string_lossy()) {
+                        warn!("Failed to save instance with error: {}", e)
                     }
                 }
             }
@@ -104,9 +103,8 @@ pub fn menu_bar(cx: Scope<MenuBarProps>) -> Element {
         match result {
             Ok(Some(path)) => {
                 if let Some(instance) = atom_instance.read().as_ref() {
-                    match instance.generate_lua(&path.to_string_lossy()) {
-                        Err(e) => warn!("Failed to export with error: {}", e),
-                        Ok(()) => {}
+                    if let Err(e) = instance.generate_lua(&path.to_string_lossy()) {
+                        warn!("Failed to export with error: {}", e)
                     }
                 }
             }

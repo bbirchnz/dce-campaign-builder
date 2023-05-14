@@ -76,14 +76,7 @@ fn main_body(cx: Scope) -> Element {
     let atom_instance = use_atom_ref(cx, INSTANCE);
 
     let instance = atom_instance.read();
-    let squadrons = instance
-        .as_ref()
-        .unwrap()
-        .oob_air
-        .red
-        .iter()
-        .map(|i| i.clone())
-        .collect::<Vec<_>>();
+    let squadrons = instance.as_ref().unwrap().oob_air.red.to_vec();
     let squad_orig = squadrons[0].clone();
     let squad_copy = squadrons[0].clone();
 

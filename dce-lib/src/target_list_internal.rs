@@ -9,6 +9,7 @@ use anyhow::anyhow;
 use bevy_reflect::{FromReflect, Reflect};
 use log::info;
 use serde::{Deserialize, Serialize};
+
 /// A much more convenient form where everythings in vecs appropriate to their type
 /// and has name and side all within one
 ///

@@ -1,15 +1,13 @@
 use std::{collections::HashMap, iter::repeat};
 
-use bevy_reflect::{Reflect, FromReflect};
+use bevy_reflect::{FromReflect, Reflect};
 use serde::{Deserialize, Serialize};
+use tables::{HeaderField, TableHeader};
 use validator::Validate;
 
-use crate::{
-    serde_utils::LuaFileBased,
-    NewFromMission,
-};
+use crate::{serde_utils::LuaFileBased, NewFromMission};
 
-use log::{warn};
+use log::warn;
 
 #[derive(Deserialize, Serialize, Debug, PartialEq, Validate)]
 pub struct TargetList {
@@ -55,7 +53,7 @@ impl NewFromMission for TargetList {
                             inactive: false,
                             firepower: TargetFirepower { min: 2, max: 2 },
                             _name: z.name.to_owned(),
-                            _side: "blue".into()
+                            _side: "blue".into(),
                         }),
                     );
                 }
@@ -78,7 +76,7 @@ impl NewFromMission for TargetList {
                             inactive: false,
                             firepower: TargetFirepower { min: 2, max: 2 },
                             _name: z.name.to_owned(),
-                            _side: "blue".into()
+                            _side: "blue".into(),
                         }),
                     );
                 }
@@ -121,7 +119,7 @@ impl NewFromMission for TargetList {
                                 class_template: Some(vg.name.to_owned()),
                                 elements: None,
                                 _name: vg.name.to_owned(),
-                                _side: "blue".into()
+                                _side: "blue".into(),
                             }),
                         );
                     }
@@ -156,7 +154,7 @@ impl NewFromMission for TargetList {
                         class_template: Some(sg.name.to_owned()),
                         elements: None,
                         _name: sg.name.to_owned(),
-                        _side: "blue".into()
+                        _side: "blue".into(),
                     }),
                 );
             });
@@ -321,6 +319,25 @@ pub struct StrikeNamedStaticTarget {
 
 fn default_class() -> String {
     "static".to_string()
+}
+
+impl TableHeader for Strike {
+    fn get_header() -> Vec<tables::HeaderField> {
+        vec![
+            HeaderField {
+                field: "_name".into(),
+                display: "Name".into(),
+                type_: tables::FieldType::String,
+                editable: true,
+            },
+            HeaderField {
+                field: "_side".into(),
+                display: "Side".into(),
+                type_: tables::FieldType::String,
+                editable: false,
+            },
+        ]
+    }
 }
 
 #[cfg(test)]

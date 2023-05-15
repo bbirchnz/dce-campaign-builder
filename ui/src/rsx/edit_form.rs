@@ -44,7 +44,7 @@ where
     T: Struct + ToSelectable + std::fmt::Debug + TableHeader,
 {
     let atom_instance = use_atom_ref(cx, INSTANCE);
-   
+
     let item = T::from_selectable(&cx.props.item).unwrap();
     let orig_name = item.get_name();
 
@@ -63,47 +63,44 @@ where
     };
 
     cx.render(rsx!{
-                div { class: "p-2 m-2 rounded bg-sky-200",
-                    h4 { class: "font-semibold flex",
-                        div { class: "flex-grow", "Edit Squadron" }
-                        div {
-                            class: "flex items-center font-thin rounded px-1 hover:bg-sky-300 hover:text-black icon",
-                            onclick: move |_| {
-                                let mut selected = use_atom_ref(cx, SELECTED).write();
-                                *selected = Selectable::None;
-                            },
-                            ""
-                        }
-                    }
-                    form {
-                        autocomplete: "off",
-                        onsubmit: on_submit,
-                        oninput: move |ev| println!("Input {:?}", ev.values),
-                        for h in T::get_header().iter().filter(|h| fieldtype_editable(&h.type_) && h.editable) {
-                            div { class: "flex w-full mt-1 mb-1",
-                                label { class: "flex-grow p-1", r#for: "{h.display}", "{h.display}" }
-                                input {
-                                    class: "rounded p-1",
-                                    autocomplete: "off",
-                                    r#type: "{fieldtype_to_input(&h.type_)}",
-                                    name: "{h.display}",
-                                    value: "{h.get_value_string(&item)}"
-                                }
-                            }
-                        }
-                        div { class: "flex",
-                            div { class: "flex-grow" }
-                            button {
-                                class: "rounded p-2 mt-1 mb-1 bg-sky-300 border-1",
-                                r#type: "submit",
-                                value: "Submit",
-                                "Submit changes"
-                            }
+        div { class: "p-2 m-2 rounded bg-sky-200",
+            h4 { class: "font-semibold flex",
+                div { class: "flex-grow", "{cx.props.title}" }
+                div {
+                    class: "flex items-center font-thin rounded px-1 hover:bg-sky-300 hover:text-black icon",
+                    onclick: move |_| {
+                        let mut selected = use_atom_ref(cx, SELECTED).write();
+                        *selected = Selectable::None;
+                    },
+                    ""
+                }
+            }
+            form {
+                autocomplete: "off",
+                onsubmit: on_submit,
+                oninput: move |ev| println!("Input {:?}", ev.values),
+                for h in T::get_header().iter().filter(|h| fieldtype_editable(&h.type_) && h.editable) {
+                    div { class: "flex w-full mt-1 mb-1",
+                        label { class: "flex-grow p-1", r#for: "{h.display}", "{h.display}" }
+                        input {
+                            class: "rounded p-1",
+                            autocomplete: "off",
+                            r#type: "{fieldtype_to_input(&h.type_)}",
+                            name: "{h.display}",
+                            value: "{h.get_value_string(&item)}"
                         }
                     }
                 }
-            })
-    // }
-    // _ => None,
-    // }
+                div { class: "flex",
+                    div { class: "flex-grow" }
+                    button {
+                        class: "rounded p-2 mt-1 mb-1 bg-sky-300 border-1",
+                        r#type: "submit",
+                        value: "Submit",
+                        "Submit changes"
+                    }
+                }
+            }
+        }
+    })
 }

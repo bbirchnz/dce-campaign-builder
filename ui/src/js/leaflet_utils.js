@@ -58,7 +58,7 @@ function drawmap(div_id, markers) {
           });
         });
     }
-    if (m.class == "TargetStrike") {
+    if (m.class == "TargetStrike" || m.class == "TargetAntiShipStrike") {
       L.marker([m.lat, m.lon], {
         icon:
           m.side.toLowerCase() == "blue" ? blue_target_icon : red_target_icon,
@@ -72,6 +72,9 @@ function drawmap(div_id, markers) {
           });
         });
     }
+
+    
+
     if (m.class == "TargetCAP") {
       L.corridor(
         [

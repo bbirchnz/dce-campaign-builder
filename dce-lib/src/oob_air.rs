@@ -165,36 +165,43 @@ impl tables::TableHeader for Squadron {
                 display: "Name".into(),
                 field: "name".into(),
                 type_: FieldType::String,
+                editable: true,
             },
             HeaderField {
                 display: "Country".into(),
                 field: "country".into(),
                 type_: FieldType::String,
+                editable: false,
             },
             HeaderField {
                 display: "Airframe".into(),
                 field: "_type".into(),
                 type_: FieldType::String,
+                editable: false,
             },
             HeaderField {
                 display: "Number".into(),
                 field: "number".into(),
                 type_: FieldType::Int,
+                editable: true
             },
             HeaderField {
                 display: "Reserve".into(),
                 field: "reserve".into(),
                 type_: FieldType::Int,
+                editable: true
             },
             HeaderField {
                 display: "Tasks".into(),
                 field: "tasks".into(),
                 type_: FieldType::Debug,
+                editable: false,
             },
             HeaderField {
                 display: "Base".into(),
                 field: "base".into(),
                 type_: FieldType::String,
+                editable: true
             },
         ]
     }

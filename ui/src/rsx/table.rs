@@ -28,12 +28,13 @@ where
             }
             tbody {
                 for squad in cx.props.data.iter() {
-                    tr { class: "divide-x hover:bg-slate-200",
-                        onclick: move|_| {
-                                let mut selected = use_atom_ref(cx, SELECTED).write();
-                                info!("Got row {:?}", squad);
-                                *selected = squad.to_selectable();
-                            },
+                    tr {
+                        class: "divide-x hover:bg-slate-200",
+                        onclick: move |_| {
+                            let mut selected = use_atom_ref(cx, SELECTED).write();
+                            info!("Got row {:?}", squad);
+                            *selected = squad.to_selectable();
+                        },
                         for h in cx.props.headers.iter() {
                             td { class: "p-1 border-slate-300", "{h.get_value_string(squad).to_owned()}" }
                         }

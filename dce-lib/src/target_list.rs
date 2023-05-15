@@ -1,144 +1,22 @@
 use std::{collections::HashMap, iter::repeat};
 
+use bevy_reflect::{Reflect, FromReflect};
 use serde::{Deserialize, Serialize};
 use validator::Validate;
 
 use crate::{
-    mappable::{MapPoint, Mappables},
-    projections::{convert_dcs_lat_lon, offset},
     serde_utils::LuaFileBased,
     NewFromMission,
 };
 
-use log::{info, warn};
+use log::{warn};
 
 #[derive(Deserialize, Serialize, Debug, PartialEq, Validate)]
 pub struct TargetList {
     #[validate]
-    blue: HashMap<String, Target>,
+    pub blue: HashMap<String, Target>,
     #[validate]
-    red: HashMap<String, Target>,
-}
-
-impl Mappables for TargetList {
-    fn to_mappables(&self, instance: &crate::DCEInstance) -> Vec<crate::mappable::MapPoint> {
-        let results = self
-            .blue
-            .iter()
-            .zip(repeat("blue"))
-            .chain(self.red.iter().zip(repeat("red")))
-            .filter_map(|((name, target), side)| match target {
-                Target::CAP(cap) => {
-                    let zone = instance.mission.get_zone_by_name(&cap.ref_point);
-                    match zone {
-                        Ok(zone) => {
-                            let (x2, y2) = offset(zone.x, zone.y, cap.axis, cap.radius);
-                            info!("{} {}, {} {}", zone.x, zone.y, x2, y2);
-                            let (lon2, lat2) = convert_dcs_lat_lon(x2, y2, &instance.projection);
-                            Some(
-                                MapPoint::new_from_dcs(
-                                    zone.x,
-                                    zone.y,
-                                    name.to_owned(),
-                                    side.into(),
-                                    "TargetCAP".into(),
-                                    &instance.projection,
-                                )
-                                .add_extras(HashMap::from([
-                                    ("radius".to_string(), cap.radius),
-                                    ("axis".to_string(), cap.axis),
-                                    ("lat2".to_string(), lat2),
-                                    ("lon2".to_string(), lon2),
-                                ])),
-                            )
-                        }
-                        Err(e) => {
-                            info!("{:?}", e);
-                            None
-                        }
-                    }
-                }
-                Target::Refueling(refuel) => {
-                    let zone = instance.mission.get_zone_by_name(&refuel.ref_point);
-                    match zone {
-                        Ok(zone) => {
-                            let (x2, y2) = offset(zone.x, zone.y, refuel.axis, refuel.radius);
-                            info!("{} {}, {} {}", zone.x, zone.y, x2, y2);
-                            let (lon2, lat2) = convert_dcs_lat_lon(x2, y2, &instance.projection);
-                            Some(
-                                MapPoint::new_from_dcs(
-                                    zone.x,
-                                    zone.y,
-                                    name.to_owned(),
-                                    side.into(),
-                                    "TargetRefuel".into(),
-                                    &instance.projection,
-                                )
-                                .add_extras(HashMap::from([
-                                    ("radius".to_string(), refuel.radius),
-                                    ("axis".to_string(), refuel.axis),
-                                    ("lat2".to_string(), lat2),
-                                    ("lon2".to_string(), lon2),
-                                ])),
-                            )
-                        }
-                        Err(e) => {
-                            info!("{:?}", e);
-                            None
-                        }
-                    }
-                }
-                Target::Intercept(_) => None,
-                Target::FighterSweep(_) => None,
-                Target::Strike(strike) => {
-                    if strike.class == "vehicle" && strike.class_template.is_some() {
-                        let all_groups = instance.mission.get_vehicle_groups();
-
-                        let groups = all_groups
-                            .iter()
-                            .filter(|g| &g.name == strike.class_template.as_ref().unwrap())
-                            .collect::<Vec<_>>();
-
-                        if groups.len() == 1 {
-                            return Some(MapPoint::new_from_dcs(
-                                groups[0].x,
-                                groups[0].y,
-                                strike.text.to_owned(),
-                                side.into(),
-                                "TargetStrike".into(),
-                                &instance.projection,
-                            ));
-                        }
-                    }
-                    None
-                }
-                Target::AntiShipStrike(strike) => {
-                    if strike.class == "ship" && strike.class_template.is_some() {
-                        let all_groups = instance.mission.get_ship_groups();
-
-                        let groups = all_groups
-                            .iter()
-                            .filter(|g| &g.name == strike.class_template.as_ref().unwrap())
-                            .collect::<Vec<_>>();
-
-                        if groups.len() == 1 {
-                            return Some(MapPoint::new_from_dcs(
-                                groups[0].x,
-                                groups[0].y,
-                                strike.text.to_owned(),
-                                side.into(),
-                                "TargetAntiShipStrike".into(),
-                                &instance.projection,
-                            ));
-                        }
-                    }
-                    None
-                }
-            })
-            .collect::<Vec<_>>();
-
-        results
-    }
+    pub red: HashMap<String, Target>,
 }
 
 impl LuaFileBased<'_> for TargetList {}
@@ -176,6 +54,8 @@ impl NewFromMission for TargetList {
                             text: z.name.to_owned(),
                             inactive: false,
                             firepower: TargetFirepower { min: 2, max: 2 },
+                            _name: z.name.to_owned(),
+                            _side: "blue".into()
                         }),
                     );
                 }
@@ -197,6 +77,8 @@ impl NewFromMission for TargetList {
                             text: z.name.to_owned(),
                             inactive: false,
                             firepower: TargetFirepower { min: 2, max: 2 },
+                            _name: z.name.to_owned(),
+                            _side: "blue".into()
                         }),
                     );
                 }
@@ -238,6 +120,8 @@ impl NewFromMission for TargetList {
                                 class: "vehicle".to_owned(),
                                 class_template: Some(vg.name.to_owned()),
                                 elements: None,
+                                _name: vg.name.to_owned(),
+                                _side: "blue".into()
                             }),
                         );
                     }
@@ -271,6 +155,8 @@ impl NewFromMission for TargetList {
                         class: "ship".to_owned(),
                         class_template: Some(sg.name.to_owned()),
                         elements: None,
+                        _name: sg.name.to_owned(),
+                        _side: "blue".into()
                     }),
                 );
             });
@@ -282,7 +168,7 @@ impl NewFromMission for TargetList {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(tag = "task")]
 pub enum Target {
     CAP(CAP),
@@ -308,7 +194,7 @@ impl Validate for Target {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Validate)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Validate, Clone, Reflect, FromReflect)]
 pub struct TargetFirepower {
     #[validate(range(min = 1, max = 20))]
     min: u32,
@@ -316,7 +202,7 @@ pub struct TargetFirepower {
     max: u32,
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Validate)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Validate, Clone, Reflect, FromReflect)]
 pub struct CAP {
     #[validate(range(min = 1, max = 50))]
     pub priority: u32,
@@ -330,11 +216,15 @@ pub struct CAP {
     pub inactive: bool,
     #[validate]
     pub firepower: TargetFirepower,
+    #[serde(default)]
+    pub _name: String,
+    #[serde(default)]
+    pub _side: String,
     // #[serde(default)]
     // pub attributes: Option<Vec<String>>,
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Validate)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Validate, Clone, Reflect, FromReflect)]
 pub struct Refueling {
     #[validate(range(min = 1, max = 50))]
     pub priority: u32,
@@ -349,9 +239,13 @@ pub struct Refueling {
     pub inactive: bool,
     #[validate]
     pub firepower: TargetFirepower,
+    #[serde(default)]
+    pub _name: String,
+    #[serde(default)]
+    pub _side: String,
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Validate)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Validate, Clone, Reflect, FromReflect)]
 pub struct Intercept {
     #[validate(range(min = 1, max = 50))]
     pub priority: u32,
@@ -362,9 +256,13 @@ pub struct Intercept {
     pub inactive: bool,
     #[validate]
     pub firepower: TargetFirepower,
+    #[serde(default)]
+    pub _name: String,
+    #[serde(default)]
+    pub _side: String,
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Validate)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Validate, Clone, Reflect, FromReflect)]
 pub struct FighterSweep {
     #[validate(range(min = 1, max = 50))]
     pub priority: u32,
@@ -375,9 +273,13 @@ pub struct FighterSweep {
     pub inactive: bool,
     #[validate]
     pub firepower: TargetFirepower,
+    #[serde(default)]
+    pub _name: String,
+    #[serde(default)]
+    pub _side: String,
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Validate)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Validate, Clone, Reflect, FromReflect)]
 pub struct Strike {
     #[validate(range(min = 1, max = 50))]
     pub priority: u32,
@@ -392,23 +294,27 @@ pub struct Strike {
     #[serde(rename = "name")]
     pub class_template: Option<String>,
     pub elements: Option<Vec<StrikeElement>>,
+    #[serde(default)]
+    pub _name: String,
+    #[serde(default)]
+    pub _side: String,
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
 #[serde(untagged)]
 pub enum StrikeElement {
     FixedCoord(StrikeFixedCoordTarget),
     NamedStatic(StrikeNamedStaticTarget),
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
 pub struct StrikeFixedCoordTarget {
     pub name: String,
     pub x: f64,
     pub y: f64,
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
 pub struct StrikeNamedStaticTarget {
     pub name: String,
 }

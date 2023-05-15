@@ -5,9 +5,9 @@ use fermi::{use_atom_ref, use_init_atom_root, AtomRef};
 use log::{info, warn};
 use selectable::Selectable;
 use simple_logger::SimpleLogger;
-use tables::{FieldType, TableHeader};
+use tables::{TableHeader};
 
-use crate::rsx::{menu_bar, EmptyDialog};
+use crate::rsx::{menu_bar, EmptyDialog, edit_form};
 
 mod rsx;
 mod selectable;
@@ -85,9 +85,9 @@ fn main_body(cx: Scope) -> Element {
     cx.render(rsx! {
         div { class: "top-8 grid grid-cols-4 grid-rows-6 absolute inset-0 bg-slate-50",
             div { class: "col-span-1 row-span-full min-h-0 bg-sky-100",
-                if let Selectable::Squadron(_) = *selected {
+                if let Selectable::Squadron(squad) = selected.clone() {
                     rsx!{
-                        edit_form {}
+                        edit_form::<Squadron> { headers: Squadron::get_header(), title: "Edit Squadron".into(), item: selected.clone()}
                     }
                 }
             }
@@ -98,83 +98,4 @@ fn main_body(cx: Scope) -> Element {
             }
         }
     })
-}
-
-fn fieldtype_to_input(field: &FieldType) -> String {
-    match field {
-        FieldType::String => "text".into(),
-        FieldType::Float => "number".into(),
-        FieldType::Int => "number".into(),
-        FieldType::Enum => "text".into(),
-        FieldType::VecString => "text".into(),
-        FieldType::Debug => "text".into(),
-    }
-}
-
-fn fieldtype_editable(field: &FieldType) -> bool {
-    match field {
-        FieldType::String => true,
-        FieldType::Float => true,
-        FieldType::Int => true,
-        FieldType::Enum => false,
-        FieldType::VecString => false,
-        FieldType::Debug => false,
-    }
-}
-
-pub fn edit_form(cx: Scope) -> Element {
-    let atom_instance = use_atom_ref(cx, INSTANCE);
-    let selected = use_atom_ref(cx, SELECTED).read();
-
-    match selected.clone() {
-        Selectable::Squadron(squad) => {
-            let orig_name = squad.name.to_owned();
-
-            let on_submit = move |ev: FormEvent| {
-                let mut instance_refmut = atom_instance.write();
-                let w_instance = instance_refmut.as_mut().unwrap();
-                let squad_to_change = w_instance
-                    .oob_air
-                    .red
-                    .iter_mut()
-                    .find(|s| s.name == orig_name)
-                    .unwrap();
-
-                let headers = Squadron::get_header();
-
-                for (k, v) in ev.values.iter() {
-                    // find header that matches key:
-                    let h = headers.iter().find(|h| h.display == *k).unwrap();
-                    if let Err(e) = h.set_value_fromstr(squad_to_change, v) {
-                        warn!("Failed to set field: {} with {}. Error: {}", h.field, v, e);
-                    }
-                }
-            };
-
-            cx.render(rsx!{
-                div {
-                    class: "p-2 m-2 rounded bg-sky-200",
-                    h4{ class: "font-semibold ", "Edit Squadron"}
-                    form {
-                        autocomplete: "off",
-                        onsubmit: on_submit,
-                        oninput: move |ev| println!("Input {:?}", ev.values),
-                        for h in Squadron::get_header().iter().filter(|h| fieldtype_editable(&h.type_)) {
-                            div {
-                                class: "flex w-full mt-1 mb-1",
-                                label {class: "flex-grow p-1", r#for: "{h.display}", "{h.display}" }
-                                input { class: "rounded p-1",autocomplete: "off", r#type: "{fieldtype_to_input(&h.type_)}", name: "{h.display}", value: "{h.get_value_string(&squad)}" }
-                            }
-                        }
-                        div {
-                            class: "flex",
-                            div { class: "flex-grow"}
-                            button { class: "rounded p-2 mt-1 mb-1 bg-sky-300 border-1", r#type: "submit", value: "Submit", "Submit changes" }
-                        }
-                    }
-                }
-            })
-        }
-        _ => None,
-    }
 }

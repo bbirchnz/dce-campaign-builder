@@ -56,6 +56,7 @@ pub struct HeaderField {
     pub field: String,
     pub display: String,
     pub type_: FieldType,
+    pub editable: bool,
 }
 
 impl HeaderField {

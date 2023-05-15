@@ -14,6 +14,7 @@ use projections::{projection_from_theatre, TransverseMercator};
 use serde::{Deserialize, Serialize};
 use serde_utils::LuaFileBased;
 use target_list::TargetList;
+use target_list_internal::TargetListInternal;
 use trigger::Triggers;
 
 pub mod campaign_header;
@@ -30,6 +31,7 @@ pub mod oob_air;
 pub mod projections;
 pub mod serde_utils;
 pub mod target_list;
+pub mod target_list_internal;
 pub mod trigger;
 
 #[derive(Deserialize, Serialize)]
@@ -37,7 +39,7 @@ pub struct DCEInstance {
     pub oob_air: OobAir,
     pub airbases: DBAirbases,
     pub mission: Mission,
-    pub target_list: TargetList,
+    pub target_list: TargetListInternal,
     pub triggers: Triggers,
     pub loadouts: Loadouts,
     pub projection: TransverseMercator,
@@ -55,10 +57,10 @@ impl DCEInstance {
 
         let mission = Mission::from_miz(&format!("{}/base_mission.miz", path))?;
 
-        let target_list = TargetList::from_lua_file(
+        let target_list = TargetListInternal::from_target_list(&TargetList::from_lua_file(
             format!("{}/targetlist_init.lua", path),
             "targetlist".into(),
-        )?;
+        )?);
 
         let triggers = Triggers::from_lua_file(
             format!("{}/camp_triggers_init.lua", path),
@@ -97,7 +99,9 @@ impl DCEInstance {
 
         Ok(DCEInstance {
             oob_air: OobAir::new_from_mission(&mission)?,
-            target_list: TargetList::new_from_mission(&mission)?,
+            target_list: TargetListInternal::from_target_list(&TargetList::new_from_mission(
+                &mission,
+            )?),
             projection: projection_from_theatre(&mission.theatre)?,
             base_path,
             campaign_header: Header::new_from_mission(&mission)?,
@@ -176,7 +180,7 @@ impl DCEInstance {
                 .to_string(),
             "oob_air".into(),
         )?;
-        self.target_list.to_lua_file(
+        self.target_list.to_target_list()?.to_lua_file(
             init_path
                 .join("targetlist_init.lua")
                 .to_string_lossy()

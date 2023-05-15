@@ -31,7 +31,7 @@ pub fn map(cx: Scope) -> Element {
     // draw with slight delay so its done after the canvas is ready
     use_effect(cx, div_id, move |_| delayed_js(w, code, 10));
 
-    cx.render(rsx! { div { id: "{div_id}", class: "flex-grow flex-shrink min-h-0 m-4" } })
+    cx.render(rsx! { div { id: "{div_id}", class: "flex-grow flex-shrink min-h-0 m-2 rounded" } })
 }
 
 async fn delayed_js(dcx: DesktopContext, code: String, duration_ms: u64) {

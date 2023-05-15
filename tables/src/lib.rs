@@ -1,3 +1,4 @@
+use anyhow::anyhow;
 use bevy_reflect::Struct;
 
 pub fn add(left: usize, right: usize) -> usize {
@@ -93,6 +94,34 @@ impl HeaderField {
                 format!("{:?}", v)
             }
         }
+    }
+
+    pub fn set_value_fromstr(
+        &self,
+        item: &mut dyn Struct,
+        value: &str,
+    ) -> Result<(), anyhow::Error> {
+        match self.type_ {
+            FieldType::String => {
+                item.field_mut(&self.field)
+                    .ok_or(anyhow!("Couldn't get field {}", &self.field))?
+                    .apply(&value.to_owned());
+            }
+            FieldType::Float => {
+                item.field_mut(&self.field)
+                    .ok_or(anyhow!("Couldn't get field {}", &self.field))?
+                    .apply(&value.parse::<f64>()?);
+            }
+            FieldType::Int => {
+                item.field_mut(&self.field)
+                    .ok_or(anyhow!("Couldn't get field {}", &self.field))?
+                    .apply(&value.parse::<u32>()?);
+            }
+            FieldType::Enum => todo!(),
+            FieldType::VecString => todo!(),
+            FieldType::Debug => todo!(),
+        };
+        Ok(())
     }
 }
 

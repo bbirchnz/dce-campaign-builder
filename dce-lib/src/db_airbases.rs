@@ -14,7 +14,7 @@ use anyhow::anyhow;
 
 pub type DBAirbases = HashMap<String, AirBase>;
 
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 #[serde(untagged)]
 pub enum AirBase {
     Fixed(FixedAirBase),
@@ -48,6 +48,15 @@ impl ValidateSelf for AirBase {
     }
 }
 
+pub fn get_by_name(airbases: &DBAirbases, name: &str) -> Option<AirBase> {
+    airbases.iter().find_map(|(k, v)| {
+        if k == name {
+            return Some(v.to_owned());
+        }
+        return None;
+    })
+}
+
 impl Mappables for DBAirbases {
     fn to_mappables(&self, instance: &DCEInstance) -> Vec<crate::mappable::MapPoint> {
         self.iter()
@@ -61,12 +70,15 @@ impl Mappables for DBAirbases {
                     &instance.projection,
                 )),
                 AirBase::Ship(_) => {
-                    let groups = instance.mission.get_vehicle_groups();
-                    let group = groups.iter().find(|g| &g.name == name);
-                    if let Some(ship_group) = group {
+                    let groups = instance.mission.get_ship_groups();
+                    let unit = groups
+                        .iter()
+                        .flat_map(|g| g.units.as_slice())
+                        .find(|s| s.name == *name);
+                    if let Some(unit) = unit {
                         return Some(MapPoint::new_from_dcs(
-                            ship_group.x,
-                            ship_group.y,
+                            unit.x,
+                            unit.y,
                             name.to_owned(),
                             "blue".to_owned(),
                             "ShipAirBase".to_owned(),
@@ -83,7 +95,7 @@ impl Mappables for DBAirbases {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 pub struct FixedAirBase {
     pub x: f64,
     pub y: f64,
@@ -116,22 +128,16 @@ impl ValidateSelf for FixedAirBase {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 pub struct ShipBase {
-    unitname: String,
-    startup: Option<f64>,
+    pub unitname: String,
+    pub startup: Option<f64>,
     #[serde(rename = "ATC_frequency")]
-    atc_frequency: Option<String>,
-    side: String,
+    pub atc_frequency: Option<String>,
+    pub side: String,
     #[serde(rename = "LimitedParkNb")]
-    limited_park_number: u16,
+    pub limited_park_number: u16,
 }
-
-// impl ShipBase {
-//     pub fn to_mappable(&self, mission: Mission) -> MapPoint {
-//         let miz_ship = mission.coalition
-//     }
-// }
 
 impl ValidateSelf for ShipBase {
     fn validate_self(&self) -> Result<(), anyhow::Error> {
@@ -142,7 +148,7 @@ impl ValidateSelf for ShipBase {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 pub struct FarpBase {
     x: f64,
     y: f64,
@@ -166,7 +172,7 @@ impl ValidateSelf for FarpBase {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 pub struct AirStartBase {
     #[serde(default)]
     inactive: bool,
@@ -201,7 +207,7 @@ impl ValidateSelf for AirStartBase {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 pub struct ReserveBase {
     inactive: bool,
     x: f64,

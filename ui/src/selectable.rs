@@ -36,6 +36,17 @@ impl Selectable {
                     .clone();
                 Selectable::TargetStrike(item)
             }
+            "Squadron" => {
+                let item = instance
+                    .oob_air
+                    .blue
+                    .iter()
+                    .chain(instance.oob_air.red.iter())
+                    .find(|c| c.name == map_point.name)
+                    .unwrap()
+                    .clone();
+                Selectable::Squadron(item)
+            }
             _ => Selectable::None,
         }
     }
@@ -63,6 +74,8 @@ impl ToSelectable for Squadron {
             .oob_air
             .red
             .iter_mut()
+            .chain(instance.oob_air.blue.iter_mut())
+            // .iter_mut()
             .find(|s| s.name == name)
             .unwrap()
     }

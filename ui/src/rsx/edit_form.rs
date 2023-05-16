@@ -44,11 +44,13 @@ where
     T: Struct + ToSelectable + std::fmt::Debug + TableHeader,
 {
     let atom_instance = use_atom_ref(cx, INSTANCE);
+    let atom_selectable = use_atom_ref(cx, SELECTED);
 
     let item = T::from_selectable(&cx.props.item).unwrap();
     let orig_name = item.get_name();
 
     let on_submit = move |ev: FormEvent| {
+        let mut selectable = atom_selectable.write();
         let mut instance_refmut = atom_instance.write();
         let w_instance = instance_refmut.as_mut().unwrap();
         let item_to_change = T::get_mut_by_name(w_instance, &orig_name);
@@ -60,6 +62,8 @@ where
                 warn!("Failed to set field: {} with {}. Error: {}", h.field, v, e);
             }
         }
+        // update selectable:
+        *selectable = item_to_change.to_selectable();
     };
 
     cx.render(rsx!{

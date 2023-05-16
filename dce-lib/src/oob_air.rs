@@ -6,7 +6,8 @@ use std::{collections::HashMap, iter::repeat};
 use tables::{FieldType, HeaderField};
 
 use crate::{
-    db_airbases::DBAirbases,
+    db_airbases::{get_by_name, DBAirbases},
+    mappable::{MapPoint, Mappables},
     mission::{Country, Mission},
     serde_utils::LuaFileBased,
     NewFromMission,
@@ -74,7 +75,7 @@ impl NewFromMission for OobAir {
     fn new_from_mission(mission: &Mission) -> Result<Self, anyhow::Error> {
         // get first airbase for each side:
         let airbases = DBAirbases::new_from_mission(mission)?;
-        
+
         let blue_airbases = airbases
             .iter()
             .filter(|(_, ab)| ab.get_side() == *"blue")
@@ -183,13 +184,13 @@ impl tables::TableHeader for Squadron {
                 display: "Number".into(),
                 field: "number".into(),
                 type_: FieldType::Int,
-                editable: true
+                editable: true,
             },
             HeaderField {
                 display: "Reserve".into(),
                 field: "reserve".into(),
                 type_: FieldType::Int,
-                editable: true
+                editable: true,
             },
             HeaderField {
                 display: "Tasks".into(),
@@ -201,9 +202,59 @@ impl tables::TableHeader for Squadron {
                 display: "Base".into(),
                 field: "base".into(),
                 type_: FieldType::String,
-                editable: true
+                editable: true,
             },
         ]
+    }
+}
+
+impl Mappables for OobAir {
+    fn to_mappables(&self, instance: &crate::DCEInstance) -> Vec<crate::mappable::MapPoint> {
+        instance
+            .oob_air
+            .blue
+            .iter()
+            .zip(repeat("blue"))
+            .chain(instance.oob_air.red.iter().zip(repeat("red")))
+            .filter_map(|(squad, side)| {
+                if let Some(base) = get_by_name(&instance.airbases, &squad.base) {
+                    let result = match base {
+                        crate::db_airbases::AirBase::Fixed(fixed) => Some(MapPoint::new_from_dcs(
+                            fixed.x,
+                            fixed.y,
+                            squad.name.to_owned(),
+                            side.into(),
+                            "Squadron".into(),
+                            &instance.projection,
+                        )),
+
+                        crate::db_airbases::AirBase::Ship(ship) => {
+                            let groups = instance.mission.get_ship_groups();
+                            let unit = groups
+                                .iter()
+                                .flat_map(|g| g.units.as_slice())
+                                .find(|s| s.name == ship.unitname);
+                            if let Some(unit) = unit {
+                                return Some(MapPoint::new_from_dcs(
+                                    unit.x,
+                                    unit.y,
+                                    squad.name.to_owned(),
+                                    side.to_owned(),
+                                    "Squadron".to_owned(),
+                                    &instance.projection,
+                                ));
+                            }
+                            None
+                        }
+                        crate::db_airbases::AirBase::Farp(_) => None,
+                        crate::db_airbases::AirBase::Reserve(_) => None,
+                        crate::db_airbases::AirBase::AirStart(_) => None,
+                    };
+                    return result;
+                }
+                None
+            })
+            .collect::<Vec<_>>()
     }
 }
 

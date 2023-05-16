@@ -16,8 +16,9 @@ pub fn map(cx: Scope) -> Element {
     let instance = atom.as_ref().unwrap();
     let mut airbases = instance.airbases.to_mappables(instance);
     let targets = instance.target_list.to_mappables(instance);
-
+    let squadrons = instance.oob_air.to_mappables(instance);
     airbases.extend(targets);
+    airbases.extend(squadrons);
 
     let code = format!(
         "data_{} = {}; drawmap('{}', data_{})",
@@ -29,7 +30,7 @@ pub fn map(cx: Scope) -> Element {
 
     let w = use_window(cx).clone();
     // draw with slight delay so its done after the canvas is ready
-    use_effect(cx, div_id, move |_| delayed_js(w, code, 10));
+    use_effect(cx, (div_id, &code.to_owned()), move |_| delayed_js(w, code, 10));
 
     cx.render(rsx! { div { id: "{div_id}", class: "flex-grow flex-shrink min-h-0 m-2 rounded" } })
 }

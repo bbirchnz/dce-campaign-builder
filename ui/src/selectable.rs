@@ -1,16 +1,41 @@
-use dce_lib::{mappable::MapPoint, oob_air::Squadron, target_list::Strike, DCEInstance};
+use dce_lib::{
+    mappable::MapPoint,
+    oob_air::Squadron,
+    target_list::{Strike, CAP},
+    DCEInstance,
+};
 
 #[derive(Clone, PartialEq)]
 pub enum Selectable {
     Squadron(Squadron),
     TargetStrike(Strike),
+    TargetCAP(CAP),
     None,
 }
 
 impl Selectable {
-    pub fn from_map(map_point: &MapPoint, instance: DCEInstance) -> Selectable {
+    pub fn from_map(map_point: &MapPoint, instance: &DCEInstance) -> Selectable {
         match map_point.class.as_str() {
-            "TargetCAP" => Selectable::None,
+            "TargetCAP" => {
+                let cap = instance
+                    .target_list
+                    .cap
+                    .iter()
+                    .find(|c| c._name == map_point.name)
+                    .unwrap()
+                    .clone();
+                Selectable::TargetCAP(cap)
+            }
+            "TargetStrike" => {
+                let item = instance
+                    .target_list
+                    .strike
+                    .iter()
+                    .find(|c| c._name == map_point.name)
+                    .unwrap()
+                    .clone();
+                Selectable::TargetStrike(item)
+            }
             _ => Selectable::None,
         }
     }
@@ -73,6 +98,35 @@ impl ToSelectable for Strike {
         Self: Sized,
     {
         if let Selectable::TargetStrike(t) = sel {
+            return Some(t.clone());
+        }
+        None
+    }
+
+    fn get_name(&self) -> String {
+        self.text.to_string()
+    }
+}
+
+impl ToSelectable for CAP {
+    fn to_selectable(&self) -> Selectable {
+        Selectable::TargetCAP(self.clone())
+    }
+
+    fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {
+        instance
+            .target_list
+            .cap
+            .iter_mut()
+            .find(|s| s._name == name)
+            .unwrap()
+    }
+
+    fn from_selectable(sel: &Selectable) -> Option<Self>
+    where
+        Self: Sized,
+    {
+        if let Selectable::TargetCAP(t) = sel {
             return Some(t.clone());
         }
         None

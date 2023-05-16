@@ -8,7 +8,7 @@ use crate::{
     DCEInstance,
 };
 
-#[derive(Serialize, Deserialize, PartialEq, Debug)]
+#[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
 pub struct MapPoint {
     pub lat: f64,
     pub lon: f64,

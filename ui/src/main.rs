@@ -1,7 +1,7 @@
 use dce_lib::{mappable::MapPoint, oob_air::Squadron, target_list::Strike, DCEInstance};
 use dioxus::prelude::*;
 use dioxus_desktop::{use_window, wry::http::Response, Config};
-use fermi::{use_atom_ref, use_init_atom_root, AtomRef};
+use fermi::{use_atom_ref, use_atom_root, use_init_atom_root, AtomRef};
 use log::{info, warn};
 use selectable::Selectable;
 use simple_logger::SimpleLogger;
@@ -22,17 +22,26 @@ static INSTANCE: AtomRef<Option<DCEInstance>> = |_| None;
 static SELECTED: AtomRef<Selectable> = |_| Selectable::None;
 static TABLETYPE: AtomRef<TableType> = |_| TableType::StrikeTarget;
 
+struct AppProps {
+    rx: async_channel::Receiver<MapPoint>,
+}
+
 fn main() {
     SimpleLogger::new().init().unwrap();
     // launch the dioxus app in a webview
-    dioxus_desktop::launch_cfg(
+
+    let (s, r) = async_channel::unbounded::<MapPoint>();
+
+    dioxus_desktop::launch_with_props(
         app,
-        Config::default().with_custom_protocol("testprotocol".into(), |req| {
+        AppProps { rx: r.clone() },
+        Config::default().with_custom_protocol("testprotocol".into(), move |req| {
             // this handle callbacks of clicked objects in leaflet
             let obj =
                 serde_json::from_str::<MapPoint>(&String::from_utf8(req.body().to_vec()).unwrap());
             if let Ok(map_point) = obj {
-                info!("{:?}", map_point);
+                info!("Sending {:?}", map_point);
+                s.send_blocking(map_point).unwrap();
             } else {
                 warn!(
                     "Failed to parse {:?} with error {:?}",
@@ -46,7 +55,7 @@ fn main() {
     )
 }
 
-fn app(cx: Scope) -> Element {
+fn app(cx: Scope<AppProps>) -> Element {
     use_init_atom_root(cx);
 
     let w = use_window(cx);
@@ -54,8 +63,28 @@ fn app(cx: Scope) -> Element {
     w.set_decorations(false);
 
     let atom_instance = use_atom_ref(cx, INSTANCE);
+    let atom_selected = use_atom_ref(cx, SELECTED);
 
     let instance_loaded = atom_instance.read().is_some();
+    let atoms = use_atom_root(cx);
+    let rx = cx.props.rx.to_owned();
+
+    use_coroutine(cx, move |_: UnboundedReceiver<i32>| {
+        let atom_selected = atom_selected.to_owned();
+        let atoms = atoms.to_owned();
+        let rx = rx.to_owned();
+
+        async move {
+            while let Ok(item) = rx.recv().await {
+                let instance_ref = atoms.read(INSTANCE);
+                let instance = instance_ref.as_ref().borrow();
+                let dce = instance.as_ref().unwrap();
+                let mut writable = atom_selected.write();
+                let selectable = Selectable::from_map(&item, dce);
+                *writable = selectable;
+            }
+        }
+    });
 
     cx.render(rsx! {
         // TODO: replace this script inclusion

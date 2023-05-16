@@ -321,6 +321,31 @@ fn default_class() -> String {
     "static".to_string()
 }
 
+impl TableHeader for CAP {
+    fn get_header() -> Vec<tables::HeaderField> {
+        vec![
+            HeaderField {
+                field: "_name".into(),
+                display: "Name".into(),
+                type_: tables::FieldType::String,
+                editable: true,
+            },
+            HeaderField {
+                field: "_side".into(),
+                display: "Side".into(),
+                type_: tables::FieldType::String,
+                editable: false,
+            },
+            HeaderField {
+                field: "priority".into(),
+                display: "Priority".into(),
+                type_: tables::FieldType::Int,
+                editable: true
+            }
+        ]
+    }
+}
+
 impl TableHeader for Strike {
     fn get_header() -> Vec<tables::HeaderField> {
         vec![
@@ -336,6 +361,12 @@ impl TableHeader for Strike {
                 type_: tables::FieldType::String,
                 editable: false,
             },
+            HeaderField {
+                field: "priority".into(),
+                display: "Priority".into(),
+                type_: tables::FieldType::Int,
+                editable: true
+            }
         ]
     }
 }

@@ -170,6 +170,12 @@ impl tables::TableHeader for Squadron {
                 editable: true,
             },
             HeaderField {
+                display: "Base".into(),
+                field: "base".into(),
+                type_: FieldType::String,
+                editable: true,
+            },
+            HeaderField {
                 display: "Country".into(),
                 field: "country".into(),
                 type_: FieldType::String,
@@ -199,12 +205,7 @@ impl tables::TableHeader for Squadron {
                 type_: FieldType::Debug,
                 editable: false,
             },
-            HeaderField {
-                display: "Base".into(),
-                field: "base".into(),
-                type_: FieldType::String,
-                editable: true,
-            },
+            
         ]
     }
 }

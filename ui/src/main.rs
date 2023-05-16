@@ -1,4 +1,10 @@
-use dce_lib::{mappable::MapPoint, oob_air::Squadron, target_list::{Strike, CAP}, DCEInstance, db_airbases::FixedAirBase};
+use dce_lib::{
+    db_airbases::FixedAirBase,
+    mappable::MapPoint,
+    oob_air::Squadron,
+    target_list::{Strike, CAP},
+    DCEInstance,
+};
 use dioxus::prelude::*;
 use dioxus_desktop::{use_window, wry::http::Response, Config};
 use fermi::{use_atom_ref, use_atom_root, use_init_atom_root, AtomRef};
@@ -127,7 +133,12 @@ fn main_body(cx: Scope) -> Element {
     cx.render(rsx! {
         div { class: "top-8 flex absolute inset-0 bg-slate-50",
             // selector col
-            div { class: "basis-10 min-h-0 bg-sky-500 flex flex-col" }
+            div { class: "basis-10 min-h-0 bg-sky-500 flex flex-col items-center",
+                icon_button { path: "images/airfield_blue.png".into() }
+                icon_button { path: "images/target_blue.png".into() }
+                icon_button { path: "images/plane_blue.png".into() }
+                icon_button { path: "images/ship_blue.png".into() }
+            }
             // edit col
             div { class: "{edit_col_width} min-h-0 bg-sky-100",
                 match *selected_form {
@@ -168,5 +179,20 @@ fn main_body(cx: Scope) -> Element {
                 }
             }
         }
+    })
+}
+
+#[derive(PartialEq, Props)]
+struct IconButtonProps {
+    path: String,
+}
+
+fn icon_button(cx: Scope<IconButtonProps>) -> Element {
+    cx.render(rsx! {img {
+        class: "mt-1 mb-1 p-1 rounded hover:bg-sky-600",
+        src: "{cx.props.path}",
+        width: 35,
+        height: 35
+    }
     })
 }

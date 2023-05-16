@@ -53,7 +53,7 @@ pub fn get_by_name(airbases: &DBAirbases, name: &str) -> Option<AirBase> {
         if k == name {
             return Some(v.to_owned());
         }
-        return None;
+        None
     })
 }
 

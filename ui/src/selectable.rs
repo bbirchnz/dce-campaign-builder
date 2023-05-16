@@ -75,7 +75,6 @@ impl ToSelectable for Squadron {
             .red
             .iter_mut()
             .chain(instance.oob_air.blue.iter_mut())
-            // .iter_mut()
             .find(|s| s.name == name)
             .unwrap()
     }

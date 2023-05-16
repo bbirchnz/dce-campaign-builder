@@ -7,20 +7,13 @@ use selectable::Selectable;
 use simple_logger::SimpleLogger;
 use tables::TableHeader;
 
-use crate::rsx::{edit_form, menu_bar, EmptyDialog};
+use crate::rsx::{edit_form, menu_bar};
 
 mod rsx;
 mod selectable;
 
-pub enum TableType {
-    Squadron,
-    StrikeTarget,
-    None,
-}
-
 static INSTANCE: AtomRef<Option<DCEInstance>> = |_| None;
 static SELECTED: AtomRef<Selectable> = |_| Selectable::None;
-static TABLETYPE: AtomRef<TableType> = |_| TableType::StrikeTarget;
 
 struct AppProps {
     rx: async_channel::Receiver<MapPoint>,
@@ -113,37 +106,54 @@ fn app(cx: Scope<AppProps>) -> Element {
 
 fn main_body(cx: Scope) -> Element {
     let atom_instance = use_atom_ref(cx, INSTANCE);
-    let selected = use_atom_ref(cx, SELECTED).read();
-    let table_type = use_atom_ref(cx, TABLETYPE).read();
+    let selected_table = use_atom_ref(cx, SELECTED).read();
+    let selected_form = use_atom_ref(cx, SELECTED).read();
 
-    let instance = atom_instance.read();
-    let squadrons = instance.as_ref().unwrap().oob_air.red.to_vec();
+    let atom_read = atom_instance.read();
+    let instance = atom_read.as_ref().unwrap();
+
+    let edit_col_width = if let Selectable::None = selected_form.to_owned() {
+        ""
+    } else {
+        "basis-1/4"
+    };
+
+    let edit_table_height = if let Selectable::None = selected_form.to_owned() {
+        ""
+    } else {
+        "basis-1/4"
+    };
 
     cx.render(rsx! {
-        div { class: "top-8 grid grid-cols-4 grid-rows-6 absolute inset-0 bg-slate-50",
-            div { class: "col-span-1 row-span-full min-h-0 bg-sky-100",
-                match selected.clone() {
+        div { class: "top-8 flex absolute inset-0 bg-slate-50",
+            // selector col
+            div { class: "basis-10 min-h-0 bg-sky-500 flex flex-col" }
+            // edit col
+            div { class: "{edit_col_width} min-h-0 bg-sky-100",
+                match *selected_form {
                     Selectable::Squadron(_) => rsx!{
-                        edit_form::<Squadron> { headers: Squadron::get_header(), title: "Edit Squadron".into(), item: selected.clone()}
+                        edit_form::<Squadron> { headers: Squadron::get_header(), title: "Edit Squadron".into(), item: selected_form.clone()}
                      },
                      Selectable::TargetStrike(_) => rsx!{
-                        edit_form::<Strike> { headers: Strike::get_header(), title: "Edit Strike Target".into(), item: selected.clone()}
+                        edit_form::<Strike> { headers: Strike::get_header(), title: "Edit Strike Target".into(), item: selected_form.clone()}
                     },
                     _ => rsx!{{}}
                 }
             }
-            div { class: "col-span-3 row-span-4 min-h-0 bg-slate-50 flex flex-col", rsx::map {} }
-            div { class: "col-span-3 row-span-2 pl-2 pr-2 overflow-clip",
-                EmptyDialog { visible: false, onclose: move |_| {}, div { "hello" } }
-                match *table_type {
-                    TableType::Squadron => rsx!{
-                        rsx::table { headers: Squadron::get_header(), data: squadrons }
-                    },
-                    TableType::StrikeTarget => rsx! {
-                        rsx::table { headers: Strike::get_header(), data: instance.as_ref().unwrap().target_list.strike.to_vec() }
-                    },
-                    _ => rsx!{{}}
-                    }
+            // map and table col
+            div { class: "flex-grow flex flex-col",
+                div { class: "flex-grow min-h-0 bg-slate-50 flex flex-col", rsx::map {} }
+                div { class: "{edit_table_height} grow-0 overflow-y-auto",
+                    match *selected_table {
+                        Selectable::Squadron(_) => rsx!{
+                            rsx::table { headers: Squadron::get_header(), data: instance.oob_air.red.iter().chain(instance.oob_air.blue.iter()).cloned().collect::<Vec<Squadron>>() }
+                        },
+                        Selectable::TargetStrike(_) => rsx! {
+                            rsx::table { headers: Strike::get_header(), data: instance.target_list.strike.to_vec() }
+                        },
+                        _ => rsx!{{}}
+                        }
+                }
             }
         }
     })

@@ -1,13 +1,12 @@
+use bevy_reflect::{FromReflect, Reflect};
 use itertools::Itertools;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use tables::{FieldType, HeaderField, TableHeader};
 
 use crate::{
-    dce_utils::ValidateSelf,
-    dcs_airbase_export::dcs_airbases_for_theatre,
-    mappable::{MapPoint, Mappables},
-    serde_utils::LuaFileBased,
-    DCEInstance, NewFromMission,
+    dce_utils::ValidateSelf, dcs_airbase_export::dcs_airbases_for_theatre,
+    serde_utils::LuaFileBased, NewFromMission,
 };
 
 use anyhow::anyhow;
@@ -23,7 +22,6 @@ pub enum AirBase {
     Reserve(ReserveBase),
     AirStart(AirStartBase),
 }
-
 impl AirBase {
     pub fn get_side(&self) -> String {
         match self {
@@ -48,54 +46,7 @@ impl ValidateSelf for AirBase {
     }
 }
 
-pub fn get_by_name(airbases: &DBAirbases, name: &str) -> Option<AirBase> {
-    airbases.iter().find_map(|(k, v)| {
-        if k == name {
-            return Some(v.to_owned());
-        }
-        None
-    })
-}
-
-impl Mappables for DBAirbases {
-    fn to_mappables(&self, instance: &DCEInstance) -> Vec<crate::mappable::MapPoint> {
-        self.iter()
-            .filter_map(|(name, ab)| match ab {
-                AirBase::Fixed(fixed) => Some(MapPoint::new_from_dcs(
-                    fixed.x,
-                    fixed.y,
-                    name.to_owned(),
-                    fixed.side.to_owned(),
-                    "FixedAirBase".into(),
-                    &instance.projection,
-                )),
-                AirBase::Ship(_) => {
-                    let groups = instance.mission.get_ship_groups();
-                    let unit = groups
-                        .iter()
-                        .flat_map(|g| g.units.as_slice())
-                        .find(|s| s.name == *name);
-                    if let Some(unit) = unit {
-                        return Some(MapPoint::new_from_dcs(
-                            unit.x,
-                            unit.y,
-                            name.to_owned(),
-                            "blue".to_owned(),
-                            "ShipAirBase".to_owned(),
-                            &instance.projection,
-                        ));
-                    }
-                    None
-                }
-                AirBase::Farp(_) => None,
-                AirBase::Reserve(_) => None,
-                AirBase::AirStart(_) => None,
-            })
-            .collect()
-    }
-}
-
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
 pub struct FixedAirBase {
     pub x: f64,
     pub y: f64,
@@ -117,6 +68,27 @@ pub struct FixedAirBase {
     ils: Option<String>,
     #[serde(rename = "LimitedParkNb")]
     limited_park_number: u16,
+    #[serde(default)]
+    pub _name: String,
+}
+
+impl TableHeader for FixedAirBase {
+    fn get_header() -> Vec<tables::HeaderField> {
+        vec![
+            HeaderField {
+                field: "_name".into(),
+                display: "Name".into(),
+                type_: FieldType::String,
+                editable: false,
+            },
+            HeaderField {
+                field: "elevation".into(),
+                display: "Elevation".into(),
+                type_: FieldType::Float,
+                editable: false,
+            },
+        ]
+    }
 }
 
 impl ValidateSelf for FixedAirBase {
@@ -128,7 +100,7 @@ impl ValidateSelf for FixedAirBase {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
 pub struct ShipBase {
     pub unitname: String,
     pub startup: Option<f64>,
@@ -137,6 +109,8 @@ pub struct ShipBase {
     pub side: String,
     #[serde(rename = "LimitedParkNb")]
     pub limited_park_number: u16,
+    #[serde(default)]
+    pub _name: String,
 }
 
 impl ValidateSelf for ShipBase {
@@ -148,7 +122,7 @@ impl ValidateSelf for ShipBase {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
 pub struct FarpBase {
     x: f64,
     y: f64,
@@ -161,6 +135,8 @@ pub struct FarpBase {
     atc_frequency: String,
     side: String,
     divert: bool,
+    #[serde(default)]
+    pub _name: String,
 }
 
 impl ValidateSelf for FarpBase {
@@ -172,7 +148,7 @@ impl ValidateSelf for FarpBase {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
 pub struct AirStartBase {
     #[serde(default)]
     inactive: bool,
@@ -186,6 +162,8 @@ pub struct AirStartBase {
     // #[serde(rename = "airdromeId")]
     // airdrome_id: Option<u16>,
     pub side: String,
+    #[serde(default)]
+    pub _name: String,
 }
 
 impl ValidateSelf for AirStartBase {
@@ -207,7 +185,7 @@ impl ValidateSelf for AirStartBase {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
 pub struct ReserveBase {
     inactive: bool,
     x: f64,
@@ -216,6 +194,8 @@ pub struct ReserveBase {
     #[serde(rename = "ATC_frequency")]
     atc_frequency: String,
     pub side: String,
+    #[serde(default)]
+    pub _name: String,
 }
 
 impl ValidateSelf for ReserveBase {
@@ -275,6 +255,7 @@ impl NewFromMission for DBAirbases {
                         tacan: None,
                         ils: None,
                         limited_park_number: dcs_ab.stands.len() as u16,
+                        _name: "".into(),
                     }),
                 )
             })
@@ -301,6 +282,7 @@ impl NewFromMission for DBAirbases {
                         atc_frequency: None,
                         side: "blue".into(),
                         limited_park_number: 4,
+                        _name: "".into(),
                     }),
                 ))
             })
@@ -321,6 +303,7 @@ impl NewFromMission for DBAirbases {
                     atc_frequency: "".into(),
                     base_air_start: true,
                     side: "red".into(),
+                    _name: "".into(),
                 }),
             ))
         });

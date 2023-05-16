@@ -1,13 +1,14 @@
 use anyhow::anyhow;
 
 use bevy_reflect::{FromReflect, Reflect};
+use log::warn;
 use serde::{Deserialize, Serialize};
 use std::{collections::HashMap, iter::repeat};
 use tables::{FieldType, HeaderField};
 
 use crate::{
-    db_airbases::{get_by_name, DBAirbases},
-    mappable::{MapPoint, Mappables},
+    db_airbases::{DBAirbases},
+    mappable::{Mappables},
     mission::{Country, Mission},
     serde_utils::LuaFileBased,
     NewFromMission,
@@ -210,6 +211,8 @@ impl tables::TableHeader for Squadron {
 
 impl Mappables for OobAir {
     fn to_mappables(&self, instance: &crate::DCEInstance) -> Vec<crate::mappable::MapPoint> {
+        let airbase_mappables = instance.airbases.to_mappables(&instance);
+
         instance
             .oob_air
             .blue
@@ -217,42 +220,21 @@ impl Mappables for OobAir {
             .zip(repeat("blue"))
             .chain(instance.oob_air.red.iter().zip(repeat("red")))
             .filter_map(|(squad, side)| {
-                if let Some(base) = get_by_name(&instance.airbases, &squad.base) {
-                    let result = match base {
-                        crate::db_airbases::AirBase::Fixed(fixed) => Some(MapPoint::new_from_dcs(
-                            fixed.x,
-                            fixed.y,
-                            squad.name.to_owned(),
-                            side.into(),
-                            "Squadron".into(),
-                            &instance.projection,
-                        )),
-
-                        crate::db_airbases::AirBase::Ship(ship) => {
-                            let groups = instance.mission.get_ship_groups();
-                            let unit = groups
-                                .iter()
-                                .flat_map(|g| g.units.as_slice())
-                                .find(|s| s.name == ship.unitname);
-                            if let Some(unit) = unit {
-                                return Some(MapPoint::new_from_dcs(
-                                    unit.x,
-                                    unit.y,
-                                    squad.name.to_owned(),
-                                    side.to_owned(),
-                                    "Squadron".to_owned(),
-                                    &instance.projection,
-                                ));
-                            }
-                            None
-                        }
-                        crate::db_airbases::AirBase::Farp(_) => None,
-                        crate::db_airbases::AirBase::Reserve(_) => None,
-                        crate::db_airbases::AirBase::AirStart(_) => None,
-                    };
-                    return result;
+                // its got the same coords as the airbase, so lets save some trouble
+                let mappable = airbase_mappables.iter().find(|ab| ab.name == squad.base);
+                match mappable {
+                    Some(map) => {
+                        let mut map = map.clone();
+                        map.name = squad.name.to_owned();
+                        map.side = side.to_owned();
+                        map.class = "Squadron".into();
+                        Some(map)
+                    },
+                    None => {
+                        warn!("Couldn't find airbase mappable for squadron {}", squad.name);
+                        None
+                    },
                 }
-                None
             })
             .collect::<Vec<_>>()
     }

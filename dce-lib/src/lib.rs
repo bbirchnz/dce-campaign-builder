@@ -7,6 +7,7 @@ use campaign_header::Header;
 use cmp_file::CMPFile;
 use conf_mod::ConfMod;
 use db_airbases::DBAirbases;
+use db_airbases_internal::DBAirbasesInternal;
 use loadouts::Loadouts;
 use mission::Mission;
 use oob_air::OobAir;
@@ -21,6 +22,7 @@ pub mod campaign_header;
 pub mod cmp_file;
 pub mod conf_mod;
 pub mod db_airbases;
+pub mod db_airbases_internal;
 pub mod dce_utils;
 pub mod dcs_airbase_export;
 pub mod loadouts;
@@ -37,7 +39,7 @@ pub mod trigger;
 #[derive(Deserialize, Serialize)]
 pub struct DCEInstance {
     pub oob_air: OobAir,
-    pub airbases: DBAirbases,
+    pub airbases: DBAirbasesInternal,
     pub mission: Mission,
     pub target_list: TargetListInternal,
     pub triggers: Triggers,
@@ -52,8 +54,11 @@ impl DCEInstance {
     pub fn new(path: String) -> Result<DCEInstance, anyhow::Error> {
         let oob_air =
             OobAir::from_lua_file(format!("{}/oob_air_init.lua", path), "oob_air".into())?;
-        let airbases =
-            DBAirbases::from_lua_file(format!("{}/db_airbases.lua", path), "db_airbases".into())?;
+
+        let airbases = DBAirbasesInternal::from_db_airbases(&DBAirbases::from_lua_file(
+            format!("{}/db_airbases.lua", path),
+            "db_airbases".into(),
+        )?);
 
         let mission = Mission::from_miz(&format!("{}/base_mission.miz", path))?;
 
@@ -105,7 +110,9 @@ impl DCEInstance {
             projection: projection_from_theatre(&mission.theatre)?,
             base_path,
             campaign_header: Header::new_from_mission(&mission)?,
-            airbases: DBAirbases::new_from_mission(&mission)?,
+            airbases: DBAirbasesInternal::from_db_airbases(&DBAirbases::new_from_mission(
+                &mission,
+            )?),
             triggers: Triggers::new_from_mission(&mission)?,
             loadouts: Loadouts::new_from_mission(&mission)?,
             conf_mod: ConfMod::new(),
@@ -159,7 +166,7 @@ impl DCEInstance {
             init_path.join("base_mission.miz"),
         )?;
 
-        self.airbases.to_lua_file(
+        self.airbases.to_db_airbases().to_lua_file(
             init_path
                 .join("db_airbases.lua")
                 .to_string_lossy()

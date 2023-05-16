@@ -325,8 +325,8 @@ impl TableHeader for CAP {
     fn get_header() -> Vec<tables::HeaderField> {
         vec![
             HeaderField {
-                field: "_name".into(),
-                display: "Name".into(),
+                field: "text".into(),
+                display: "Display Text".into(),
                 type_: tables::FieldType::String,
                 editable: true,
             },
@@ -340,8 +340,26 @@ impl TableHeader for CAP {
                 field: "priority".into(),
                 display: "Priority".into(),
                 type_: tables::FieldType::Int,
-                editable: true
-            }
+                editable: true,
+            },
+            HeaderField {
+                field: "firepower".into(),
+                display: "Req Firepower".into(),
+                type_: tables::FieldType::Debug,
+                editable: false,
+            },
+            HeaderField {
+                field: "axis".into(),
+                display: "Axis".into(),
+                type_: tables::FieldType::Float,
+                editable: true,
+            },
+            HeaderField {
+                field: "radius".into(),
+                display: "Radius".into(),
+                type_: tables::FieldType::Float,
+                editable: true,
+            },
         ]
     }
 }
@@ -350,8 +368,8 @@ impl TableHeader for Strike {
     fn get_header() -> Vec<tables::HeaderField> {
         vec![
             HeaderField {
-                field: "_name".into(),
-                display: "Name".into(),
+                field: "text".into(),
+                display: "Display Text".into(),
                 type_: tables::FieldType::String,
                 editable: true,
             },
@@ -365,8 +383,14 @@ impl TableHeader for Strike {
                 field: "priority".into(),
                 display: "Priority".into(),
                 type_: tables::FieldType::Int,
-                editable: true
-            }
+                editable: true,
+            },
+            HeaderField {
+                field: "firepower".into(),
+                display: "Req Firepower".into(),
+                type_: tables::FieldType::Debug,
+                editable: false,
+            },
         ]
     }
 }

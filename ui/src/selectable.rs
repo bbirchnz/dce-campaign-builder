@@ -1,4 +1,5 @@
 use dce_lib::{
+    db_airbases::FixedAirBase,
     mappable::MapPoint,
     oob_air::Squadron,
     target_list::{Strike, CAP},
@@ -10,6 +11,7 @@ pub enum Selectable {
     Squadron(Squadron),
     TargetStrike(Strike),
     TargetCAP(CAP),
+    FixedAirBase(FixedAirBase),
     None,
 }
 
@@ -46,6 +48,16 @@ impl Selectable {
                     .unwrap()
                     .clone();
                 Selectable::Squadron(item)
+            }
+            "FixedAirBase" => {
+                let item = instance
+                    .airbases
+                    .fixed
+                    .iter()
+                    .find(|item| item._name == map_point.name)
+                    .unwrap()
+                    .clone();
+                Selectable::FixedAirBase(item)
             }
             _ => Selectable::None,
         }
@@ -146,5 +158,34 @@ impl ToSelectable for CAP {
 
     fn get_name(&self) -> String {
         self.text.to_string()
+    }
+}
+
+impl ToSelectable for FixedAirBase {
+    fn to_selectable(&self) -> Selectable {
+        Selectable::FixedAirBase(self.clone())
+    }
+
+    fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {
+        instance
+            .airbases
+            .fixed
+            .iter_mut()
+            .find(|item| item._name == name)
+            .unwrap()
+    }
+
+    fn from_selectable(sel: &Selectable) -> Option<Self>
+    where
+        Self: Sized,
+    {
+        if let Selectable::FixedAirBase(t) = sel {
+            return Some(t.clone());
+        }
+        None
+    }
+
+    fn get_name(&self) -> String {
+        self._name.to_owned()
     }
 }

@@ -1,4 +1,4 @@
-use dce_lib::{mappable::MapPoint, oob_air::Squadron, target_list::Strike, DCEInstance};
+use dce_lib::{mappable::MapPoint, oob_air::Squadron, target_list::{Strike, CAP}, DCEInstance, db_airbases::FixedAirBase};
 use dioxus::prelude::*;
 use dioxus_desktop::{use_window, wry::http::Response, Config};
 use fermi::{use_atom_ref, use_atom_root, use_init_atom_root, AtomRef};
@@ -134,8 +134,14 @@ fn main_body(cx: Scope) -> Element {
                     Selectable::Squadron(_) => rsx!{
                         edit_form::<Squadron> { headers: Squadron::get_header(), title: "Edit Squadron".into(), item: selected_form.clone()}
                      },
-                     Selectable::TargetStrike(_) => rsx!{
+                    Selectable::TargetStrike(_) => rsx!{
                         edit_form::<Strike> { headers: Strike::get_header(), title: "Edit Strike Target".into(), item: selected_form.clone()}
+                    },
+                    Selectable::TargetCAP(_) => rsx!{
+                        edit_form::<CAP> { headers: CAP::get_header(), title: "Edit CAP".into(), item: selected_form.clone()}
+                    },
+                    Selectable::FixedAirBase(_) => rsx!{
+                        edit_form::<FixedAirBase> { headers: FixedAirBase::get_header(), title: "Edit Airbase".into(), item: selected_form.clone()}
                     },
                     _ => rsx!{{}}
                 }
@@ -150,6 +156,12 @@ fn main_body(cx: Scope) -> Element {
                         },
                         Selectable::TargetStrike(_) => rsx! {
                             rsx::table { headers: Strike::get_header(), data: instance.target_list.strike.to_vec() }
+                        },
+                        Selectable::TargetCAP(_) => rsx! {
+                            rsx::table { headers: CAP::get_header(), data: instance.target_list.cap.to_vec() }
+                        },
+                        Selectable::FixedAirBase(_) => rsx! {
+                            rsx::table { headers: FixedAirBase::get_header(), data: instance.airbases.fixed.to_vec() }
                         },
                         _ => rsx!{{}}
                         }

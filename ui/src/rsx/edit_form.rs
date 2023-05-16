@@ -83,7 +83,7 @@ where
                 autocomplete: "off",
                 onsubmit: on_submit,
                 oninput: move |ev| println!("Input {:?}", ev.values),
-                for h in T::get_header().iter().filter(|h| fieldtype_editable(&h.type_) && h.editable) {
+                for h in T::get_header().iter().filter(|h| fieldtype_editable(&h.type_)) {
                     div { class: "flex w-full mt-1 mb-1",
                         label { class: "flex-grow p-1", r#for: "{h.display}", "{h.display}" }
                         input {
@@ -91,7 +91,9 @@ where
                             autocomplete: "off",
                             r#type: "{fieldtype_to_input(&h.type_)}",
                             name: "{h.display}",
-                            value: "{h.get_value_string(&item)}"
+                            value: "{h.get_value_string(&item)}",
+                            readonly: "{!h.editable}",
+                            disabled: "{!h.editable}"
                         }
                     }
                 }

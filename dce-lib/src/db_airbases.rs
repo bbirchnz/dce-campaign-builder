@@ -84,7 +84,7 @@ impl TableHeader for FixedAirBase {
             HeaderField {
                 field: "elevation".into(),
                 display: "Elevation".into(),
-                type_: FieldType::Float,
+                type_: FieldType::Float(|v| format!("{:.1}", v)),
                 editable: false,
             },
         ]

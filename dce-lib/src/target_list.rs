@@ -351,13 +351,13 @@ impl TableHeader for CAP {
             HeaderField {
                 field: "axis".into(),
                 display: "Axis".into(),
-                type_: tables::FieldType::Float,
+                type_: tables::FieldType::Float(|v| format!("{:.0}", v)),
                 editable: true,
             },
             HeaderField {
                 field: "radius".into(),
                 display: "Radius".into(),
-                type_: tables::FieldType::Float,
+                type_: tables::FieldType::Float(|v| format!("{:.0}", v)),
                 editable: true,
             },
         ]

@@ -13,7 +13,7 @@ use crate::{
 fn fieldtype_to_input(field: &FieldType) -> String {
     match field {
         FieldType::String => "text".into(),
-        FieldType::Float => "number".into(),
+        FieldType::Float(_) => "number".into(),
         FieldType::Int => "number".into(),
         FieldType::Enum => "text".into(),
         FieldType::VecString => "text".into(),
@@ -24,7 +24,7 @@ fn fieldtype_to_input(field: &FieldType) -> String {
 fn fieldtype_editable(field: &FieldType) -> bool {
     match field {
         FieldType::String => true,
-        FieldType::Float => true,
+        FieldType::Float(_) => true,
         FieldType::Int => true,
         FieldType::Enum => false,
         FieldType::VecString => false,

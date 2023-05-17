@@ -101,12 +101,14 @@ impl DCEInstance {
         let base_path = path.parent().unwrap().to_str().unwrap().to_owned();
 
         let mission = Mission::from_miz(miz_file)?;
+        let mut oob_air = OobAir::new_from_mission(&mission)?;
+        oob_air.set_player_defaults();
 
         Ok(DCEInstance {
-            oob_air: OobAir::new_from_mission(&mission)?,
             target_list: TargetListInternal::from_target_list(&TargetList::new_from_mission(
                 &mission,
             )?),
+            oob_air,
             projection: projection_from_theatre(&mission.theatre)?,
             base_path,
             campaign_header: Header::new_from_mission(&mission)?,
@@ -164,6 +166,49 @@ impl DCEInstance {
         fs::copy(
             Path::new(&self.base_path).join("base_mission.miz"),
             init_path.join("base_mission.miz"),
+        )?;
+
+        // create FirstMission.bat and SkipMission.bat
+        fs::write(
+            camp_path.join("FirstMission.bat"),
+            include_str!("../resources/FirstMission.bat"),
+        )?;
+        fs::write(
+            camp_path.join("SkipMission.bat"),
+            include_str!("../resources/SkipMission.bat"),
+        )?;
+        // and the sound that seem required
+        fs::write(
+            camp_path.join("Sounds").join("alarme.wav"),
+            include_bytes!("../resources/alarme.wav"),
+        )?;
+        fs::write(
+            init_path.join("path.bat"),
+            format!(
+                r#"
+REM Core or Main DCS ou DCS.beta path, always end the line with \ 
+set "pathDCS=C:\Program Files\Eagle Dynamics\\DCS World OpenBeta\"
+REM Core or Main DCS ou DCS.beta path, always end the line with \ 
+set "pathSavedGames={}"
+REM DCE ScriptMod version not any / or \ and no space before and after = 
+set "versionPackageICM=NG"
+
+
+REM After each change, You must launch the FirsMission.bat for it to be taken into account.
+"#,
+                base_path
+                    .parent()
+                    .expect("is campaign folder")
+                    .parent()
+                    .expect("is dce folder")
+                    .parent()
+                    .expect("is tech folder")
+                    .parent()
+                    .expect("is mods folder")
+                    .parent()
+                    .expect("is dcs saved games folder")
+                    .display()
+            ),
         )?;
 
         self.airbases.to_db_airbases().to_lua_file(

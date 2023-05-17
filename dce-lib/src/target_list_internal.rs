@@ -93,7 +93,8 @@ impl TargetListInternal {
         self.antiship.iter().try_for_each(|item| {
             match item._side.as_str() {
                 "blue" => {
-                    let _ = blue.insert(item._name.to_owned(), Target::AntiShipStrike(item.clone()));
+                    let _ =
+                        blue.insert(item._name.to_owned(), Target::AntiShipStrike(item.clone()));
                 }
                 "red" => {
                     let _ = red.insert(item._name.to_owned(), Target::AntiShipStrike(item.clone()));

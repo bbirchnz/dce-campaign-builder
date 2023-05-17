@@ -7,8 +7,8 @@ use std::{collections::HashMap, iter::repeat};
 use tables::{FieldType, HeaderField};
 
 use crate::{
-    db_airbases::{DBAirbases},
-    mappable::{Mappables},
+    db_airbases::DBAirbases,
+    mappable::Mappables,
     mission::{Country, Mission},
     serde_utils::LuaFileBased,
     NewFromMission,
@@ -205,7 +205,6 @@ impl tables::TableHeader for Squadron {
                 type_: FieldType::Debug,
                 editable: false,
             },
-            
         ]
     }
 }
@@ -230,11 +229,11 @@ impl Mappables for OobAir {
                         map.side = side.to_owned();
                         map.class = "Squadron".into();
                         Some(map)
-                    },
+                    }
                     None => {
                         warn!("Couldn't find airbase mappable for squadron {}", squad.name);
                         None
-                    },
+                    }
                 }
             })
             .collect::<Vec<_>>()

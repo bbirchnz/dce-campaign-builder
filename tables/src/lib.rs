@@ -21,7 +21,7 @@ where
                 .downcast_ref::<String>()
                 .unwrap()
                 .to_string(),
-            FieldType::Float => self
+            FieldType::Float(_) => self
                 .field(&header.field)
                 .unwrap()
                 .downcast_ref::<f64>()
@@ -68,12 +68,14 @@ impl HeaderField {
                 .downcast_ref::<String>()
                 .unwrap()
                 .to_string(),
-            FieldType::Float => item
-                .field(&self.field)
-                .unwrap()
-                .downcast_ref::<f64>()
-                .expect(&format!("Failed to get field {} as f64", &self.field))
-                .to_string(),
+            FieldType::Float(func) => {
+                let value = item
+                    .field(&self.field)
+                    .unwrap()
+                    .downcast_ref::<f64>()
+                    .expect(&format!("Failed to get field {} as f64", &self.field));
+                func(*value)
+            } // .to_string(),
             FieldType::Int => item
                 .field(&self.field)
                 .unwrap()
@@ -108,7 +110,7 @@ impl HeaderField {
                     .ok_or(anyhow!("Couldn't get field {}", &self.field))?
                     .apply(&value.to_owned());
             }
-            FieldType::Float => {
+            FieldType::Float(_) => {
                 item.field_mut(&self.field)
                     .ok_or(anyhow!("Couldn't get field {}", &self.field))?
                     .apply(&value.parse::<f64>()?);
@@ -129,7 +131,7 @@ impl HeaderField {
 #[derive(PartialEq)]
 pub enum FieldType {
     String,
-    Float,
+    Float(fn(f64) -> String),
     Int,
     Enum,
     VecString,

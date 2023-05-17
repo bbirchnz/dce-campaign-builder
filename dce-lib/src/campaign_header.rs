@@ -127,7 +127,7 @@ impl TableHeader for Header {
             HeaderField {
                 field: "mag_var".into(),
                 display: "Magnetic Variation".into(),
-                type_: FieldType::Float,
+                type_: FieldType::Float(|v| format!("{:.1}", v)),
                 editable: true,
             },
         ]

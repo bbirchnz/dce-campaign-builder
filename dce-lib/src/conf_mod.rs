@@ -1,8 +1,9 @@
+use bevy_reflect::{Reflect, FromReflect};
 use serde::{Deserialize, Serialize};
 
 use crate::serde_utils::LuaFileBased;
 
-#[derive(Deserialize, Serialize, Debug, PartialEq)]
+#[derive(Deserialize, Serialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
 pub struct ConfMod {
     #[serde(rename = "SelectLoadout")]
     pub select_loadout: String,

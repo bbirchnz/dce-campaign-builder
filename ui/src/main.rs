@@ -1,4 +1,5 @@
 use dce_lib::{
+    campaign_header::Header,
     db_airbases::FixedAirBase,
     mappable::MapPoint,
     oob_air::Squadron,
@@ -133,11 +134,21 @@ fn main_body(cx: Scope) -> Element {
     cx.render(rsx! {
         div { class: "top-8 flex absolute inset-0 bg-slate-50",
             // selector col
-            div { class: "basis-10 min-h-0 bg-sky-500 flex flex-col items-center",
-                icon_button { path: "images/airfield_blue.png".into() }
-                icon_button { path: "images/target_blue.png".into() }
-                icon_button { path: "images/plane_blue.png".into() }
-                icon_button { path: "images/ship_blue.png".into() }
+            div { class: "basis-12 shrink-0 min-h-0 bg-sky-500 flex flex-col items-center",
+                icon_button {
+                    path: "images/airfield_grey.png".into(),
+                    on_click: |_| select_first_fixed_airbase(cx)
+                }
+                icon_button {
+                    path: "images/target_grey.png".into(),
+                    on_click: |_| select_first_strike_target(cx)
+                }
+                icon_button { path: "images/plane_grey.png".into(), on_click: |_| select_first_squadron(cx) }
+                // icon_button { path: "images/ship_grey.png".into(), on_click: |_| select_first_cap_target(cx) }
+                icon_button {
+                    path: "images/settings_grey.png".into(),
+                    on_click: |_| select_campaign_settings(cx)
+                }
             }
             // edit col
             div { class: "{edit_col_width} min-h-0 bg-sky-100",
@@ -153,6 +164,9 @@ fn main_body(cx: Scope) -> Element {
                     },
                     Selectable::FixedAirBase(_) => rsx!{
                         edit_form::<FixedAirBase> { headers: FixedAirBase::get_header(), title: "Edit Airbase".into(), item: selected_form.clone()}
+                    },
+                    Selectable::CampaignSettings(_) => rsx!{
+                        edit_form::<Header> { headers: Header::get_header(), title: "Campaign Settings".into(), item: selected_form.clone()}
                     },
                     _ => rsx!{{}}
                 }
@@ -174,6 +188,10 @@ fn main_body(cx: Scope) -> Element {
                         Selectable::FixedAirBase(_) => rsx! {
                             rsx::table { headers: FixedAirBase::get_header(), data: instance.airbases.fixed.to_vec() }
                         },
+                        // not the right things to do, but if we don't there will be an empty space:
+                        Selectable::CampaignSettings(_) => rsx! {
+                            rsx::table { headers: FixedAirBase::get_header(), data: instance.airbases.fixed.to_vec() }
+                        },
                         _ => rsx!{{}}
                         }
                 }
@@ -182,17 +200,79 @@ fn main_body(cx: Scope) -> Element {
     })
 }
 
-#[derive(PartialEq, Props)]
-struct IconButtonProps {
+#[derive(Props)]
+struct IconButtonProps<'a> {
     path: String,
+    on_click: EventHandler<'a, MouseEvent>,
 }
 
-fn icon_button(cx: Scope<IconButtonProps>) -> Element {
-    cx.render(rsx! {img {
-        class: "mt-1 mb-1 p-1 rounded hover:bg-sky-600",
-        src: "{cx.props.path}",
-        width: 35,
-        height: 35
-    }
+fn icon_button<'a>(cx: Scope<'a, IconButtonProps<'a>>) -> Element<'a> {
+    cx.render(rsx! {
+        img {
+            class: "mt-1 mb-1 p-1 rounded hover:bg-sky-600",
+            src: "{cx.props.path}",
+            width: 40,
+            height: 40,
+            onclick: |e| cx.props.on_click.call(e)
+        }
     })
+}
+
+fn select_first_fixed_airbase(cx: Scope) {
+    let atom_instance = use_atom_ref(cx, INSTANCE);
+    let atom_selected = use_atom_ref(cx, SELECTED);
+
+    if let Some(fixed) = atom_instance
+        .read()
+        .as_ref()
+        .unwrap()
+        .airbases
+        .fixed
+        .first()
+    {
+        let mut writable = atom_selected.write();
+        *writable = Selectable::FixedAirBase(fixed.clone());
+    }
+}
+
+fn select_first_strike_target(cx: Scope) {
+    let atom_instance = use_atom_ref(cx, INSTANCE);
+    let atom_selected = use_atom_ref(cx, SELECTED);
+
+    if let Some(item) = atom_instance
+        .read()
+        .as_ref()
+        .unwrap()
+        .target_list
+        .strike
+        .first()
+    {
+        let mut writable = atom_selected.write();
+        *writable = Selectable::TargetStrike(item.clone());
+    }
+}
+
+fn select_first_squadron(cx: Scope) {
+    let atom_instance = use_atom_ref(cx, INSTANCE);
+    let atom_selected = use_atom_ref(cx, SELECTED);
+
+    if let Some(item) = atom_instance.read().as_ref().unwrap().oob_air.blue.first() {
+        let mut writable = atom_selected.write();
+        *writable = Selectable::Squadron(item.clone());
+    }
+}
+
+fn select_campaign_settings(cx: Scope) {
+    let atom_instance = use_atom_ref(cx, INSTANCE);
+    let atom_selected = use_atom_ref(cx, SELECTED);
+
+    let item = atom_instance
+        .read()
+        .as_ref()
+        .unwrap()
+        .campaign_header
+        .clone();
+
+    let mut writable = atom_selected.write();
+    *writable = Selectable::CampaignSettings(item);
 }

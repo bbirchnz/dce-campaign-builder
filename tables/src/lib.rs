@@ -72,7 +72,7 @@ impl HeaderField {
                 .field(&self.field)
                 .unwrap()
                 .downcast_ref::<f64>()
-                .unwrap()
+                .expect(&format!("Failed to get field {} as f64", &self.field))
                 .to_string(),
             FieldType::Int => item
                 .field(&self.field)

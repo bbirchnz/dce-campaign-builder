@@ -1,8 +1,10 @@
+use bevy_reflect::{FromReflect, Reflect};
 use serde::{Deserialize, Serialize};
+use tables::{FieldType, HeaderField, TableHeader};
 
 use crate::{serde_utils::LuaFileBased, NewFromMission};
 
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
 pub struct Header {
     #[serde(rename = "CampaignOriginal")]
     pub original: bool,
@@ -20,18 +22,18 @@ pub struct Header {
     pub units: String,
     pub weather: Weather,
     #[serde(rename = "variation")]
-    pub mag_var: f32,
+    pub mag_var: f64,
     pub debug: bool,
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
 pub struct Date {
     pub day: u8,
     pub month: u8,
     pub year: u16,
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
 pub struct Weather {
     #[serde(rename = "pHigh")]
     pub high_prob: f32,
@@ -74,6 +76,61 @@ impl NewFromMission for Header {
             mag_var: 2.,
             debug: true,
         })
+    }
+}
+
+impl TableHeader for Header {
+    fn get_header() -> Vec<tables::HeaderField> {
+        vec![
+            HeaderField {
+                field: "title".into(),
+                display: "Title".into(),
+                type_: FieldType::String,
+                editable: true,
+            },
+            HeaderField {
+                field: "version".into(),
+                display: "Version".into(),
+                type_: FieldType::String,
+                editable: true,
+            },
+            HeaderField {
+                field: "dawn".into(),
+                display: "Dawn".into(),
+                type_: FieldType::Int,
+                editable: true,
+            },
+            HeaderField {
+                field: "dusk".into(),
+                display: "Dusk".into(),
+                type_: FieldType::Int,
+                editable: true,
+            },
+            HeaderField {
+                field: "mission_duration".into(),
+                display: "Mission Duration".into(),
+                type_: FieldType::Int,
+                editable: true,
+            },
+            HeaderField {
+                field: "startup".into(),
+                display: "Startup Time".into(),
+                type_: FieldType::Int,
+                editable: true,
+            },
+            HeaderField {
+                field: "units".into(),
+                display: "Units of Measure".into(),
+                type_: FieldType::String,
+                editable: true,
+            },
+            HeaderField {
+                field: "mag_var".into(),
+                display: "Magnetic Variation".into(),
+                type_: FieldType::Float,
+                editable: true,
+            },
+        ]
     }
 }
 

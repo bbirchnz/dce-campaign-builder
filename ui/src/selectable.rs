@@ -1,4 +1,5 @@
 use dce_lib::{
+    campaign_header::Header,
     db_airbases::FixedAirBase,
     mappable::MapPoint,
     oob_air::Squadron,
@@ -12,6 +13,7 @@ pub enum Selectable {
     TargetStrike(Strike),
     TargetCAP(CAP),
     FixedAirBase(FixedAirBase),
+    CampaignSettings(Header),
     None,
 }
 
@@ -187,5 +189,29 @@ impl ToSelectable for FixedAirBase {
 
     fn get_name(&self) -> String {
         self._name.to_owned()
+    }
+}
+
+impl ToSelectable for Header {
+    fn to_selectable(&self) -> Selectable {
+        Selectable::CampaignSettings(self.clone())
+    }
+
+    fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, _: &str) -> &'a mut Self {
+        &mut instance.campaign_header
+    }
+
+    fn from_selectable(sel: &Selectable) -> Option<Self>
+    where
+        Self: Sized,
+    {
+        if let Selectable::CampaignSettings(header) = sel {
+            return Some(header.clone());
+        }
+        None
+    }
+
+    fn get_name(&self) -> String {
+        "settings".into()
     }
 }

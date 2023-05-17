@@ -189,7 +189,7 @@ impl DCEInstance {
 REM Core or Main DCS ou DCS.beta path, always end the line with \ 
 set "pathDCS=C:\Program Files\Eagle Dynamics\\DCS World OpenBeta\"
 REM Core or Main DCS ou DCS.beta path, always end the line with \ 
-set "pathSavedGames={}"
+set "pathSavedGames={}\"
 REM DCE ScriptMod version not any / or \ and no space before and after = 
 set "versionPackageICM=NG"
 

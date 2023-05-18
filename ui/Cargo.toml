@@ -25,3 +25,4 @@ native-dialog = { version = "0.6.3", features = [
     "windows_visual_styles",
 ] }
 async-channel = "1.8.0"
+chrono = "0.4.24"

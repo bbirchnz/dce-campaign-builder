@@ -1,7 +1,7 @@
 function drawmap(div_id, markers) {
   last_coords = null;
   last_zoom = null;
-  
+
   if (window["map_" + div_id] && window["map_" + div_id].remove) {
     last_coords = window["map_" + div_id].getCenter();
     last_zoom = window["map_" + div_id].getZoom();
@@ -122,7 +122,7 @@ function drawmap(div_id, markers) {
           m.side.toLowerCase() == "blue" ? blue_target_icon : red_target_icon,
       })
         .addTo(target_group)
-        .bindTooltip(m.name)
+        .bindTooltip(m.name, { permanent: false, opacity: 1.0 })
         .on("click", function (e) {
           fetch("https://testprotocol.example/", {
             method: "POST",
@@ -165,7 +165,13 @@ function drawmap(div_id, markers) {
             body: JSON.stringify(m),
           });
         });
-      console.log(JSON.stringify(m));
+      L.polyline(
+        [
+          [m.lat, m.lon],
+          [m.lat2, m.lon2],
+        ],
+        { color: m.side == "blue" ? "#0066dd44" : "#dd330044" }
+      ).addTo(target_group);
     }
     if (m.class == "TargetRefuel") {
       L.polyline(

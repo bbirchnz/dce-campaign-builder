@@ -97,13 +97,13 @@ impl TableHeader for Header {
             HeaderField {
                 field: "dawn".into(),
                 display: "Dawn".into(),
-                type_: FieldType::Int,
+                type_: FieldType::IntTime,
                 editable: true,
             },
             HeaderField {
                 field: "dusk".into(),
                 display: "Dusk".into(),
-                type_: FieldType::Int,
+                type_: FieldType::IntTime,
                 editable: true,
             },
             HeaderField {

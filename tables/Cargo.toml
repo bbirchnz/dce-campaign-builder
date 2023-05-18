@@ -8,4 +8,5 @@ edition = "2021"
 [dependencies]
 anyhow = "1.0.71"
 bevy_reflect = "0.10.1"
+chrono = "0.4.24"
 log = "0.4.17"

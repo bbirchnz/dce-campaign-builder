@@ -2,7 +2,7 @@ use std::{collections::HashMap, iter::repeat};
 
 use bevy_reflect::{FromReflect, Reflect};
 use serde::{Deserialize, Serialize};
-use tables::{HeaderField, TableHeader};
+use tables::{FieldType, HeaderField, TableHeader};
 use validator::Validate;
 
 use crate::{serde_utils::LuaFileBased, NewFromMission};
@@ -327,37 +327,43 @@ impl TableHeader for CAP {
             HeaderField {
                 field: "text".into(),
                 display: "Display Text".into(),
-                type_: tables::FieldType::String,
+                type_: FieldType::String,
                 editable: true,
             },
             HeaderField {
                 field: "_side".into(),
                 display: "Side".into(),
-                type_: tables::FieldType::String,
+                type_: FieldType::String,
                 editable: false,
             },
             HeaderField {
                 field: "priority".into(),
                 display: "Priority".into(),
-                type_: tables::FieldType::Int,
+                type_: FieldType::Int,
                 editable: true,
             },
             HeaderField {
                 field: "firepower".into(),
                 display: "Req Firepower".into(),
-                type_: tables::FieldType::Debug,
+                type_: FieldType::Debug,
                 editable: false,
             },
             HeaderField {
                 field: "axis".into(),
                 display: "Axis".into(),
-                type_: tables::FieldType::Float(|v| format!("{:.0}", v)),
+                type_: FieldType::Float(|v| format!("{:.0}", v)),
                 editable: true,
             },
             HeaderField {
                 field: "radius".into(),
                 display: "Radius".into(),
-                type_: tables::FieldType::Float(|v| format!("{:.0}", v)),
+                type_: FieldType::Float(|v| format!("{:.0}", v)),
+                editable: true,
+            },
+            HeaderField {
+                display: "Inactive".into(),
+                field: "inactive".into(),
+                type_: FieldType::Bool,
                 editable: true,
             },
         ]
@@ -365,31 +371,37 @@ impl TableHeader for CAP {
 }
 
 impl TableHeader for Strike {
-    fn get_header() -> Vec<tables::HeaderField> {
+    fn get_header() -> Vec<HeaderField> {
         vec![
             HeaderField {
                 field: "text".into(),
                 display: "Display Text".into(),
-                type_: tables::FieldType::String,
+                type_: FieldType::String,
                 editable: true,
             },
             HeaderField {
                 field: "_side".into(),
                 display: "Side".into(),
-                type_: tables::FieldType::String,
+                type_: FieldType::String,
                 editable: false,
             },
             HeaderField {
                 field: "priority".into(),
                 display: "Priority".into(),
-                type_: tables::FieldType::Int,
+                type_: FieldType::Int,
                 editable: true,
             },
             HeaderField {
                 field: "firepower".into(),
                 display: "Req Firepower".into(),
-                type_: tables::FieldType::Debug,
+                type_: FieldType::Debug,
                 editable: false,
+            },
+            HeaderField {
+                display: "Inactive".into(),
+                field: "inactive".into(),
+                type_: FieldType::Bool,
+                editable: true,
             },
         ]
     }

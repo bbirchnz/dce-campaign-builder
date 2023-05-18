@@ -205,6 +205,12 @@ impl tables::TableHeader for Squadron {
                 type_: FieldType::Debug,
                 editable: false,
             },
+            HeaderField {
+                display: "Inactive".into(),
+                field: "inactive".into(),
+                type_: FieldType::Bool,
+                editable: true,
+            },
         ]
     }
 }

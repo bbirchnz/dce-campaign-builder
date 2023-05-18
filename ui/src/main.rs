@@ -140,8 +140,12 @@ fn main_body(cx: Scope) -> Element {
                     on_click: |_| select_first_fixed_airbase(cx)
                 }
                 icon_button {
-                    path: "images/target_grey.png".into(),
+                    path: "images/target_grey_s.png".into(),
                     on_click: |_| select_first_strike_target(cx)
+                }
+                icon_button {
+                    path: "images/target_grey_c.png".into(),
+                    on_click: |_| select_first_cap_target(cx)
                 }
                 icon_button { path: "images/plane_grey.png".into(), on_click: |_| select_first_squadron(cx) }
                 // icon_button { path: "images/ship_grey.png".into(), on_click: |_| select_first_cap_target(cx) }
@@ -249,6 +253,23 @@ fn select_first_strike_target(cx: Scope) {
     {
         let mut writable = atom_selected.write();
         *writable = Selectable::TargetStrike(item.clone());
+    }
+}
+
+fn select_first_cap_target(cx: Scope) {
+    let atom_instance = use_atom_ref(cx, INSTANCE);
+    let atom_selected = use_atom_ref(cx, SELECTED);
+
+    if let Some(item) = atom_instance
+        .read()
+        .as_ref()
+        .unwrap()
+        .target_list
+        .cap
+        .first()
+    {
+        let mut writable = atom_selected.write();
+        *writable = Selectable::TargetCAP(item.clone());
     }
 }
 

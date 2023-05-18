@@ -18,6 +18,8 @@ fn fieldtype_to_input(field: &FieldType) -> String {
         FieldType::Enum => "text".into(),
         FieldType::VecString => "text".into(),
         FieldType::Debug => "text".into(),
+        FieldType::IntTime => "time".into(),
+        FieldType::Bool => "checkbox".into(),
     }
 }
 
@@ -29,6 +31,8 @@ fn fieldtype_editable(field: &FieldType) -> bool {
         FieldType::Enum => false,
         FieldType::VecString => false,
         FieldType::Debug => false,
+        FieldType::IntTime => true,
+        FieldType::Bool => true,
     }
 }
 
@@ -93,7 +97,8 @@ where
                             name: "{h.display}",
                             value: "{h.get_value_string(&item)}",
                             readonly: "{!h.editable}",
-                            disabled: "{!h.editable}"
+                            disabled: "{!h.editable}",
+                            step: "any"
                         }
                     }
                 }

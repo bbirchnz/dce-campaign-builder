@@ -1,5 +1,6 @@
 use anyhow::anyhow;
 use bevy_reflect::Struct;
+use chrono::{NaiveTime, Timelike};
 
 pub fn add(left: usize, right: usize) -> usize {
     left + right
@@ -7,48 +8,6 @@ pub fn add(left: usize, right: usize) -> usize {
 
 pub trait TableHeader {
     fn get_header() -> Vec<HeaderField>;
-}
-
-pub trait Table
-where
-    Self: Struct + std::fmt::Debug + PartialEq,
-{
-    fn get_field(&self, header: &HeaderField) -> String {
-        match header.type_ {
-            FieldType::String => self
-                .field(&header.field)
-                .unwrap()
-                .downcast_ref::<String>()
-                .unwrap()
-                .to_string(),
-            FieldType::Float(_) => self
-                .field(&header.field)
-                .unwrap()
-                .downcast_ref::<f64>()
-                .unwrap()
-                .to_string(),
-            FieldType::Int => self
-                .field(&header.field)
-                .unwrap()
-                .downcast_ref::<u32>()
-                .expect(&format!("Failed to get field {} as u32", &header.field))
-                .to_string(),
-            FieldType::Enum => "".into(),
-            FieldType::VecString => self
-                .field(&header.field)
-                .unwrap()
-                .downcast_ref::<Vec<String>>()
-                .expect(&format!(
-                    "Failed to get field {} as Vec<String>",
-                    &header.field
-                ))
-                .join(", "),
-            FieldType::Debug => {
-                let v = self.field(&header.field).unwrap();
-                format!("{:?}", v)
-            }
-        }
-    }
 }
 
 #[derive(PartialEq)]
@@ -96,6 +55,32 @@ impl HeaderField {
                 let v = item.field(&self.field).unwrap();
                 format!("{:?}", v)
             }
+            FieldType::IntTime => {
+                let seconds_since_midnight = item
+                    .field(&self.field)
+                    .unwrap()
+                    .downcast_ref::<u32>()
+                    .expect(&format!("Failed to get field {} as u32", &self.field));
+                let time = chrono::NaiveTime::from_num_seconds_from_midnight_opt(
+                    *seconds_since_midnight,
+                    0,
+                )
+                .expect("A valid number of seconds since midnight");
+
+                return time.format("%H:%M:%S").to_string();
+            }
+            FieldType::Bool => {
+                let val = item
+                    .field(&self.field)
+                    .unwrap()
+                    .downcast_ref::<bool>()
+                    .expect(&format!("Failed to get field {} as bool", &self.field));
+                if *val {
+                    "true".into()
+                } else {
+                    "false".into()
+                }
+            }
         }
     }
 
@@ -123,6 +108,20 @@ impl HeaderField {
             FieldType::Enum => todo!(),
             FieldType::VecString => todo!(),
             FieldType::Debug => todo!(),
+            FieldType::IntTime => {
+                let time =
+                    NaiveTime::parse_from_str(value, "%H:%M:%S").expect("Expected HH:MM:SS string");
+                item.field_mut(&self.field)
+                    .ok_or(anyhow!("Couldn't get field {}", &self.field))?
+                    .apply(&time.num_seconds_from_midnight());
+            }
+            FieldType::Bool => {
+                let selected = if value == "true" { true } else { false };
+
+                item.field_mut(&self.field)
+                    .ok_or(anyhow!("Couldn't get field {}", &self.field))?
+                    .apply(&selected);
+            }
         };
         Ok(())
     }
@@ -136,6 +135,8 @@ pub enum FieldType {
     Enum,
     VecString,
     Debug,
+    IntTime,
+    Bool,
 }
 
 #[cfg(test)]

@@ -2,7 +2,7 @@
 
 Build new campaigns for the [Dynamic Campaign Engine](https://forum.dcs.world/topic/162712-dce-campaigns/)
 
-Designed to make the process user friendly and fast, the 
+Designed to make the campaign design and build process user friendly and faster, but all credit must go to MBot, Miguel21 and PB0_CEF for their amazing work on DCE.
 
 Warning: this is an early stage project built for personal use, is sparsely documented and likely full of bugs!
 

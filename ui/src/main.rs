@@ -1,6 +1,9 @@
+// #![windows_subsystem = "windows"]
+
 use dce_lib::{
     campaign_header::Header,
     db_airbases::FixedAirBase,
+    loadouts::CAPLoadout,
     mappable::MapPoint,
     oob_air::Squadron,
     target_list::{Strike, CAP},
@@ -148,10 +151,13 @@ fn main_body(cx: Scope) -> Element {
                     on_click: |_| select_first_cap_target(cx)
                 }
                 icon_button { path: "images/plane_grey.png".into(), on_click: |_| select_first_squadron(cx) }
-                // icon_button { path: "images/ship_grey.png".into(), on_click: |_| select_first_cap_target(cx) }
                 icon_button {
                     path: "images/settings_grey.png".into(),
                     on_click: |_| select_campaign_settings(cx)
+                }
+                icon_button {
+                    path: "images/settings_grey.png".into(),
+                    on_click: |_| select_first_cap_loadout(cx)
                 }
             }
             // edit col
@@ -171,6 +177,9 @@ fn main_body(cx: Scope) -> Element {
                     },
                     Selectable::CampaignSettings(_) => rsx!{
                         edit_form::<Header> { headers: Header::get_header(), title: "Campaign Settings".into(), item: selected_form.clone()}
+                    },
+                    Selectable::LoadoutCAP(_) => rsx!{
+                        edit_form::<CAPLoadout> { headers: CAPLoadout::get_header(), title: "Edit CAP Loadout".into(), item: selected_form.clone()}
                     },
                     _ => rsx!{{}}
                 }
@@ -196,6 +205,9 @@ fn main_body(cx: Scope) -> Element {
                         Selectable::CampaignSettings(_) => rsx! {
                             rsx::table { headers: FixedAirBase::get_header(), data: instance.airbases.fixed.to_vec() }
                         },
+                        Selectable::LoadoutCAP(_) => rsx! {
+                            rsx::table { headers: CAPLoadout::get_header(), data: instance.loadouts.cap.to_vec() }
+                        },
                         _ => rsx!{{}}
                         }
                 }
@@ -213,7 +225,7 @@ struct IconButtonProps<'a> {
 fn icon_button<'a>(cx: Scope<'a, IconButtonProps<'a>>) -> Element<'a> {
     cx.render(rsx! {
         img {
-            class: "mt-1 mb-1 p-1 rounded hover:bg-sky-600",
+            class: "mt-1 mb-1 p-1 rounded opacity-70 hover:opacity-100 hover:bg-sky-600",
             src: "{cx.props.path}",
             width: 40,
             height: 40,
@@ -296,4 +308,14 @@ fn select_campaign_settings(cx: Scope) {
 
     let mut writable = atom_selected.write();
     *writable = Selectable::CampaignSettings(item);
+}
+
+fn select_first_cap_loadout(cx: Scope) {
+    let atom_instance = use_atom_ref(cx, INSTANCE);
+    let atom_selected = use_atom_ref(cx, SELECTED);
+
+    if let Some(item) = atom_instance.read().as_ref().unwrap().loadouts.cap.first() {
+        let mut writable = atom_selected.write();
+        *writable = Selectable::LoadoutCAP(item.clone());
+    }
 }

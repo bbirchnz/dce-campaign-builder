@@ -1,6 +1,7 @@
 use dce_lib::{
     campaign_header::Header,
     db_airbases::FixedAirBase,
+    loadouts::CAPLoadout,
     mappable::MapPoint,
     oob_air::Squadron,
     target_list::{Strike, CAP},
@@ -14,6 +15,7 @@ pub enum Selectable {
     TargetCAP(CAP),
     FixedAirBase(FixedAirBase),
     CampaignSettings(Header),
+    LoadoutCAP(CAPLoadout),
     None,
 }
 
@@ -213,5 +215,34 @@ impl ToSelectable for Header {
 
     fn get_name(&self) -> String {
         "settings".into()
+    }
+}
+
+impl ToSelectable for CAPLoadout {
+    fn to_selectable(&self) -> Selectable {
+        Selectable::LoadoutCAP(self.to_owned())
+    }
+
+    fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {
+        instance
+            .loadouts
+            .cap
+            .iter_mut()
+            .find(|item| item._name == name)
+            .unwrap()
+    }
+
+    fn from_selectable(sel: &Selectable) -> Option<Self>
+    where
+        Self: Sized,
+    {
+        if let Selectable::LoadoutCAP(cap) = sel {
+            return Some(cap.clone());
+        }
+        None
+    }
+
+    fn get_name(&self) -> String {
+        self._name.to_owned()
     }
 }

@@ -20,6 +20,9 @@ fn fieldtype_to_input(field: &FieldType) -> String {
         FieldType::Debug => "text".into(),
         FieldType::IntTime => "time".into(),
         FieldType::Bool => "checkbox".into(),
+        FieldType::AltitudeFeet => "number".into(),
+        FieldType::SpeedKnotsTAS => "number".into(),
+        FieldType::DistanceNM => "number".into(),
     }
 }
 
@@ -33,6 +36,9 @@ fn fieldtype_editable(field: &FieldType) -> bool {
         FieldType::Debug => false,
         FieldType::IntTime => true,
         FieldType::Bool => true,
+        FieldType::AltitudeFeet => true,
+        FieldType::SpeedKnotsTAS => true,
+        FieldType::DistanceNM => true,
     }
 }
 
@@ -98,7 +104,8 @@ where
                             value: "{h.get_value_string(&item)}",
                             readonly: "{!h.editable}",
                             disabled: "{!h.editable}",
-                            step: "any"
+                            step: "any",
+                            checked: "{h.get_value_string(&item) == \"true\"}"
                         }
                     }
                 }

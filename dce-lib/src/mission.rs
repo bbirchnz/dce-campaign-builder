@@ -1,5 +1,6 @@
 use std::{collections::HashMap, fs::File};
 
+use bevy_reflect::{FromReflect, Reflect};
 use serde::{Deserialize, Serialize};
 
 use crate::serde_utils::LuaFileBased;
@@ -183,7 +184,7 @@ pub struct PlaneUnit {
     pub payload: Payload,
 }
 
-#[derive(Deserialize, Serialize, Debug, PartialEq, Clone)]
+#[derive(Deserialize, Serialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
 pub struct Payload {
     pub pylons: HashMap<u32, Pylon>,
     pub fuel: f64,
@@ -192,7 +193,7 @@ pub struct Payload {
     pub gun: f64,
 }
 
-#[derive(Deserialize, Serialize, Debug, PartialEq, Clone)]
+#[derive(Deserialize, Serialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
 pub struct Pylon {
     #[serde(rename = "CLSID")]
     pub cls_id: String,

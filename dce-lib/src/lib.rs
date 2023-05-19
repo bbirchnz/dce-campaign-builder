@@ -9,6 +9,7 @@ use conf_mod::ConfMod;
 use db_airbases::DBAirbases;
 use db_airbases_internal::DBAirbasesInternal;
 use loadouts::Loadouts;
+use loadouts_internal::LoadoutsInternal;
 use mission::Mission;
 use oob_air::OobAir;
 use projections::{projection_from_theatre, TransverseMercator};
@@ -26,6 +27,7 @@ pub mod db_airbases_internal;
 pub mod dce_utils;
 pub mod dcs_airbase_export;
 pub mod loadouts;
+pub mod loadouts_internal;
 pub mod lua_utils;
 pub mod mappable;
 pub mod mission;
@@ -43,7 +45,7 @@ pub struct DCEInstance {
     pub mission: Mission,
     pub target_list: TargetListInternal,
     pub triggers: Triggers,
-    pub loadouts: Loadouts,
+    pub loadouts: LoadoutsInternal,
     pub projection: TransverseMercator,
     pub base_path: String,
     pub campaign_header: Header,
@@ -75,8 +77,10 @@ impl DCEInstance {
         let conf_mod =
             ConfMod::from_lua_file(format!("{}/conf_mod.lua", path), "mission_ini".into())?;
 
-        let loadouts =
-            Loadouts::from_lua_file(format!("{}/db_loadouts.lua", path), "db_loadouts".into())?;
+        let loadouts = LoadoutsInternal::from_loadouts(&Loadouts::from_lua_file(
+            format!("{}/db_loadouts.lua", path),
+            "db_loadouts".into(),
+        )?);
 
         let projection = projection_from_theatre(&mission.theatre)?;
 
@@ -116,7 +120,7 @@ impl DCEInstance {
                 &mission,
             )?),
             triggers: Triggers::new_from_mission(&mission)?,
-            loadouts: Loadouts::new_from_mission(&mission)?,
+            loadouts: LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&mission)?),
             conf_mod: ConfMod::new(),
             mission,
         })
@@ -246,7 +250,7 @@ REM After each change, You must launch the FirsMission.bat for it to be taken in
                 .to_string(),
             "camp_triggers".into(),
         )?;
-        self.loadouts.to_lua_file(
+        self.loadouts.to_loadouts().to_lua_file(
             init_path
                 .join("db_loadouts.lua")
                 .to_string_lossy()

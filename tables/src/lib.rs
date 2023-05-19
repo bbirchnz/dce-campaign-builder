@@ -18,6 +18,15 @@ pub struct HeaderField {
     pub editable: bool,
 }
 
+const METERS_TO_FEET: f64 = 3.281;
+const FEET_TO_METERS: f64 = 1. / METERS_TO_FEET;
+
+const MS_to_KNOTS: f64 = 3.6 / 1.852;
+const KNOTS_TO_MS: f64 = 1. / MS_to_KNOTS;
+
+const NM_TO_METERS: f64 = 1852.;
+const METERS_TO_NM: f64 = 1. / NM_TO_METERS;
+
 impl HeaderField {
     pub fn get_value_string(&self, item: &dyn Struct) -> String {
         match self.type_ {
@@ -81,6 +90,30 @@ impl HeaderField {
                     "false".into()
                 }
             }
+            FieldType::AltitudeFeet => {
+                let meters = item
+                    .field(&self.field)
+                    .unwrap()
+                    .downcast_ref::<f64>()
+                    .expect(&format!("Failed to get field {} as f64", &self.field));
+                format!("{:.0}", meters * METERS_TO_FEET)
+            }
+            FieldType::SpeedKnotsTAS => {
+                let ms = item
+                    .field(&self.field)
+                    .unwrap()
+                    .downcast_ref::<f64>()
+                    .expect(&format!("Failed to get field {} as f64", &self.field));
+                format!("{:.0}", ms * MS_to_KNOTS)
+            }
+            FieldType::DistanceNM => {
+                let meters = item
+                    .field(&self.field)
+                    .unwrap()
+                    .downcast_ref::<f64>()
+                    .expect(&format!("Failed to get field {} as f64", &self.field));
+                format!("{:.0}", meters * METERS_TO_NM)
+            }
         }
     }
 
@@ -122,6 +155,27 @@ impl HeaderField {
                     .ok_or(anyhow!("Couldn't get field {}", &self.field))?
                     .apply(&selected);
             }
+            FieldType::AltitudeFeet => {
+                let meters = value.parse::<f64>()? * FEET_TO_METERS;
+
+                item.field_mut(&self.field)
+                    .ok_or(anyhow!("Couldn't get field {}", &self.field))?
+                    .apply(&meters);
+            }
+            FieldType::SpeedKnotsTAS => {
+                let ms = value.parse::<f64>()? * KNOTS_TO_MS;
+
+                item.field_mut(&self.field)
+                    .ok_or(anyhow!("Couldn't get field {}", &self.field))?
+                    .apply(&ms);
+            }
+            FieldType::DistanceNM => {
+                let meters = value.parse::<f64>()? * NM_TO_METERS;
+
+                item.field_mut(&self.field)
+                    .ok_or(anyhow!("Couldn't get field {}", &self.field))?
+                    .apply(&meters);
+            }
         };
         Ok(())
     }
@@ -137,6 +191,9 @@ pub enum FieldType {
     Debug,
     IntTime,
     Bool,
+    AltitudeFeet,
+    SpeedKnotsTAS,
+    DistanceNM,
 }
 
 #[cfg(test)]

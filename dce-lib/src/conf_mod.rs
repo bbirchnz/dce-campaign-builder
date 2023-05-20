@@ -137,7 +137,7 @@ impl ConfMod {
 }
 
 impl LuaFileBased<'_> for ConfMod {
-    fn to_lua_file(&self, filename: String, key: String) -> Result<(), anyhow::Error> {
+    fn to_lua_str(&self, key: &str) -> Result<String, anyhow::Error> {
         let lua = mlua::Lua::new();
         // load utils:
         crate::lua_utils::load_utils(&lua)?;
@@ -296,10 +296,6 @@ pictureBrief = {
 
 "#;
 
-        let f: String = key + " = " + &table + "\n" + version_str;
-
-        std::fs::write(filename, f)?;
-
-        Ok(())
+        Ok(key.to_owned() + " = " + &table + "\n" + version_str)
     }
 }

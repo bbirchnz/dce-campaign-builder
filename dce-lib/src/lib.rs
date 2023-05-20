@@ -1,5 +1,6 @@
 use std::{
     fs::{self, File},
+    io::{self, Write},
     path::Path,
 };
 
@@ -18,6 +19,7 @@ use serde_utils::LuaFileBased;
 use target_list::TargetList;
 use target_list_internal::TargetListInternal;
 use trigger::Triggers;
+use zip::{write::FileOptions, ZipWriter};
 
 pub mod campaign_header;
 pub mod cmp_file;
@@ -138,7 +140,16 @@ impl DCEInstance {
         Ok(instance)
     }
 
-    pub fn generate_lua(&self, dir: &str) -> Result<(), anyhow::Error> {
+    /// Exports the full structure in DCE files and folder structures
+    ///
+    /// When given the path to DCE's campaigns folder it will create all files
+    /// including cmp, miz, batch files ready to run. Good for testing as a campaign
+    /// developer, but prefer `export_dce_zip` for distribution.
+    ///
+    /// # Errors
+    ///
+    /// Any file write errors or problems with serialization will be returned
+    pub fn export_dce_format(&self, dir: &str) -> Result<(), anyhow::Error> {
         let base_path = Path::new(&dir);
         let camp_name = self.campaign_header.title.to_owned();
         let camp_path = base_path.join(&camp_name);
@@ -264,6 +275,128 @@ REM After each change, You must launch the FirsMission.bat for it to be taken in
         Ok(())
     }
 
+    pub fn export_dce_zip(&self, zip_file: &str) -> Result<(), anyhow::Error> {
+        let file = File::create(zip_file)?;
+        let mut zip = zip::ZipWriter::new(file);
+
+        let options = zip::write::FileOptions::default();
+
+        let camp_name = self.campaign_header.title.to_owned();
+
+        let dce_campaigns_folder: String =
+            "DCS_SavedGames_Path/Mods/tech/DCE/Missions/Campaigns/".into();
+        let campaign_folder: String = dce_campaigns_folder.to_owned() + camp_name.as_str() + "/";
+
+        // create extra empty folders
+        vec!["Init", "Active", "Debug", "Images", "Debriefing", "Sounds"]
+            .iter()
+            .try_for_each(|d| zip.add_directory(campaign_folder.to_owned() + d, options))?;
+
+        // create cmp file:
+        CMPFile::new(self.campaign_header.title.to_owned()).add_to_zip(
+            "campaign",
+            &(dce_campaigns_folder.to_owned() + &format!("{}.cmp", &camp_name)),
+            &mut zip,
+            &options,
+        )?;
+
+        // create placeholder first and ongoings as copies of the base_mission
+        copy_to_zip(
+            Path::new(&self.base_path)
+                .join("base_mission.miz")
+                .to_str()
+                .expect("Should be a valid path"),
+            &(dce_campaigns_folder.to_owned() + &format!("{}_first.miz", &camp_name)),
+            &mut zip,
+            &options,
+        )?;
+
+        copy_to_zip(
+            Path::new(&self.base_path)
+                .join("base_mission.miz")
+                .to_str()
+                .expect("Should be a valid path"),
+            &(dce_campaigns_folder.to_owned() + &format!("{}_ongoing.miz", &camp_name)),
+            &mut zip,
+            &options,
+        )?;
+
+        copy_to_zip(
+            Path::new(&self.base_path)
+                .join("base_mission.miz")
+                .to_str()
+                .expect("Should be a valid path"),
+            &(campaign_folder.to_owned() + "init/base_mission.miz"),
+            &mut zip,
+            &options,
+        )?;
+
+        // create FirstMission.bat and SkipMission.bat
+        zip.start_file(campaign_folder.to_owned() + "FirstMission.bat", options)?;
+        zip.write(include_str!("../resources/FirstMission.bat").as_bytes())?;
+
+        zip.start_file(campaign_folder.to_owned() + "SkipMission.bat", options)?;
+        zip.write(include_str!("../resources/SkipMission.bat").as_bytes())?;
+
+        // and the sound that seem required.
+        zip.start_file(campaign_folder.to_owned() + "Sounds/alarme.wav", options)?;
+        zip.write(include_bytes!("../resources/alarme.wav"))?;
+
+        // build our lua files
+        self.target_list.to_target_list()?.add_to_zip(
+            "targetlist",
+            &(campaign_folder.to_owned() + "init/targetlist_init.lua"),
+            &mut zip,
+            &options,
+        )?;
+
+        self.airbases.to_db_airbases().add_to_zip(
+            "db_airbases",
+            &(campaign_folder.to_owned() + "init/db_airbases.lua"),
+            &mut zip,
+            &options,
+        )?;
+
+        self.campaign_header.add_to_zip(
+            "camp",
+            &(campaign_folder.to_owned() + "init/camp_init.lua"),
+            &mut zip,
+            &options,
+        )?;
+
+        self.oob_air.add_to_zip(
+            "oob_air",
+            &(campaign_folder.to_owned() + "init/oob_air_init.lua"),
+            &mut zip,
+            &options,
+        )?;
+
+        self.triggers.add_to_zip(
+            "camp_triggers",
+            &(campaign_folder.to_owned() + "init/camp_triggers_init.lua"),
+            &mut zip,
+            &options,
+        )?;
+
+        self.loadouts.to_loadouts().add_to_zip(
+            "db_loadouts",
+            &(campaign_folder.to_owned() + "init/db_loadouts.lua"),
+            &mut zip,
+            &options,
+        )?;
+
+        self.conf_mod.add_to_zip(
+            "mission_ini",
+            &(campaign_folder.to_owned() + "init/conf_mod.lua"),
+            &mut zip,
+            &options,
+        )?;
+
+        zip.finish()?;
+
+        Ok(())
+    }
+
     pub fn validate(&self) -> Result<(), anyhow::Error> {
         Ok(())
     }
@@ -271,6 +404,23 @@ REM After each change, You must launch the FirsMission.bat for it to be taken in
     pub fn set_mission_name(&mut self, name: String) {
         self.campaign_header.title = name;
     }
+}
+
+fn copy_to_zip<T>(
+    file_path: &str,
+    zip_path: &str,
+    zip: &mut ZipWriter<T>,
+    options: &FileOptions,
+) -> Result<(), anyhow::Error>
+where
+    T: Write + io::Seek,
+{
+    let buf = fs::read(file_path)?;
+
+    zip.start_file(zip_path, *options)?;
+    zip.write(buf.as_slice())?;
+
+    Ok(())
 }
 
 trait NewFromMission {
@@ -293,7 +443,7 @@ mod tests {
         let mut new_instance = DCEInstance::new_from_miz("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\Falklands v1\\Init\\base_mission.miz".into()).unwrap();
         new_instance.set_mission_name("Falklands v1".into());
         new_instance.oob_air.set_player_defaults();
-        new_instance.generate_lua("test_run\\".into()).unwrap();
+        new_instance.export_dce_format("test_run\\".into()).unwrap();
     }
 
     #[test]
@@ -305,5 +455,16 @@ mod tests {
         let second_instance = DCEInstance::load_from_json("test.json").unwrap();
 
         assert_eq!(&instance.mission.theatre, &second_instance.mission.theatre);
+    }
+
+    #[test]
+    fn to_zip() {
+        let mut new_instance =
+            DCEInstance::new_from_miz("test_resources\\base_mission.miz".into()).unwrap();
+        new_instance.set_mission_name("Falklands v1".into());
+        new_instance.oob_air.set_player_defaults();
+        new_instance
+            .export_dce_zip("test_run\\test.zip".into())
+            .unwrap();
     }
 }

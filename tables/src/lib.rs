@@ -142,8 +142,15 @@ impl HeaderField {
             FieldType::VecString => todo!(),
             FieldType::Debug => todo!(),
             FieldType::IntTime => {
-                let time =
-                    NaiveTime::parse_from_str(value, "%H:%M:%S").expect("Expected HH:MM:SS string");
+                let time;
+                let attempt_hms = NaiveTime::parse_from_str(value, "%H:%M:%S");
+                match attempt_hms {
+                    Ok(t) => time = t,
+                    Err(_) => {
+                        time = NaiveTime::parse_from_str(value, "%H:%M")
+                            .expect("Expected HH:MM:SS or HH:MM")
+                    }
+                }
                 item.field_mut(&self.field)
                     .ok_or(anyhow!("Couldn't get field {}", &self.field))?
                     .apply(&time.num_seconds_from_midnight());

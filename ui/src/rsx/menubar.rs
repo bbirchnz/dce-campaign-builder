@@ -99,17 +99,19 @@ pub fn menu_bar(cx: Scope<MenuBarProps>) -> Element {
     };
 
     let export_click = move |_| {
-        let result = FileDialog::new().show_open_single_dir();
+        let result = FileDialog::new()
+            .add_filter("DCE_Manager compatible zip", &["zip"])
+            .show_save_single_file();
         match result {
             Ok(Some(path)) => {
                 if let Some(instance) = atom_instance.read().as_ref() {
-                    if let Err(e) = instance.generate_lua(&path.to_string_lossy()) {
+                    if let Err(e) = instance.export_dce_zip(&path.to_string_lossy()) {
                         warn!("Failed to export with error: {}", e)
                     }
                 }
             }
             Ok(None) => {}
-            Err(e) => warn!("Select directory failed with error: {}", e),
+            Err(e) => warn!("Select zip file to save failed with error: {}", e),
         };
     };
 

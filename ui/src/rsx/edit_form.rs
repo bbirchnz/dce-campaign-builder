@@ -6,7 +6,7 @@ use log::warn;
 use tables::{FieldType, HeaderField, TableHeader};
 
 use crate::{
-    selectable::{Selectable, ToSelectable},
+    selectable::{Selectable, ToSelectable, ValidationResult},
     INSTANCE, SELECTED,
 };
 
@@ -53,29 +53,52 @@ pub struct EditProps {
 
 pub fn edit_form<T>(cx: Scope<EditProps>) -> Element
 where
-    T: Struct + ToSelectable + std::fmt::Debug + TableHeader,
+    T: Struct + ToSelectable + std::fmt::Debug + TableHeader + Clone,
 {
     let atom_instance = use_atom_ref(cx, INSTANCE);
-    let atom_selectable = use_atom_ref(cx, SELECTED);
 
-    let item = T::from_selectable(&cx.props.item).unwrap();
-    let orig_name = item.get_name();
+    let validation_state = use_state(cx, || ValidationResult::Pass);
+    let item_state = use_state(cx, || T::from_selectable(&cx.props.item).unwrap());
+
+    let orig_name = item_state.get().get_name();
 
     let on_submit = move |ev: FormEvent| {
-        let mut selectable = atom_selectable.write();
-        let mut instance_refmut = atom_instance.write();
-        let w_instance = instance_refmut.as_mut().unwrap();
-        let item_to_change = T::get_mut_by_name(w_instance, &orig_name);
+        let atom_selectable = use_atom_ref(cx, SELECTED);
+        let mut current_item = item_state.make_mut();
 
+        // apply the values from the form
         for (k, v) in ev.values.iter() {
             // find header that matches key:
             let h = cx.props.headers.iter().find(|h| h.display == *k).unwrap();
-            if let Err(e) = h.set_value_fromstr(item_to_change, v) {
+            if let Err(e) = h.set_value_fromstr(&mut *current_item, v) {
                 warn!("Failed to set field: {} with {}. Error: {}", h.field, v, e);
             }
         }
-        // update selectable:
-        *selectable = item_to_change.to_selectable();
+
+        // validate
+        let validation_result = {
+            let instance_ref = atom_instance.read();
+            let r_instance = instance_ref.as_ref().unwrap();
+            current_item.validate(r_instance)
+        };
+
+        match validation_result {
+            ValidationResult::Pass => {
+                // get mutable references and pass into the various atoms
+                let mut instance_refmut = atom_instance.write();
+                let w_instance = instance_refmut.as_mut().unwrap();
+                let item_to_change = T::get_mut_by_name(w_instance, &orig_name);
+                *item_to_change = current_item.clone();
+
+                let mut selectable = atom_selectable.write();
+                *selectable = item_to_change.to_selectable();
+                validation_state.modify(|_| ValidationResult::Pass);
+            }
+            ValidationResult::Fail(errors) => {
+                warn!("Got Errors: {:?}", errors);
+                validation_state.modify(|_| ValidationResult::Fail(errors));
+            }
+        }
     };
 
     cx.render(rsx!{
@@ -93,8 +116,7 @@ where
             }
             form {
                 autocomplete: "off",
-                onsubmit: on_submit,
-                oninput: move |ev| println!("Input {:?}", ev.values),
+                oninput: on_submit,
                 for h in T::get_header().iter().filter(|h| fieldtype_editable(&h.type_)) {
                     div { class: "flex w-full mt-1 mb-1",
                         label { class: "flex-grow p-1", r#for: "{h.display}", "{h.display}" }
@@ -103,24 +125,37 @@ where
                             autocomplete: "off",
                             r#type: "{fieldtype_to_input(&h.type_)}",
                             name: "{h.display}",
-                            value: "{h.get_value_string(&item)}",
+                            value: "{h.get_value_string(item_state.get())}",
                             readonly: "{!h.editable}",
                             disabled: "{!h.editable}",
                             step: "any",
-                            checked: "{h.get_value_string(&item) == \"true\"}"
+                            checked: "{h.get_value_string(item_state.get()) == \"true\"}"
                         }
                     }
                 }
-                div { class: "flex",
-                    div { class: "flex-grow" }
-                    button {
-                        class: "rounded p-2 mt-1 mb-1 bg-sky-300 border-1",
-                        r#type: "submit",
-                        value: "Submit",
-                        "Submit changes"
-                    }
-                }
+                render_errors { result: validation_state.get().to_owned()}
             }
         }
     })
+}
+
+#[derive(PartialEq, Props)]
+struct RenderErrorProps {
+    result: ValidationResult,
+}
+
+fn render_errors<'a>(cx: Scope<RenderErrorProps>) -> Option<VNode> {
+    if let ValidationResult::Fail(errors) = &cx.props.result {
+        return cx.render(rsx! {
+            for e in errors.iter() {
+                rsx!{
+                    div {
+                        class: "italic text-xs p-1 text-red-700",
+                        "{e.error}"
+                    }
+                }
+            }
+        });
+    }
+    None
 }

@@ -83,6 +83,26 @@ impl DBAirbasesInternal {
 
         result
     }
+
+    pub fn airbase_exists(&self, name: &str) -> bool {
+        if let Some(_) = self.fixed.iter().find(|n| n._name == name) {
+            return true;
+        }
+        if let Some(_) = self.ship.iter().find(|n| n._name == name) {
+            return true;
+        }
+        if let Some(_) = self.air_start.iter().find(|n| n._name == name) {
+            return true;
+        }
+        if let Some(_) = self.reserve.iter().find(|n| n._name == name) {
+            return true;
+        }
+        if let Some(_) = self.farp.iter().find(|n| n._name == name) {
+            return true;
+        }
+
+        false
+    }
 }
 
 impl Mappables for DBAirbasesInternal {

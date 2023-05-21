@@ -8,6 +8,7 @@ use crate::{
 use anyhow::anyhow;
 use bevy_reflect::{FromReflect, Reflect};
 use log::info;
+use proj::Proj;
 use serde::{Deserialize, Serialize};
 
 /// A much more convenient form where everythings in vecs appropriate to their type
@@ -174,7 +175,11 @@ impl TargetListInternal {
 }
 
 impl Mappables for TargetListInternal {
-    fn to_mappables(&self, instance: &crate::DCEInstance) -> Vec<crate::mappable::MapPoint> {
+    fn to_mappables(
+        &self,
+        instance: &crate::DCEInstance,
+        proj: &Proj,
+    ) -> Vec<crate::mappable::MapPoint> {
         let mut map_points = Vec::default();
 
         self.cap.iter().for_each(|cap| {
@@ -183,7 +188,7 @@ impl Mappables for TargetListInternal {
                 Ok(zone) => {
                     let (x2, y2) = offset(zone.x, zone.y, cap.axis, cap.radius);
                     info!("{} {}, {} {}", zone.x, zone.y, x2, y2);
-                    let (lon2, lat2) = convert_dcs_lat_lon(x2, y2, &instance.projection);
+                    let (lon2, lat2) = convert_dcs_lat_lon(x2, y2, proj);
                     map_points.push(
                         MapPoint::new_from_dcs(
                             zone.x,
@@ -191,7 +196,7 @@ impl Mappables for TargetListInternal {
                             cap._name.to_owned(),
                             cap._side.to_owned(),
                             "TargetCAP".into(),
-                            &instance.projection,
+                            proj,
                         )
                         .add_extras(HashMap::from([
                             ("radius".to_string(), cap.radius),
@@ -213,7 +218,7 @@ impl Mappables for TargetListInternal {
                 Ok(zone) => {
                     let (x2, y2) = offset(zone.x, zone.y, refuel.axis, refuel.radius);
                     info!("{} {}, {} {}", zone.x, zone.y, x2, y2);
-                    let (lon2, lat2) = convert_dcs_lat_lon(x2, y2, &instance.projection);
+                    let (lon2, lat2) = convert_dcs_lat_lon(x2, y2, proj);
                     map_points.push(
                         MapPoint::new_from_dcs(
                             zone.x,
@@ -221,7 +226,7 @@ impl Mappables for TargetListInternal {
                             refuel._name.to_owned(),
                             refuel._side.to_owned(),
                             "TargetRefuel".into(),
-                            &instance.projection,
+                            proj,
                         )
                         .add_extras(HashMap::from([
                             ("radius".to_string(), refuel.radius),
@@ -253,7 +258,7 @@ impl Mappables for TargetListInternal {
                         strike.text.to_owned(),
                         strike._side.to_owned(),
                         "TargetStrike".into(),
-                        &instance.projection,
+                        proj,
                     ));
                 }
             }
@@ -275,7 +280,7 @@ impl Mappables for TargetListInternal {
                         antiship.text.to_owned(),
                         antiship._side.to_owned(),
                         "TargetAntiShipStrike".into(),
-                        &instance.projection,
+                        proj,
                     ));
                 }
             }

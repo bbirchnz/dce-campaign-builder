@@ -361,9 +361,9 @@ impl ToSelectable for Header {
 
         if self.dawn >= self.dusk {
             errors.push(ValidationError::new(
-                "dawm",
+                "dawn",
                 "Dawn time",
-                "Dawn must be earlier than usk",
+                "Dawn must be earlier than Dusk",
             ));
         }
 

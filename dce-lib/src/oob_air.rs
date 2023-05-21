@@ -2,6 +2,7 @@ use anyhow::anyhow;
 
 use bevy_reflect::{FromReflect, Reflect};
 use log::warn;
+use proj::Proj;
 use serde::{Deserialize, Serialize};
 use std::{collections::HashMap, iter::repeat};
 use tables::{FieldType, HeaderField};
@@ -216,8 +217,12 @@ impl tables::TableHeader for Squadron {
 }
 
 impl Mappables for OobAir {
-    fn to_mappables(&self, instance: &crate::DCEInstance) -> Vec<crate::mappable::MapPoint> {
-        let airbase_mappables = instance.airbases.to_mappables(&instance);
+    fn to_mappables(
+        &self,
+        instance: &crate::DCEInstance,
+        proj: &Proj,
+    ) -> Vec<crate::mappable::MapPoint> {
+        let airbase_mappables = instance.airbases.to_mappables(&instance, proj);
 
         instance
             .oob_air

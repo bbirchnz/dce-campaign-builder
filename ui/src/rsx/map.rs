@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use dce_lib::mappable::Mappables;
+use dce_lib::{mappable::Mappables, projections::proj_from_map};
 use dioxus::prelude::*;
 use dioxus_desktop::{use_window, DesktopContext};
 use fermi::use_atom_ref;
@@ -14,9 +14,10 @@ pub fn map(cx: Scope) -> Element {
     let atom = use_atom_ref(cx, INSTANCE).read();
 
     let instance = atom.as_ref().unwrap();
-    let mut airbases = instance.airbases.to_mappables(instance);
-    let targets = instance.target_list.to_mappables(instance);
-    let squadrons = instance.oob_air.to_mappables(instance);
+    let proj = proj_from_map(&instance.projection).unwrap();
+    let mut airbases = instance.airbases.to_mappables(instance, &proj);
+    let targets = instance.target_list.to_mappables(instance, &proj);
+    let squadrons = instance.oob_air.to_mappables(instance, &proj);
     airbases.extend(targets);
     airbases.extend(squadrons);
 
@@ -31,6 +32,7 @@ pub fn map(cx: Scope) -> Element {
     let w = use_window(cx).clone();
     // draw with slight delay so its done after the canvas is ready
     use_effect(cx, (div_id, &code.to_owned()), move |_| {
+        info!("Triggering Drawing Map");
         delayed_js(w, code, 10)
     });
 

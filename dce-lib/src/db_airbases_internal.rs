@@ -1,4 +1,5 @@
 use bevy_reflect::{FromReflect, Reflect};
+use proj::Proj;
 use serde::{Deserialize, Serialize};
 
 use crate::{
@@ -106,7 +107,11 @@ impl DBAirbasesInternal {
 }
 
 impl Mappables for DBAirbasesInternal {
-    fn to_mappables(&self, instance: &crate::DCEInstance) -> Vec<crate::mappable::MapPoint> {
+    fn to_mappables(
+        &self,
+        instance: &crate::DCEInstance,
+        proj: &Proj,
+    ) -> Vec<crate::mappable::MapPoint> {
         let mut result = Vec::default();
 
         self.fixed.iter().for_each(|item| {
@@ -116,7 +121,7 @@ impl Mappables for DBAirbasesInternal {
                 item._name.to_owned(),
                 item.side.to_owned(),
                 "FixedAirBase".into(),
-                &instance.projection,
+                proj,
             ));
         });
 
@@ -133,7 +138,7 @@ impl Mappables for DBAirbasesInternal {
                     item._name.to_owned(),
                     item.side.to_owned(),
                     "ShipAirBase".to_owned(),
-                    &instance.projection,
+                    proj,
                 ));
             }
         });

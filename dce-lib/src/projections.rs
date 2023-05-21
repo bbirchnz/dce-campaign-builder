@@ -32,8 +32,8 @@ pub fn projection_from_theatre(theatre: &str) -> Result<TransverseMercator, anyh
     }
 }
 
-pub fn convert_dcs_lat_lon(x: f64, y: f64, map: &TransverseMercator) -> (f64, f64) {
-    let proj = Proj::new_known_crs(
+pub fn proj_from_map(map: &TransverseMercator) -> Result<Proj, anyhow::Error> {
+    Proj::new_known_crs(
         &format!(
             "+proj=tmerc +lat_0=0 +lon_0={} +k_0={} +x_0={} +y_0={}",
             map.central_meridian, map.scale_factor, map.false_easting, map.false_northing
@@ -41,7 +41,10 @@ pub fn convert_dcs_lat_lon(x: f64, y: f64, map: &TransverseMercator) -> (f64, f6
         "WGS84",
         None,
     )
-    .unwrap();
+    .map_err(|e| anyhow!("{:?}", e))
+}
+
+pub fn convert_dcs_lat_lon(x: f64, y: f64, proj: &Proj) -> (f64, f64) {
     proj.convert((y, x)).unwrap()
 }
 
@@ -55,12 +58,13 @@ pub fn offset(x_init: f64, y_init: f64, axis_deg: f64, distance_m: f64) -> (f64,
 #[cfg(test)]
 mod tests {
     use super::{convert_dcs_lat_lon, offset};
-    use crate::projections::PG;
+    use crate::projections::{proj_from_map, PG};
     use approx_eq::assert_approx_eq;
 
     #[test]
     fn can_convert_to_lat_lon() {
-        let (x, y) = convert_dcs_lat_lon(-100594.371094, -88875.371094, &PG);
+        let (x, y) =
+            convert_dcs_lat_lon(-100594.371094, -88875.371094, &proj_from_map(&PG).unwrap());
 
         assert_approx_eq!(x, 55.3652612);
         assert_approx_eq!(y, 25.25637587);

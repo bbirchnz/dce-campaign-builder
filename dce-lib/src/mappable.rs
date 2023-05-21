@@ -1,11 +1,9 @@
 use std::collections::HashMap;
 
+use proj::Proj;
 use serde::{Deserialize, Serialize};
 
-use crate::{
-    projections::{convert_dcs_lat_lon, TransverseMercator},
-    DCEInstance,
-};
+use crate::{projections::convert_dcs_lat_lon, DCEInstance};
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
 pub struct MapPoint {
@@ -25,7 +23,7 @@ impl MapPoint {
         name: String,
         side: String,
         class: String,
-        map: &TransverseMercator,
+        map: &Proj,
     ) -> MapPoint {
         let (lon, lat) = convert_dcs_lat_lon(x, y, map);
         MapPoint {
@@ -45,5 +43,5 @@ impl MapPoint {
 }
 
 pub trait Mappables {
-    fn to_mappables(&self, instance: &DCEInstance) -> Vec<MapPoint>;
+    fn to_mappables(&self, instance: &DCEInstance, proj: &Proj) -> Vec<MapPoint>;
 }

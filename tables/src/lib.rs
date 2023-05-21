@@ -114,6 +114,14 @@ impl HeaderField {
                     .expect(&format!("Failed to get field {} as f64", &self.field));
                 format!("{:.0}", meters * METERS_TO_NM)
             }
+            FieldType::DurationMin => {
+                let seconds = item
+                    .field(&self.field)
+                    .unwrap()
+                    .downcast_ref::<u32>()
+                    .expect(&format!("Failed to get field {} as f64", &self.field));
+                format!("{:.0}", seconds / 60)
+            }
         }
     }
 
@@ -183,6 +191,13 @@ impl HeaderField {
                     .ok_or(anyhow!("Couldn't get field {}", &self.field))?
                     .apply(&meters);
             }
+            FieldType::DurationMin => {
+                let seconds = value.parse::<u32>()? * 60;
+
+                item.field_mut(&self.field)
+                    .ok_or(anyhow!("Couldn't get field {}", &self.field))?
+                    .apply(&seconds);
+            }
         };
         Ok(())
     }
@@ -201,6 +216,7 @@ pub enum FieldType {
     AltitudeFeet,
     SpeedKnotsTAS,
     DistanceNM,
+    DurationMin,
 }
 
 #[cfg(test)]

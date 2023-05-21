@@ -3,7 +3,7 @@
 use dce_lib::{
     campaign_header::Header,
     db_airbases::FixedAirBase,
-    loadouts::CAPLoadout,
+    loadouts::{CAPLoadout, StrikeLoadout},
     mappable::MapPoint,
     oob_air::Squadron,
     target_list::{Strike, CAP},
@@ -159,6 +159,10 @@ fn main_body(cx: Scope) -> Element {
                     path: "images/settings_grey.png".into(),
                     on_click: |_| select_first_cap_loadout(cx)
                 }
+                icon_button {
+                    path: "images/settings_grey.png".into(),
+                    on_click: |_| select_first_strike_loadout(cx)
+                }
             }
             // edit col
             div { class: "{edit_col_width} min-h-0 bg-sky-100",
@@ -180,6 +184,9 @@ fn main_body(cx: Scope) -> Element {
                     },
                     Selectable::LoadoutCAP(_) => rsx!{
                         edit_form::<CAPLoadout> { headers: CAPLoadout::get_header(), title: "Edit CAP Loadout".into(), item: selected_form.clone()}
+                    },
+                    Selectable::LoadoutStrike(_) => rsx!{
+                        edit_form::<StrikeLoadout> { headers: StrikeLoadout::get_header(), title: "Edit Strike Loadout".into(), item: selected_form.clone()}
                     },
                     _ => rsx!{{}}
                 }
@@ -207,6 +214,9 @@ fn main_body(cx: Scope) -> Element {
                         },
                         Selectable::LoadoutCAP(_) => rsx! {
                             rsx::table { headers: CAPLoadout::get_header(), data: instance.loadouts.cap.to_vec() }
+                        },
+                        Selectable::LoadoutStrike(_) => rsx! {
+                            rsx::table { headers: StrikeLoadout::get_header(), data: instance.loadouts.strike.to_vec() }
                         },
                         _ => rsx!{{}}
                         }
@@ -317,5 +327,22 @@ fn select_first_cap_loadout(cx: Scope) {
     if let Some(item) = atom_instance.read().as_ref().unwrap().loadouts.cap.first() {
         let mut writable = atom_selected.write();
         *writable = Selectable::LoadoutCAP(item.clone());
+    }
+}
+
+fn select_first_strike_loadout(cx: Scope) {
+    let atom_instance = use_atom_ref(cx, INSTANCE);
+    let atom_selected = use_atom_ref(cx, SELECTED);
+
+    if let Some(item) = atom_instance
+        .read()
+        .as_ref()
+        .unwrap()
+        .loadouts
+        .strike
+        .first()
+    {
+        let mut writable = atom_selected.write();
+        *writable = Selectable::LoadoutStrike(item.clone());
     }
 }

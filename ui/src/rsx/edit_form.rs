@@ -23,6 +23,7 @@ fn fieldtype_to_input(field: &FieldType) -> String {
         FieldType::AltitudeFeet => "number".into(),
         FieldType::SpeedKnotsTAS => "number".into(),
         FieldType::DistanceNM => "number".into(),
+        FieldType::DurationMin => "number".into(),
     }
 }
 
@@ -39,6 +40,7 @@ fn fieldtype_editable(field: &FieldType) -> bool {
         FieldType::AltitudeFeet => true,
         FieldType::SpeedKnotsTAS => true,
         FieldType::DistanceNM => true,
+        FieldType::DurationMin => true,
     }
 }
 

@@ -13,10 +13,12 @@ pub struct AirframeLoadout {
     #[serde(rename = "Strike")]
     pub strike: Option<HashMap<String, StrikeLoadout>>,
     #[serde(rename = "Anti-ship Strike")]
-    pub anti_ship: Option<HashMap<String, StrikeLoadout>>,
+    pub anti_ship: Option<HashMap<String, AntiShipLoadout>>,
     #[serde(rename = "CAP")]
     pub cap: Option<HashMap<String, CAPLoadout>>,
 }
+
+pub type AntiShipLoadout = StrikeLoadout;
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
 pub struct StrikeLoadout {
@@ -30,8 +32,8 @@ pub struct StrikeLoadout {
     #[serde(rename = "adverseWeather")]
     pub adverse_weather: bool,
     pub range: f64,
-    pub capability: f64,
-    pub firepower: f64,
+    pub capability: u32,
+    pub firepower: u32,
     #[serde(rename = "vCruise")]
     pub v_cruise: f64,
     #[serde(rename = "vAttack")]
@@ -42,7 +44,8 @@ pub struct StrikeLoadout {
     pub h_attack: f64,
     pub standoff: Option<f64>,
     #[serde(rename = "tStation")]
-    pub t_station: Option<f64>,
+    #[serde(default)]
+    pub t_station: u32,
     #[serde(rename = "LDSD")]
     pub ldsd: bool,
     pub stores: Payload,
@@ -72,7 +75,8 @@ pub struct CAPLoadout {
     #[serde(rename = "hAttack")]
     pub h_attack: f64,
     #[serde(rename = "tStation")]
-    pub t_station: Option<f64>,
+    #[serde(default)]
+    pub t_station: u32,
     #[serde(rename = "LDSD")]
     pub ldsd: bool,
     pub stores: Payload,
@@ -82,57 +86,63 @@ pub struct CAPLoadout {
     pub _name: String,
 }
 
+fn common_headers() -> Vec<HeaderField> {
+    vec![
+        HeaderField {
+            field: "_name".into(),
+            display: "Name".into(),
+            type_: FieldType::String,
+            editable: true,
+        },
+        HeaderField {
+            field: "_airframe".into(),
+            display: "Airframe".into(),
+            type_: FieldType::String,
+            editable: false,
+        },
+        HeaderField {
+            field: "day".into(),
+            display: "Day".into(),
+            type_: FieldType::Bool,
+            editable: true,
+        },
+        HeaderField {
+            field: "night".into(),
+            display: "Night".into(),
+            type_: FieldType::Bool,
+            editable: true,
+        },
+        HeaderField {
+            field: "adverse_weather".into(),
+            display: "Adverse Weather".into(),
+            type_: FieldType::Bool,
+            editable: true,
+        },
+        HeaderField {
+            field: "range".into(),
+            display: "Range (nm)".into(),
+            type_: FieldType::DistanceNM,
+            editable: true,
+        },
+        HeaderField {
+            field: "capability".into(),
+            display: "Capability".into(),
+            type_: FieldType::Int,
+            editable: true,
+        },
+        HeaderField {
+            field: "firepower".into(),
+            display: "Firepower".into(),
+            type_: FieldType::Int,
+            editable: true,
+        },
+    ]
+}
+
 impl TableHeader for CAPLoadout {
     fn get_header() -> Vec<tables::HeaderField> {
-        vec![
-            HeaderField {
-                field: "_name".into(),
-                display: "Name".into(),
-                type_: FieldType::String,
-                editable: true,
-            },
-            HeaderField {
-                field: "_airframe".into(),
-                display: "Airframe".into(),
-                type_: FieldType::String,
-                editable: false,
-            },
-            HeaderField {
-                field: "day".into(),
-                display: "Day".into(),
-                type_: FieldType::Bool,
-                editable: true,
-            },
-            HeaderField {
-                field: "night".into(),
-                display: "Night".into(),
-                type_: FieldType::Bool,
-                editable: true,
-            },
-            HeaderField {
-                field: "adverse_weather".into(),
-                display: "Adverse Weather".into(),
-                type_: FieldType::Bool,
-                editable: true,
-            },
-            HeaderField {
-                field: "range".into(),
-                display: "Range (nm)".into(),
-                type_: FieldType::DistanceNM,
-                editable: true,
-            },
-            HeaderField {
-                field: "capability".into(),
-                display: "Capability".into(),
-                type_: FieldType::Int,
-                editable: true,
-            },
-            HeaderField {
-                field: "firepower".into(),
-                display: "Firepower".into(),
-                type_: FieldType::Int,
-                editable: true,
-            },
+        let mut common = common_headers();
+        common.extend(vec![
             HeaderField {
                 field: "v_cruise".into(),
                 display: "Cruise Speed (knots TAS)".into(),
@@ -145,7 +155,47 @@ impl TableHeader for CAPLoadout {
                 type_: FieldType::AltitudeFeet,
                 editable: true,
             },
-        ]
+            HeaderField {
+                field: "t_station".into(),
+                display: "Time on station (min)".into(),
+                type_: FieldType::DurationMin,
+                editable: true,
+            },
+        ]);
+        common
+    }
+}
+
+impl TableHeader for StrikeLoadout {
+    fn get_header() -> Vec<tables::HeaderField> {
+        let mut common = common_headers();
+        common.extend(vec![
+            HeaderField {
+                field: "v_cruise".into(),
+                display: "Cruise Speed (knots TAS)".into(),
+                type_: FieldType::SpeedKnotsTAS,
+                editable: true,
+            },
+            HeaderField {
+                field: "h_cruise".into(),
+                display: "Cruise Altitude (ft)".into(),
+                type_: FieldType::AltitudeFeet,
+                editable: true,
+            },
+            HeaderField {
+                field: "v_attack".into(),
+                display: "Attack Speed (knots TAS)".into(),
+                type_: FieldType::SpeedKnotsTAS,
+                editable: true,
+            },
+            HeaderField {
+                field: "h_attack".into(),
+                display: "Attack Altitude (ft)".into(),
+                type_: FieldType::AltitudeFeet,
+                editable: true,
+            },
+        ]);
+        common
     }
 }
 
@@ -205,14 +255,14 @@ impl NewFromMission for Loadouts {
                                 night: true,
                                 adverse_weather: true,
                                 range: 500000.,
-                                capability: 1.,
-                                firepower: 1.,
+                                capability: 1,
+                                firepower: 1,
                                 v_cruise: 225.,
                                 v_attack: 277.5,
                                 h_cruise: 7000.,
                                 h_attack: 6706.,
                                 standoff: None,
-                                t_station: None,
+                                t_station: 0,
                                 ldsd: false,
                                 stores: u.payload.clone(),
                                 self_escort: false,
@@ -236,7 +286,7 @@ impl NewFromMission for Loadouts {
                                 v_attack: 246.,
                                 h_cruise: 6096.,
                                 h_attack: 6096.,
-                                t_station: Some(1200.),
+                                t_station: 2400,
                                 ldsd: false,
                                 stores: u.payload.clone(),
                                 sortie_rate: 6,
@@ -261,14 +311,14 @@ impl NewFromMission for Loadouts {
                                 night: true,
                                 adverse_weather: true,
                                 range: 500000.,
-                                capability: 1.,
-                                firepower: 1.,
+                                capability: 1,
+                                firepower: 1,
                                 v_cruise: 225.,
                                 v_attack: 277.5,
                                 h_cruise: 7000.,
                                 h_attack: 6706.,
                                 standoff: None,
-                                t_station: None,
+                                t_station: 0,
                                 ldsd: false,
                                 stores: u.payload.clone(),
                                 self_escort: false,

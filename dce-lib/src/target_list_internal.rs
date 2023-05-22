@@ -3,7 +3,8 @@ use std::{collections::HashMap, iter::repeat};
 use crate::{
     mappable::{MapPoint, Mappables},
     projections::{convert_dcs_lat_lon, offset},
-    target_list::{self, FighterSweep, Intercept, Refueling, Strike, Target, TargetList, CAP},
+    target_list::{self, FighterSweep, Intercept, Refueling, Target, TargetList},
+    targets::{cap::CAP, strike::Strike},
 };
 use anyhow::anyhow;
 use bevy_reflect::{FromReflect, Reflect};

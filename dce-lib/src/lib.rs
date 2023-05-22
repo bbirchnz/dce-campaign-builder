@@ -38,6 +38,7 @@ pub mod projections;
 pub mod serde_utils;
 pub mod target_list;
 pub mod target_list_internal;
+pub mod targets;
 pub mod trigger;
 
 #[derive(Deserialize, Serialize)]

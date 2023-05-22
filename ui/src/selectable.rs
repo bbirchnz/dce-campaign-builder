@@ -4,7 +4,7 @@ use dce_lib::{
     loadouts::{CAPLoadout, StrikeLoadout},
     mappable::MapPoint,
     oob_air::Squadron,
-    target_list::{Strike, CAP},
+    targets::{cap::CAP, strike::Strike},
     DCEInstance,
 };
 
@@ -175,7 +175,7 @@ impl ToSelectable for Strike {
     }
 
     fn get_name(&self) -> String {
-        self.text.to_string()
+        self._name.to_string()
     }
 
     fn validate(&self, instance: &DCEInstance) -> ValidationResult {
@@ -260,7 +260,7 @@ impl ToSelectable for CAP {
     }
 
     fn get_name(&self) -> String {
-        self.text.to_string()
+        self._name.to_string()
     }
 
     fn validate(&self, instance: &DCEInstance) -> ValidationResult {

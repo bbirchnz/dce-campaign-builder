@@ -2,18 +2,18 @@ use std::{collections::HashMap, iter::repeat};
 
 use bevy_reflect::{FromReflect, Reflect};
 use serde::{Deserialize, Serialize};
-use tables::{FieldType, HeaderField, TableHeader};
-use validator::Validate;
 
-use crate::{serde_utils::LuaFileBased, NewFromMission};
+use crate::{
+    serde_utils::LuaFileBased,
+    targets::{cap::CAP, strike::Strike, TargetFirepower},
+    NewFromMission,
+};
 
 use log::warn;
 
-#[derive(Deserialize, Serialize, Debug, PartialEq, Validate)]
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
 pub struct TargetList {
-    #[validate]
     pub blue: HashMap<String, Target>,
-    #[validate]
     pub red: HashMap<String, Target>,
 }
 
@@ -179,63 +179,16 @@ pub enum Target {
     AntiShipStrike(Strike),
 }
 
-impl Validate for Target {
-    fn validate(&self) -> Result<(), validator::ValidationErrors> {
-        match self {
-            Target::CAP(i) => i.validate(),
-            Target::Refueling(i) => i.validate(),
-            Target::Intercept(i) => i.validate(),
-            Target::FighterSweep(i) => i.validate(),
-            Target::Strike(i) => i.validate(),
-            Target::AntiShipStrike(i) => i.validate(),
-        }
-    }
-}
-
-#[derive(Serialize, Deserialize, Debug, PartialEq, Validate, Clone, Reflect, FromReflect)]
-pub struct TargetFirepower {
-    #[validate(range(min = 1, max = 20))]
-    min: u32,
-    #[validate(range(min = 1, max = 20))]
-    max: u32,
-}
-
-#[derive(Serialize, Deserialize, Debug, PartialEq, Validate, Clone, Reflect, FromReflect)]
-pub struct CAP {
-    #[validate(range(min = 1, max = 50))]
-    pub priority: u32,
-    #[serde(rename = "refpoint")]
-    pub ref_point: String,
-    #[validate(range(min = 10000, max = 1000000))]
-    pub radius: f64,
-    #[validate(range(min = 0, max = 360))]
-    pub axis: f64,
-    pub text: String,
-    pub inactive: bool,
-    #[validate]
-    pub firepower: TargetFirepower,
-    #[serde(default)]
-    pub _name: String,
-    #[serde(default)]
-    pub _side: String,
-    // #[serde(default)]
-    // pub attributes: Option<Vec<String>>,
-}
-
-#[derive(Serialize, Deserialize, Debug, PartialEq, Validate, Clone, Reflect, FromReflect)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
 pub struct Refueling {
-    #[validate(range(min = 1, max = 50))]
     pub priority: u32,
     #[serde(rename = "refpoint")]
     pub ref_point: String,
-    #[validate(range(min = 10000, max = 1000000))]
     pub radius: f64,
-    #[validate(range(min = 0, max = 360))]
     pub axis: f64,
     pub text: String,
     #[serde(default)]
     pub inactive: bool,
-    #[validate]
     pub firepower: TargetFirepower,
     #[serde(default)]
     pub _name: String,
@@ -243,16 +196,14 @@ pub struct Refueling {
     pub _side: String,
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Validate, Clone, Reflect, FromReflect)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
 pub struct Intercept {
-    #[validate(range(min = 1, max = 50))]
     pub priority: u32,
     #[serde(default)]
     pub text: String,
     pub base: String,
     #[serde(default)]
     pub inactive: bool,
-    #[validate]
     pub firepower: TargetFirepower,
     #[serde(default)]
     pub _name: String,
@@ -260,156 +211,23 @@ pub struct Intercept {
     pub _side: String,
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Validate, Clone, Reflect, FromReflect)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
 pub struct FighterSweep {
-    #[validate(range(min = 1, max = 50))]
     pub priority: u32,
     pub text: String,
     pub x: f64,
     pub y: f64,
     #[serde(default)]
     pub inactive: bool,
-    #[validate]
     pub firepower: TargetFirepower,
     #[serde(default)]
     pub _name: String,
     #[serde(default)]
     pub _side: String,
-}
-
-#[derive(Serialize, Deserialize, Debug, PartialEq, Validate, Clone, Reflect, FromReflect)]
-pub struct Strike {
-    #[validate(range(min = 1, max = 50))]
-    pub priority: u32,
-    #[serde(default)]
-    pub text: String,
-    #[serde(default)]
-    pub inactive: bool,
-    #[validate]
-    pub firepower: TargetFirepower,
-    #[serde(default = "default_class")]
-    pub class: String,
-    #[serde(rename = "name")]
-    pub class_template: Option<String>,
-    pub elements: Option<Vec<StrikeElement>>,
-    #[serde(default)]
-    pub _name: String,
-    #[serde(default)]
-    pub _side: String,
-}
-
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
-#[serde(untagged)]
-pub enum StrikeElement {
-    FixedCoord(StrikeFixedCoordTarget),
-    NamedStatic(StrikeNamedStaticTarget),
-}
-
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
-pub struct StrikeFixedCoordTarget {
-    pub name: String,
-    pub x: f64,
-    pub y: f64,
-}
-
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
-pub struct StrikeNamedStaticTarget {
-    pub name: String,
-}
-
-fn default_class() -> String {
-    "static".to_string()
-}
-
-impl TableHeader for CAP {
-    fn get_header() -> Vec<tables::HeaderField> {
-        vec![
-            HeaderField {
-                field: "text".into(),
-                display: "Display Text".into(),
-                type_: FieldType::String,
-                editable: true,
-            },
-            HeaderField {
-                field: "_side".into(),
-                display: "Side".into(),
-                type_: FieldType::String,
-                editable: false,
-            },
-            HeaderField {
-                field: "priority".into(),
-                display: "Priority".into(),
-                type_: FieldType::Int,
-                editable: true,
-            },
-            HeaderField {
-                field: "firepower".into(),
-                display: "Req Firepower".into(),
-                type_: FieldType::Debug,
-                editable: false,
-            },
-            HeaderField {
-                field: "axis".into(),
-                display: "Axis".into(),
-                type_: FieldType::Float(|v| format!("{:.0}", v)),
-                editable: true,
-            },
-            HeaderField {
-                field: "radius".into(),
-                display: "Radius".into(),
-                type_: FieldType::Float(|v| format!("{:.0}", v)),
-                editable: true,
-            },
-            HeaderField {
-                display: "Inactive".into(),
-                field: "inactive".into(),
-                type_: FieldType::Bool,
-                editable: true,
-            },
-        ]
-    }
-}
-
-impl TableHeader for Strike {
-    fn get_header() -> Vec<HeaderField> {
-        vec![
-            HeaderField {
-                field: "text".into(),
-                display: "Display Text".into(),
-                type_: FieldType::String,
-                editable: true,
-            },
-            HeaderField {
-                field: "_side".into(),
-                display: "Side".into(),
-                type_: FieldType::String,
-                editable: false,
-            },
-            HeaderField {
-                field: "priority".into(),
-                display: "Priority".into(),
-                type_: FieldType::Int,
-                editable: true,
-            },
-            HeaderField {
-                field: "firepower".into(),
-                display: "Req Firepower".into(),
-                type_: FieldType::Debug,
-                editable: false,
-            },
-            HeaderField {
-                display: "Inactive".into(),
-                field: "inactive".into(),
-                type_: FieldType::Bool,
-                editable: true,
-            },
-        ]
-    }
 }
 
 #[cfg(test)]
 mod tests {
-    use validator::Validate;
 
     use crate::{mission::Mission, serde_utils::LuaFileBased, NewFromMission};
 
@@ -417,8 +235,7 @@ mod tests {
 
     #[test]
     fn load_example() {
-        let result = TargetList::from_lua_file("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\War over Tchad 1987-Blue-Mirage-F1EE-3-30 Lorraine\\Init\\targetlist_init.lua".into(), "targetlist".into());
-        result.unwrap().validate().unwrap();
+        TargetList::from_lua_file("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\War over Tchad 1987-Blue-Mirage-F1EE-3-30 Lorraine\\Init\\targetlist_init.lua".into(), "targetlist".into()).unwrap();
     }
 
     #[test]

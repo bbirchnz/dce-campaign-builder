@@ -6,7 +6,7 @@ use dce_lib::{
     loadouts::{CAPLoadout, StrikeLoadout},
     mappable::MapPoint,
     oob_air::Squadron,
-    target_list::{Strike, CAP},
+    targets::{cap::CAP, strike::Strike},
     DCEInstance,
 };
 use dioxus::prelude::*;

@@ -101,6 +101,9 @@ where
 
                 let mut selectable = atom_selectable.write();
                 *selectable = item_to_change.to_selectable();
+
+                orig_name.modify(|_| current_item.get_name());
+
                 validation_state.modify(|_| ValidationResult::Pass);
             }
             ValidationResult::Fail(errors) => {

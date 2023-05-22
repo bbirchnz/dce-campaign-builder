@@ -2,7 +2,7 @@ use bevy_reflect::Struct;
 
 use dioxus::prelude::*;
 use fermi::use_atom_ref;
-use log::warn;
+use log::{trace, warn};
 use tables::{FieldType, HeaderField, TableHeader};
 
 use crate::{
@@ -55,12 +55,21 @@ pub fn edit_form<T>(cx: Scope<EditProps>) -> Element
 where
     T: Struct + ToSelectable + std::fmt::Debug + TableHeader + Clone,
 {
+    trace!("render edit form");
     let atom_instance = use_atom_ref(cx, INSTANCE);
 
-    let validation_state = use_state(cx, || ValidationResult::Pass);
-    let item_state = use_state(cx, || T::from_selectable(&cx.props.item).unwrap());
+    let item_from_props = T::from_selectable(&cx.props.item).unwrap();
 
-    let orig_name = item_state.get().get_name();
+    let validation_state = use_state(cx, || ValidationResult::Pass);
+    let item_state = use_state(cx, || item_from_props.to_owned());
+    let orig_name = use_state(cx, || item_state.get().get_name());
+
+    if item_from_props.get_name().as_str() != orig_name.as_str() {
+        trace!("Selectable has changed, resetting form");
+        validation_state.modify(|_| ValidationResult::Pass);
+        orig_name.modify(|_| item_from_props.get_name());
+        item_state.modify(|_| item_from_props);
+    }
 
     let on_submit = move |ev: FormEvent| {
         let atom_selectable = use_atom_ref(cx, SELECTED);

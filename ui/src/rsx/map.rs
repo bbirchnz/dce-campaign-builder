@@ -22,7 +22,7 @@ pub fn map(cx: Scope) -> Element {
     airbases.extend(squadrons);
 
     let code = format!(
-        "data_{} = {}; drawmap('{}', data_{})",
+        "data_{} = {}; draw_map('{}', data_{})",
         &div_id,
         serde_json::to_string(&airbases).unwrap(),
         &div_id,

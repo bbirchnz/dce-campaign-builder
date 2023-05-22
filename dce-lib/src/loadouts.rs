@@ -4,7 +4,12 @@ use bevy_reflect::{FromReflect, Reflect};
 use serde::{Deserialize, Serialize};
 use tables::{FieldType, HeaderField, TableHeader};
 
-use crate::{mission::Payload, serde_utils::LuaFileBased, NewFromMission};
+use crate::{
+    editable::{Editable, ValidationResult},
+    mission::Payload,
+    serde_utils::LuaFileBased,
+    DCEInstance, NewFromMission,
+};
 
 pub type Loadouts = HashMap<String, AirframeLoadout>;
 
@@ -333,6 +338,57 @@ impl NewFromMission for Loadouts {
             });
 
         Ok(loadout)
+    }
+}
+
+impl Editable for CAPLoadout {
+    fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {
+        instance
+            .loadouts
+            .cap
+            .iter_mut()
+            .find(|item| item._name == name)
+            .unwrap()
+    }
+
+    fn get_name(&self) -> String {
+        self._name.to_owned()
+    }
+
+    fn validate(&self, _: &DCEInstance) -> ValidationResult {
+        let errors = Vec::default();
+
+        // todo: Probably want to put some limits on speeds/altitudes
+
+        if errors.is_empty() {
+            return ValidationResult::Pass;
+        }
+        ValidationResult::Fail(errors)
+    }
+}
+
+impl Editable for StrikeLoadout {
+    fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {
+        instance
+            .loadouts
+            .strike
+            .iter_mut()
+            .find(|item| item._name == name)
+            .unwrap()
+    }
+
+    fn get_name(&self) -> String {
+        self._name.to_owned()
+    }
+
+    fn validate(&self, _: &DCEInstance) -> ValidationResult {
+        let errors = Vec::default();
+
+        // todo: Probably want to put some limits on speeds/altitudes
+        if errors.is_empty() {
+            return ValidationResult::Pass;
+        }
+        ValidationResult::Fail(errors)
     }
 }
 

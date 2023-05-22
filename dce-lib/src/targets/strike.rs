@@ -2,6 +2,11 @@ use bevy_reflect::{FromReflect, Reflect};
 use serde::{Deserialize, Serialize};
 use tables::{FieldType, HeaderField, TableHeader};
 
+use crate::{
+    editable::{Editable, ValidationError, ValidationResult},
+    DCEInstance,
+};
+
 use super::TargetFirepower;
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
@@ -80,5 +85,75 @@ impl TableHeader for Strike {
                 editable: true,
             },
         ]
+    }
+}
+
+impl Editable for Strike {
+    fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {
+        instance
+            .target_list
+            .strike
+            .iter_mut()
+            .find(|s| s._name == name)
+            .unwrap()
+    }
+    fn get_name(&self) -> String {
+        self._name.to_string()
+    }
+
+    fn validate(&self, instance: &DCEInstance) -> ValidationResult {
+        let mut errors = Vec::default();
+
+        if self._side != "blue" && self._name == "red" {
+            errors.push(ValidationError::new(
+                "_side",
+                "Target Side",
+                "Side must be blue or red",
+            ));
+        }
+        if let Some(vg_name) = self.class_template.clone() {
+            match self.class.as_str() {
+                "vehicle" => {
+                    if let None = instance
+                        .mission
+                        .get_vehicle_groups()
+                        .iter()
+                        .find(|g| g.name == vg_name)
+                    {
+                        errors.push(ValidationError::new(
+                            "class_template",
+                            "Target group name",
+                            "Target group must be a vehicle group name defined in base_mission.miz",
+                        ));
+                    }
+                }
+                "ship" => {
+                    if let None = instance
+                        .mission
+                        .get_ship_groups()
+                        .iter()
+                        .find(|g| g.name == vg_name)
+                    {
+                        errors.push(ValidationError::new(
+                            "class_template",
+                            "Target group name",
+                            "Target group must be a ship group name defined in base_mission.miz",
+                        ));
+                    }
+                }
+                _ => {
+                    errors.push(ValidationError::new(
+                        "class",
+                        "Target Class",
+                        "Target class must be vehicle or ship",
+                    ));
+                }
+            }
+        }
+
+        if errors.is_empty() {
+            return ValidationResult::Pass;
+        }
+        ValidationResult::Fail(errors)
     }
 }

@@ -2,7 +2,11 @@ use bevy_reflect::{FromReflect, Reflect};
 use serde::{Deserialize, Serialize};
 use tables::{FieldType, HeaderField, TableHeader};
 
-use crate::{serde_utils::LuaFileBased, NewFromMission};
+use crate::{
+    editable::{Editable, ValidationError, ValidationResult},
+    serde_utils::LuaFileBased,
+    DCEInstance, NewFromMission,
+};
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
 pub struct Header {
@@ -131,6 +135,32 @@ impl TableHeader for Header {
                 editable: true,
             },
         ]
+    }
+}
+
+impl Editable for Header {
+    fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, _: &str) -> &'a mut Self {
+        &mut instance.campaign_header
+    }
+    fn get_name(&self) -> String {
+        "settings".into()
+    }
+
+    fn validate(&self, _: &DCEInstance) -> ValidationResult {
+        let mut errors = Vec::default();
+
+        if self.dawn >= self.dusk {
+            errors.push(ValidationError::new(
+                "dawn",
+                "Dawn time",
+                "Dawn must be earlier than Dusk",
+            ));
+        }
+
+        if errors.is_empty() {
+            return ValidationResult::Pass;
+        }
+        ValidationResult::Fail(errors)
     }
 }
 

@@ -9,10 +9,11 @@ use tables::{FieldType, HeaderField};
 
 use crate::{
     db_airbases::DBAirbases,
+    editable::{Editable, ValidationError, ValidationResult},
     mappable::Mappables,
     mission::{Country, Mission},
     serde_utils::LuaFileBased,
-    NewFromMission,
+    DCEInstance, NewFromMission,
 };
 
 #[derive(Deserialize, Serialize, Debug, PartialEq, Reflect, FromReflect)]
@@ -248,6 +249,38 @@ impl Mappables for OobAir {
                 }
             })
             .collect::<Vec<_>>()
+    }
+}
+
+impl Editable for Squadron {
+    fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Squadron {
+        instance
+            .oob_air
+            .red
+            .iter_mut()
+            .chain(instance.oob_air.blue.iter_mut())
+            .find(|s| s.name == name)
+            .unwrap()
+    }
+    fn get_name(&self) -> String {
+        self.name.to_string()
+    }
+
+    fn validate(&self, instance: &DCEInstance) -> ValidationResult {
+        let mut errors = Vec::default();
+
+        if !instance.airbases.airbase_exists(&self.base) {
+            errors.push(ValidationError::new(
+                "base",
+                "Airbase Name",
+                "Airbase must be a fixed airbase, ship, farp, reserve or airstart",
+            ));
+        }
+
+        if errors.is_empty() {
+            return ValidationResult::Pass;
+        }
+        ValidationResult::Fail(errors)
     }
 }
 

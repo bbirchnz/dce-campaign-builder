@@ -5,8 +5,11 @@ use std::collections::HashMap;
 use tables::{FieldType, HeaderField, TableHeader};
 
 use crate::{
-    dce_utils::ValidateSelf, dcs_airbase_export::dcs_airbases_for_theatre,
-    serde_utils::LuaFileBased, NewFromMission,
+    dce_utils::ValidateSelf,
+    dcs_airbase_export::dcs_airbases_for_theatre,
+    editable::{Editable, ValidationError, ValidationResult},
+    serde_utils::LuaFileBased,
+    DCEInstance, NewFromMission,
 };
 
 use anyhow::anyhow;
@@ -311,6 +314,37 @@ impl NewFromMission for DBAirbases {
         fixed.extend(ships_blue);
         fixed.extend(air_starts);
         Ok(fixed)
+    }
+}
+
+impl Editable for FixedAirBase {
+    fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {
+        instance
+            .airbases
+            .fixed
+            .iter_mut()
+            .find(|item| item._name == name)
+            .unwrap()
+    }
+    fn get_name(&self) -> String {
+        self._name.to_owned()
+    }
+
+    fn validate(&self, _: &DCEInstance) -> ValidationResult {
+        let mut errors = Vec::default();
+
+        if self.side != "blue" && self._name == "red" {
+            errors.push(ValidationError::new(
+                "_side",
+                "Airbase Side",
+                "Side must be blue or red",
+            ));
+        }
+
+        if errors.is_empty() {
+            return ValidationResult::Pass;
+        }
+        ValidationResult::Fail(errors)
     }
 }
 

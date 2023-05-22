@@ -1,12 +1,13 @@
 use bevy_reflect::Struct;
 
+use dce_lib::editable::{Editable, ValidationResult};
 use dioxus::prelude::*;
 use fermi::use_atom_ref;
 use log::{trace, warn};
 use tables::{FieldType, HeaderField, TableHeader};
 
 use crate::{
-    selectable::{Selectable, ToSelectable, ValidationResult},
+    selectable::{Selectable, ToSelectable},
     INSTANCE, SELECTED,
 };
 
@@ -53,7 +54,7 @@ pub struct EditProps {
 
 pub fn edit_form<T>(cx: Scope<EditProps>) -> Element
 where
-    T: Struct + ToSelectable + std::fmt::Debug + TableHeader + Clone,
+    T: Struct + ToSelectable + std::fmt::Debug + TableHeader + Clone + Editable,
 {
     trace!("render edit form");
     let atom_instance = use_atom_ref(cx, INSTANCE);

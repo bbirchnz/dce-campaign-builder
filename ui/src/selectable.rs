@@ -5,6 +5,7 @@ use dce_lib::{
     mappable::MapPoint,
     oob_air::Squadron,
     targets::{cap::CAP, strike::Strike},
+    trigger::Trigger,
     DCEInstance,
 };
 
@@ -17,6 +18,7 @@ pub enum Selectable {
     CampaignSettings(Header),
     LoadoutCAP(CAPLoadout),
     LoadoutStrike(StrikeLoadout),
+    Trigger(Trigger),
     None,
 }
 
@@ -181,6 +183,22 @@ impl ToSelectable for StrikeLoadout {
     {
         if let Selectable::LoadoutStrike(strike) = sel {
             return Some(strike.clone());
+        }
+        None
+    }
+}
+
+impl ToSelectable for Trigger {
+    fn to_selectable(&self) -> Selectable {
+        Selectable::Trigger(self.to_owned())
+    }
+
+    fn from_selectable(sel: &Selectable) -> Option<Self>
+    where
+        Self: Sized,
+    {
+        if let Selectable::Trigger(trigger) = sel {
+            return Some(trigger.clone());
         }
         None
     }

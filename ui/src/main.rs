@@ -7,6 +7,7 @@ use dce_lib::{
     mappable::MapPoint,
     oob_air::Squadron,
     targets::{cap::CAP, strike::Strike},
+    trigger::Trigger,
     DCEInstance,
 };
 use dioxus::prelude::*;
@@ -163,6 +164,10 @@ fn main_body(cx: Scope) -> Element {
                     path: "images/settings_grey.png".into(),
                     on_click: |_| select_first_strike_loadout(cx)
                 }
+                icon_button {
+                    path: "images/settings_grey.png".into(),
+                    on_click: |_| select_first_trigger(cx)
+                }
             }
             // edit col
             div { class: "{edit_col_width} min-h-0 bg-sky-100",
@@ -187,6 +192,9 @@ fn main_body(cx: Scope) -> Element {
                     },
                     Selectable::LoadoutStrike(_) => rsx!{
                         edit_form::<StrikeLoadout> { headers: StrikeLoadout::get_header(), title: "Edit Strike Loadout".into(), item: selected_form.clone()}
+                    },
+                    Selectable::Trigger(_) => rsx!{
+                        edit_form::<Trigger> { headers: Trigger::get_header(), title: "Edit Trigger".into(), item: selected_form.clone()}
                     },
                     _ => rsx!{{}}
                 }
@@ -217,6 +225,9 @@ fn main_body(cx: Scope) -> Element {
                         },
                         Selectable::LoadoutStrike(_) => rsx! {
                             rsx::table { headers: StrikeLoadout::get_header(), data: instance.loadouts.strike.to_vec() }
+                        },
+                        Selectable::Trigger(_) => rsx! {
+                            rsx::table { headers: Trigger::get_header(), data: instance.triggers.to_vec() }
                         },
                         _ => rsx!{{}}
                         }
@@ -344,5 +355,15 @@ fn select_first_strike_loadout(cx: Scope) {
     {
         let mut writable = atom_selected.write();
         *writable = Selectable::LoadoutStrike(item.clone());
+    }
+}
+
+fn select_first_trigger(cx: Scope) {
+    let atom_instance = use_atom_ref(cx, INSTANCE);
+    let atom_selected = use_atom_ref(cx, SELECTED);
+
+    if let Some(item) = atom_instance.read().as_ref().unwrap().triggers.first() {
+        let mut writable = atom_selected.write();
+        *writable = Selectable::Trigger(item.clone());
     }
 }

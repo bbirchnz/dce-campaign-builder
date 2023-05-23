@@ -21,13 +21,22 @@ pub struct HeaderField {
 const METERS_TO_FEET: f64 = 3.281;
 const FEET_TO_METERS: f64 = 1. / METERS_TO_FEET;
 
-const MS_to_KNOTS: f64 = 3.6 / 1.852;
-const KNOTS_TO_MS: f64 = 1. / MS_to_KNOTS;
+const MS_TO_KNOTS: f64 = 3.6 / 1.852;
+const KNOTS_TO_MS: f64 = 1. / MS_TO_KNOTS;
 
 const NM_TO_METERS: f64 = 1852.;
 const METERS_TO_NM: f64 = 1. / NM_TO_METERS;
 
 impl HeaderField {
+    pub fn new(field: &str, display: &str, type_: FieldType, editable: bool) -> HeaderField {
+        HeaderField {
+            field: field.to_owned(),
+            display: display.to_owned(),
+            type_,
+            editable,
+        }
+    }
+
     pub fn get_value_string(&self, item: &dyn Struct) -> String {
         match self.type_ {
             FieldType::String => item
@@ -104,7 +113,7 @@ impl HeaderField {
                     .unwrap()
                     .downcast_ref::<f64>()
                     .expect(&format!("Failed to get field {} as f64", &self.field));
-                format!("{:.0}", ms * MS_to_KNOTS)
+                format!("{:.0}", ms * MS_TO_KNOTS)
             }
             FieldType::DistanceNM => {
                 let meters = item
@@ -122,6 +131,12 @@ impl HeaderField {
                     .expect(&format!("Failed to get field {} as f64", &self.field));
                 format!("{:.0}", seconds / 60)
             }
+            FieldType::TriggerActions => item
+                .field(&self.field)
+                .unwrap()
+                .downcast_ref::<String>()
+                .unwrap()
+                .to_string(),
         }
     }
 
@@ -198,6 +213,11 @@ impl HeaderField {
                     .ok_or(anyhow!("Couldn't get field {}", &self.field))?
                     .apply(&seconds);
             }
+            FieldType::TriggerActions => {
+                item.field_mut(&self.field)
+                    .ok_or(anyhow!("Couldn't get field {}", &self.field))?
+                    .apply(&value.to_owned());
+            }
         };
         Ok(())
     }
@@ -217,6 +237,7 @@ pub enum FieldType {
     SpeedKnotsTAS,
     DistanceNM,
     DurationMin,
+    TriggerActions,
 }
 
 #[cfg(test)]

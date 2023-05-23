@@ -25,6 +25,7 @@ fn fieldtype_to_input(field: &FieldType) -> String {
         FieldType::SpeedKnotsTAS => "number".into(),
         FieldType::DistanceNM => "number".into(),
         FieldType::DurationMin => "number".into(),
+        FieldType::TriggerActions => "textarea".into(),
     }
 }
 
@@ -42,6 +43,7 @@ fn fieldtype_editable(field: &FieldType) -> bool {
         FieldType::SpeedKnotsTAS => true,
         FieldType::DistanceNM => true,
         FieldType::DurationMin => true,
+        FieldType::TriggerActions => true,
     }
 }
 

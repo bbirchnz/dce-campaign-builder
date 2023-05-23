@@ -18,7 +18,7 @@ use serde::{Deserialize, Serialize};
 use serde_utils::LuaFileBased;
 use target_list::TargetList;
 use target_list_internal::TargetListInternal;
-use trigger::Triggers;
+use trigger::{flat_to_triggers, triggers_to_flat, Triggers, TriggersFlat};
 use zip::{write::FileOptions, ZipWriter};
 
 pub mod campaign_header;
@@ -48,7 +48,7 @@ pub struct DCEInstance {
     pub airbases: DBAirbasesInternal,
     pub mission: Mission,
     pub target_list: TargetListInternal,
-    pub triggers: Triggers,
+    pub triggers: TriggersFlat,
     pub loadouts: LoadoutsInternal,
     pub projection: TransverseMercator,
     pub base_path: String,
@@ -73,10 +73,10 @@ impl DCEInstance {
             "targetlist".into(),
         )?);
 
-        let triggers = Triggers::from_lua_file(
+        let triggers = triggers_to_flat(&Triggers::from_lua_file(
             format!("{}/camp_triggers_init.lua", path),
             "camp_triggers".into(),
-        )?;
+        )?);
 
         let conf_mod =
             ConfMod::from_lua_file(format!("{}/conf_mod.lua", path), "mission_ini".into())?;
@@ -123,7 +123,7 @@ impl DCEInstance {
             airbases: DBAirbasesInternal::from_db_airbases(&DBAirbases::new_from_mission(
                 &mission,
             )?),
-            triggers: Triggers::new_from_mission(&mission)?,
+            triggers: triggers_to_flat(&Triggers::new_from_mission(&mission)?),
             loadouts: LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&mission)?),
             conf_mod: ConfMod::new(),
             mission,
@@ -256,7 +256,7 @@ REM After each change, You must launch the FirsMission.bat for it to be taken in
                 .to_string(),
             "targetlist".into(),
         )?;
-        self.triggers.to_lua_file(
+        flat_to_triggers(&self.triggers).to_lua_file(
             init_path
                 .join("camp_triggers_init.lua")
                 .to_string_lossy()
@@ -373,7 +373,7 @@ REM After each change, You must launch the FirsMission.bat for it to be taken in
             &options,
         )?;
 
-        self.triggers.add_to_zip(
+        flat_to_triggers(&self.triggers).add_to_zip(
             "camp_triggers",
             &(campaign_folder.to_owned() + "init/camp_triggers_init.lua"),
             &mut zip,

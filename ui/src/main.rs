@@ -1,4 +1,4 @@
-// #![windows_subsystem = "windows"]
+#![windows_subsystem = "windows"]
 
 use dce_lib::{
     campaign_header::Header,
@@ -17,6 +17,8 @@ use log::{info, warn};
 use selectable::Selectable;
 use simple_logger::SimpleLogger;
 use tables::TableHeader;
+
+use directories::ProjectDirs;
 
 use crate::rsx::{edit_form, menu_bar};
 
@@ -39,23 +41,30 @@ fn main() {
     dioxus_desktop::launch_with_props(
         app,
         AppProps { rx: r.clone() },
-        Config::default().with_custom_protocol("testprotocol".into(), move |req| {
-            // this handle callbacks of clicked objects in leaflet
-            let obj =
-                serde_json::from_str::<MapPoint>(&String::from_utf8(req.body().to_vec()).unwrap());
-            if let Ok(map_point) = obj {
-                info!("Sending {:?}", map_point);
-                s.send_blocking(map_point).unwrap();
-            } else {
-                warn!(
-                    "Failed to parse {:?} with error {:?}",
-                    String::from_utf8(req.body().to_vec()).unwrap(),
-                    obj.err().unwrap()
+        Config::default()
+            .with_custom_protocol("testprotocol".into(), move |req| {
+                // this handle callbacks of clicked objects in leaflet
+                let obj = serde_json::from_str::<MapPoint>(
+                    &String::from_utf8(req.body().to_vec()).unwrap(),
                 );
-            }
+                if let Ok(map_point) = obj {
+                    info!("Sending {:?}", map_point);
+                    s.send_blocking(map_point).unwrap();
+                } else {
+                    warn!(
+                        "Failed to parse {:?} with error {:?}",
+                        String::from_utf8(req.body().to_vec()).unwrap(),
+                        obj.err().unwrap()
+                    );
+                }
 
-            Ok(Response::new(vec![]))
-        }),
+                Ok(Response::new(vec![].into()))
+            })
+            .with_data_directory(
+                ProjectDirs::from("com", "BB", "DCE Builder")
+                    .unwrap()
+                    .data_dir(),
+            ),
     )
 }
 

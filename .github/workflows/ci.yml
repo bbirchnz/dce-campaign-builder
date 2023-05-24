@@ -52,6 +52,7 @@ jobs:
         run: |
             export PKG_CONFIG_PATH="$VCPKG_ROOT/installed/x64-windows/lib/pkgconfig"
             export PATH=$PATH:$(pwd)/wix/tools/
+            cp $VCPKG_ROOT/installed/x64-windows/bin/*.dll target/release/
             cargo wix --package=ui --nocapture
       # gather up artifacts..
       - uses: actions/upload-artifact@v3

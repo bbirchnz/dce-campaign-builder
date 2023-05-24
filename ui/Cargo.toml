@@ -6,9 +6,9 @@ authors = ["Ben Birch"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-dioxus = "0.3.2"
-dioxus-desktop = "0.3.0"
-fermi = "0.3.0"
+dioxus = {git = "https://github.com/DioxusLabs/dioxus.git", rev="073c414"}
+dioxus-desktop = {git = "https://github.com/DioxusLabs/dioxus.git", rev="073c414"}
+fermi = {git = "https://github.com/DioxusLabs/dioxus.git", rev="073c414"}
 anyhow = "1.0.70"
 serde = "1.0.160"
 log = "0.4.17"
@@ -26,3 +26,4 @@ native-dialog = { version = "0.6.3", features = [
 ] }
 async-channel = "1.8.0"
 chrono = "0.4.24"
+directories = "5.0.1"

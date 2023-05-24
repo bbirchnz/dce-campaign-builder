@@ -129,9 +129,7 @@ where
                     ""
                 }
             }
-            form {
-                autocomplete: "off",
-                oninput: on_submit,
+            form { autocomplete: "off", oninput: on_submit,
                 for h in T::get_header().iter().filter(|h| fieldtype_editable(&h.type_)) {
                     div { class: "flex w-full mt-1 mb-1",
                         label { class: "flex-grow p-1", r#for: "{h.display}", "{h.display}" }
@@ -148,7 +146,7 @@ where
                         }
                     }
                 }
-                render_errors { result: validation_state.get().to_owned()}
+                render_errors { result: validation_state.get().to_owned() }
             }
         }
     })

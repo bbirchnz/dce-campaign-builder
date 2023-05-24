@@ -2,7 +2,7 @@ use dce_lib::DCEInstance;
 use dioxus::prelude::*;
 use dioxus_desktop::use_window;
 use fermi::use_atom_ref;
-use log::warn;
+use log::{trace, warn};
 use native_dialog::FileDialog;
 
 use crate::INSTANCE;
@@ -49,6 +49,7 @@ pub fn menu_bar(cx: Scope<MenuBarProps>) -> Element {
     };
 
     let new_click = move |_| {
+        trace!("New instance from miz clicked");
         let result = FileDialog::new()
             .add_filter("DCS Mission", &["miz"])
             .show_open_single_file();
@@ -116,9 +117,7 @@ pub fn menu_bar(cx: Scope<MenuBarProps>) -> Element {
     };
 
     cx.render(rsx! {
-        div {
-            class: "fixed top-0 left-0 right-0 flex items-stretch bg-sky-500 text-slate-700 h-8 cursor-default select-none",
-            onmousedown: move |_| w.drag(),
+        div { class: "fixed top-0 left-0 right-0 flex items-stretch bg-sky-500 text-slate-700 h-8 cursor-default select-none",
             div {
                 // New
                 class: "flex items-center font-thin px-4 hover:bg-neutral-300 icon",
@@ -149,9 +148,11 @@ pub fn menu_bar(cx: Scope<MenuBarProps>) -> Element {
                 }
             }
             }
-            div { class: "grow" }
-            div { class: "ml-3 flex items-center", "{cx.props.title}" }
-            div { class: "grow" }
+            div {
+                class: "flex flex-grow items-center justify-center",
+                onmousedown: move |_| w.drag(),
+                div { "{cx.props.title}" }
+            }
             div {
                 class: "flex items-center font-thin px-4 hover:bg-neutral-300 icon",
                 onclick: move |_| w.set_minimized(true),

@@ -1,0 +1,60 @@
+name: CI
+on: push
+
+jobs:
+  build-proj:
+    name: Build Proj dlls
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+            vcpkg/installed/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Run vckpg install proj
+        uses: lukka/run-vcpkg@v4
+        with:
+          vcpkgArguments: "proj:x64-windows"
+          vcpkgDirectory: "${{ github.workspace }}/vcpkg"
+          vcpkgGitCommitId: "0ccb3d11406922bef1dcc29002f68f633a321f19"
+
+      - name: Choco install pkgconfiglite
+        uses: crazy-max/ghaction-chocolatey@v2
+        with:
+          args: install pkgconfiglite --allowemptychecksum
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - name: Test pkgconfiglite and build
+        shell: bash
+        run: | 
+          export PKG_CONFIG_PATH="$VCPKG_ROOT/installed/x64-windows/lib/pkgconfig"
+          pkg-config --libs --cflags proj
+          cargo build --release
+      # next: package
+      - name: Install Wix
+        uses: actions/checkout@v2
+        with:
+          repository: fbarresi/wix
+          path: wix
+      - name: install cargo-wix
+        shell: bash
+        run: |
+          cargo install cargo-wix
+      - name: build MSI
+        shell: bash
+        run: |
+            export PKG_CONFIG_PATH="$VCPKG_ROOT/installed/x64-windows/lib/pkgconfig"
+            export PATH=$PATH:$(pwd)/wix/tools/
+            cargo wix --package=ui --nocapture
+      # gather up artifacts..
+      - uses: actions/upload-artifact@v3
+        with:
+          name: installer
+          path: target/wix/ui*.msi

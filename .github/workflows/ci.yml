@@ -3,7 +3,7 @@ on: push
 
 jobs:
   build-proj:
-    name: Build Proj dlls
+    name: Build Installer
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
@@ -33,7 +33,7 @@ jobs:
           toolchain: stable
       - name: Test pkgconfiglite and build
         shell: bash
-        run: | 
+        run: |
           export PKG_CONFIG_PATH="$VCPKG_ROOT/installed/x64-windows/lib/pkgconfig"
           pkg-config --libs --cflags proj
           cargo build --release
@@ -46,16 +46,16 @@ jobs:
       - name: install cargo-wix
         shell: bash
         run: |
-          cargo install cargo-wix
+          cargo install cargo-wix --force
       - name: build MSI
         shell: bash
         run: |
-            export PKG_CONFIG_PATH="$VCPKG_ROOT/installed/x64-windows/lib/pkgconfig"
-            export PATH=$PATH:$(pwd)/wix/tools/
-            cp $VCPKG_ROOT/installed/x64-windows/bin/*.dll target/release/
-            cargo wix --package=ui --nocapture
+          export PKG_CONFIG_PATH="$VCPKG_ROOT/installed/x64-windows/lib/pkgconfig"
+          export PATH=$PATH:$(pwd)/wix/tools/
+          cp -Lvr vcpkg/installed/x64-windows/bin/* target/release
+          cargo wix --package=ui --nocapture --name=dce_builder
       # gather up artifacts..
       - uses: actions/upload-artifact@v3
         with:
           name: installer
-          path: target/wix/ui*.msi
+          path: target/wix/dce_builder*.msi

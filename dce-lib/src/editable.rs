@@ -164,7 +164,16 @@ impl HeaderField {
                 format!("{:.0}", seconds / 60)
             }
             FieldType::TriggerActions => {
-                panic!("Shouldn't get here, TriggerAction should use stringvec methods")
+                // Just return the number of actions as a string. Used in table
+                let val = item
+                    .field(&self.field)
+                    .unwrap_or_else(|| panic!("Field {} should exist", &self.field))
+                    .downcast_ref::<Actions>()
+                    .unwrap_or_else(|| panic!("Failed to get field {} as bool", &self.field));
+                match val {
+                    Actions::One(_) => "1".into(),
+                    Actions::Many(actions) => format!("{}", actions.len()),
+                }
             }
         }
     }

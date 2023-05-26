@@ -169,6 +169,7 @@ where
                     match h.type_ {
                         // Trigger actions have to render as one input per action
                         FieldType::TriggerActions => rsx!{
+                            label {class: "p-1 w-full", "Actions"}
                             for (i, action) in h.get_value_stringvec(item_state.get()).iter().enumerate() {
                                 rsx! {
                                     div {

@@ -136,6 +136,12 @@ impl ConfMod {
     }
 }
 
+impl Default for ConfMod {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl LuaFileBased<'_> for ConfMod {
     fn to_lua_str(&self, key: &str) -> Result<String, anyhow::Error> {
         let lua = mlua::Lua::new();

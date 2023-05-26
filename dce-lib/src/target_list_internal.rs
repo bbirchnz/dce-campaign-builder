@@ -8,7 +8,7 @@ use crate::{
 };
 use anyhow::anyhow;
 use bevy_reflect::{FromReflect, Reflect};
-use log::info;
+use log::{info, trace};
 use proj::Proj;
 use serde::{Deserialize, Serialize};
 
@@ -207,7 +207,7 @@ impl Mappables for TargetListInternal {
             match zone {
                 Ok(zone) => {
                     let (x2, y2) = offset(zone.x, zone.y, cap.axis, cap.radius);
-                    info!("{} {}, {} {}", zone.x, zone.y, x2, y2);
+                    trace!("CAP zone points: {} {}, {} {}", zone.x, zone.y, x2, y2);
                     let (lon2, lat2) = convert_dcs_lat_lon(x2, y2, proj);
                     map_points.push(
                         MapPoint::new_from_dcs(

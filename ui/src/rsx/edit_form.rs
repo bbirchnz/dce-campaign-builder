@@ -109,10 +109,12 @@ where
                     }
                 }
                 _ => {
-                    let v = ev.values.get(&h.display).expect(&format!(
-                        "There must be a value for field {:?} in formevent",
-                        &h.type_
-                    ));
+                    let v = ev.values.get(&h.display).unwrap_or_else(|| {
+                        panic!(
+                            "There must be a value for field {:?} in formevent",
+                            &h.type_
+                        )
+                    });
                     if let Err(e) = h.set_value_fromstr(&mut *current_item, v) {
                         warn!("Failed to set field: {} with {}. Error: {}", h.field, v, e);
                     }

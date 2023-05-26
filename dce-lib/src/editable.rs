@@ -1,4 +1,4 @@
-use bevy_reflect::Struct;
+use bevy_reflect::{Reflect, Struct};
 use itertools::Itertools;
 use log::warn;
 
@@ -74,9 +74,9 @@ impl HeaderField {
             FieldType::TriggerActions => {
                 let actions = item
                     .field(&self.field)
-                    .expect(&format!("Field {} should exist", &self.field))
+                    .unwrap_or_else(|| panic!("Field {} should exist", &self.field))
                     .downcast_ref::<Actions>()
-                    .expect(&format!("Failed to get field {} as Actions", &self.field));
+                    .unwrap_or_else(|| panic!("Failed to get field {} as Actions", &self.field));
                 match actions {
                     Actions::One(action) => vec![action.to_owned()],
                     Actions::Many(actions) => actions.to_owned(),
@@ -114,39 +114,21 @@ impl HeaderField {
 
     pub fn get_value_string(&self, item: &dyn Struct) -> String {
         match self.type_ {
-            FieldType::String => item
-                .field(&self.field)
-                .expect(&format!("Field {} should exist", &self.field))
-                .downcast_ref::<String>()
-                .expect(&format!("Failed to get field {} as String", &self.field))
-                .to_string(),
+            FieldType::String => get_string(item, &self.field),
             FieldType::Float(func) => {
-                let value = item
-                    .field(&self.field)
-                    .expect(&format!("Field {} should exist", &self.field))
-                    .downcast_ref::<f64>()
-                    .expect(&format!("Failed to get field {} as f64", &self.field));
-                func(*value)
-            } // .to_string(),
-            FieldType::Int => item
-                .field(&self.field)
-                .expect(&format!("Field {} should exist", &self.field))
-                .downcast_ref::<u32>()
-                .expect(&format!("Failed to get field {} as u32", &self.field))
-                .to_string(),
+                let value = get_f64(item, &self.field);
+                func(value)
+            }
+            FieldType::Int => get_u32(item, &self.field).to_string(),
             FieldType::Enum => "".into(),
             FieldType::Debug => {
                 let v = item.field(&self.field).unwrap();
                 format!("{:?}", v)
             }
             FieldType::IntTime => {
-                let seconds_since_midnight = item
-                    .field(&self.field)
-                    .expect(&format!("Field {} should exist", &self.field))
-                    .downcast_ref::<u32>()
-                    .expect(&format!("Failed to get field {} as u32", &self.field));
+                let seconds_since_midnight = get_u32(item, &self.field);
                 let time = chrono::NaiveTime::from_num_seconds_from_midnight_opt(
-                    *seconds_since_midnight,
+                    seconds_since_midnight,
                     0,
                 )
                 .expect("A valid number of seconds since midnight");
@@ -156,9 +138,9 @@ impl HeaderField {
             FieldType::Bool => {
                 let val = item
                     .field(&self.field)
-                    .expect(&format!("Field {} should exist", &self.field))
+                    .unwrap_or_else(|| panic!("Field {} should exist", &self.field))
                     .downcast_ref::<bool>()
-                    .expect(&format!("Failed to get field {} as bool", &self.field));
+                    .unwrap_or_else(|| panic!("Failed to get field {} as bool", &self.field));
                 if *val {
                     "true".into()
                 } else {
@@ -166,35 +148,19 @@ impl HeaderField {
                 }
             }
             FieldType::AltitudeFeet => {
-                let meters = item
-                    .field(&self.field)
-                    .expect(&format!("Field {} should exist", &self.field))
-                    .downcast_ref::<f64>()
-                    .expect(&format!("Failed to get field {} as f64", &self.field));
+                let meters = get_f64(item, &self.field);
                 format!("{:.0}", meters * METERS_TO_FEET)
             }
             FieldType::SpeedKnotsTAS => {
-                let ms = item
-                    .field(&self.field)
-                    .expect(&format!("Field {} should exist", &self.field))
-                    .downcast_ref::<f64>()
-                    .expect(&format!("Failed to get field {} as f64", &self.field));
+                let ms = get_f64(item, &self.field);
                 format!("{:.0}", ms * MS_TO_KNOTS)
             }
             FieldType::DistanceNM => {
-                let meters = item
-                    .field(&self.field)
-                    .expect(&format!("Field {} should exist", &self.field))
-                    .downcast_ref::<f64>()
-                    .expect(&format!("Failed to get field {} as f64", &self.field));
+                let meters = get_f64(item, &self.field);
                 format!("{:.0}", meters * METERS_TO_NM)
             }
             FieldType::DurationMin => {
-                let seconds = item
-                    .field(&self.field)
-                    .expect(&format!("Field {} should exist", &self.field))
-                    .downcast_ref::<u32>()
-                    .expect(&format!("Failed to get field {} as f64", &self.field));
+                let seconds = get_u32(item, &self.field);
                 format!("{:.0}", seconds / 60)
             }
             FieldType::TriggerActions => {
@@ -209,20 +175,24 @@ impl HeaderField {
         value: &str,
     ) -> Result<(), anyhow::Error> {
         match self.type_ {
-            FieldType::String => {
-                item.field_mut(&self.field)
-                    .ok_or(anyhow!("Couldn't get field {}", &self.field))?
-                    .apply(&value.to_owned());
-            }
+            FieldType::String => apply_value(item, &self.field, &value.to_owned()),
             FieldType::Float(_) => {
-                item.field_mut(&self.field)
-                    .ok_or(anyhow!("Couldn't get field {}", &self.field))?
-                    .apply(&value.parse::<f64>()?);
+                apply_value(
+                    item,
+                    &self.field,
+                    &value
+                        .parse::<f64>()
+                        .unwrap_or_else(|_| panic!("Can't parse {} to f64", &value)),
+                );
             }
             FieldType::Int => {
-                item.field_mut(&self.field)
-                    .ok_or(anyhow!("Couldn't get field {}", &self.field))?
-                    .apply(&value.parse::<u32>()?);
+                apply_value(
+                    item,
+                    &self.field,
+                    &value
+                        .parse::<u32>()
+                        .unwrap_or_else(|_| panic!("Can't parse {} to u32", &value)),
+                );
             }
             FieldType::Enum => todo!(),
             FieldType::Debug => todo!(),
@@ -233,53 +203,64 @@ impl HeaderField {
                     Err(_) => NaiveTime::parse_from_str(value, "%H:%M")
                         .expect("Expected HH:MM:SS or HH:MM"),
                 };
-                item.field_mut(&self.field)
-                    .ok_or(anyhow!("Couldn't get field {}", &self.field))?
-                    .apply(&time.num_seconds_from_midnight());
+                apply_value(item, &self.field, &time.num_seconds_from_midnight());
             }
             FieldType::Bool => {
                 let selected = value == "true";
-
-                item.field_mut(&self.field)
-                    .ok_or(anyhow!("Couldn't get field {}", &self.field))?
-                    .apply(&selected);
+                apply_value(item, &self.field, &selected);
             }
             FieldType::AltitudeFeet => {
                 let meters = value.parse::<f64>()? * FEET_TO_METERS;
-
-                item.field_mut(&self.field)
-                    .ok_or(anyhow!("Couldn't get field {}", &self.field))?
-                    .apply(&meters);
+                apply_value(item, &self.field, &meters);
             }
             FieldType::SpeedKnotsTAS => {
                 let ms = value.parse::<f64>()? * KNOTS_TO_MS;
-
-                item.field_mut(&self.field)
-                    .ok_or(anyhow!("Couldn't get field {}", &self.field))?
-                    .apply(&ms);
+                apply_value(item, &self.field, &ms);
             }
             FieldType::DistanceNM => {
                 let meters = value.parse::<f64>()? * NM_TO_METERS;
-
-                item.field_mut(&self.field)
-                    .ok_or(anyhow!("Couldn't get field {}", &self.field))?
-                    .apply(&meters);
+                apply_value(item, &self.field, &meters);
             }
             FieldType::DurationMin => {
                 let seconds = value.parse::<u32>()? * 60;
-
-                item.field_mut(&self.field)
-                    .ok_or(anyhow!("Couldn't get field {}", &self.field))?
-                    .apply(&seconds);
+                apply_value(item, &self.field, &seconds);
             }
             FieldType::TriggerActions => {
-                item.field_mut(&self.field)
-                    .ok_or(anyhow!("Couldn't get field {}", &self.field))?
-                    .apply(&value.to_owned());
+                apply_value(item, &self.field, &value.to_owned());
             }
         };
         Ok(())
     }
+}
+
+fn get_string(item: &dyn Struct, field: &str) -> String {
+    item.field(field)
+        .unwrap_or_else(|| panic!("Field {} should exist", field))
+        .downcast_ref::<String>()
+        .unwrap_or_else(|| panic!("Failed to get field {} as String", field))
+        .to_string()
+}
+
+fn get_f64(item: &dyn Struct, field: &str) -> f64 {
+    *item
+        .field(field)
+        .unwrap_or_else(|| panic!("Field {} should exist", field))
+        .downcast_ref::<f64>()
+        .unwrap_or_else(|| panic!("Failed to get field {} as f64", field))
+}
+
+fn get_u32(item: &dyn Struct, field: &str) -> u32 {
+    *item
+        .field(field)
+        .unwrap_or_else(|| panic!("Field {} should exist", field))
+        .downcast_ref::<u32>()
+        .unwrap_or_else(|| panic!("Failed to get field {} as u32", field))
+}
+
+fn apply_value(item: &mut dyn Struct, field: &str, value: &dyn Reflect) {
+    item.field_mut(field)
+        .unwrap_or_else(|| panic!("Field {} doesn't exist on type", field))
+        .apply(value.to_owned());
 }
 
 #[derive(PartialEq, Debug)]

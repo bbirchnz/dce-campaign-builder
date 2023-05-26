@@ -15,7 +15,7 @@ use dce_lib::{
 use dioxus::prelude::*;
 use dioxus_desktop::{use_window, wry::http::Response, Config};
 use fermi::{use_atom_ref, use_atom_root, use_init_atom_root, AtomRef};
-use log::{info, warn};
+use log::{trace, warn};
 use selectable::Selectable;
 use simple_logger::SimpleLogger;
 
@@ -49,7 +49,7 @@ fn main() {
                     &String::from_utf8(req.body().to_vec()).unwrap(),
                 );
                 if let Ok(map_point) = obj {
-                    info!("Sending {:?}", map_point);
+                    trace!("Got from WebView/Sending to channel {:?}", map_point);
                     s.send_blocking(map_point).unwrap();
                 } else {
                     warn!(

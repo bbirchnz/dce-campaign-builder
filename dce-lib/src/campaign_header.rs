@@ -1,9 +1,8 @@
 use bevy_reflect::{FromReflect, Reflect};
 use serde::{Deserialize, Serialize};
-use tables::{FieldType, HeaderField, TableHeader};
 
 use crate::{
-    editable::{Editable, ValidationError, ValidationResult},
+    editable::{Editable, FieldType, HeaderField, ValidationError, ValidationResult},
     serde_utils::LuaFileBased,
     DCEInstance, NewFromMission,
 };
@@ -83,62 +82,34 @@ impl NewFromMission for Header {
     }
 }
 
-impl TableHeader for Header {
-    fn get_header() -> Vec<tables::HeaderField> {
+impl Editable for Header {
+    fn get_header() -> Vec<HeaderField> {
         vec![
-            HeaderField {
-                field: "title".into(),
-                display: "Title".into(),
-                type_: FieldType::String,
-                editable: true,
-            },
-            HeaderField {
-                field: "version".into(),
-                display: "Version".into(),
-                type_: FieldType::String,
-                editable: true,
-            },
-            HeaderField {
-                field: "dawn".into(),
-                display: "Dawn".into(),
-                type_: FieldType::IntTime,
-                editable: true,
-            },
-            HeaderField {
-                field: "dusk".into(),
-                display: "Dusk".into(),
-                type_: FieldType::IntTime,
-                editable: true,
-            },
-            HeaderField {
-                field: "mission_duration".into(),
-                display: "Mission Duration".into(),
-                type_: FieldType::Int,
-                editable: true,
-            },
-            HeaderField {
-                field: "startup".into(),
-                display: "Startup Time".into(),
-                type_: FieldType::Int,
-                editable: true,
-            },
-            HeaderField {
-                field: "units".into(),
-                display: "Units of Measure".into(),
-                type_: FieldType::String,
-                editable: true,
-            },
-            HeaderField {
-                field: "mag_var".into(),
-                display: "Magnetic Variation".into(),
-                type_: FieldType::Float(|v| format!("{:.1}", v)),
-                editable: true,
-            },
+            HeaderField::new("title", "Title", FieldType::String, true),
+            HeaderField::new("version", "Version", FieldType::String, true),
+            HeaderField::new("dawn", "Dawn", FieldType::IntTime, true),
+            HeaderField::new("dusk", "Dusk", FieldType::IntTime, true),
+            HeaderField::new(
+                "mission_duration",
+                "Mission Duration (min)",
+                FieldType::DurationMin,
+                true,
+            ),
+            HeaderField::new(
+                "startup",
+                "Startup Time (min)",
+                FieldType::DurationMin,
+                true,
+            ),
+            HeaderField::new("units", "Unit of Measure", FieldType::String, true),
+            HeaderField::new(
+                "mag_var",
+                "Magnetic Variation",
+                FieldType::Float(|v| format!("{:.1}", v)),
+                true,
+            ),
         ]
     }
-}
-
-impl Editable for Header {
     fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, _: &str) -> &'a mut Self {
         &mut instance.campaign_header
     }
@@ -155,6 +126,14 @@ impl Editable for Header {
                 "Dawn time",
                 "Dawn must be earlier than Dusk",
             ));
+        }
+
+        if self.units != "imperial" && self.units != "metric" {
+            errors.push(ValidationError::new(
+                "units",
+                "Units of Measure",
+                "Units must be 'imperial' or 'metric'",
+            ))
         }
 
         if errors.is_empty() {

@@ -1,2 +1,2 @@
 [workspace]
-members = ["dce-lib", "ui", "tables"]
+members = ["dce-lib", "ui"]

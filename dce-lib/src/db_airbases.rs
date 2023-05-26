@@ -2,12 +2,11 @@ use bevy_reflect::{FromReflect, Reflect};
 use itertools::Itertools;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use tables::{FieldType, HeaderField, TableHeader};
 
 use crate::{
     dce_utils::ValidateSelf,
     dcs_airbase_export::dcs_airbases_for_theatre,
-    editable::{Editable, ValidationError, ValidationResult},
+    editable::{Editable, FieldType, HeaderField, ValidationError, ValidationResult},
     serde_utils::LuaFileBased,
     DCEInstance, NewFromMission,
 };
@@ -73,25 +72,6 @@ pub struct FixedAirBase {
     limited_park_number: u16,
     #[serde(default)]
     pub _name: String,
-}
-
-impl TableHeader for FixedAirBase {
-    fn get_header() -> Vec<tables::HeaderField> {
-        vec![
-            HeaderField {
-                field: "_name".into(),
-                display: "Name".into(),
-                type_: FieldType::String,
-                editable: false,
-            },
-            HeaderField {
-                field: "elevation".into(),
-                display: "Elevation".into(),
-                type_: FieldType::Float(|v| format!("{:.1}", v)),
-                editable: false,
-            },
-        ]
-    }
 }
 
 impl ValidateSelf for FixedAirBase {
@@ -318,6 +298,17 @@ impl NewFromMission for DBAirbases {
 }
 
 impl Editable for FixedAirBase {
+    fn get_header() -> Vec<HeaderField> {
+        vec![
+            HeaderField::new("_name", "Name", FieldType::String, false),
+            HeaderField::new(
+                "elevation",
+                "Elevation",
+                FieldType::Float(|v| format!("{:.1}", v)),
+                false,
+            ),
+        ]
+    }
     fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {
         instance
             .airbases

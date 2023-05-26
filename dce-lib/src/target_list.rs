@@ -54,6 +54,8 @@ impl NewFromMission for TargetList {
                             firepower: TargetFirepower { min: 2, max: 2 },
                             _name: z.name.to_owned(),
                             _side: "blue".into(),
+                            _firepower_min: 2,
+                            _firepower_max: 2,
                         }),
                     );
                 }
@@ -120,6 +122,8 @@ impl NewFromMission for TargetList {
                                 elements: None,
                                 _name: vg.name.to_owned(),
                                 _side: "blue".into(),
+                                _firepower_min: 2,
+                                _firepower_max: 2,
                             }),
                         );
                     }
@@ -155,6 +159,8 @@ impl NewFromMission for TargetList {
                         elements: None,
                         _name: sg.name.to_owned(),
                         _side: "blue".into(),
+                        _firepower_min: 2,
+                        _firepower_max: 4,
                     }),
                 );
             });
@@ -209,6 +215,10 @@ pub struct Intercept {
     pub _name: String,
     #[serde(default)]
     pub _side: String,
+    #[serde(default)]
+    pub _firepower_min: u32,
+    #[serde(default)]
+    pub _firepower_max: u32,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
@@ -224,6 +234,10 @@ pub struct FighterSweep {
     pub _name: String,
     #[serde(default)]
     pub _side: String,
+    #[serde(default)]
+    pub _firepower_min: u32,
+    #[serde(default)]
+    pub _firepower_max: u32,
 }
 
 #[cfg(test)]

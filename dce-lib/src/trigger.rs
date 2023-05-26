@@ -3,10 +3,9 @@ use std::collections::HashMap;
 use bevy_reflect::{FromReflect, Reflect};
 use mlua::Lua;
 use serde::{Deserialize, Serialize};
-use tables::{FieldType, HeaderField, TableHeader};
 
 use crate::{
-    editable::{Editable, ValidationError, ValidationResult},
+    editable::{Editable, FieldType, HeaderField, ValidationError, ValidationResult},
     lua_utils::load_trigger_mocks,
     serde_utils::LuaFileBased,
     NewFromMission,
@@ -105,6 +104,14 @@ impl NewFromMission for Triggers {
 }
 
 impl Editable for Trigger {
+    fn get_header() -> Vec<HeaderField> {
+        vec![
+            HeaderField::new("_name", "Name", FieldType::String, true),
+            HeaderField::new("active", "Active", FieldType::Bool, true),
+            HeaderField::new("once", "Once Only", FieldType::Bool, true),
+            HeaderField::new("condition", "Condition", FieldType::String, true),
+        ]
+    }
     fn get_name(&self) -> String {
         self._name.to_owned()
     }
@@ -150,17 +157,6 @@ impl Editable for Trigger {
             .iter_mut()
             .find(|item| item._name == name)
             .expect("Item must exist in trigger vec")
-    }
-}
-
-impl TableHeader for Trigger {
-    fn get_header() -> Vec<HeaderField> {
-        vec![
-            HeaderField::new("_name", "Name", FieldType::String, true),
-            HeaderField::new("active", "Active", FieldType::Bool, true),
-            HeaderField::new("once", "Once Only", FieldType::Bool, true),
-            HeaderField::new("condition", "Condition", FieldType::String, true),
-        ]
     }
 }
 

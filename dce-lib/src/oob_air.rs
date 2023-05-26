@@ -5,11 +5,10 @@ use log::warn;
 use proj::Proj;
 use serde::{Deserialize, Serialize};
 use std::{collections::HashMap, iter::repeat};
-use tables::{FieldType, HeaderField};
 
 use crate::{
     db_airbases::DBAirbases,
-    editable::{Editable, ValidationError, ValidationResult},
+    editable::{Editable, FieldType, HeaderField, ValidationError, ValidationResult},
     mappable::Mappables,
     mission::{Country, Mission},
     serde_utils::LuaFileBased,
@@ -162,61 +161,6 @@ fn side_to_squadrons(countries: &[Country], base: String) -> Vec<Squadron> {
         .collect::<Vec<_>>()
 }
 
-impl tables::TableHeader for Squadron {
-    fn get_header() -> Vec<tables::HeaderField> {
-        vec![
-            HeaderField {
-                display: "Name".into(),
-                field: "name".into(),
-                type_: FieldType::String,
-                editable: true,
-            },
-            HeaderField {
-                display: "Base".into(),
-                field: "base".into(),
-                type_: FieldType::String,
-                editable: true,
-            },
-            HeaderField {
-                display: "Country".into(),
-                field: "country".into(),
-                type_: FieldType::String,
-                editable: false,
-            },
-            HeaderField {
-                display: "Airframe".into(),
-                field: "_type".into(),
-                type_: FieldType::String,
-                editable: false,
-            },
-            HeaderField {
-                display: "Number".into(),
-                field: "number".into(),
-                type_: FieldType::Int,
-                editable: true,
-            },
-            HeaderField {
-                display: "Reserve".into(),
-                field: "reserve".into(),
-                type_: FieldType::Int,
-                editable: true,
-            },
-            HeaderField {
-                display: "Tasks".into(),
-                field: "tasks".into(),
-                type_: FieldType::Debug,
-                editable: false,
-            },
-            HeaderField {
-                display: "Inactive".into(),
-                field: "inactive".into(),
-                type_: FieldType::Bool,
-                editable: true,
-            },
-        ]
-    }
-}
-
 impl Mappables for OobAir {
     fn to_mappables(
         &self,
@@ -253,6 +197,18 @@ impl Mappables for OobAir {
 }
 
 impl Editable for Squadron {
+    fn get_header() -> Vec<HeaderField> {
+        vec![
+            HeaderField::new("name", "Name", FieldType::String, true),
+            HeaderField::new("base", "Base", FieldType::String, true),
+            HeaderField::new("country", "Country", FieldType::String, false),
+            HeaderField::new("_type", "Airframe", FieldType::String, false),
+            HeaderField::new("number", "Number", FieldType::Int, true),
+            HeaderField::new("reserve", "Reserve", FieldType::Int, true),
+            HeaderField::new("tasks", "Tasks", FieldType::Debug, false),
+            HeaderField::new("inactive", "Inactive", FieldType::Bool, true),
+        ]
+    }
     fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Squadron {
         instance
             .oob_air

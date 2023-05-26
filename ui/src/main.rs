@@ -1,8 +1,10 @@
-#![windows_subsystem = "windows"]
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+#![cfg_attr(debug_assertions, windows_subsystem = "console")]
 
 use dce_lib::{
     campaign_header::Header,
     db_airbases::FixedAirBase,
+    editable::Editable,
     loadouts::{CAPLoadout, StrikeLoadout},
     mappable::MapPoint,
     oob_air::Squadron,
@@ -16,7 +18,6 @@ use fermi::{use_atom_ref, use_atom_root, use_init_atom_root, AtomRef};
 use log::{info, warn};
 use selectable::Selectable;
 use simple_logger::SimpleLogger;
-use tables::TableHeader;
 
 use directories::ProjectDirs;
 

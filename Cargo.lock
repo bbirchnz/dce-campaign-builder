@@ -887,6 +887,7 @@ dependencies = [
  "anyhow",
  "approx_eq",
  "bevy_reflect",
+ "chrono",
  "itertools",
  "log",
  "mlua",
@@ -894,7 +895,6 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_path_to_error",
- "tables",
  "void",
  "zip",
 ]
@@ -3349,16 +3349,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "tables"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "bevy_reflect",
- "chrono",
- "log",
-]
-
-[[package]]
 name = "tao"
 version = "0.18.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3662,7 +3652,6 @@ dependencies = [
  "serde",
  "serde_json",
  "simple_logger",
- "tables",
  "tokio",
  "zip",
 ]

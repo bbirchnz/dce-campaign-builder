@@ -1,9 +1,9 @@
 use bevy_reflect::Struct;
 
+use dce_lib::editable::HeaderField;
 use dioxus::prelude::*;
 use fermi::use_atom_ref;
 use log::info;
-use tables::HeaderField;
 
 use crate::{selectable::ToSelectable, SELECTED};
 

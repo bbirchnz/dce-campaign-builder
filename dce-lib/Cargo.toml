@@ -18,4 +18,4 @@ serde_path_to_error = "0.1.11"
 void = "1.0.2"
 zip = "0.6.5"
 bevy_reflect = "0.10.1"
-tables = { path = "../tables" }
+chrono = "0.4.24"

@@ -1,11 +1,9 @@
-use bevy_reflect::{FromReflect, Reflect};
-use serde::{Deserialize, Serialize};
-use tables::{FieldType, HeaderField, TableHeader};
-
 use crate::{
-    editable::{Editable, ValidationError, ValidationResult},
+    editable::{Editable, FieldType, HeaderField, ValidationError, ValidationResult},
     DCEInstance,
 };
+use bevy_reflect::{FromReflect, Reflect};
+use serde::{Deserialize, Serialize};
 
 use super::TargetFirepower;
 
@@ -26,6 +24,10 @@ pub struct Strike {
     pub _name: String,
     #[serde(default)]
     pub _side: String,
+    #[serde(default)]
+    pub _firepower_min: u32,
+    #[serde(default)]
+    pub _firepower_max: u32,
 }
 
 fn default_class() -> String {
@@ -51,44 +53,17 @@ pub struct StrikeNamedStaticTarget {
     pub name: String,
 }
 
-impl TableHeader for Strike {
+impl Editable for Strike {
     fn get_header() -> Vec<HeaderField> {
         vec![
-            HeaderField {
-                field: "text".into(),
-                display: "Display Text".into(),
-                type_: FieldType::String,
-                editable: true,
-            },
-            HeaderField {
-                field: "_side".into(),
-                display: "Side".into(),
-                type_: FieldType::String,
-                editable: false,
-            },
-            HeaderField {
-                field: "priority".into(),
-                display: "Priority".into(),
-                type_: FieldType::Int,
-                editable: true,
-            },
-            HeaderField {
-                field: "firepower".into(),
-                display: "Req Firepower".into(),
-                type_: FieldType::Debug,
-                editable: false,
-            },
-            HeaderField {
-                display: "Inactive".into(),
-                field: "inactive".into(),
-                type_: FieldType::Bool,
-                editable: true,
-            },
+            HeaderField::new("text", "Display Text", FieldType::String, true),
+            HeaderField::new("_side", "Side", FieldType::String, false),
+            HeaderField::new("priority", "Priority", FieldType::Int, true),
+            HeaderField::new("_firepower_min", "Min Req Firepower", FieldType::Int, true),
+            HeaderField::new("_firepower_max", "Max Req Firepower", FieldType::Int, true),
+            HeaderField::new("inactive", "Inactive", FieldType::Bool, true),
         ]
     }
-}
-
-impl Editable for Strike {
     fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {
         instance
             .target_list

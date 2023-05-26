@@ -93,13 +93,16 @@ impl TargetListInternal {
         let mut red = HashMap::default();
 
         self.antiship.iter().try_for_each(|item| {
+            let mut item = item.clone();
+            item.firepower.min = item._firepower_min;
+            item.firepower.max = item._firepower_max;
+
             match item._side.as_str() {
                 "blue" => {
-                    let _ =
-                        blue.insert(item._name.to_owned(), Target::AntiShipStrike(item.clone()));
+                    let _ = blue.insert(item._name.to_owned(), Target::AntiShipStrike(item));
                 }
                 "red" => {
-                    let _ = red.insert(item._name.to_owned(), Target::AntiShipStrike(item.clone()));
+                    let _ = red.insert(item._name.to_owned(), Target::AntiShipStrike(item));
                 }
                 _ => return Err(anyhow!("Got side == {}", item._side)),
             }
@@ -107,12 +110,16 @@ impl TargetListInternal {
         })?;
 
         self.cap.iter().try_for_each(|item| {
+            let mut item = item.clone();
+            item.firepower.min = item._firepower_min;
+            item.firepower.max = item._firepower_max;
+
             match item._side.as_str() {
                 "blue" => {
-                    let _ = blue.insert(item._name.to_owned(), Target::CAP(item.clone()));
+                    let _ = blue.insert(item._name.to_owned(), Target::CAP(item));
                 }
                 "red" => {
-                    let _ = red.insert(item._name.to_owned(), Target::CAP(item.clone()));
+                    let _ = red.insert(item._name.to_owned(), Target::CAP(item));
                 }
                 _ => return Err(anyhow!("Got side == {}", item._side)),
             }
@@ -120,12 +127,16 @@ impl TargetListInternal {
         })?;
 
         self.intercept.iter().try_for_each(|item| {
+            let mut item = item.clone();
+            item.firepower.min = item._firepower_min;
+            item.firepower.max = item._firepower_max;
+
             match item._side.as_str() {
                 "blue" => {
-                    let _ = blue.insert(item._name.to_owned(), Target::Intercept(item.clone()));
+                    let _ = blue.insert(item._name.to_owned(), Target::Intercept(item));
                 }
                 "red" => {
-                    let _ = red.insert(item._name.to_owned(), Target::Intercept(item.clone()));
+                    let _ = red.insert(item._name.to_owned(), Target::Intercept(item));
                 }
                 _ => return Err(anyhow!("Got side == {}", item._side)),
             }
@@ -133,12 +144,16 @@ impl TargetListInternal {
         })?;
 
         self.strike.iter().try_for_each(|item| {
+            let mut item = item.clone();
+            item.firepower.min = item._firepower_min;
+            item.firepower.max = item._firepower_max;
+
             match item._side.as_str() {
                 "blue" => {
-                    let _ = blue.insert(item._name.to_owned(), Target::Strike(item.clone()));
+                    let _ = blue.insert(item._name.to_owned(), Target::Strike(item));
                 }
                 "red" => {
-                    let _ = red.insert(item._name.to_owned(), Target::Strike(item.clone()));
+                    let _ = red.insert(item._name.to_owned(), Target::Strike(item));
                 }
                 _ => return Err(anyhow!("Got side == {}", item._side)),
             }
@@ -146,12 +161,16 @@ impl TargetListInternal {
         })?;
 
         self.fighter_sweep.iter().try_for_each(|item| {
+            let mut item = item.clone();
+            item.firepower.min = item._firepower_min;
+            item.firepower.max = item._firepower_max;
+
             match item._side.as_str() {
                 "blue" => {
-                    let _ = blue.insert(item._name.to_owned(), Target::FighterSweep(item.clone()));
+                    let _ = blue.insert(item._name.to_owned(), Target::FighterSweep(item));
                 }
                 "red" => {
-                    let _ = red.insert(item._name.to_owned(), Target::FighterSweep(item.clone()));
+                    let _ = red.insert(item._name.to_owned(), Target::FighterSweep(item));
                 }
                 _ => return Err(anyhow!("Got side == {}", item._side)),
             }

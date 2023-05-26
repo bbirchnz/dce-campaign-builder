@@ -2,10 +2,9 @@ use std::collections::HashMap;
 
 use bevy_reflect::{FromReflect, Reflect};
 use serde::{Deserialize, Serialize};
-use tables::{FieldType, HeaderField, TableHeader};
 
 use crate::{
-    editable::{Editable, ValidationResult},
+    editable::{Editable, FieldType, HeaderField, ValidationResult},
     mission::Payload,
     serde_utils::LuaFileBased,
     DCEInstance, NewFromMission,
@@ -93,115 +92,15 @@ pub struct CAPLoadout {
 
 fn common_headers() -> Vec<HeaderField> {
     vec![
-        HeaderField {
-            field: "_name".into(),
-            display: "Name".into(),
-            type_: FieldType::String,
-            editable: true,
-        },
-        HeaderField {
-            field: "_airframe".into(),
-            display: "Airframe".into(),
-            type_: FieldType::String,
-            editable: false,
-        },
-        HeaderField {
-            field: "day".into(),
-            display: "Day".into(),
-            type_: FieldType::Bool,
-            editable: true,
-        },
-        HeaderField {
-            field: "night".into(),
-            display: "Night".into(),
-            type_: FieldType::Bool,
-            editable: true,
-        },
-        HeaderField {
-            field: "adverse_weather".into(),
-            display: "Adverse Weather".into(),
-            type_: FieldType::Bool,
-            editable: true,
-        },
-        HeaderField {
-            field: "range".into(),
-            display: "Range (nm)".into(),
-            type_: FieldType::DistanceNM,
-            editable: true,
-        },
-        HeaderField {
-            field: "capability".into(),
-            display: "Capability".into(),
-            type_: FieldType::Int,
-            editable: true,
-        },
-        HeaderField {
-            field: "firepower".into(),
-            display: "Firepower".into(),
-            type_: FieldType::Int,
-            editable: true,
-        },
+        HeaderField::new("_name", "Name", FieldType::String, true),
+        HeaderField::new("_airframe", "AirFrame", FieldType::String, false),
+        HeaderField::new("day", "Day", FieldType::Bool, true),
+        HeaderField::new("night", "Night", FieldType::Bool, true),
+        HeaderField::new("adverse_weather", "Adverse Weather", FieldType::Bool, true),
+        HeaderField::new("range", "Range (nm)", FieldType::DistanceNM, true),
+        HeaderField::new("capability", "Capability", FieldType::Int, true),
+        HeaderField::new("firepower", "Firepower", FieldType::Int, true),
     ]
-}
-
-impl TableHeader for CAPLoadout {
-    fn get_header() -> Vec<tables::HeaderField> {
-        let mut common = common_headers();
-        common.extend(vec![
-            HeaderField {
-                field: "v_cruise".into(),
-                display: "Cruise Speed (knots TAS)".into(),
-                type_: FieldType::SpeedKnotsTAS,
-                editable: true,
-            },
-            HeaderField {
-                field: "h_cruise".into(),
-                display: "Cruise Altitude (ft)".into(),
-                type_: FieldType::AltitudeFeet,
-                editable: true,
-            },
-            HeaderField {
-                field: "t_station".into(),
-                display: "Time on station (min)".into(),
-                type_: FieldType::DurationMin,
-                editable: true,
-            },
-        ]);
-        common
-    }
-}
-
-impl TableHeader for StrikeLoadout {
-    fn get_header() -> Vec<tables::HeaderField> {
-        let mut common = common_headers();
-        common.extend(vec![
-            HeaderField {
-                field: "v_cruise".into(),
-                display: "Cruise Speed (knots TAS)".into(),
-                type_: FieldType::SpeedKnotsTAS,
-                editable: true,
-            },
-            HeaderField {
-                field: "h_cruise".into(),
-                display: "Cruise Altitude (ft)".into(),
-                type_: FieldType::AltitudeFeet,
-                editable: true,
-            },
-            HeaderField {
-                field: "v_attack".into(),
-                display: "Attack Speed (knots TAS)".into(),
-                type_: FieldType::SpeedKnotsTAS,
-                editable: true,
-            },
-            HeaderField {
-                field: "h_attack".into(),
-                display: "Attack Altitude (ft)".into(),
-                type_: FieldType::AltitudeFeet,
-                editable: true,
-            },
-        ]);
-        common
-    }
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
@@ -342,6 +241,31 @@ impl NewFromMission for Loadouts {
 }
 
 impl Editable for CAPLoadout {
+    fn get_header() -> Vec<HeaderField> {
+        let mut common = common_headers();
+        common.extend(vec![
+            HeaderField::new(
+                "v_cruise",
+                "Cruise Speed (knots TAS)",
+                FieldType::SpeedKnotsTAS,
+                true,
+            ),
+            HeaderField::new(
+                "h_cruise",
+                "Cruise Altitude (ft)",
+                FieldType::AltitudeFeet,
+                true,
+            ),
+            HeaderField::new(
+                "t_station",
+                "Time on station (min)",
+                FieldType::DurationMin,
+                true,
+            ),
+        ]);
+        common
+    }
+
     fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {
         instance
             .loadouts
@@ -368,6 +292,36 @@ impl Editable for CAPLoadout {
 }
 
 impl Editable for StrikeLoadout {
+    fn get_header() -> Vec<HeaderField> {
+        let mut common = common_headers();
+        common.extend(vec![
+            HeaderField::new(
+                "v_cruise",
+                "Cruise Speed (knots TAS)",
+                FieldType::SpeedKnotsTAS,
+                true,
+            ),
+            HeaderField::new(
+                "h_cruise",
+                "Cruise Altitude (ft)",
+                FieldType::AltitudeFeet,
+                true,
+            ),
+            HeaderField::new(
+                "v_attack",
+                "Attack Speed (knots TAS)",
+                FieldType::SpeedKnotsTAS,
+                true,
+            ),
+            HeaderField::new(
+                "h_attack",
+                "Attack Altitude (ft)",
+                FieldType::AltitudeFeet,
+                true,
+            ),
+        ]);
+        common
+    }
     fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {
         instance
             .loadouts

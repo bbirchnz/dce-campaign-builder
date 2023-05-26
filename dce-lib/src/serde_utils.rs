@@ -38,7 +38,7 @@ pub trait LuaFileBased<'a>: Deserialize<'a> + Serialize {
 
         load_utils(&lua)?;
 
-        lua.globals().set(key.clone(), lua.to_value(&self)?)?;
+        lua.globals().set(key.to_owned(), lua.to_value(&self)?)?;
 
         let table = lua
             .load(&format!("TableSerialization({}, 0)", &key))

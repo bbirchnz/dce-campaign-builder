@@ -16,7 +16,6 @@ fn fieldtype_to_input(field: &FieldType) -> String {
         FieldType::Float(_) => "number".into(),
         FieldType::Int => "number".into(),
         FieldType::Enum => "text".into(),
-        FieldType::VecString => "text".into(),
         FieldType::Debug => "text".into(),
         FieldType::IntTime => "time".into(),
         FieldType::Bool => "checkbox".into(),
@@ -24,7 +23,7 @@ fn fieldtype_to_input(field: &FieldType) -> String {
         FieldType::SpeedKnotsTAS => "number".into(),
         FieldType::DistanceNM => "number".into(),
         FieldType::DurationMin => "number".into(),
-        FieldType::TriggerActions => "textarea".into(),
+        FieldType::TriggerActions => "text".into(),
     }
 }
 
@@ -34,7 +33,6 @@ fn fieldtype_editable(field: &FieldType) -> bool {
         FieldType::Float(_) => true,
         FieldType::Int => true,
         FieldType::Enum => false,
-        FieldType::VecString => false,
         FieldType::Debug => false,
         FieldType::IntTime => true,
         FieldType::Bool => true,
@@ -77,13 +75,49 @@ where
         let atom_selectable = use_atom_ref(cx, SELECTED);
         let mut current_item = item_state.make_mut();
 
+        trace!("edit_form submit: {:?}", ev);
+
         // apply the values from the form
-        for (k, v) in ev.values.iter() {
-            // find header that matches key:
-            let h = cx.props.headers.iter().find(|h| h.display == *k).unwrap();
-            if let Err(e) = h.set_value_fromstr(&mut *current_item, v) {
-                warn!("Failed to set field: {} with {}. Error: {}", h.field, v, e);
-            }
+        for h in cx.props.headers.iter().filter(|h| h.editable) {
+            match h.type_ {
+                FieldType::TriggerActions => {
+                    let values = ev
+                        .values
+                        .iter()
+                        .filter_map(|(k, v)| {
+                            let k_root: String = k
+                                .split('.')
+                                .map(|s| s.to_string())
+                                .collect::<Vec<String>>()
+                                .first()
+                                .expect("Should work even without a .")
+                                .to_string();
+
+                            if k_root == h.display {
+                                return Some(v.to_owned());
+                            }
+                            None
+                        })
+                        .collect::<Vec<String>>();
+                    if let Err(e) =
+                        h.set_value_from_stringvec(&mut *current_item, values.as_slice())
+                    {
+                        warn!(
+                            "Failed to set field: {} with {:?}. Error: {}",
+                            h.field, values, e
+                        );
+                    }
+                }
+                _ => {
+                    let v = ev.values.get(&h.display).expect(&format!(
+                        "There must be a value for field {:?} in formevent",
+                        &h.type_
+                    ));
+                    if let Err(e) = h.set_value_fromstr(&mut *current_item, v) {
+                        warn!("Failed to set field: {} with {}. Error: {}", h.field, v, e);
+                    }
+                }
+            };
         }
 
         // validate
@@ -98,7 +132,7 @@ where
                 // get mutable references and pass into the various atoms
                 let mut instance_refmut = atom_instance.write();
                 let w_instance = instance_refmut.as_mut().unwrap();
-                let item_to_change = T::get_mut_by_name(w_instance, &orig_name);
+                let item_to_change = T::get_mut_by_name(w_instance, orig_name);
                 *item_to_change = current_item.clone();
 
                 let mut selectable = atom_selectable.write();
@@ -130,18 +164,41 @@ where
             }
             form { autocomplete: "off", oninput: on_submit,
                 for h in T::get_header().iter().filter(|h| fieldtype_editable(&h.type_)) {
-                    div { class: "flex w-full mt-1 mb-1",
-                        label { class: "flex-grow p-1", r#for: "{h.display}", "{h.display}" }
-                        input {
-                            class: "rounded p-1",
-                            autocomplete: "off",
-                            r#type: "{fieldtype_to_input(&h.type_)}",
-                            name: "{h.display}",
-                            value: "{h.get_value_string(item_state.get())}",
-                            readonly: "{!h.editable}",
-                            disabled: "{!h.editable}",
-                            step: "any",
-                            checked: "{h.get_value_string(item_state.get()) == \"true\"}"
+                    match h.type_ {
+                        // Trigger actions have to render as one input per action
+                        FieldType::TriggerActions => rsx!{
+                            for (i, action) in h.get_value_stringvec(item_state.get()).iter().enumerate() {
+                                rsx! {
+                                    div {
+                                        class: "flex w-full mt-1 mb-1",
+                                        label { class: "p-1", r#for: "{h.display}.{i}", "{i}" }
+                                        input {
+                                            class: "flex-grow rounded p-1",
+                                            autocomplete: "off",
+                                            r#type: "{fieldtype_to_input(&h.type_)}",
+                                            name: "{h.display}.{i}",
+                                            value: "{action}"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        // all other fields are one input per field
+                        _ => rsx!{
+                            div { class: "flex w-full mt-1 mb-1",
+                                label { class: "flex-grow p-1", r#for: "{h.display}", "{h.display}" }
+                                input {
+                                    class: "rounded p-1",
+                                    autocomplete: "off",
+                                    r#type: "{fieldtype_to_input(&h.type_)}",
+                                    name: "{h.display}",
+                                    value: "{h.get_value_string(item_state.get())}",
+                                    readonly: "{!h.editable}",
+                                    disabled: "{!h.editable}",
+                                    step: "any",
+                                    checked: "{h.get_value_string(item_state.get()) == \"true\"}"
+                                }
+                            }
                         }
                     }
                 }
@@ -156,7 +213,7 @@ struct RenderErrorProps {
     result: ValidationResult,
 }
 
-fn render_errors<'a>(cx: Scope<RenderErrorProps>) -> Option<VNode> {
+fn render_errors(cx: Scope<RenderErrorProps>) -> Option<VNode> {
     if let ValidationResult::Fail(errors) = &cx.props.result {
         return cx.render(rsx! {
             for e in errors.iter() {

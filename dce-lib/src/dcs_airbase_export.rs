@@ -57,7 +57,7 @@ pub fn dcs_airbases_for_theatre(theatre: &str) -> Result<Airports, anyhow::Error
     match theatre {
         "Falklands" => Ok(Airports::from_lua_str(
             include_str!("..\\lua\\standlist_sa.lua"),
-            "airports".into(),
+            "airports",
         )?),
         _ => Err(anyhow!("Couldn't get DCS airbases for {theatre}")),
     }

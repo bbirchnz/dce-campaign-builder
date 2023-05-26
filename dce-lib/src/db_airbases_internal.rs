@@ -86,19 +86,19 @@ impl DBAirbasesInternal {
     }
 
     pub fn airbase_exists(&self, name: &str) -> bool {
-        if let Some(_) = self.fixed.iter().find(|n| n._name == name) {
+        if self.fixed.iter().any(|n| n._name == name) {
             return true;
         }
-        if let Some(_) = self.ship.iter().find(|n| n._name == name) {
+        if self.ship.iter().any(|n| n._name == name) {
             return true;
         }
-        if let Some(_) = self.air_start.iter().find(|n| n._name == name) {
+        if self.air_start.iter().any(|n| n._name == name) {
             return true;
         }
-        if let Some(_) = self.reserve.iter().find(|n| n._name == name) {
+        if self.reserve.iter().any(|n| n._name == name) {
             return true;
         }
-        if let Some(_) = self.farp.iter().find(|n| n._name == name) {
+        if self.farp.iter().any(|n| n._name == name) {
             return true;
         }
 
@@ -118,9 +118,9 @@ impl Mappables for DBAirbasesInternal {
             result.push(MapPoint::new_from_dcs(
                 item.x,
                 item.y,
-                item._name.to_owned(),
-                item.side.to_owned(),
-                "FixedAirBase".into(),
+                &item._name,
+                &item.side,
+                "FixedAirBase",
                 proj,
             ));
         });
@@ -135,9 +135,9 @@ impl Mappables for DBAirbasesInternal {
                 result.push(MapPoint::new_from_dcs(
                     unit.x,
                     unit.y,
-                    item._name.to_owned(),
-                    item.side.to_owned(),
-                    "ShipAirBase".to_owned(),
+                    &item._name,
+                    &item.side,
+                    "ShipAirBase",
                     proj,
                 ));
             }

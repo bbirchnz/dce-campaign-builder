@@ -243,7 +243,7 @@ impl Mission {
 
         archive.by_name("mission")?.read_to_string(&mut mission)?;
 
-        Mission::from_lua_str(&mission, "mission".into())
+        Mission::from_lua_str(&mission, "mission")
     }
 
     pub fn get_vehicle_groups(&self) -> Vec<&VehicleGroup> {

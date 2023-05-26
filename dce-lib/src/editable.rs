@@ -1,6 +1,8 @@
 use bevy_reflect::Struct;
+use itertools::Itertools;
+use log::warn;
 
-use crate::DCEInstance;
+use crate::{trigger::Actions, DCEInstance};
 use anyhow::anyhow;
 use chrono::{NaiveTime, Timelike};
 
@@ -15,7 +17,7 @@ pub trait Editable {
 
 // pub trait TableHeader {
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Debug)]
 pub struct HeaderField {
     pub field: String,
     pub display: String,
@@ -65,13 +67,58 @@ impl HeaderField {
         }
     }
 
+    /// Attempt to get a value as a string array. For most types this is a wrapper
+    /// around `get_value_string()` but comes into its own when used with `TriggerActions`
+    pub fn get_value_stringvec(&self, item: &dyn Struct) -> Vec<String> {
+        match self.type_ {
+            FieldType::TriggerActions => {
+                let actions = item
+                    .field(&self.field)
+                    .expect(&format!("Field {} should exist", &self.field))
+                    .downcast_ref::<Actions>()
+                    .expect(&format!("Failed to get field {} as Actions", &self.field));
+                match actions {
+                    Actions::One(action) => vec![action.to_owned()],
+                    Actions::Many(actions) => actions.to_owned(),
+                }
+            }
+            _ => {
+                warn!(
+                    "get_value_stringvec called with a {:?} that doesn't need it",
+                    self
+                );
+                vec![self.get_value_string(item)]
+            }
+        }
+    }
+
+    pub fn set_value_from_stringvec(
+        &self,
+        item: &mut dyn Struct,
+        values: &[String],
+    ) -> Result<(), anyhow::Error> {
+        match self.type_ {
+            FieldType::TriggerActions => {
+                let action = Actions::Many(values.iter().map(|v| v.to_string()).collect_vec());
+                item.field_mut(&self.field)
+                    .ok_or(anyhow!("Couldn't get field {}", &self.field))?
+                    .apply(&action);
+                Ok(())
+            }
+            _ => Err(anyhow!(
+                "set_value_from_stringvec called with a {:?} that doesn't need it",
+                self
+            )),
+        }
+    }
+
     pub fn get_value_string(&self, item: &dyn Struct) -> String {
         match self.type_ {
             FieldType::String => item
                 .field(&self.field)
                 .expect(&format!("Field {} should exist", &self.field))
                 .downcast_ref::<String>()
-                .unwrap()
+                .expect(&format!("Failed to get field {} as String", &self.field))
                 .to_string(),
             FieldType::Float(func) => {
                 let value = item
@@ -88,15 +135,6 @@ impl HeaderField {
                 .expect(&format!("Failed to get field {} as u32", &self.field))
                 .to_string(),
             FieldType::Enum => "".into(),
-            FieldType::VecString => item
-                .field(&self.field)
-                .expect(&format!("Field {} should exist", &self.field))
-                .downcast_ref::<Vec<String>>()
-                .expect(&format!(
-                    "Failed to get field {} as Vec<String>",
-                    &self.field
-                ))
-                .join(", "),
             FieldType::Debug => {
                 let v = item.field(&self.field).unwrap();
                 format!("{:?}", v)
@@ -159,12 +197,9 @@ impl HeaderField {
                     .expect(&format!("Failed to get field {} as f64", &self.field));
                 format!("{:.0}", seconds / 60)
             }
-            FieldType::TriggerActions => item
-                .field(&self.field)
-                .expect(&format!("Field {} should exist", &self.field))
-                .downcast_ref::<String>()
-                .unwrap()
-                .to_string(),
+            FieldType::TriggerActions => {
+                panic!("Shouldn't get here, TriggerAction should use stringvec methods")
+            }
         }
     }
 
@@ -190,24 +225,20 @@ impl HeaderField {
                     .apply(&value.parse::<u32>()?);
             }
             FieldType::Enum => todo!(),
-            FieldType::VecString => todo!(),
             FieldType::Debug => todo!(),
             FieldType::IntTime => {
-                let time;
                 let attempt_hms = NaiveTime::parse_from_str(value, "%H:%M:%S");
-                match attempt_hms {
-                    Ok(t) => time = t,
-                    Err(_) => {
-                        time = NaiveTime::parse_from_str(value, "%H:%M")
-                            .expect("Expected HH:MM:SS or HH:MM")
-                    }
-                }
+                let time = match attempt_hms {
+                    Ok(t) => t,
+                    Err(_) => NaiveTime::parse_from_str(value, "%H:%M")
+                        .expect("Expected HH:MM:SS or HH:MM"),
+                };
                 item.field_mut(&self.field)
                     .ok_or(anyhow!("Couldn't get field {}", &self.field))?
                     .apply(&time.num_seconds_from_midnight());
             }
             FieldType::Bool => {
-                let selected = if value == "true" { true } else { false };
+                let selected = value == "true";
 
                 item.field_mut(&self.field)
                     .ok_or(anyhow!("Couldn't get field {}", &self.field))?
@@ -251,13 +282,12 @@ impl HeaderField {
     }
 }
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Debug)]
 pub enum FieldType {
     String,
     Float(fn(f64) -> String),
     Int,
     Enum,
-    VecString,
     Debug,
     IntTime,
     Bool,

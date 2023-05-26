@@ -89,11 +89,11 @@ impl Editable for Strike {
         if let Some(vg_name) = self.class_template.clone() {
             match self.class.as_str() {
                 "vehicle" => {
-                    if let None = instance
+                    if !instance
                         .mission
                         .get_vehicle_groups()
                         .iter()
-                        .find(|g| g.name == vg_name)
+                        .any(|g| g.name == vg_name)
                     {
                         errors.push(ValidationError::new(
                             "class_template",
@@ -103,11 +103,11 @@ impl Editable for Strike {
                     }
                 }
                 "ship" => {
-                    if let None = instance
+                    if !instance
                         .mission
                         .get_ship_groups()
                         .iter()
-                        .find(|g| g.name == vg_name)
+                        .any(|g| g.name == vg_name)
                     {
                         errors.push(ValidationError::new(
                             "class_template",

@@ -76,7 +76,7 @@ impl Editable for CAP {
                 "Side must be blue or red",
             ));
         }
-        if let Err(_) = instance.mission.get_zone_by_name(&self.ref_point) {
+        if instance.mission.get_zone_by_name(&self.ref_point).is_err() {
             errors.push(ValidationError::new(
                 "ref_point",
                 "CAP Reference Zone",

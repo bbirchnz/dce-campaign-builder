@@ -58,37 +58,35 @@ pub struct DCEInstance {
 
 impl DCEInstance {
     pub fn new(path: String) -> Result<DCEInstance, anyhow::Error> {
-        let oob_air =
-            OobAir::from_lua_file(format!("{}/oob_air_init.lua", path), "oob_air".into())?;
+        let oob_air = OobAir::from_lua_file(format!("{}/oob_air_init.lua", path), "oob_air")?;
 
         let airbases = DBAirbasesInternal::from_db_airbases(&DBAirbases::from_lua_file(
             format!("{}/db_airbases.lua", path),
-            "db_airbases".into(),
+            "db_airbases",
         )?);
 
         let mission = Mission::from_miz(&format!("{}/base_mission.miz", path))?;
 
         let target_list = TargetListInternal::from_target_list(&TargetList::from_lua_file(
             format!("{}/targetlist_init.lua", path),
-            "targetlist".into(),
+            "targetlist",
         )?);
 
         let triggers = triggers_to_flat(&Triggers::from_lua_file(
             format!("{}/camp_triggers_init.lua", path),
-            "camp_triggers".into(),
+            "camp_triggers",
         )?);
 
-        let conf_mod =
-            ConfMod::from_lua_file(format!("{}/conf_mod.lua", path), "mission_ini".into())?;
+        let conf_mod = ConfMod::from_lua_file(format!("{}/conf_mod.lua", path), "mission_ini")?;
 
         let loadouts = LoadoutsInternal::from_loadouts(&Loadouts::from_lua_file(
             format!("{}/db_loadouts.lua", path),
-            "db_loadouts".into(),
+            "db_loadouts",
         )?);
 
         let projection = projection_from_theatre(&mission.theatre)?;
 
-        let header = Header::from_lua_file(format!("{}/camp_init.lua", path), "camp".into())?;
+        let header = Header::from_lua_file(format!("{}/camp_init.lua", path), "camp")?;
 
         Ok(DCEInstance {
             oob_air,
@@ -168,7 +166,7 @@ impl DCEInstance {
                 .join(format!("{}.cmp", &camp_name))
                 .to_string_lossy()
                 .to_string(),
-            "campaign".into(),
+            "campaign",
         )?;
 
         // create placeholder first and ongoings as copies of the base_mission
@@ -233,46 +231,46 @@ REM After each change, You must launch the FirsMission.bat for it to be taken in
                 .join("db_airbases.lua")
                 .to_string_lossy()
                 .to_string(),
-            "db_airbases".into(),
+            "db_airbases",
         )?;
         self.campaign_header.to_lua_file(
             init_path
                 .join("camp_init.lua")
                 .to_string_lossy()
                 .to_string(),
-            "camp".into(),
+            "camp",
         )?;
         self.oob_air.to_lua_file(
             init_path
                 .join("oob_air_init.lua")
                 .to_string_lossy()
                 .to_string(),
-            "oob_air".into(),
+            "oob_air",
         )?;
         self.target_list.to_target_list()?.to_lua_file(
             init_path
                 .join("targetlist_init.lua")
                 .to_string_lossy()
                 .to_string(),
-            "targetlist".into(),
+            "targetlist",
         )?;
         flat_to_triggers(&self.triggers).to_lua_file(
             init_path
                 .join("camp_triggers_init.lua")
                 .to_string_lossy()
                 .to_string(),
-            "camp_triggers".into(),
+            "camp_triggers",
         )?;
         self.loadouts.to_loadouts().to_lua_file(
             init_path
                 .join("db_loadouts.lua")
                 .to_string_lossy()
                 .to_string(),
-            "db_loadouts".into(),
+            "db_loadouts",
         )?;
         self.conf_mod.to_lua_file(
             init_path.join("conf_mod.lua").to_string_lossy().to_string(),
-            "mission_ini".into(),
+            "mission_ini",
         )?;
         Ok(())
     }
@@ -318,7 +316,7 @@ REM After each change, You must launch the FirsMission.bat for it to be taken in
                 .join("base_mission.miz")
                 .to_str()
                 .expect("Should be a valid path"),
-            &(dce_campaigns_folder.to_owned() + &format!("{}_ongoing.miz", &camp_name)),
+            &(dce_campaigns_folder + &format!("{}_ongoing.miz", &camp_name)),
             &mut zip,
             &options,
         )?;
@@ -335,14 +333,14 @@ REM After each change, You must launch the FirsMission.bat for it to be taken in
 
         // create FirstMission.bat and SkipMission.bat
         zip.start_file(campaign_folder.to_owned() + "FirstMission.bat", options)?;
-        zip.write(include_str!("../resources/FirstMission.bat").as_bytes())?;
+        zip.write_all(include_str!("../resources/FirstMission.bat").as_bytes())?;
 
         zip.start_file(campaign_folder.to_owned() + "SkipMission.bat", options)?;
-        zip.write(include_str!("../resources/SkipMission.bat").as_bytes())?;
+        zip.write_all(include_str!("../resources/SkipMission.bat").as_bytes())?;
 
         // and the sound that seem required.
         zip.start_file(campaign_folder.to_owned() + "Sounds/alarme.wav", options)?;
-        zip.write(include_bytes!("../resources/alarme.wav"))?;
+        zip.write_all(include_bytes!("../resources/alarme.wav"))?;
 
         // build our lua files
         self.target_list.to_target_list()?.add_to_zip(
@@ -389,7 +387,7 @@ REM After each change, You must launch the FirsMission.bat for it to be taken in
 
         self.conf_mod.add_to_zip(
             "mission_ini",
-            &(campaign_folder.to_owned() + "init/conf_mod.lua"),
+            &(campaign_folder + "init/conf_mod.lua"),
             &mut zip,
             &options,
         )?;
@@ -420,7 +418,7 @@ where
     let buf = fs::read(file_path)?;
 
     zip.start_file(zip_path, *options)?;
-    zip.write(buf.as_slice())?;
+    zip.write_all(buf.as_slice())?;
 
     Ok(())
 }

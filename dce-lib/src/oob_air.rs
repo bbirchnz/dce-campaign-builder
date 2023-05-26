@@ -167,7 +167,7 @@ impl Mappables for OobAir {
         instance: &crate::DCEInstance,
         proj: &Proj,
     ) -> Vec<crate::mappable::MapPoint> {
-        let airbase_mappables = instance.airbases.to_mappables(&instance, proj);
+        let airbase_mappables = instance.airbases.to_mappables(instance, proj);
 
         instance
             .oob_air

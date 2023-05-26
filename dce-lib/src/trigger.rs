@@ -78,7 +78,7 @@ assert(type(test()) == 'boolean', "Must return a boolean result")
             Actions::One(action) => lua.load(action).exec()?,
             Actions::Many(actions) => actions
                 .iter()
-                .for_each(|action| lua.load(action).exec().unwrap()),
+                .try_for_each(|action| lua.load(action).exec())?,
         }
 
         Ok(())
@@ -110,6 +110,7 @@ impl Editable for Trigger {
             HeaderField::new("active", "Active", FieldType::Bool, true),
             HeaderField::new("once", "Once Only", FieldType::Bool, true),
             HeaderField::new("condition", "Condition", FieldType::String, true),
+            HeaderField::new("action", "Actions", FieldType::TriggerActions, true),
         ]
     }
     fn get_name(&self) -> String {
@@ -127,7 +128,7 @@ impl Editable for Trigger {
             ));
         }
 
-        if self.condition.contains("'") {
+        if self.condition.contains('\'') {
             errors.push(ValidationError::new(
                 "condition",
                 "Condition",
@@ -135,7 +136,7 @@ impl Editable for Trigger {
             ))
         }
 
-        if self.condition.contains(";") {
+        if self.condition.contains(';') {
             errors.push(ValidationError::new(
                 "condition",
                 "Condition",

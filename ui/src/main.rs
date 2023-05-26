@@ -41,7 +41,7 @@ fn main() {
 
     dioxus_desktop::launch_with_props(
         app,
-        AppProps { rx: r.clone() },
+        AppProps { rx: r },
         Config::default()
             .with_custom_protocol("testprotocol".into(), move |req| {
                 // this handle callbacks of clicked objects in leaflet
@@ -86,7 +86,6 @@ fn app(cx: Scope<AppProps>) -> Element {
     use_coroutine(cx, move |_: UnboundedReceiver<i32>| {
         let atom_selected = atom_selected.to_owned();
         let atoms = atoms.to_owned();
-        let rx = rx.to_owned();
 
         async move {
             while let Ok(item) = rx.recv().await {

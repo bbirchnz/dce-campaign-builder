@@ -213,9 +213,9 @@ impl Mappables for TargetListInternal {
                         MapPoint::new_from_dcs(
                             zone.x,
                             zone.y,
-                            cap._name.to_owned(),
-                            cap._side.to_owned(),
-                            "TargetCAP".into(),
+                            &cap._name,
+                            &cap._side,
+                            "TargetCAP",
                             proj,
                         )
                         .add_extras(HashMap::from([
@@ -243,9 +243,9 @@ impl Mappables for TargetListInternal {
                         MapPoint::new_from_dcs(
                             zone.x,
                             zone.y,
-                            refuel._name.to_owned(),
-                            refuel._side.to_owned(),
-                            "TargetRefuel".into(),
+                            &refuel._name,
+                            &refuel._side,
+                            "TargetRefuel",
                             proj,
                         )
                         .add_extras(HashMap::from([
@@ -275,9 +275,9 @@ impl Mappables for TargetListInternal {
                     map_points.push(MapPoint::new_from_dcs(
                         groups[0].x,
                         groups[0].y,
-                        strike.text.to_owned(),
-                        strike._side.to_owned(),
-                        "TargetStrike".into(),
+                        &strike.text,
+                        &strike._side,
+                        "TargetStrike",
                         proj,
                     ));
                 }
@@ -297,9 +297,9 @@ impl Mappables for TargetListInternal {
                     map_points.push(MapPoint::new_from_dcs(
                         groups[0].x,
                         groups[0].y,
-                        antiship.text.to_owned(),
-                        antiship._side.to_owned(),
-                        "TargetAntiShipStrike".into(),
+                        &antiship.text,
+                        &antiship._side,
+                        "TargetAntiShipStrike",
                         proj,
                     ));
                 }

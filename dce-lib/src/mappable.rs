@@ -20,18 +20,18 @@ impl MapPoint {
     pub fn new_from_dcs(
         x: f64,
         y: f64,
-        name: String,
-        side: String,
-        class: String,
+        name: &str,
+        side: &str,
+        class: &str,
         map: &Proj,
     ) -> MapPoint {
         let (lon, lat) = convert_dcs_lat_lon(x, y, map);
         MapPoint {
             lat,
             lon,
-            name,
-            side,
-            class,
+            name: name.into(),
+            side: side.into(),
+            class: class.into(),
             extras: HashMap::default(),
         }
     }

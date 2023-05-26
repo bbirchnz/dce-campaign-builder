@@ -142,7 +142,7 @@ impl LuaFileBased<'_> for ConfMod {
         // load utils:
         crate::lua_utils::load_utils(&lua)?;
 
-        lua.globals().set(key.clone(), lua.to_value(&self)?)?;
+        lua.globals().set(key.to_string(), lua.to_value(&self)?)?;
 
         let table = lua
             .load(&format!("TableSerialization({}, 0)", &key))

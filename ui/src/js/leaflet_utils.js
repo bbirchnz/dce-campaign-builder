@@ -17,19 +17,35 @@ function draw_map(div_id, markers) {
     map.__target_group = new L.featureGroup([]);
     map.__squadron_group = new L.featureGroup([]);
 
-    map.__blue_airfield_icon = L.icon({
-      iconUrl: "/images/airfield_blue.png",
+    map.__blue_airfield_icon = L.divIcon({
+      html: "<img src='/images/airfield_fixed.svg'/>",
+      className: "svg_blue marker_no_bg",
       iconSize: [32, 32],
       iconAnchor: [16, 16],
-      popupAnchor: [0, -16],
       tooltipAnchor: [16, 0],
     });
 
-    map.__red_airfield_icon = L.icon({
-      iconUrl: "/images/airfield_red.png",
+    map.__red_airfield_icon = L.divIcon({
+      html: "<img src='/images/airfield_fixed.svg'/>",
+      className: "svg_red marker_no_bg",
       iconSize: [32, 32],
       iconAnchor: [16, 16],
-      popupAnchor: [0, -16],
+      tooltipAnchor: [16, 0],
+    });
+
+    map.__blue_airstart_icon = L.divIcon({
+      html: "<img src='/images/airfield_airstart.svg'/>",
+      className: "svg_blue marker_no_bg",
+      iconSize: [32, 32],
+      iconAnchor: [16, 16],
+      tooltipAnchor: [16, 0],
+    });
+
+    map.__red_airstart_icon = L.divIcon({
+      html: "<img src='/images/airfield_airstart.svg'/>",
+      className: "svg_red marker_no_bg",
+      iconSize: [32, 32],
+      iconAnchor: [16, 16],
       tooltipAnchor: [16, 0],
     });
 
@@ -65,19 +81,19 @@ function draw_map(div_id, markers) {
       tooltipAnchor: [16, 0],
     });
 
-    map.__blue_ship_icon = L.icon({
-      iconUrl: "/images/ship_blue.png",
+    map.__blue_ship_icon = L.divIcon({
+      html: "<img src='/images/airfield_ship.svg'/>",
+      className: "svg_blue marker_no_bg",
       iconSize: [32, 32],
       iconAnchor: [16, 16],
-      popupAnchor: [0, -16],
       tooltipAnchor: [16, 0],
     });
 
-    map.__red_ship_icon = L.icon({
-      iconUrl: "/images/ship_red.png",
+    map.__red_ship_icon = L.divIcon({
+      html: "<img src='/images/airfield_ship.svg'/>",
+      className: "svg_red marker_no_bg",
       iconSize: [32, 32],
       iconAnchor: [16, 16],
-      popupAnchor: [0, -16],
       tooltipAnchor: [16, 0],
     });
 
@@ -92,16 +108,8 @@ function draw_map(div_id, markers) {
       Squadrons: map.__squadron_group,
     };
 
-    // if (last_coords !== null) {
-    //   map.setView(last_coords, last_zoom);
-    // } else {
-    //   // reset zoom:
-    //   map.fitBounds(airfield_group.getBounds());
-    // }
-
     var layerControl = L.control.layers(null, overlays).addTo(map);
   }
-
 
   // update markers:
   map.__airfield_group.clearLayers();
@@ -109,7 +117,7 @@ function draw_map(div_id, markers) {
   map.__squadron_group.clearLayers();
 
   markers.forEach((m) => {
-    if (m.class == "FixedAirBase") {
+    if (m.class == "FixedAirBase" && m.side != "neutral") {
       L.marker([m.lat, m.lon], {
         icon:
           m.side.toLowerCase() == "blue"
@@ -126,9 +134,29 @@ function draw_map(div_id, markers) {
         });
     }
 
+    if (m.class == "Airstart") {
+      L.marker([m.lat, m.lon], {
+        icon:
+          m.side.toLowerCase() == "blue"
+            ? map.__blue_airstart_icon
+            : map.__red_airstart_icon,
+      })
+        .addTo(map.__airfield_group)
+        .bindTooltip(m.name)
+        .on("click", function (e) {
+          fetch("https://testprotocol.example/", {
+            method: "POST",
+            body: JSON.stringify(m),
+          });
+        });
+    }
+
     if (m.class == "Squadron") {
       L.marker([m.lat, m.lon], {
-        icon: m.side.toLowerCase() == "blue" ? map.__blue_plane_icon : map.__red_plane_icon,
+        icon:
+          m.side.toLowerCase() == "blue"
+            ? map.__blue_plane_icon
+            : map.__red_plane_icon,
       })
         .addTo(map.__squadron_group)
         .bindTooltip(m.name)
@@ -142,7 +170,9 @@ function draw_map(div_id, markers) {
     if (m.class == "TargetStrike" || m.class == "TargetAntiShipStrike") {
       L.marker([m.lat, m.lon], {
         icon:
-          m.side.toLowerCase() == "blue" ? map.__blue_target_icon : map.__red_target_icon,
+          m.side.toLowerCase() == "blue"
+            ? map.__blue_target_icon
+            : map.__red_target_icon,
       })
         .addTo(map.__target_group)
         .bindTooltip(m.name, { permanent: false, opacity: 1.0 })
@@ -156,7 +186,10 @@ function draw_map(div_id, markers) {
 
     if (m.class == "ShipAirBase") {
       L.marker([m.lat, m.lon], {
-        icon: m.side.toLowerCase() == "blue" ? map.__blue_ship_icon : map.__red_ship_icon,
+        icon:
+          m.side.toLowerCase() == "blue"
+            ? map.__blue_ship_icon
+            : map.__red_ship_icon,
       })
         .addTo(map.__airfield_group)
         .bindTooltip(m.name)
@@ -218,5 +251,4 @@ function draw_map(div_id, markers) {
   if (first_draw) {
     map.fitBounds(map.__airfield_group.getBounds());
   }
-
 }

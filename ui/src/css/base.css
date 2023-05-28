@@ -50,3 +50,25 @@ body {
 .tooltip:hover .tooltiptext {
     visibility: visible;
 }
+
+.svg_blue {
+    filter: invert(55%) sepia(69%) saturate(4072%) hue-rotate(186deg) brightness(93%) contrast(93%);
+}
+
+.svg_red {
+    filter: invert(19%) sepia(75%) saturate(2351%) hue-rotate(344deg) brightness(120%) contrast(108%);
+}
+
+.svg_grey {
+    filter: invert(29%) sepia(94%) saturate(0%) hue-rotate(192deg) brightness(91%) contrast(87%);
+}
+
+.leaflet-div-icon .marker_no_bg {
+    background: none;
+    border: none;
+}
+
+.marker_no_bg img {
+    width: 32px;
+    height: 32px;
+}

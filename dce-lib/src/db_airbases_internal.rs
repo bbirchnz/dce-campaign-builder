@@ -7,6 +7,7 @@ use crate::{
         AirBase, AirStartBase, DBAirbases, FarpBase, FixedAirBase, ReserveBase, ShipBase,
     },
     mappable::{MapPoint, Mappables},
+    mission_warehouses::Warehouses,
 };
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
@@ -19,7 +20,7 @@ pub struct DBAirbasesInternal {
 }
 
 impl DBAirbasesInternal {
-    pub fn from_db_airbases(db_airbases: &DBAirbases) -> Self {
+    pub fn from_db_airbases(db_airbases: &DBAirbases, warehouses: &Warehouses) -> Self {
         let mut result = DBAirbasesInternal {
             fixed: Vec::default(),
             ship: Vec::default(),
@@ -31,6 +32,12 @@ impl DBAirbasesInternal {
         db_airbases.iter().for_each(|(key, value)| match value {
             AirBase::Fixed(item) => {
                 let mut item = item.clone();
+                // fix sides as we go
+                let warehouse = warehouses
+                    .airports
+                    .get(&item.airdrome_id)
+                    .expect("Airport must have an entry in warehouses");
+                item.side = warehouse.coalition.to_lowercase();
                 item._name = key.to_owned();
                 result.fixed.push(item);
             }
@@ -151,8 +158,15 @@ impl Mappables for DBAirbasesInternal {
             // result.insert(item._name.to_owned(), AirBase::Reserve(item.clone()));
         });
 
-        self.air_start.iter().for_each(|_| {
-            // result.insert(item._name.to_owned(), AirBase::AirStart(item.clone()));
+        self.air_start.iter().for_each(|item| {
+            result.push(MapPoint::new_from_dcs(
+                item.x,
+                item.y,
+                &item._name,
+                &item.side,
+                "Airstart",
+                proj,
+            ));
         });
 
         result

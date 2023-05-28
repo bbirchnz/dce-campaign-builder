@@ -12,6 +12,7 @@ use db_airbases_internal::DBAirbasesInternal;
 use loadouts::Loadouts;
 use loadouts_internal::LoadoutsInternal;
 use mission::Mission;
+use mission_warehouses::Warehouses;
 use oob_air::OobAir;
 use projections::{projection_from_theatre, TransverseMercator};
 use serde::{Deserialize, Serialize};
@@ -34,6 +35,7 @@ pub mod loadouts_internal;
 pub mod lua_utils;
 pub mod mappable;
 pub mod mission;
+pub mod mission_warehouses;
 pub mod oob_air;
 pub mod projections;
 pub mod serde_utils;
@@ -47,6 +49,7 @@ pub struct DCEInstance {
     pub oob_air: OobAir,
     pub airbases: DBAirbasesInternal,
     pub mission: Mission,
+    pub mission_warehouses: Warehouses,
     pub target_list: TargetListInternal,
     pub triggers: TriggersFlat,
     pub loadouts: LoadoutsInternal,
@@ -58,14 +61,15 @@ pub struct DCEInstance {
 
 impl DCEInstance {
     pub fn new(path: String) -> Result<DCEInstance, anyhow::Error> {
+        let mission = Mission::from_miz(&format!("{}/base_mission.miz", path))?;
+        let mission_warehouses = Warehouses::from_miz(&format!("{}/base_mission.miz", path))?;
+
         let oob_air = OobAir::from_lua_file(format!("{}/oob_air_init.lua", path), "oob_air")?;
 
-        let airbases = DBAirbasesInternal::from_db_airbases(&DBAirbases::from_lua_file(
-            format!("{}/db_airbases.lua", path),
-            "db_airbases",
-        )?);
-
-        let mission = Mission::from_miz(&format!("{}/base_mission.miz", path))?;
+        let airbases = DBAirbasesInternal::from_db_airbases(
+            &DBAirbases::from_lua_file(format!("{}/db_airbases.lua", path), "db_airbases")?,
+            &mission_warehouses,
+        );
 
         let target_list = TargetListInternal::from_target_list(&TargetList::from_lua_file(
             format!("{}/targetlist_init.lua", path),
@@ -92,6 +96,7 @@ impl DCEInstance {
             oob_air,
             airbases,
             mission,
+            mission_warehouses,
             triggers,
             target_list,
             loadouts,
@@ -107,6 +112,8 @@ impl DCEInstance {
         let base_path = path.parent().unwrap().to_str().unwrap().to_owned();
 
         let mission = Mission::from_miz(miz_file)?;
+        let mission_warehouses = Warehouses::from_miz(miz_file)?;
+
         let mut oob_air = OobAir::new_from_mission(&mission)?;
         oob_air.set_player_defaults();
 
@@ -118,13 +125,15 @@ impl DCEInstance {
             projection: projection_from_theatre(&mission.theatre)?,
             base_path,
             campaign_header: Header::new_from_mission(&mission)?,
-            airbases: DBAirbasesInternal::from_db_airbases(&DBAirbases::new_from_mission(
-                &mission,
-            )?),
+            airbases: DBAirbasesInternal::from_db_airbases(
+                &DBAirbases::new_from_mission(&mission)?,
+                &mission_warehouses,
+            ),
             triggers: triggers_to_flat(&Triggers::new_from_mission(&mission)?),
             loadouts: LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&mission)?),
             conf_mod: ConfMod::new(),
             mission,
+            mission_warehouses,
         })
     }
 

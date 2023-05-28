@@ -54,12 +54,13 @@ pub struct FixedAirBase {
     pub y: f64,
     pub elevation: f64,
     #[serde(rename = "airdromeId")]
-    airdrome_id: u32,
+    pub airdrome_id: u32,
     #[serde(rename = "ATC_frequency")]
-    atc_frequency: String,
-    startup: Option<f64>,
+    pub atc_frequency: String,
+    #[serde(default)]
+    pub startup: u32,
     pub side: String,
-    divert: bool,
+    pub divert: bool,
     #[serde(rename = "VOR")]
     vor: Option<String>,
     #[serde(rename = "NDB")]
@@ -134,10 +135,10 @@ impl ValidateSelf for FarpBase {
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
 pub struct AirStartBase {
     #[serde(default)]
-    inactive: bool,
-    x: f64,
-    y: f64,
-    elevation: f64,
+    pub inactive: bool,
+    pub x: f64,
+    pub y: f64,
+    pub elevation: f64,
     #[serde(rename = "ATC_frequency")]
     atc_frequency: String,
     #[serde(rename = "BaseAirStart")]
@@ -230,7 +231,7 @@ impl NewFromMission for DBAirbases {
                             .copied()
                             .unwrap_or_default()
                             .to_string(),
-                        startup: Some(600.),
+                        startup: 600,
                         side: "red".into(),
                         divert: false,
                         vor: None,
@@ -307,6 +308,19 @@ impl Editable for FixedAirBase {
                 FieldType::Float(|v| format!("{:.1}", v)),
                 false,
             ),
+            HeaderField::new(
+                "side",
+                "Side",
+                FieldType::FixedEnum(vec!["blue".into(), "red".into(), "neutral".into()]),
+                true,
+            ),
+            HeaderField::new("divert", "Divert", FieldType::Bool, true),
+            HeaderField::new(
+                "startup",
+                "Startup time (min)",
+                FieldType::DurationMin,
+                true,
+            ),
         ]
     }
     fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {
@@ -324,11 +338,11 @@ impl Editable for FixedAirBase {
     fn validate(&self, _: &DCEInstance) -> ValidationResult {
         let mut errors = Vec::default();
 
-        if self.side != "blue" && self._name == "red" {
+        if self.side != "blue" && self.side != "red" && self.side != "neutral" {
             errors.push(ValidationError::new(
-                "_side",
+                "side",
                 "Airbase Side",
-                "Side must be blue or red",
+                "Side must be blue/red/neutral",
             ));
         }
 

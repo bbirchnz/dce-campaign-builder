@@ -182,6 +182,7 @@ impl HeaderField {
                     Actions::Many(actions) => format!("{}", actions.len()),
                 }
             }
+            FieldType::FixedEnum(_) => get_string(item, &self.field),
         }
     }
 
@@ -244,6 +245,7 @@ impl HeaderField {
             FieldType::TriggerActions => {
                 apply_value(item, &self.field, &value.to_owned());
             }
+            FieldType::FixedEnum(_) => apply_value(item, &self.field, &value.to_owned()),
         };
         Ok(())
     }
@@ -293,4 +295,5 @@ pub enum FieldType {
     DistanceNM,
     DurationMin,
     TriggerActions,
+    FixedEnum(Vec<String>),
 }

@@ -30,6 +30,7 @@ fn fieldtype_to_input(field: &FieldType) -> String {
         FieldType::DistanceNM => "number".into(),
         FieldType::DurationMin => "number".into(),
         FieldType::TriggerActions => "text".into(),
+        FieldType::FixedEnum(_) => "select".into(),
     }
 }
 
@@ -47,6 +48,7 @@ fn fieldtype_editable(field: &FieldType) -> bool {
         FieldType::DistanceNM => true,
         FieldType::DurationMin => true,
         FieldType::TriggerActions => true,
+        FieldType::FixedEnum(_) => true,
     }
 }
 
@@ -116,7 +118,7 @@ where
             }
             form { autocomplete: "off", oninput: on_submit,
                 for h in usable_headers {
-                    match h.type_ {
+                    match &h.type_ {
                         // Trigger actions have to render as one input per action
                         FieldType::TriggerActions => rsx!{
                             render_triggeractions {
@@ -147,6 +149,28 @@ where
                                 }
                             }
                         },
+                        FieldType::FixedEnum(allowed_values) => {
+                            rsx! {
+                                div { class: "flex w-full mt-1 mb-1",
+                                label { class: "flex-grow p-1", r#for: "{h.display}", "{h.display}" }
+                                select {
+                                    class: "rounded p-1",
+                                    autocomplete: "off",
+                                    name: "{h.display}",
+                                    value: "{h.get_value_string(item_state.get())}",
+                                    disabled: "{!h.editable}",
+                                    for v in allowed_values {
+                                        rsx!{
+                                            option {
+                                                value: "{v}",
+                                                "{v}"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            }
+                        }
                         // all other fields are one input per field
                         _ => rsx!{
                             div { class: "flex w-full mt-1 mb-1",

@@ -1,14 +1,14 @@
 use std::collections::HashMap;
 
-use bevy_reflect::{FromReflect, Reflect};
-use serde::{Deserialize, Serialize};
-
 use crate::{
     editable::{Editable, FieldType, HeaderField, ValidationResult},
     mission::Payload,
     serde_utils::LuaFileBased,
     DCEInstance, NewFromMission,
 };
+use anyhow::anyhow;
+use bevy_reflect::{FromReflect, Reflect};
+use serde::{Deserialize, Serialize};
 
 pub type Loadouts = HashMap<String, AirframeLoadout>;
 
@@ -20,6 +20,22 @@ pub struct AirframeLoadout {
     pub anti_ship: Option<HashMap<String, AntiShipLoadout>>,
     #[serde(rename = "CAP")]
     pub cap: Option<HashMap<String, CAPLoadout>>,
+    #[serde(rename = "AWACS")]
+    pub awacs: Option<HashMap<String, AWACSLoadout>>,
+    #[serde(rename = "Refueling")]
+    pub aar: Option<HashMap<String, AARLoadout>>,
+}
+
+impl Default for AirframeLoadout {
+    fn default() -> Self {
+        Self {
+            strike: Some(Default::default()),
+            anti_ship: Some(Default::default()),
+            cap: Some(Default::default()),
+            awacs: Some(Default::default()),
+            aar: Some(Default::default()),
+        }
+    }
 }
 
 pub type AntiShipLoadout = StrikeLoadout;
@@ -90,6 +106,60 @@ pub struct CAPLoadout {
     pub _name: String,
 }
 
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
+pub struct AWACSLoadout {
+    pub day: bool,
+    pub night: bool,
+    #[serde(rename = "adverseWeather")]
+    pub adverse_weather: bool,
+    pub range: f64,
+    pub capability: u32,
+    pub firepower: u32,
+    #[serde(rename = "vCruise")]
+    pub v_cruise: f64,
+    #[serde(rename = "vAttack")]
+    pub v_attack: f64,
+    #[serde(rename = "hCruise")]
+    pub h_cruise: f64,
+    #[serde(rename = "hAttack")]
+    pub h_attack: f64,
+    #[serde(rename = "tStation")]
+    #[serde(default)]
+    pub t_station: u32,
+    pub stores: Payload,
+    #[serde(default)]
+    pub sortie_rate: u32,
+    pub _airframe: String,
+    pub _name: String,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
+pub struct AARLoadout {
+    pub day: bool,
+    pub night: bool,
+    #[serde(rename = "adverseWeather")]
+    pub adverse_weather: bool,
+    pub range: f64,
+    pub capability: u32,
+    pub firepower: u32,
+    #[serde(rename = "vCruise")]
+    pub v_cruise: f64,
+    #[serde(rename = "vAttack")]
+    pub v_attack: f64,
+    #[serde(rename = "hCruise")]
+    pub h_cruise: f64,
+    #[serde(rename = "hAttack")]
+    pub h_attack: f64,
+    #[serde(rename = "tStation")]
+    #[serde(default)]
+    pub t_station: u32,
+    pub stores: Payload,
+    #[serde(default)]
+    pub sortie_rate: u32,
+    pub _airframe: String,
+    pub _name: String,
+}
+
 fn common_headers() -> Vec<HeaderField> {
     vec![
         HeaderField::new("_name", "Name", FieldType::String, true),
@@ -133,15 +203,11 @@ impl NewFromMission for Loadouts {
             .filter_map(|c| c.plane.as_ref())
             .flat_map(|pg| pg.groups.as_slice())
             .flat_map(|g| g.units.as_slice())
-            .for_each(|u| {
+            .try_for_each(|u| {
                 let name_parts = u.name.split('_').collect::<Vec<_>>();
                 let unit_record = loadout
                     .entry(u._type.to_owned())
-                    .or_insert(AirframeLoadout {
-                        strike: Some(HashMap::default()),
-                        cap: Some(HashMap::default()),
-                        anti_ship: Some(HashMap::default()),
-                    });
+                    .or_insert(AirframeLoadout::default());
                 match name_parts[1] {
                     "Strike" => {
                         unit_record.strike.as_mut().unwrap().insert(
@@ -175,6 +241,7 @@ impl NewFromMission for Loadouts {
                                 _name: u.name.to_owned(),
                             },
                         );
+                        Ok(())
                     }
                     "CAP" => {
                         unit_record.cap.as_mut().unwrap().insert(
@@ -198,6 +265,7 @@ impl NewFromMission for Loadouts {
                                 _name: u.name.to_owned(),
                             },
                         );
+                        Ok(())
                     }
                     "Anti-ship Strike" => {
                         unit_record.anti_ship.as_mut().unwrap().insert(
@@ -231,10 +299,57 @@ impl NewFromMission for Loadouts {
                                 _name: u.name.to_owned(),
                             },
                         );
+                        Ok(())
                     }
-                    _ => {}
+                    "AWACS" => {
+                        unit_record.awacs.as_mut().unwrap().insert(
+                            u.name.to_owned(),
+                            AWACSLoadout {
+                                day: true,
+                                night: true,
+                                adverse_weather: true,
+                                range: 500000.,
+                                capability: 10,
+                                firepower: 1,
+                                v_cruise: 152.778,
+                                v_attack: 138.889,
+                                h_cruise: 7315.2,
+                                h_attack: 7315.2,
+                                t_station: 14400,
+                                stores: u.payload.clone(),
+                                sortie_rate: 12,
+                                _airframe: u._type.to_owned(),
+                                _name: u.name.to_owned(),
+                            },
+                        );
+                        Ok(())
+                    }
+                    "Refueling" => {
+                        unit_record.aar.as_mut().unwrap().insert(
+                            u.name.to_owned(),
+                            AARLoadout {
+                                day: true,
+                                night: true,
+                                adverse_weather: true,
+                                range: 500000.,
+                                capability: 10,
+                                firepower: 1,
+                                v_cruise: 200.,
+                                v_attack: 150.,
+                                h_cruise: 1828.,
+                                h_attack: 1828.,
+                                t_station: 10800,
+                                stores: u.payload.clone(),
+                                sortie_rate: 12,
+                                _airframe: u._type.to_owned(),
+                                _name: u.name.to_owned(),
+                            },
+                        );
+                        Ok(())
+                    }
+                    _ => Err(anyhow!("Don't know how to handle loadout {}", u.name)),
                 }
-            });
+            })?;
 
         Ok(loadout)
     }
@@ -354,11 +469,11 @@ mod tests {
 
     #[test]
     fn from_miz() {
-        let mission = Mission::from_miz("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\Falklands v1\\Init\\base_mission.miz".into()).unwrap();
+        let mission = Mission::from_miz("test_resources\\base_mission.miz".into()).unwrap();
         let loadouts = Loadouts::new_from_mission(&mission).unwrap();
 
         loadouts
-            .to_lua_file("db_loadouts.lua".into(), "db_loadouts".into())
+            .to_lua_file("..\\target\\db_loadouts.lua".into(), "db_loadouts".into())
             .unwrap();
     }
 }

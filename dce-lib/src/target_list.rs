@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     serde_utils::LuaFileBased,
-    targets::{cap::CAP, strike::Strike, TargetFirepower},
+    targets::{awacs::AWACS, cap::CAP, strike::Strike, TargetFirepower},
     NewFromMission,
 };
 
@@ -53,13 +53,13 @@ impl NewFromMission for TargetList {
                             inactive: false,
                             firepower: TargetFirepower { min: 2, max: 2 },
                             _name: z.name.to_owned(),
-                            _side: "blue".into(),
+                            _side: name_splits[0].to_lowercase(),
                             _firepower_min: 2,
                             _firepower_max: 2,
                         }),
                     );
                 }
-                "AAR" => {
+                "Refueling" => {
                     let targets = match name_splits[0] {
                         "BLUE" => &mut blue_targets,
                         _ => &mut red_targets,
@@ -67,7 +67,7 @@ impl NewFromMission for TargetList {
                     targets.insert(
                         z.name.to_owned(),
                         Target::Refueling(Refueling {
-                            priority: 1,
+                            priority: 10,
                             ref_point: z.name.to_owned(),
                             radius: name_splits[3]
                                 .parse::<f64>()
@@ -76,9 +76,34 @@ impl NewFromMission for TargetList {
                             axis: name_splits[2].parse().expect("Failed to parse axis"),
                             text: z.name.to_owned(),
                             inactive: false,
-                            firepower: TargetFirepower { min: 2, max: 2 },
+                            firepower: TargetFirepower { min: 1, max: 1 },
                             _name: z.name.to_owned(),
-                            _side: "blue".into(),
+                            _side: name_splits[0].to_lowercase(),
+                        }),
+                    );
+                }
+                "AWACS" => {
+                    let targets = match name_splits[0] {
+                        "BLUE" => &mut blue_targets,
+                        _ => &mut red_targets,
+                    };
+                    targets.insert(
+                        z.name.to_owned(),
+                        Target::AWACS(AWACS {
+                            priority: 10,
+                            ref_point: z.name.to_owned(),
+                            radius: name_splits[3]
+                                .parse::<f64>()
+                                .expect("Failed to parse radius")
+                                * 1000.0,
+                            axis: name_splits[2].parse().expect("Failed to parse axis"),
+                            text: z.name.to_owned(),
+                            inactive: false,
+                            firepower: TargetFirepower { min: 1, max: 1 },
+                            _name: z.name.to_owned(),
+                            _side: name_splits[0].to_lowercase(),
+                            _firepower_min: 1,
+                            _firepower_max: 1,
                         }),
                     );
                 }
@@ -183,6 +208,7 @@ pub enum Target {
     Strike(Strike),
     #[serde(rename = "Anti-ship Strike")]
     AntiShipStrike(Strike),
+    AWACS(AWACS),
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
@@ -248,25 +274,12 @@ mod tests {
     use super::TargetList;
 
     #[test]
-    fn load_example() {
-        TargetList::from_lua_file("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\War over Tchad 1987-Blue-Mirage-F1EE-3-30 Lorraine\\Init\\targetlist_init.lua".into(), "targetlist".into()).unwrap();
-    }
-
-    #[test]
-    fn save_example() {
-        let loaded = TargetList::from_lua_file("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\War over Tchad 1987-Blue-Mirage-F1EE-3-30 Lorraine\\Init\\targetlist_init.lua".into(), "targetlist".into()).unwrap();
-        loaded
-            .to_lua_file("targetlist_init.lua".into(), "targetlist".into())
-            .unwrap();
-    }
-
-    #[test]
     fn from_miz() {
-        let mission = Mission::from_miz("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\Falklands v1\\Init\\base_mission.miz".into()).unwrap();
+        let mission = Mission::from_miz("test_resources\\base_mission.miz".into()).unwrap();
         let targets = TargetList::new_from_mission(&mission).unwrap();
 
         targets
-            .to_lua_file("targetlist_sa.lua".into(), "target_list".into())
+            .to_lua_file("..\\target\\targetlist.lua".into(), "target_list".into())
             .unwrap();
     }
 }

@@ -52,11 +52,11 @@ body {
 }
 
 .svg_blue {
-    filter: invert(55%) sepia(69%) saturate(4072%) hue-rotate(186deg) brightness(93%) contrast(93%);
+    filter: invert(10%) sepia(75%) saturate(6961%) hue-rotate(245deg) brightness(101%) contrast(155%);
 }
 
 .svg_red {
-    filter: invert(19%) sepia(75%) saturate(2351%) hue-rotate(344deg) brightness(120%) contrast(108%);
+    filter: invert(17%) sepia(99%) saturate(5287%) hue-rotate(359deg) brightness(103%) contrast(124%);
 }
 
 .svg_grey {

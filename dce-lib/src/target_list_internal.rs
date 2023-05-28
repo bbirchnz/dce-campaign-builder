@@ -4,7 +4,7 @@ use crate::{
     mappable::{MapPoint, Mappables},
     projections::{convert_dcs_lat_lon, offset},
     target_list::{self, FighterSweep, Intercept, Refueling, Target, TargetList},
-    targets::{cap::CAP, strike::Strike},
+    targets::{awacs::AWACS, cap::CAP, strike::Strike},
 };
 use anyhow::anyhow;
 use bevy_reflect::{FromReflect, Reflect};
@@ -23,6 +23,7 @@ pub struct TargetListInternal {
     pub antiship: Vec<Strike>,
     pub intercept: Vec<Intercept>,
     pub fighter_sweep: Vec<FighterSweep>,
+    pub awacs: Vec<AWACS>,
 }
 
 impl TargetListInternal {
@@ -33,6 +34,7 @@ impl TargetListInternal {
         let mut refuel = Vec::default();
         let mut intercept = Vec::default();
         let mut fighter_sweep = Vec::default();
+        let mut awacs = Vec::default();
 
         tlist
             .blue
@@ -76,6 +78,12 @@ impl TargetListInternal {
                     i._side = side.to_owned();
                     antiship.push(i);
                 }
+                target_list::Target::AWACS(i) => {
+                    let mut i = i.clone();
+                    i._name = name.to_owned();
+                    i._side = side.to_owned();
+                    awacs.push(i);
+                }
             });
 
         TargetListInternal {
@@ -85,6 +93,7 @@ impl TargetListInternal {
             refuel,
             intercept,
             fighter_sweep,
+            awacs,
         }
     }
 
@@ -190,6 +199,19 @@ impl TargetListInternal {
             Ok(())
         })?;
 
+        self.awacs.iter().try_for_each(|item| {
+            match item._side.as_str() {
+                "blue" => {
+                    let _ = blue.insert(item._name.to_owned(), Target::AWACS(item.clone()));
+                }
+                "red" => {
+                    let _ = red.insert(item._name.to_owned(), Target::AWACS(item.clone()));
+                }
+                _ => return Err(anyhow!("Got side == {}", item._side)),
+            }
+            Ok(())
+        })?;
+
         Ok(TargetList { blue, red })
     }
 }
@@ -251,6 +273,36 @@ impl Mappables for TargetListInternal {
                         .add_extras(HashMap::from([
                             ("radius".to_string(), refuel.radius),
                             ("axis".to_string(), refuel.axis),
+                            ("lat2".to_string(), lat2),
+                            ("lon2".to_string(), lon2),
+                        ])),
+                    );
+                }
+                Err(e) => {
+                    info!("{:?}", e);
+                }
+            }
+        });
+
+        self.awacs.iter().for_each(|awacs| {
+            let zone = instance.mission.get_zone_by_name(&awacs.ref_point);
+            match zone {
+                Ok(zone) => {
+                    let (x2, y2) = offset(zone.x, zone.y, awacs.axis, awacs.radius);
+                    info!("{} {}, {} {}", zone.x, zone.y, x2, y2);
+                    let (lon2, lat2) = convert_dcs_lat_lon(x2, y2, proj);
+                    map_points.push(
+                        MapPoint::new_from_dcs(
+                            zone.x,
+                            zone.y,
+                            &awacs._name,
+                            &awacs._side,
+                            "TargetAWACS",
+                            proj,
+                        )
+                        .add_extras(HashMap::from([
+                            ("radius".to_string(), awacs.radius),
+                            ("axis".to_string(), awacs.axis),
                             ("lat2".to_string(), lat2),
                             ("lon2".to_string(), lon2),
                         ])),

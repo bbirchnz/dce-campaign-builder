@@ -286,7 +286,7 @@ impl NewFromMission for DBAirbases {
                     elevation: 6000.,
                     atc_frequency: "".into(),
                     base_air_start: true,
-                    side: "red".into(),
+                    side: parts[0].to_lowercase(),
                     _name: "".into(),
                 }),
             ))

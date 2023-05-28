@@ -18,3 +18,35 @@ body {
 .z_dialog {
     z-index: 10000;
 }
+
+.tooltip {
+    position: relative;
+    /* display: inline-block; */
+}
+
+.menubar {
+    z-index: 9999;
+}
+
+.tooltip .tooltiptext {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    visibility: hidden;
+    width: 200px;
+    background-color: rgb(158, 158, 158);
+    color: #fff;
+    text-align: left;
+    border-radius: 4px;
+    padding: 0 2px;
+
+    /* Position the tooltip */
+    position: absolute;
+
+    top: 40px;
+    left: 10px;
+
+    z-index: 10000;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}

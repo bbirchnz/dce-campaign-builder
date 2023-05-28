@@ -117,35 +117,21 @@ pub fn menu_bar(cx: Scope<MenuBarProps>) -> Element {
     };
 
     cx.render(rsx! {
-        div { class: "fixed top-0 left-0 right-0 flex items-stretch bg-sky-500 text-slate-700 h-8 cursor-default select-none",
-            div {
-                // New
-                class: "flex items-center font-thin px-4 hover:bg-neutral-300 icon",
-                onclick: new_click,
-                ""
-            }
-            div {
-                // Open
-                class: "flex items-center font-thin px-4 hover:bg-neutral-300 icon",
-                onclick: open_click,
-                ""
-            }
+        div { class: "fixed top-0 left-0 right-0 flex items-stretch bg-sky-500 text-slate-700 h-8 cursor-default select-none menubar",
+            icon_button { onclick: new_click, tooltip: "Create new campaign from template DCS miz", "" }
+            icon_button { onclick: open_click, tooltip: "Load campaign", "" }
             if is_loaded {
                 rsx!{
-                div {
-                    // Save
-                    hidden: "{!is_loaded}",
-                    class: "flex items-center font-thin px-4 hover:bg-neutral-300 icon",
-                    onclick: save_click,
-                    ""
-                }
-                div {
-                    // Export
-                    hidden: !is_loaded,
-                    class: "flex items-center font-thin px-4 hover:bg-neutral-300 icon",
-                    onclick: export_click,
-                    ""
-                }
+                    icon_button {
+                        onclick: save_click,
+                        tooltip: "Save campaign",
+                        ""
+                    }
+                    icon_button {
+                        onclick: export_click,
+                        tooltip: "Generate zip for DCE_Manager",
+                        ""
+                    }
             }
             }
             div {
@@ -164,6 +150,31 @@ pub fn menu_bar(cx: Scope<MenuBarProps>) -> Element {
                 onclick: move |_| w.close(),
                 ""
             }
+        }
+    })
+}
+
+#[derive(Props)]
+struct IconButtonProps<'a> {
+    onclick: EventHandler<'a, MouseEvent>,
+    tooltip: Option<&'a str>,
+    children: Element<'a>,
+}
+
+fn icon_button<'a>(cx: Scope<'a, IconButtonProps<'a>>) -> Element<'a> {
+    cx.render(rsx! {
+        div {
+            class: "flex items-center font-thin px-4 hover:bg-neutral-300 icon tooltip",
+            onclick: move |e| cx.props.onclick.call(e),
+            if cx.props.tooltip.is_some() {
+                rsx! {
+                    span {
+                        class: "tooltiptext",
+                        "{cx.props.tooltip.unwrap()}"
+                    }
+                }
+            }
+            &cx.props.children
         }
     })
 }

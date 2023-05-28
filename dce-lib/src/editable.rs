@@ -1,5 +1,5 @@
 use bevy_reflect::{Reflect, Struct};
-use itertools::Itertools;
+
 use log::warn;
 
 use crate::{trigger::Actions, DCEInstance};
@@ -17,7 +17,7 @@ pub trait Editable {
 
 // pub trait TableHeader {
 
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Clone)]
 pub struct HeaderField {
     pub field: String,
     pub display: String,
@@ -95,11 +95,18 @@ impl HeaderField {
     pub fn set_value_from_stringvec(
         &self,
         item: &mut dyn Struct,
-        values: &[String],
+        values: Vec<String>,
     ) -> Result<(), anyhow::Error> {
         match self.type_ {
             FieldType::TriggerActions => {
-                let action = Actions::Many(values.iter().map(|v| v.to_string()).collect_vec());
+                let action = Actions::Many(values);
+                // have to set this to `Actions::One`, then back to proper result.
+                // this due to the `Reflect` behaviour for lists changing existing values
+                // not replacing the entire list
+                item.field_mut(&self.field)
+                    .ok_or(anyhow!("Couldn't get field {}", &self.field))?
+                    .apply(&Actions::One("".into()));
+
                 item.field_mut(&self.field)
                     .ok_or(anyhow!("Couldn't get field {}", &self.field))?
                     .apply(&action);
@@ -272,7 +279,7 @@ fn apply_value(item: &mut dyn Struct, field: &str, value: &dyn Reflect) {
         .apply(value.to_owned());
 }
 
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Clone)]
 pub enum FieldType {
     String,
     Float(fn(f64) -> String),

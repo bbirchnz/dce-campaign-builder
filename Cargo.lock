@@ -3646,6 +3646,7 @@ dependencies = [
  "dioxus-desktop",
  "directories",
  "fermi",
+ "itertools",
  "log",
  "native-dialog",
  "rand 0.8.5",

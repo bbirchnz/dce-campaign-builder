@@ -1,8 +1,14 @@
+use std::{cell::RefMut, collections::HashMap, fmt::Debug};
+
 use bevy_reflect::Struct;
 
-use dce_lib::editable::{Editable, FieldType, HeaderField, ValidationResult};
+use dce_lib::{
+    editable::{Editable, FieldType, HeaderField, ValidationResult},
+    DCEInstance,
+};
 use dioxus::prelude::*;
-use fermi::use_atom_ref;
+use fermi::{use_atom_ref, UseAtomRef};
+use itertools::Itertools;
 use log::{trace, warn};
 
 use crate::{
@@ -77,79 +83,23 @@ where
 
         trace!("edit_form submit: {:?}", ev);
 
-        // apply the values from the form
-        for h in cx.props.headers.iter().filter(|h| h.editable) {
-            match h.type_ {
-                FieldType::TriggerActions => {
-                    let values = ev
-                        .values
-                        .iter()
-                        .filter_map(|(k, v)| {
-                            let k_root: String = k
-                                .split('.')
-                                .map(|s| s.to_string())
-                                .collect::<Vec<String>>()
-                                .first()
-                                .expect("Should work even without a .")
-                                .to_string();
+        // apply the values from the form (to local state only)
+        apply_to_item(&mut current_item, &ev.values);
 
-                            if k_root == h.display {
-                                return Some(v.to_owned());
-                            }
-                            None
-                        })
-                        .collect::<Vec<String>>();
-                    if let Err(e) =
-                        h.set_value_from_stringvec(&mut *current_item, values.as_slice())
-                    {
-                        warn!(
-                            "Failed to set field: {} with {:?}. Error: {}",
-                            h.field, values, e
-                        );
-                    }
-                }
-                _ => {
-                    let v = ev.values.get(&h.display).unwrap_or_else(|| {
-                        panic!(
-                            "There must be a value for field {:?} in formevent",
-                            &h.type_
-                        )
-                    });
-                    if let Err(e) = h.set_value_fromstr(&mut *current_item, v) {
-                        warn!("Failed to set field: {} with {}. Error: {}", h.field, v, e);
-                    }
-                }
-            };
-        }
-
-        // validate
-        let validation_result = {
-            let instance_ref = atom_instance.read();
-            let r_instance = instance_ref.as_ref().unwrap();
-            current_item.validate(r_instance)
-        };
-
-        match validation_result {
-            ValidationResult::Pass => {
-                // get mutable references and pass into the various atoms
-                let mut instance_refmut = atom_instance.write();
-                let w_instance = instance_refmut.as_mut().unwrap();
-                let item_to_change = T::get_mut_by_name(w_instance, orig_name);
-                *item_to_change = current_item.clone();
-
-                let mut selectable = atom_selectable.write();
-                *selectable = item_to_change.to_selectable();
-
-                orig_name.modify(|_| current_item.get_name());
-
-                validation_state.modify(|_| ValidationResult::Pass);
-            }
-            ValidationResult::Fail(errors) => {
-                warn!("Got Errors: {:?}", errors);
-                validation_state.modify(|_| ValidationResult::Fail(errors));
-            }
-        }
+        // validate and if passes apply to wider instance
+        validate_and_apply(
+            current_item,
+            atom_instance,
+            atom_selectable,
+            orig_name,
+            validation_state,
+        );
     };
+    let headers = T::get_header();
+    let usable_headers = headers
+        .iter()
+        .filter(|h| fieldtype_editable(&h.type_))
+        .collect::<Vec<_>>();
 
     cx.render(rsx!{
         div { class: "p-2 m-2 rounded bg-sky-200",
@@ -165,24 +115,35 @@ where
                 }
             }
             form { autocomplete: "off", oninput: on_submit,
-                for h in T::get_header().iter().filter(|h| fieldtype_editable(&h.type_)) {
+                for h in usable_headers {
                     match h.type_ {
                         // Trigger actions have to render as one input per action
                         FieldType::TriggerActions => rsx!{
-                            label {class: "p-1 w-full", "Actions"}
-                            for (i, action) in h.get_value_stringvec(item_state.get()).iter().enumerate() {
-                                rsx! {
-                                    div {
-                                        class: "flex w-full mt-1 mb-1",
-                                        label { class: "p-1", r#for: "{h.display}.{i}", "{i}" }
-                                        input {
-                                            class: "flex-grow rounded p-1",
-                                            autocomplete: "off",
-                                            r#type: "{fieldtype_to_input(&h.type_)}",
-                                            name: "{h.display}.{i}",
-                                            value: "{action}"
-                                        }
-                                    }
+                            render_triggeractions {
+                                header: h.clone(),
+                                item: item_state.get().to_owned(),
+                                onclick_delete: move |(h_local, i)|{
+                                    let mut mut_item = item_state.make_mut();
+                                    delete_action_from_item(&mut mut_item, h_local, i);
+                                    validate_and_apply(
+                                        mut_item,
+                                        atom_instance,
+                                        use_atom_ref(cx, SELECTED),
+                                        orig_name,
+                                        validation_state,
+                                    );
+                             },
+                                onclick_addnew: move |h_local| {
+                                    let mut mut_item = item_state.make_mut();
+
+                                    add_action_to_item(&mut mut_item, h_local);
+                                    validate_and_apply(
+                                        mut_item,
+                                        atom_instance,
+                                        use_atom_ref(cx, SELECTED),
+                                        orig_name,
+                                        validation_state,
+                                    );
                                 }
                             }
                         },
@@ -230,4 +191,164 @@ fn render_errors(cx: Scope<RenderErrorProps>) -> Option<VNode> {
         });
     }
     None
+}
+
+#[derive(Props)]
+struct TriggerActionProps<'a, T> {
+    header: HeaderField,
+    item: T,
+    /// Delete button: (Headerfield, index)
+    onclick_delete: EventHandler<'a, (&'a HeaderField, usize)>,
+    /// Add new row button: ()
+    onclick_addnew: EventHandler<'a, &'a HeaderField>,
+}
+
+fn render_triggeractions<'a, T>(cx: Scope<'a, TriggerActionProps<'a, T>>) -> Element<'a>
+where
+    T: Struct,
+{
+    let h = &cx.props.header;
+    cx.render(rsx!{
+        label { class: "p-1 w-full", "Actions" }
+        for (i , action) in h.get_value_stringvec(&cx.props.item).iter().enumerate() {
+            rsx! {
+                div {
+                    class: "flex w-full mt-1 mb-1",
+                    label { class: "p-1", r#for: "{h.display}.{i}", "{i}" }
+                    input {
+                        class: "flex-grow rounded p-1",
+                        autocomplete: "off",
+                        r#type: "{fieldtype_to_input(&h.type_)}",
+                        name: "{h.display}.{i}",
+                        value: "{action}"
+                    }
+                    div {
+                        class: "flex items-center font-thin rounded px-1 hover:bg-sky-300 hover:text-black icon",
+                        onclick: move |_| cx.props.onclick_delete.call((h, i)),
+                        "\u{E74D}"
+                    }
+                }
+            }
+        }
+        div { class: "flex",
+            div { class: "flex-grow" }
+            div {
+                class: "flex items-center font-thin rounded px-1 hover:bg-sky-300 hover:text-black icon",
+                onclick: move |_| cx.props.onclick_addnew.call(&h),
+                ""
+            }
+        }
+    })
+}
+
+fn apply_to_item<T>(item: &mut RefMut<T>, values: &HashMap<String, String>)
+where
+    T: Struct + Editable,
+{
+    let headers = T::get_header();
+    for h in headers.iter().filter(|h| h.editable) {
+        match h.type_ {
+            FieldType::TriggerActions => {
+                let values = stringvec_for_field(values, &h.display);
+
+                if let Err(e) = h.set_value_from_stringvec(&mut **item, values) {
+                    panic!("Failed to set field: {}. Error: {}", h.field, e);
+                }
+            }
+            _ => {
+                let v = values.get(&h.display).unwrap_or_else(|| {
+                    panic!(
+                        "There must be a value for field {:?} in formevent",
+                        &h.type_
+                    )
+                });
+                if let Err(e) = h.set_value_fromstr(&mut **item, v) {
+                    panic!("Failed to set field: {} with {}. Error: {}", h.field, v, e);
+                }
+            }
+        };
+    }
+}
+
+fn add_action_to_item<T>(item: &mut RefMut<T>, header: &HeaderField)
+where
+    T: Struct,
+{
+    let mut actions = header.get_value_stringvec(&**item);
+
+    actions.push("".into());
+
+    header
+        .set_value_from_stringvec(&mut **item, actions)
+        .unwrap_or_else(|e| panic!("Failed to add action with error: {e:?}"));
+}
+
+fn delete_action_from_item<T>(item: &mut RefMut<T>, header: &HeaderField, index: usize)
+where
+    T: Struct + Debug,
+{
+    let mut actions = header.get_value_stringvec(&**item);
+    if actions.len() == 1 {
+        actions[0] = "".into();
+    } else {
+        actions.remove(index);
+    }
+
+    header
+        .set_value_from_stringvec(&mut **item, actions)
+        .unwrap_or_else(|e| panic!("Failed to add action with error: {e:?}"));
+}
+
+fn stringvec_for_field(values: &HashMap<String, String>, display_name: &str) -> Vec<String> {
+    values
+        .iter()
+        .filter_map(|(k, v)| {
+            let splits = k.split('.').map(|s| s.to_string()).collect::<Vec<String>>();
+
+            if splits.len() == 2 && splits[0] == display_name && splits[1].parse::<usize>().is_ok()
+            {
+                return Some((splits[1].parse::<usize>().unwrap(), v.to_owned()));
+            }
+            None
+        })
+        .sorted()
+        .map(|(_, v)| v)
+        .collect::<Vec<String>>()
+}
+fn validate_and_apply<T>(
+    current_item: RefMut<T>,
+    atom_instance: &UseAtomRef<Option<DCEInstance>>,
+    atom_selectable: &UseAtomRef<Selectable>,
+    orig_name: &UseState<String>,
+    validation_state: &UseState<ValidationResult>,
+) where
+    T: Editable + ToSelectable + Clone,
+{
+    // validate
+    let validation_result = {
+        let instance_ref = atom_instance.read();
+        let r_instance = instance_ref.as_ref().unwrap();
+        current_item.validate(r_instance)
+    };
+
+    match validation_result {
+        ValidationResult::Pass => {
+            // get mutable references and pass into the various atoms
+            let mut instance_refmut = atom_instance.write();
+            let w_instance = instance_refmut.as_mut().unwrap();
+            let item_to_change = T::get_mut_by_name(w_instance, orig_name);
+            *item_to_change = current_item.clone();
+
+            let mut selectable = atom_selectable.write();
+            *selectable = item_to_change.to_selectable();
+
+            orig_name.modify(|_| current_item.get_name());
+
+            validation_state.modify(|_| ValidationResult::Pass);
+        }
+        ValidationResult::Fail(errors) => {
+            warn!("Got Errors: {:?}", errors);
+            validation_state.modify(|_| ValidationResult::Fail(errors));
+        }
+    }
 }

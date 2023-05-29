@@ -3,7 +3,7 @@
 
 use dce_lib::{
     campaign_header::Header,
-    db_airbases::FixedAirBase,
+    db_airbases::{AirStartBase, FixedAirBase, ShipBase},
     editable::Editable,
     loadouts::{CAPLoadout, StrikeLoadout},
     mappable::MapPoint,
@@ -154,13 +154,23 @@ fn main_body(cx: Scope) -> Element {
         div { class: "top-8 flex absolute inset-0 bg-slate-50",
             // selector col
             div { class: "basis-12 shrink-0 min-h-0 bg-sky-500 flex flex-col items-center",
-                icon_button {
-                    path: "images/airfield_grey.png".into(),
-                    on_click: |_| select_first_fixed_airbase(cx)
-                }
                 popout_menu {
-                    onclick: |_| select_first_cap_target(cx),
-                    base_icon_url: "images/target_none.svg",
+                    onclick: |_| select_first_fixed_airbase(cx),
+                    base_icon_url: "images/airfield_fixed.svg",
+                    icon_button {
+                        path: "images/airfield_fixed.svg".into(),
+                        on_click: |_| select_first_fixed_airbase(cx)
+                    }
+                    icon_button {
+                        path: "images/airfield_ship.svg".into(),
+                        on_click: |_| select_first_ship_airbase(cx)
+                    }
+                    icon_button {
+                        path: "images/airfield_airstart.svg".into(),
+                        on_click: |_| select_first_airstart_airbase(cx)
+                    }
+                }
+                popout_menu { onclick: |_| select_first_cap_target(cx), base_icon_url: "images/target_none.svg",
                     icon_button {
                         path: "images/target_strike.svg".into(),
                         on_click: |_| select_first_strike_target(cx)
@@ -219,10 +229,16 @@ fn main_body(cx: Scope) -> Element {
                         edit_form::<Refueling> { headers: Refueling::get_header(), title: "Edit AAR".into(), item: selected_form.clone()}
                     },
                     Selectable::TargetAntiShip(_) => rsx!{
-                        edit_form::<AntiShipStrike> { headers: AntiShipStrike::get_header(), title: "Edit Antiship Strike".into(), item: selected_form.clone()}
+                        edit_form::<AntiShipStrike> { headers: AntiShipStrike::get_header(), title: "Edit Anti-ship Strike".into(), item: selected_form.clone()}
                     },
                     Selectable::FixedAirBase(_) => rsx!{
                         edit_form::<FixedAirBase> { headers: FixedAirBase::get_header(), title: "Edit Airbase".into(), item: selected_form.clone()}
+                    },
+                    Selectable::ShipAirBase(_) => rsx!{
+                        edit_form::<ShipBase> { headers: ShipBase::get_header(), title: "Edit Ship Base".into(), item: selected_form.clone()}
+                    },
+                    Selectable::AirstartBase(_) => rsx!{
+                        edit_form::<AirStartBase> { headers: AirStartBase::get_header(), title: "Edit Airstart".into(), item: selected_form.clone()}
                     },
                     Selectable::CampaignSettings(_) => rsx!{
                         edit_form::<Header> { headers: Header::get_header(), title: "Campaign Settings".into(), item: selected_form.clone()}
@@ -264,6 +280,12 @@ fn main_body(cx: Scope) -> Element {
                         },
                         Selectable::FixedAirBase(_) => rsx! {
                             rsx::table { headers: FixedAirBase::get_header(), data: instance.airbases.fixed.to_vec() }
+                        },
+                        Selectable::ShipAirBase(_) => rsx! {
+                            rsx::table { headers: ShipBase::get_header(), data: instance.airbases.ship.to_vec() }
+                        },
+                        Selectable::AirstartBase(_) => rsx! {
+                            rsx::table { headers: AirStartBase::get_header(), data: instance.airbases.air_start.to_vec() }
                         },
                         // not the right things to do, but if we don't there will be an empty space:
                         Selectable::CampaignSettings(_) => rsx! {
@@ -314,15 +336,10 @@ struct PopoutMenuProps<'a> {
 fn popout_menu<'a>(cx: Scope<'a, PopoutMenuProps<'a>>) -> Element<'a> {
     cx.render(rsx! {
         div { class: "dropdown relative inline-block",
-        div {
-            icon_button {
-                path: cx.props.base_icon_url.into(),
-                on_click: |e| cx.props.onclick.call(e)
+            div { icon_button { path: cx.props.base_icon_url.into(), on_click: |e| cx.props.onclick.call(e) } }
+            div { class: "dropdown-content rounded-r-lg flex flex-col items-end pr-1 hidden absolute bg-sky-500 w-12 left-10 top-0",
+                &cx.props.children
             }
         }
-        div { class: "dropdown-content rounded-r-lg flex flex-col items-end pr-1 hidden absolute bg-sky-500 w-12 left-10 top-0",
-            &cx.props.children
-        }
-    }
     })
 }

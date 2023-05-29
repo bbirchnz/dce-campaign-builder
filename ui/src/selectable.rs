@@ -1,6 +1,6 @@
 use dce_lib::{
     campaign_header::Header,
-    db_airbases::FixedAirBase,
+    db_airbases::{AirStartBase, FixedAirBase, ShipBase},
     loadouts::{CAPLoadout, StrikeLoadout},
     mappable::MapPoint,
     oob_air::Squadron,
@@ -20,6 +20,8 @@ pub enum Selectable {
     TargetAAR(Refueling),
     TargetAWACS(AWACS),
     FixedAirBase(FixedAirBase),
+    ShipAirBase(ShipBase),
+    AirstartBase(AirStartBase),
     CampaignSettings(Header),
     LoadoutCAP(CAPLoadout),
     LoadoutStrike(StrikeLoadout),
@@ -100,6 +102,26 @@ impl Selectable {
                     .unwrap()
                     .clone();
                 Selectable::FixedAirBase(item)
+            }
+            "ShipAirBase" => {
+                let item = instance
+                    .airbases
+                    .ship
+                    .iter()
+                    .find(|item| item._name == map_point.name)
+                    .unwrap()
+                    .clone();
+                Selectable::ShipAirBase(item)
+            }
+            "Airstart" => {
+                let item = instance
+                    .airbases
+                    .air_start
+                    .iter()
+                    .find(|item| item._name == map_point.name)
+                    .unwrap()
+                    .clone();
+                Selectable::AirstartBase(item)
             }
             _ => Selectable::None,
         }
@@ -217,6 +239,38 @@ impl ToSelectable for FixedAirBase {
         Self: Sized,
     {
         if let Selectable::FixedAirBase(t) = sel {
+            return Some(t.clone());
+        }
+        None
+    }
+}
+
+impl ToSelectable for AirStartBase {
+    fn to_selectable(&self) -> Selectable {
+        Selectable::AirstartBase(self.clone())
+    }
+
+    fn from_selectable(sel: &Selectable) -> Option<Self>
+    where
+        Self: Sized,
+    {
+        if let Selectable::AirstartBase(t) = sel {
+            return Some(t.clone());
+        }
+        None
+    }
+}
+
+impl ToSelectable for ShipBase {
+    fn to_selectable(&self) -> Selectable {
+        Selectable::ShipAirBase(self.clone())
+    }
+
+    fn from_selectable(sel: &Selectable) -> Option<Self>
+    where
+        Self: Sized,
+    {
+        if let Selectable::ShipAirBase(t) = sel {
             return Some(t.clone());
         }
         None

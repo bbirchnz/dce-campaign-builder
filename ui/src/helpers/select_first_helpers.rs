@@ -21,6 +21,31 @@ pub fn select_first_fixed_airbase(cx: Scope) {
         *writable = Selectable::FixedAirBase(fixed.clone());
     }
 }
+pub fn select_first_ship_airbase(cx: Scope) {
+    let atom_instance = use_atom_ref(cx, INSTANCE);
+    let atom_selected = use_atom_ref(cx, SELECTED);
+
+    if let Some(item) = atom_instance.read().as_ref().unwrap().airbases.ship.first() {
+        let mut writable = atom_selected.write();
+        *writable = Selectable::ShipAirBase(item.clone());
+    }
+}
+pub fn select_first_airstart_airbase(cx: Scope) {
+    let atom_instance = use_atom_ref(cx, INSTANCE);
+    let atom_selected = use_atom_ref(cx, SELECTED);
+
+    if let Some(item) = atom_instance
+        .read()
+        .as_ref()
+        .unwrap()
+        .airbases
+        .air_start
+        .first()
+    {
+        let mut writable = atom_selected.write();
+        *writable = Selectable::AirstartBase(item.clone());
+    }
+}
 
 pub fn select_first_strike_target(cx: Scope) {
     let atom_instance = use_atom_ref(cx, INSTANCE);

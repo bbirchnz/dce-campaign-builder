@@ -4,14 +4,11 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 use crate::{
-    dce_utils::ValidateSelf,
     dcs_airbase_export::dcs_airbases_for_theatre,
     editable::{Editable, FieldType, HeaderField, ValidationError, ValidationResult},
     serde_utils::LuaFileBased,
     DCEInstance, NewFromMission,
 };
-
-use anyhow::anyhow;
 
 pub type DBAirbases = HashMap<String, AirBase>;
 
@@ -32,18 +29,6 @@ impl AirBase {
             AirBase::Farp(a) => a.side.to_owned(),
             AirBase::Reserve(a) => a.side.to_owned(),
             AirBase::AirStart(a) => a.side.to_owned(),
-        }
-    }
-}
-
-impl ValidateSelf for AirBase {
-    fn validate_self(&self) -> Result<(), anyhow::Error> {
-        match self {
-            AirBase::Fixed(a) => a.validate_self(),
-            AirBase::Ship(a) => a.validate_self(),
-            AirBase::Farp(a) => a.validate_self(),
-            AirBase::Reserve(a) => a.validate_self(),
-            AirBase::AirStart(a) => a.validate_self(),
         }
     }
 }
@@ -75,15 +60,6 @@ pub struct FixedAirBase {
     pub _name: String,
 }
 
-impl ValidateSelf for FixedAirBase {
-    fn validate_self(&self) -> Result<(), anyhow::Error> {
-        if self.atc_frequency.len() < 3 {
-            return Err(anyhow!("ATC Frequency must be set"));
-        }
-        Ok(())
-    }
-}
-
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
 pub struct ShipBase {
     pub unitname: String,
@@ -92,18 +68,9 @@ pub struct ShipBase {
     pub atc_frequency: Option<String>,
     pub side: String,
     #[serde(rename = "LimitedParkNb")]
-    pub limited_park_number: u16,
+    pub limited_park_number: u32,
     #[serde(default)]
     pub _name: String,
-}
-
-impl ValidateSelf for ShipBase {
-    fn validate_self(&self) -> Result<(), anyhow::Error> {
-        if self.atc_frequency.is_some() && self.atc_frequency.as_ref().unwrap().len() < 3 {
-            return Err(anyhow!("ATC Frequency must be set"));
-        }
-        Ok(())
-    }
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
@@ -121,15 +88,6 @@ pub struct FarpBase {
     divert: bool,
     #[serde(default)]
     pub _name: String,
-}
-
-impl ValidateSelf for FarpBase {
-    fn validate_self(&self) -> Result<(), anyhow::Error> {
-        if self.atc_frequency.len() < 3 {
-            return Err(anyhow!("ATC Frequency must be set"));
-        }
-        Ok(())
-    }
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
@@ -150,25 +108,6 @@ pub struct AirStartBase {
     pub _name: String,
 }
 
-impl ValidateSelf for AirStartBase {
-    fn validate_self(&self) -> Result<(), anyhow::Error> {
-        if self.elevation != 0.0 {
-            return Err(anyhow!("elevation must = 0.0"));
-        }
-        if !self.atc_frequency.is_empty() {
-            return Err(anyhow!("ATC_frequency must be an empty string"));
-        }
-        if !self.base_air_start {
-            return Err(anyhow!("BaseAirStart must be true"));
-        }
-        // if self.airdrome_id.is_some() {
-        //     return Err(anyhow!("airdromeId must be nil"));
-        // }
-
-        Ok(())
-    }
-}
-
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
 pub struct ReserveBase {
     inactive: bool,
@@ -180,25 +119,6 @@ pub struct ReserveBase {
     pub side: String,
     #[serde(default)]
     pub _name: String,
-}
-
-impl ValidateSelf for ReserveBase {
-    fn validate_self(&self) -> Result<(), anyhow::Error> {
-        if self.x != 9999999999.0 {
-            return Err(anyhow!("x must = 9999999999.0"));
-        }
-        if self.y != 9999999999.0 {
-            return Err(anyhow!("y must = 9999999999.0"));
-        }
-        if self.elevation != 0.0 {
-            return Err(anyhow!("elevation must = 0.0"));
-        }
-        if !self.atc_frequency.is_empty() {
-            return Err(anyhow!("ATC_frequency must be an empty string"));
-        }
-
-        Ok(())
-    }
 }
 
 impl LuaFileBased<'_> for DBAirbases {}
@@ -327,6 +247,96 @@ impl Editable for FixedAirBase {
         instance
             .airbases
             .fixed
+            .iter_mut()
+            .find(|item| item._name == name)
+            .unwrap()
+    }
+    fn get_name(&self) -> String {
+        self._name.to_owned()
+    }
+
+    fn validate(&self, _: &DCEInstance) -> ValidationResult {
+        let mut errors = Vec::default();
+
+        if self.side != "blue" && self.side != "red" && self.side != "neutral" {
+            errors.push(ValidationError::new(
+                "side",
+                "Airbase Side",
+                "Side must be blue/red/neutral",
+            ));
+        }
+
+        if errors.is_empty() {
+            return ValidationResult::Pass;
+        }
+        ValidationResult::Fail(errors)
+    }
+}
+
+impl Editable for ShipBase {
+    fn get_header() -> Vec<HeaderField> {
+        vec![
+            HeaderField::new("_name", "Name", FieldType::String, false),
+            HeaderField::new(
+                "side",
+                "Side",
+                FieldType::FixedEnum(vec!["blue".into(), "red".into(), "neutral".into()]),
+                false,
+            ),
+            HeaderField::new(
+                "limited_park_number",
+                "Parking spaces",
+                FieldType::Int,
+                true,
+            ),
+        ]
+    }
+    fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {
+        instance
+            .airbases
+            .ship
+            .iter_mut()
+            .find(|item| item._name == name)
+            .unwrap()
+    }
+    fn get_name(&self) -> String {
+        self._name.to_owned()
+    }
+
+    fn validate(&self, _: &DCEInstance) -> ValidationResult {
+        let mut errors = Vec::default();
+
+        if self.side != "blue" && self.side != "red" && self.side != "neutral" {
+            errors.push(ValidationError::new(
+                "side",
+                "Airbase Side",
+                "Side must be blue/red/neutral",
+            ));
+        }
+
+        if errors.is_empty() {
+            return ValidationResult::Pass;
+        }
+        ValidationResult::Fail(errors)
+    }
+}
+
+impl Editable for AirStartBase {
+    fn get_header() -> Vec<HeaderField> {
+        vec![
+            HeaderField::new("_name", "Name", FieldType::String, false),
+            HeaderField::new(
+                "side",
+                "Side",
+                FieldType::FixedEnum(vec!["blue".into(), "red".into(), "neutral".into()]),
+                false,
+            ),
+        ]
+    }
+    fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {
+        instance
+            .airbases
+            .air_start
             .iter_mut()
             .find(|item| item._name == name)
             .unwrap()

@@ -72,3 +72,13 @@ body {
     width: 32px;
     height: 32px;
 }
+
+.dropdown {}
+
+.dropdown-content {
+    z-index: 9999;
+}
+
+.dropdown:hover .dropdown-content {
+    display: flex;
+}

@@ -3,8 +3,11 @@ use std::{collections::HashMap, iter::repeat};
 use crate::{
     mappable::{MapPoint, Mappables},
     projections::{convert_dcs_lat_lon, offset},
-    target_list::{self, FighterSweep, Intercept, Refueling, Target, TargetList},
-    targets::{awacs::AWACS, cap::CAP, strike::Strike},
+    target_list::{self, Target, TargetList},
+    targets::{
+        anti_ship::AntiShipStrike, awacs::AWACS, cap::CAP, fighter_sweep::FighterSweep,
+        intercept::Intercept, refueling::Refueling, strike::Strike,
+    },
 };
 use anyhow::anyhow;
 use bevy_reflect::{FromReflect, Reflect};
@@ -14,13 +17,12 @@ use serde::{Deserialize, Serialize};
 
 /// A much more convenient form where everythings in vecs appropriate to their type
 /// and has name and side all within one
-///
 #[derive(Deserialize, Serialize, Debug, PartialEq, Reflect, FromReflect, Clone)]
 pub struct TargetListInternal {
     pub strike: Vec<Strike>,
     pub cap: Vec<CAP>,
     pub refuel: Vec<Refueling>,
-    pub antiship: Vec<Strike>,
+    pub antiship: Vec<AntiShipStrike>,
     pub intercept: Vec<Intercept>,
     pub fighter_sweep: Vec<FighterSweep>,
     pub awacs: Vec<AWACS>,

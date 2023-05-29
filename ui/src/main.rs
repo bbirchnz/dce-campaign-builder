@@ -8,7 +8,9 @@ use dce_lib::{
     loadouts::{CAPLoadout, StrikeLoadout},
     mappable::MapPoint,
     oob_air::Squadron,
-    targets::{cap::CAP, strike::Strike},
+    targets::{
+        anti_ship::AntiShipStrike, awacs::AWACS, cap::CAP, refueling::Refueling, strike::Strike,
+    },
     trigger::Trigger,
     DCEInstance,
 };
@@ -21,8 +23,12 @@ use simple_logger::SimpleLogger;
 
 use directories::ProjectDirs;
 
-use crate::rsx::{edit_form, menu_bar};
+use crate::{
+    helpers::select_first_helpers::*,
+    rsx::{edit_form, menu_bar},
+};
 
+mod helpers;
 mod rsx;
 mod selectable;
 
@@ -152,13 +158,29 @@ fn main_body(cx: Scope) -> Element {
                     path: "images/airfield_grey.png".into(),
                     on_click: |_| select_first_fixed_airbase(cx)
                 }
-                icon_button {
-                    path: "images/target_grey_s.png".into(),
-                    on_click: |_| select_first_strike_target(cx)
-                }
-                icon_button {
-                    path: "images/target_grey_c.png".into(),
-                    on_click: |_| select_first_cap_target(cx)
+                popout_menu {
+                    onclick: |_| select_first_cap_target(cx),
+                    base_icon_url: "images/target_none.svg",
+                    icon_button {
+                        path: "images/target_strike.svg".into(),
+                        on_click: |_| select_first_strike_target(cx)
+                    }
+                    icon_button {
+                        path: "images/target_ship.svg".into(),
+                        on_click: |_| select_first_ship_target(cx)
+                    }
+                    icon_button {
+                        path: "images/target_cap.svg".into(),
+                        on_click: |_| select_first_cap_target(cx)
+                    }
+                    icon_button {
+                        path: "images/target_aar.svg".into(),
+                        on_click: |_| select_first_aar_target(cx)
+                    }
+                    icon_button {
+                        path: "images/target_awacs.svg".into(),
+                        on_click: |_| select_first_awacs_target(cx)
+                    }
                 }
                 icon_button { path: "images/plane_grey.png".into(), on_click: |_| select_first_squadron(cx) }
                 icon_button {
@@ -189,6 +211,15 @@ fn main_body(cx: Scope) -> Element {
                     },
                     Selectable::TargetCAP(_) => rsx!{
                         edit_form::<CAP> { headers: CAP::get_header(), title: "Edit CAP".into(), item: selected_form.clone()}
+                    },
+                    Selectable::TargetAWACS(_) => rsx!{
+                        edit_form::<AWACS> { headers: AWACS::get_header(), title: "Edit AWACS".into(), item: selected_form.clone()}
+                    },
+                    Selectable::TargetAAR(_) => rsx!{
+                        edit_form::<Refueling> { headers: Refueling::get_header(), title: "Edit AAR".into(), item: selected_form.clone()}
+                    },
+                    Selectable::TargetAntiShip(_) => rsx!{
+                        edit_form::<AntiShipStrike> { headers: AntiShipStrike::get_header(), title: "Edit Antiship Strike".into(), item: selected_form.clone()}
                     },
                     Selectable::FixedAirBase(_) => rsx!{
                         edit_form::<FixedAirBase> { headers: FixedAirBase::get_header(), title: "Edit Airbase".into(), item: selected_form.clone()}
@@ -221,6 +252,15 @@ fn main_body(cx: Scope) -> Element {
                         },
                         Selectable::TargetCAP(_) => rsx! {
                             rsx::table { headers: CAP::get_header(), data: instance.target_list.cap.to_vec() }
+                        },
+                        Selectable::TargetAntiShip(_) => rsx! {
+                            rsx::table { headers: AntiShipStrike::get_header(), data: instance.target_list.antiship.to_vec() }
+                        },
+                        Selectable::TargetAWACS(_) => rsx! {
+                            rsx::table { headers: AWACS::get_header(), data: instance.target_list.awacs.to_vec() }
+                        },
+                        Selectable::TargetAAR(_) => rsx! {
+                            rsx::table { headers: Refueling::get_header(), data: instance.target_list.refuel.to_vec() }
                         },
                         Selectable::FixedAirBase(_) => rsx! {
                             rsx::table { headers: FixedAirBase::get_header(), data: instance.airbases.fixed.to_vec() }
@@ -264,115 +304,25 @@ fn icon_button<'a>(cx: Scope<'a, IconButtonProps<'a>>) -> Element<'a> {
     })
 }
 
-fn select_first_fixed_airbase(cx: Scope) {
-    let atom_instance = use_atom_ref(cx, INSTANCE);
-    let atom_selected = use_atom_ref(cx, SELECTED);
-
-    if let Some(fixed) = atom_instance
-        .read()
-        .as_ref()
-        .unwrap()
-        .airbases
-        .fixed
-        .first()
-    {
-        let mut writable = atom_selected.write();
-        *writable = Selectable::FixedAirBase(fixed.clone());
-    }
+#[derive(Props)]
+struct PopoutMenuProps<'a> {
+    onclick: EventHandler<'a, MouseEvent>,
+    base_icon_url: &'a str,
+    children: Element<'a>,
 }
 
-fn select_first_strike_target(cx: Scope) {
-    let atom_instance = use_atom_ref(cx, INSTANCE);
-    let atom_selected = use_atom_ref(cx, SELECTED);
-
-    if let Some(item) = atom_instance
-        .read()
-        .as_ref()
-        .unwrap()
-        .target_list
-        .strike
-        .first()
-    {
-        let mut writable = atom_selected.write();
-        *writable = Selectable::TargetStrike(item.clone());
+fn popout_menu<'a>(cx: Scope<'a, PopoutMenuProps<'a>>) -> Element<'a> {
+    cx.render(rsx! {
+        div { class: "dropdown relative inline-block",
+        div {
+            icon_button {
+                path: cx.props.base_icon_url.into(),
+                on_click: |e| cx.props.onclick.call(e)
+            }
+        }
+        div { class: "dropdown-content rounded-r-lg flex flex-col items-end pr-1 hidden absolute bg-sky-500 w-12 left-10 top-0",
+            &cx.props.children
+        }
     }
-}
-
-fn select_first_cap_target(cx: Scope) {
-    let atom_instance = use_atom_ref(cx, INSTANCE);
-    let atom_selected = use_atom_ref(cx, SELECTED);
-
-    if let Some(item) = atom_instance
-        .read()
-        .as_ref()
-        .unwrap()
-        .target_list
-        .cap
-        .first()
-    {
-        let mut writable = atom_selected.write();
-        *writable = Selectable::TargetCAP(item.clone());
-    }
-}
-
-fn select_first_squadron(cx: Scope) {
-    let atom_instance = use_atom_ref(cx, INSTANCE);
-    let atom_selected = use_atom_ref(cx, SELECTED);
-
-    if let Some(item) = atom_instance.read().as_ref().unwrap().oob_air.blue.first() {
-        let mut writable = atom_selected.write();
-        *writable = Selectable::Squadron(item.clone());
-    }
-}
-
-fn select_campaign_settings(cx: Scope) {
-    let atom_instance = use_atom_ref(cx, INSTANCE);
-    let atom_selected = use_atom_ref(cx, SELECTED);
-
-    let item = atom_instance
-        .read()
-        .as_ref()
-        .unwrap()
-        .campaign_header
-        .clone();
-
-    let mut writable = atom_selected.write();
-    *writable = Selectable::CampaignSettings(item);
-}
-
-fn select_first_cap_loadout(cx: Scope) {
-    let atom_instance = use_atom_ref(cx, INSTANCE);
-    let atom_selected = use_atom_ref(cx, SELECTED);
-
-    if let Some(item) = atom_instance.read().as_ref().unwrap().loadouts.cap.first() {
-        let mut writable = atom_selected.write();
-        *writable = Selectable::LoadoutCAP(item.clone());
-    }
-}
-
-fn select_first_strike_loadout(cx: Scope) {
-    let atom_instance = use_atom_ref(cx, INSTANCE);
-    let atom_selected = use_atom_ref(cx, SELECTED);
-
-    if let Some(item) = atom_instance
-        .read()
-        .as_ref()
-        .unwrap()
-        .loadouts
-        .strike
-        .first()
-    {
-        let mut writable = atom_selected.write();
-        *writable = Selectable::LoadoutStrike(item.clone());
-    }
-}
-
-fn select_first_trigger(cx: Scope) {
-    let atom_instance = use_atom_ref(cx, INSTANCE);
-    let atom_selected = use_atom_ref(cx, SELECTED);
-
-    if let Some(item) = atom_instance.read().as_ref().unwrap().triggers.first() {
-        let mut writable = atom_selected.write();
-        *writable = Selectable::Trigger(item.clone());
-    }
+    })
 }

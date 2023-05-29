@@ -1,11 +1,13 @@
 use std::{collections::HashMap, iter::repeat};
 
-use bevy_reflect::{FromReflect, Reflect};
 use serde::{Deserialize, Serialize};
 
 use crate::{
     serde_utils::LuaFileBased,
-    targets::{awacs::AWACS, cap::CAP, strike::Strike, TargetFirepower},
+    targets::{
+        anti_ship::AntiShipStrike, awacs::AWACS, cap::CAP, fighter_sweep::FighterSweep,
+        intercept::Intercept, refueling::Refueling, strike::Strike, TargetFirepower,
+    },
     NewFromMission,
 };
 
@@ -174,14 +176,13 @@ impl NewFromMission for TargetList {
 
                 targets.insert(
                     sg.name.to_owned(),
-                    Target::AntiShipStrike(Strike {
+                    Target::AntiShipStrike(AntiShipStrike {
                         priority: 2,
                         text: sg.name.to_owned(),
                         inactive: false,
                         firepower: TargetFirepower { min: 2, max: 4 },
                         class: "ship".to_owned(),
                         class_template: Some(sg.name.to_owned()),
-                        elements: None,
                         _name: sg.name.to_owned(),
                         _side: "blue".into(),
                         _firepower_min: 2,
@@ -207,63 +208,8 @@ pub enum Target {
     FighterSweep(FighterSweep),
     Strike(Strike),
     #[serde(rename = "Anti-ship Strike")]
-    AntiShipStrike(Strike),
+    AntiShipStrike(AntiShipStrike),
     AWACS(AWACS),
-}
-
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
-pub struct Refueling {
-    pub priority: u32,
-    #[serde(rename = "refpoint")]
-    pub ref_point: String,
-    pub radius: f64,
-    pub axis: f64,
-    pub text: String,
-    #[serde(default)]
-    pub inactive: bool,
-    pub firepower: TargetFirepower,
-    #[serde(default)]
-    pub _name: String,
-    #[serde(default)]
-    pub _side: String,
-}
-
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
-pub struct Intercept {
-    pub priority: u32,
-    #[serde(default)]
-    pub text: String,
-    pub base: String,
-    #[serde(default)]
-    pub inactive: bool,
-    pub firepower: TargetFirepower,
-    #[serde(default)]
-    pub _name: String,
-    #[serde(default)]
-    pub _side: String,
-    #[serde(default)]
-    pub _firepower_min: u32,
-    #[serde(default)]
-    pub _firepower_max: u32,
-}
-
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
-pub struct FighterSweep {
-    pub priority: u32,
-    pub text: String,
-    pub x: f64,
-    pub y: f64,
-    #[serde(default)]
-    pub inactive: bool,
-    pub firepower: TargetFirepower,
-    #[serde(default)]
-    pub _name: String,
-    #[serde(default)]
-    pub _side: String,
-    #[serde(default)]
-    pub _firepower_min: u32,
-    #[serde(default)]
-    pub _firepower_max: u32,
 }
 
 #[cfg(test)]

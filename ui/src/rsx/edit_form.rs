@@ -258,7 +258,7 @@ where
             div { class: "flex-grow" }
             div {
                 class: "flex items-center font-thin rounded px-1 hover:bg-sky-300 hover:text-black icon",
-                onclick: move |_| cx.props.onclick_addnew.call(&h),
+                onclick: move |_| cx.props.onclick_addnew.call(h),
                 ""
             }
         }

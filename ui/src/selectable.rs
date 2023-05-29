@@ -4,7 +4,9 @@ use dce_lib::{
     loadouts::{CAPLoadout, StrikeLoadout},
     mappable::MapPoint,
     oob_air::Squadron,
-    targets::{cap::CAP, strike::Strike},
+    targets::{
+        anti_ship::AntiShipStrike, awacs::AWACS, cap::CAP, refueling::Refueling, strike::Strike,
+    },
     trigger::Trigger,
     DCEInstance,
 };
@@ -14,6 +16,9 @@ pub enum Selectable {
     Squadron(Squadron),
     TargetStrike(Strike),
     TargetCAP(CAP),
+    TargetAntiShip(AntiShipStrike),
+    TargetAAR(Refueling),
+    TargetAWACS(AWACS),
     FixedAirBase(FixedAirBase),
     CampaignSettings(Header),
     LoadoutCAP(CAPLoadout),
@@ -44,6 +49,36 @@ impl Selectable {
                     .unwrap()
                     .clone();
                 Selectable::TargetStrike(item)
+            }
+            "TargetAntiShipStrike" => {
+                let item = instance
+                    .target_list
+                    .antiship
+                    .iter()
+                    .find(|c| c._name == map_point.name)
+                    .unwrap()
+                    .clone();
+                Selectable::TargetAntiShip(item)
+            }
+            "TargetRefuel" => {
+                let item = instance
+                    .target_list
+                    .refuel
+                    .iter()
+                    .find(|c| c._name == map_point.name)
+                    .unwrap()
+                    .clone();
+                Selectable::TargetAAR(item)
+            }
+            "TargetAWACS" => {
+                let item = instance
+                    .target_list
+                    .awacs
+                    .iter()
+                    .find(|c| c._name == map_point.name)
+                    .unwrap()
+                    .clone();
+                Selectable::TargetAWACS(item)
             }
             "Squadron" => {
                 let item = instance
@@ -118,6 +153,54 @@ impl ToSelectable for CAP {
         Self: Sized,
     {
         if let Selectable::TargetCAP(t) = sel {
+            return Some(t.clone());
+        }
+        None
+    }
+}
+
+impl ToSelectable for AWACS {
+    fn to_selectable(&self) -> Selectable {
+        Selectable::TargetAWACS(self.clone())
+    }
+
+    fn from_selectable(sel: &Selectable) -> Option<Self>
+    where
+        Self: Sized,
+    {
+        if let Selectable::TargetAWACS(t) = sel {
+            return Some(t.clone());
+        }
+        None
+    }
+}
+
+impl ToSelectable for Refueling {
+    fn to_selectable(&self) -> Selectable {
+        Selectable::TargetAAR(self.clone())
+    }
+
+    fn from_selectable(sel: &Selectable) -> Option<Self>
+    where
+        Self: Sized,
+    {
+        if let Selectable::TargetAAR(t) = sel {
+            return Some(t.clone());
+        }
+        None
+    }
+}
+
+impl ToSelectable for AntiShipStrike {
+    fn to_selectable(&self) -> Selectable {
+        Selectable::TargetAntiShip(self.clone())
+    }
+
+    fn from_selectable(sel: &Selectable) -> Option<Self>
+    where
+        Self: Sized,
+    {
+        if let Selectable::TargetAntiShip(t) = sel {
             return Some(t.clone());
         }
         None

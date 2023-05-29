@@ -113,7 +113,7 @@
                     </Component>
                     -->
 
-          <Component Id='binary0' Guid='*'>
+          <Component Id='binary0' Guid='6a07a58b-eabb-4ebc-91d4-d65f9c7e5cad'>
             <File
               Id='exe0'
               Name='dce_builder.exe'
@@ -121,7 +121,8 @@
               Source='$(var.CargoTargetBinDir)\ui.exe'
               KeyPath='yes' />
           </Component>
-          <Component Id='binary1' Guid='*'>
+          <!-- Extra dlls (libproj related) -->
+          <Component Id='binary1' Guid='c3efbf66-639b-4eba-81a6-e0fc08fd0ac2'>
             <File
               Id='dll1'
               Name='jpeg62.dll'
@@ -129,7 +130,7 @@
               Source='$(var.CargoTargetBinDir)\jpeg62.dll'
               KeyPath='yes' />
           </Component>
-          <Component Id='binary2' Guid='*'>
+          <Component Id='binary2' Guid='6b4e239a-05fc-47d4-8917-edeaa6b0dc6d'>
             <File
               Id='dll2'
               Name='libcurl.dll'
@@ -137,7 +138,7 @@
               Source='$(var.CargoTargetBinDir)\libcurl.dll'
               KeyPath='yes' />
           </Component>
-          <Component Id='binary3' Guid='*'>
+          <Component Id='binary3' Guid='3b3a10e5-26ba-4566-b5a5-2ae393b7ad4c'>
             <File
               Id='dll3'
               Name='liblzma.dll'
@@ -145,7 +146,7 @@
               Source='$(var.CargoTargetBinDir)\liblzma.dll'
               KeyPath='yes' />
           </Component>
-          <Component Id='binary4' Guid='*'>
+          <Component Id='binary4' Guid='b8a505f7-9c19-4ccf-9b92-a4156fa01ced'>
             <File
               Id='dll4'
               Name='proj.dll'
@@ -153,7 +154,7 @@
               Source='$(var.CargoTargetBinDir)\proj.dll'
               KeyPath='yes' />
           </Component>
-          <Component Id='binary5' Guid='*'>
+          <Component Id='binary5' Guid='c3e63a9d-fb30-48d1-a371-71ddf5b72ef6'>
             <File
               Id='dll5'
               Name='sqlite3.dll'
@@ -161,7 +162,7 @@
               Source='$(var.CargoTargetBinDir)\sqlite3.dll'
               KeyPath='yes' />
           </Component>
-          <Component Id='binary6' Guid='*'>
+          <Component Id='binary6' Guid='85d4459a-685b-4004-a7c8-f6cdf1390131'>
             <File
               Id='dll6'
               Name='tiff.dll'
@@ -169,7 +170,7 @@
               Source='$(var.CargoTargetBinDir)\tiff.dll'
               KeyPath='yes' />
           </Component>
-          <Component Id='binary7' Guid='*'>
+          <Component Id='binary7' Guid='c2a25928-156d-4214-9c13-fcf29885432a'>
             <File
               Id='dll7'
               Name='turbojpeg.dll'
@@ -177,7 +178,7 @@
               Source='$(var.CargoTargetBinDir)\turbojpeg.dll'
               KeyPath='yes' />
           </Component>
-          <Component Id='binary8' Guid='*'>
+          <Component Id='binary8' Guid='80c615d1-a33d-4f58-ad24-1dff23682bb6'>
             <File
               Id='dll8'
               Name='zlib1.dll'
@@ -186,31 +187,131 @@
               KeyPath='yes' />
           </Component>
           <Directory Id='images' Name='images'>
-            <Component Id='airfield_blue' Guid='*'>
+            <!-- airfield svgs -->
+            <Component Id='svg_airfield_fixed' Guid='fd85d89f-6ae4-4fcd-b7b9-38c9b8864058'>
               <File
-                Id='airfield_blue_file'
-                Name='airfield_blue.png'
+                Id='svg_airfield_fixed_file'
+                Name='airfield_fixed.svg'
                 DiskId='1'
-                Source='$(var.CargoTargetBinDir)\..\..\ui\images\airfield_blue.png'
+                Source='$(var.CargoTargetBinDir)\..\..\ui\images\airfield_fixed.svg'
                 KeyPath='yes' />
             </Component>
-            <Component Id='airfield_red' Guid='*'>
+            <Component Id='svg_airfield_farp' Guid='e4c46289-548a-41b4-b71e-a106aab7df67'>
               <File
-                Id='airfield_red_file'
-                Name='airfield_red.png'
+                Id='svg_airfield_farp_file'
+                Name='airfield_farp.svg'
                 DiskId='1'
-                Source='$(var.CargoTargetBinDir)\..\..\ui\images\airfield_red.png'
+                Source='$(var.CargoTargetBinDir)\..\..\ui\images\airfield_farp.svg'
                 KeyPath='yes' />
             </Component>
-            <Component Id='airfield_grey' Guid='*'>
+            <Component Id='svg_airfield_airstart' Guid='ffbc9c4c-4757-4cdd-ba0a-38ec4dcc6817'>
               <File
-                Id='airfield_grey_file'
-                Name='airfield_grey.png'
+                Id='svg_airfield_airstart_file'
+                Name='airfield_airstart.svg'
                 DiskId='1'
-                Source='$(var.CargoTargetBinDir)\..\..\ui\images\airfield_grey.png'
+                Source='$(var.CargoTargetBinDir)\..\..\ui\images\airfield_airstart.svg'
                 KeyPath='yes' />
             </Component>
-            <Component Id='plane_blue' Guid='*'>
+            <Component Id='svg_airfield_ship' Guid='c594c5b5-caa8-4833-8f5f-840101ae8a32'>
+              <File
+                Id='svg_airfield_ship_file'
+                Name='airfield_ship.svg'
+                DiskId='1'
+                Source='$(var.CargoTargetBinDir)\..\..\ui\images\airfield_ship.svg'
+                KeyPath='yes' />
+            </Component>
+            <!-- target svgs -->
+            <Component Id='svg_target_none' Guid='db4e6d88-878f-4190-989e-10348e4605e3'>
+              <File
+                Id='svg_target_none_file'
+                Name='target_none.svg'
+                DiskId='1'
+                Source='$(var.CargoTargetBinDir)\..\..\ui\images\target_none.svg'
+                KeyPath='yes' />
+            </Component>
+            <Component Id='svg_target_aar' Guid='4c4d58e6-1ec0-4435-9b67-013ea099d6db'>
+              <File
+                Id='svg_target_aar_file'
+                Name='target_aar.svg'
+                DiskId='1'
+                Source='$(var.CargoTargetBinDir)\..\..\ui\images\target_aar.svg'
+                KeyPath='yes' />
+            </Component>
+            <Component Id='svg_target_awacs' Guid='f5f08ae2-6a15-4755-9680-a09c2a8caddc'>
+              <File
+                Id='svg_target_awacs_file'
+                Name='target_awacs.svg'
+                DiskId='1'
+                Source='$(var.CargoTargetBinDir)\..\..\ui\images\target_awacs.svg'
+                KeyPath='yes' />
+            </Component>
+            <Component Id='svg_target_cap' Guid='d86ab95a-50b4-45a2-84e6-f39a74b4a102'>
+              <File
+                Id='svg_target_cap_file'
+                Name='target_cap.svg'
+                DiskId='1'
+                Source='$(var.CargoTargetBinDir)\..\..\ui\images\target_cap.svg'
+                KeyPath='yes' />
+            </Component>
+            <Component Id='svg_target_ship' Guid='415f2d86-d8b6-43f7-afe9-6fe68225c6d0'>
+              <File
+                Id='svg_target_ship_file'
+                Name='target_ship.svg'
+                DiskId='1'
+                Source='$(var.CargoTargetBinDir)\..\..\ui\images\target_ship.svg'
+                KeyPath='yes' />
+            </Component>
+            <Component Id='svg_target_strike' Guid='2b5855c3-047d-4dfd-8bb4-343bb653f31d'>
+              <File
+                Id='svg_target_strike_file'
+                Name='target_strike.svg'
+                DiskId='1'
+                Source='$(var.CargoTargetBinDir)\..\..\ui\images\target_strike.svg'
+                KeyPath='yes' />
+            </Component>
+            <!-- loadout svgs -->
+            <Component Id='svg_loadout_aar' Guid='a2eb62a3-8c40-4e8c-bcd1-656ab42ad5bc'>
+              <File
+                Id='svg_loadout_aar_file'
+                Name='loadout_aar.svg'
+                DiskId='1'
+                Source='$(var.CargoTargetBinDir)\..\..\ui\images\loadout_aar.svg'
+                KeyPath='yes' />
+            </Component>
+            <Component Id='svg_loadout_antiship' Guid='d82ae660-83a5-40c9-865b-352a77bd7658'>
+              <File
+                Id='svg_loadout_antiship_file'
+                Name='loadout_antiship.svg'
+                DiskId='1'
+                Source='$(var.CargoTargetBinDir)\..\..\ui\images\loadout_antiship.svg'
+                KeyPath='yes' />
+            </Component>
+            <Component Id='svg_loadout_awacs' Guid='2222a534-7e63-4adf-9ec3-2d64a681c668'>
+              <File
+                Id='svg_loadout_awacs_file'
+                Name='loadout_awacs.svg'
+                DiskId='1'
+                Source='$(var.CargoTargetBinDir)\..\..\ui\images\loadout_awacs.svg'
+                KeyPath='yes' />
+            </Component>
+            <Component Id='svg_loadout_cap' Guid='4abc99f5-d7b3-4437-a64d-8b7125201954'>
+              <File
+                Id='svg_loadout_cap_file'
+                Name='loadout_cap.svg'
+                DiskId='1'
+                Source='$(var.CargoTargetBinDir)\..\..\ui\images\loadout_cap.svg'
+                KeyPath='yes' />
+            </Component>
+            <Component Id='svg_loadout_strike' Guid='fcac54ba-11f7-4598-b77b-91f991a07d29'>
+              <File
+                Id='svg_loadout_strike_file'
+                Name='loadout_strike.svg'
+                DiskId='1'
+                Source='$(var.CargoTargetBinDir)\..\..\ui\images\loadout_strike.svg'
+                KeyPath='yes' />
+            </Component>
+
+            <Component Id='plane_blue' Guid='d2f8485c-9efc-4e23-a3e8-f46ece87c7aa'>
               <File
                 Id='plane_blue_file'
                 Name='plane_blue.png'
@@ -218,7 +319,7 @@
                 Source='$(var.CargoTargetBinDir)\..\..\ui\images\plane_blue.png'
                 KeyPath='yes' />
             </Component>
-            <Component Id='plane_red' Guid='*'>
+            <Component Id='plane_red' Guid='0e59a80f-513d-4bc9-86a5-0b05f95f6f30'>
               <File
                 Id='plane_red_file'
                 Name='plane_red.png'
@@ -226,7 +327,7 @@
                 Source='$(var.CargoTargetBinDir)\..\..\ui\images\plane_red.png'
                 KeyPath='yes' />
             </Component>
-            <Component Id='plane_grey' Guid='*'>
+            <Component Id='plane_grey' Guid='80b68ba6-605c-43bb-b7dd-11e66708bd6e'>
               <File
                 Id='plane_grey_file'
                 Name='plane_grey.png'
@@ -234,71 +335,8 @@
                 Source='$(var.CargoTargetBinDir)\..\..\ui\images\plane_grey.png'
                 KeyPath='yes' />
             </Component>
-            <Component Id='ship_blue' Guid='*'>
-              <File
-                Id='ship_blue_file'
-                Name='ship_blue.png'
-                DiskId='1'
-                Source='$(var.CargoTargetBinDir)\..\..\ui\images\ship_blue.png'
-                KeyPath='yes' />
-            </Component>
-            <Component Id='ship_red' Guid='*'>
-              <File
-                Id='ship_red_file'
-                Name='ship_red.png'
-                DiskId='1'
-                Source='$(var.CargoTargetBinDir)\..\..\ui\images\ship_red.png'
-                KeyPath='yes' />
-            </Component>
-            <Component Id='ship_grey' Guid='*'>
-              <File
-                Id='ship_grey_file'
-                Name='ship_grey.png'
-                DiskId='1'
-                Source='$(var.CargoTargetBinDir)\..\..\ui\images\ship_grey.png'
-                KeyPath='yes' />
-            </Component>
-            <Component Id='target_blue' Guid='*'>
-              <File
-                Id='target_blue_file'
-                Name='target_blue.png'
-                DiskId='1'
-                Source='$(var.CargoTargetBinDir)\..\..\ui\images\target_blue.png'
-                KeyPath='yes' />
-            </Component>
-            <Component Id='target_red' Guid='*'>
-              <File
-                Id='target_red_file'
-                Name='target_red.png'
-                DiskId='1'
-                Source='$(var.CargoTargetBinDir)\..\..\ui\images\target_red.png'
-                KeyPath='yes' />
-            </Component>
-            <Component Id='target_grey' Guid='*'>
-              <File
-                Id='target_grey_file'
-                Name='target_grey.png'
-                DiskId='1'
-                Source='$(var.CargoTargetBinDir)\..\..\ui\images\target_grey.png'
-                KeyPath='yes' />
-            </Component>
-            <Component Id='target_grey_c' Guid='*'>
-              <File
-                Id='target_grey__cfile'
-                Name='target_grey_c.png'
-                DiskId='1'
-                Source='$(var.CargoTargetBinDir)\..\..\ui\images\target_grey_c.png'
-                KeyPath='yes' />
-            </Component>
-            <Component Id='target_grey_s' Guid='*'>
-              <File
-                Id='target_grey__sfile'
-                Name='target_grey_s.png'
-                DiskId='1'
-                Source='$(var.CargoTargetBinDir)\..\..\ui\images\target_grey_s.png'
-                KeyPath='yes' />
-            </Component>
-            <Component Id='settings_grey' Guid='*'>
+
+            <Component Id='settings_grey' Guid='d92c44c5-035a-48eb-9fc7-d0e129837f9e'>
               <File
                 Id='settings_grey_file'
                 Name='settings_grey.png'
@@ -306,7 +344,7 @@
                 Source='$(var.CargoTargetBinDir)\..\..\ui\images\settings_grey.png'
                 KeyPath='yes' />
             </Component>
-            <Component Id='layers' Guid='*'>
+            <Component Id='layers' Guid='a0c45cc1-4211-49db-b961-4886e4d2c72f'>
               <File
                 Id='layers_file'
                 Name='layers.png'
@@ -314,7 +352,7 @@
                 Source='$(var.CargoTargetBinDir)\..\..\ui\images\layers.png'
                 KeyPath='yes' />
             </Component>
-            <Component Id='layers2x' Guid='*'>
+            <Component Id='layers2x' Guid='10dd3517-42e7-4d40-889d-bdd345bc8fb1'>
               <File
                 Id='layers2x_file'
                 Name='layers-2x.png'
@@ -328,7 +366,7 @@
     </Directory>
 
     <DirectoryRef Id="ProgramMenuFolder">
-      <Component Id="ApplicationShortcut" Guid="*">
+      <Component Id="ApplicationShortcut" Guid="b7c0adc3-cfcb-4098-9f7a-1954d86812a0">
         <Shortcut Id="ApplicationStartMenuShortcut"
           Name="DCE Campaign Builder"
           Description="DCE Campaign Builder"
@@ -367,20 +405,27 @@
       <ComponentRef Id='binary6' />
       <ComponentRef Id='binary7' />
       <ComponentRef Id='binary8' />
-      <ComponentRef Id='airfield_blue' />
-      <ComponentRef Id='airfield_red' />
-      <ComponentRef Id='airfield_grey' />
+
+      <ComponentRef Id='svg_airfield_fixed' />
+      <ComponentRef Id='svg_airfield_farp' />
+      <ComponentRef Id='svg_airfield_airstart' />
+      <ComponentRef Id='svg_airfield_ship' />
+
+      <ComponentRef Id='svg_loadout_aar' />
+      <ComponentRef Id='svg_loadout_antiship' />
+      <ComponentRef Id='svg_loadout_awacs' />
+      <ComponentRef Id='svg_loadout_cap' />
+      <ComponentRef Id='svg_loadout_strike' />
+
+      <ComponentRef Id='svg_target_aar' />
+      <ComponentRef Id='svg_target_awacs' />
+      <ComponentRef Id='svg_target_cap' />
+      <ComponentRef Id='svg_target_none' />
+      <ComponentRef Id='svg_target_ship' />
+      <ComponentRef Id='svg_target_strike' />
       <ComponentRef Id='plane_blue' />
       <ComponentRef Id='plane_red' />
       <ComponentRef Id='plane_grey' />
-      <ComponentRef Id='ship_blue' />
-      <ComponentRef Id='ship_red' />
-      <ComponentRef Id='ship_grey' />
-      <ComponentRef Id='target_blue' />
-      <ComponentRef Id='target_red' />
-      <ComponentRef Id='target_grey' />
-      <ComponentRef Id='target_grey_c' />
-      <ComponentRef Id='target_grey_s' />
       <ComponentRef Id='settings_grey' />
       <ComponentRef Id='layers' />
       <ComponentRef Id='layers2x' />

@@ -49,7 +49,7 @@ impl Editable for FighterSweep {
         self._name.to_string()
     }
 
-    fn validate(&self, instance: &DCEInstance) -> ValidationResult {
+    fn validate(&self, _: &DCEInstance) -> ValidationResult {
         let mut errors = Vec::default();
 
         if self._side != "blue" && self._name == "red" {

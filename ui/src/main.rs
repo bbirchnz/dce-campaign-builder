@@ -17,7 +17,7 @@ use dce_lib::{
 use dioxus::prelude::*;
 use dioxus_desktop::{use_window, wry::http::Response, Config};
 use fermi::{use_atom_ref, use_atom_root, use_init_atom_root, AtomRef};
-use log::{trace, warn};
+use log::{info, trace, warn};
 use selectable::Selectable;
 use simple_logger::SimpleLogger;
 
@@ -138,10 +138,17 @@ fn main_body(cx: Scope) -> Element {
     let atom_read = atom_instance.read();
     let instance = atom_read.as_ref().unwrap();
 
+    // states and stuff for the draggable vertical divider
+    let edit_width_state = use_state(cx, || 500_i32);
+    let dragging_state = use_state(cx, || false);
+    let mouse_x_state = use_state(cx, || 0_f64);
+    const MIN_WIDTH: i32 = 300;
+    const MAX_WIDTH: i32 = 1000;
+
     let edit_col_width = if let Selectable::None = selected_form.to_owned() {
-        ""
+        "width: 0px".into()
     } else {
-        "basis-1/4"
+        format!("width: {}px", edit_width_state)
     };
 
     let edit_table_height = if let Selectable::None = selected_form.to_owned() {
@@ -151,7 +158,20 @@ fn main_body(cx: Scope) -> Element {
     };
 
     cx.render(rsx! {
-        div { class: "top-8 flex absolute inset-0 bg-slate-50",
+        div {
+            class: "top-8 flex absolute inset-0 bg-slate-50",
+            onmousemove: |ev| {
+                if *dragging_state.get() {
+                    let current_x = ev.screen_coordinates().x;
+                    let delta = current_x - mouse_x_state.get();
+                    let mut cur_width = *edit_width_state.get();
+                    cur_width += delta.floor() as i32;
+                    cur_width = cur_width.clamp(MIN_WIDTH, MAX_WIDTH);
+                    edit_width_state.set(cur_width);
+                    mouse_x_state.set(current_x);
+                }
+            },
+            onmouseup: |_| { dragging_state.set(false) },
             // selector col
             div { class: "basis-12 shrink-0 min-h-0 bg-sky-500 flex flex-col items-center",
                 popout_menu {
@@ -192,9 +212,7 @@ fn main_body(cx: Scope) -> Element {
                         on_click: |_| select_first_awacs_target(cx)
                     }
                 }
-                popout_menu {
-                    onclick: |_| select_first_cap_loadout(cx),
-                    base_icon_url: "images/loadout_cap.svg",
+                popout_menu { onclick: |_| select_first_cap_loadout(cx), base_icon_url: "images/loadout_cap.svg",
                     icon_button {
                         path: "images/loadout_cap.svg".into(),
                         on_click: |_| select_first_cap_loadout(cx)
@@ -227,7 +245,7 @@ fn main_body(cx: Scope) -> Element {
                 }
             }
             // edit col
-            div { class: "{edit_col_width} min-h-0 bg-sky-100",
+            div { class: "shrink-0 min-h-0 bg-sky-100", style: "{edit_col_width}",
                 match *selected_form {
                     Selectable::Squadron(_) => rsx!{
                         edit_form::<Squadron> { headers: Squadron::get_header(), title: "Edit Squadron".into(), item: selected_form.clone()}
@@ -280,6 +298,16 @@ fn main_body(cx: Scope) -> Element {
                     _ => rsx!{{}}
                 }
             }
+            // divider
+            div {
+                class: "shrink-0 w-1 bg-sky-500 cursor-col-resize",
+                onmousedown: |ev| {
+                    mouse_x_state.set(ev.screen_coordinates().x);
+                    dragging_state.set(true);
+                    info!("mouse down event: {ev:?}");
+                }
+            }
+
             // map and table col
             div { class: "flex-grow flex flex-col",
                 div { class: "flex-grow min-h-0 bg-slate-50 flex flex-col", rsx::map {} }

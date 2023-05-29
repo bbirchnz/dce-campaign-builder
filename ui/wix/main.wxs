@@ -60,7 +60,7 @@
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
 
   <Product
-    Id='*'
+    Id='6bb4fcac-3c1c-4fce-adda-2114ec3a39ac'
     Name='DCE Campaign Builder'
     UpgradeCode='0AEC7FB3-8AB3-4F02-9B25-04382CB07C3D'
     Manufacturer='Ben Birch'
@@ -184,6 +184,14 @@
               Name='zlib1.dll'
               DiskId='1'
               Source='$(var.CargoTargetBinDir)\zlib1.dll'
+              KeyPath='yes' />
+          </Component>
+          <Component Id='db1' Guid='67e1051d-730f-47dc-81df-6f0128fad6c9'>
+            <File
+              Id='db1_file'
+              Name='proj.db'
+              DiskId='1'
+              Source='$(var.CargoTargetBinDir)\..\..\ui\resources\proj.db'
               KeyPath='yes' />
           </Component>
           <Directory Id='images' Name='images'>
@@ -405,6 +413,7 @@
       <ComponentRef Id='binary6' />
       <ComponentRef Id='binary7' />
       <ComponentRef Id='binary8' />
+      <ComponentRef Id='db1' />
 
       <ComponentRef Id='svg_airfield_fixed' />
       <ComponentRef Id='svg_airfield_farp' />

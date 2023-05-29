@@ -5,7 +5,7 @@ use dce_lib::{
     campaign_header::Header,
     db_airbases::{AirStartBase, FixedAirBase, ShipBase},
     editable::Editable,
-    loadouts::{CAPLoadout, StrikeLoadout},
+    loadouts::{AARLoadout, AWACSLoadout, AntiShipLoadout, CAPLoadout, StrikeLoadout},
     mappable::MapPoint,
     oob_air::Squadron,
     targets::{
@@ -192,18 +192,34 @@ fn main_body(cx: Scope) -> Element {
                         on_click: |_| select_first_awacs_target(cx)
                     }
                 }
+                popout_menu {
+                    onclick: |_| select_first_cap_loadout(cx),
+                    base_icon_url: "images/loadout_cap.svg",
+                    icon_button {
+                        path: "images/loadout_cap.svg".into(),
+                        on_click: |_| select_first_cap_loadout(cx)
+                    }
+                    icon_button {
+                        path: "images/loadout_strike.svg".into(),
+                        on_click: |_| select_first_strike_loadout(cx)
+                    }
+                    icon_button {
+                        path: "images/loadout_antiship.svg".into(),
+                        on_click: |_| select_first_antiship_loadout(cx)
+                    }
+                    icon_button {
+                        path: "images/loadout_awacs.svg".into(),
+                        on_click: |_| select_first_awacs_loadout(cx)
+                    }
+                    icon_button {
+                        path: "images/loadout_aar.svg".into(),
+                        on_click: |_| select_first_aar_loadout(cx)
+                    }
+                }
                 icon_button { path: "images/plane_grey.png".into(), on_click: |_| select_first_squadron(cx) }
                 icon_button {
                     path: "images/settings_grey.png".into(),
                     on_click: |_| select_campaign_settings(cx)
-                }
-                icon_button {
-                    path: "images/settings_grey.png".into(),
-                    on_click: |_| select_first_cap_loadout(cx)
-                }
-                icon_button {
-                    path: "images/settings_grey.png".into(),
-                    on_click: |_| select_first_strike_loadout(cx)
                 }
                 icon_button {
                     path: "images/settings_grey.png".into(),
@@ -248,6 +264,15 @@ fn main_body(cx: Scope) -> Element {
                     },
                     Selectable::LoadoutStrike(_) => rsx!{
                         edit_form::<StrikeLoadout> { headers: StrikeLoadout::get_header(), title: "Edit Strike Loadout".into(), item: selected_form.clone()}
+                    },
+                    Selectable::LoadoutAntiship(_) => rsx!{
+                        edit_form::<AntiShipLoadout> { headers: AntiShipLoadout::get_header(), title: "Edit Anti-ship Loadout".into(), item: selected_form.clone()}
+                    },
+                    Selectable::LoadoutAAR(_) => rsx!{
+                        edit_form::<AARLoadout> { headers: AARLoadout::get_header(), title: "Edit Refueling Loadout".into(), item: selected_form.clone()}
+                    },
+                    Selectable::LoadoutAWACS(_) => rsx!{
+                        edit_form::<AWACSLoadout> { headers: AWACSLoadout::get_header(), title: "Edit AWACS Loadout".into(), item: selected_form.clone()}
                     },
                     Selectable::Trigger(_) => rsx!{
                         edit_form::<Trigger> { headers: Trigger::get_header(), title: "Edit Trigger".into(), item: selected_form.clone()}
@@ -296,6 +321,15 @@ fn main_body(cx: Scope) -> Element {
                         },
                         Selectable::LoadoutStrike(_) => rsx! {
                             rsx::table { headers: StrikeLoadout::get_header(), data: instance.loadouts.strike.to_vec() }
+                        },
+                        Selectable::LoadoutAntiship(_) => rsx! {
+                            rsx::table { headers: AntiShipLoadout::get_header(), data: instance.loadouts.antiship.to_vec() }
+                        },
+                        Selectable::LoadoutAAR(_) => rsx! {
+                            rsx::table { headers: AARLoadout::get_header(), data: instance.loadouts.aar.to_vec() }
+                        },
+                        Selectable::LoadoutAWACS(_) => rsx! {
+                            rsx::table { headers: AWACSLoadout::get_header(), data: instance.loadouts.awacs.to_vec() }
                         },
                         Selectable::Trigger(_) => rsx! {
                             rsx::table { headers: Trigger::get_header(), data: instance.triggers.to_vec() }

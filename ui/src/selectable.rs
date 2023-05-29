@@ -1,7 +1,7 @@
 use dce_lib::{
     campaign_header::Header,
     db_airbases::{AirStartBase, FixedAirBase, ShipBase},
-    loadouts::{CAPLoadout, StrikeLoadout},
+    loadouts::{AARLoadout, AWACSLoadout, AntiShipLoadout, CAPLoadout, StrikeLoadout},
     mappable::MapPoint,
     oob_air::Squadron,
     targets::{
@@ -25,6 +25,9 @@ pub enum Selectable {
     CampaignSettings(Header),
     LoadoutCAP(CAPLoadout),
     LoadoutStrike(StrikeLoadout),
+    LoadoutAntiship(AntiShipLoadout),
+    LoadoutAWACS(AWACSLoadout),
+    LoadoutAAR(AARLoadout),
     Trigger(Trigger),
     None,
 }
@@ -320,6 +323,51 @@ impl ToSelectable for StrikeLoadout {
     {
         if let Selectable::LoadoutStrike(strike) = sel {
             return Some(strike.clone());
+        }
+        None
+    }
+}
+impl ToSelectable for AntiShipLoadout {
+    fn to_selectable(&self) -> Selectable {
+        Selectable::LoadoutAntiship(self.to_owned())
+    }
+
+    fn from_selectable(sel: &Selectable) -> Option<Self>
+    where
+        Self: Sized,
+    {
+        if let Selectable::LoadoutAntiship(item) = sel {
+            return Some(item.clone());
+        }
+        None
+    }
+}
+impl ToSelectable for AARLoadout {
+    fn to_selectable(&self) -> Selectable {
+        Selectable::LoadoutAAR(self.to_owned())
+    }
+
+    fn from_selectable(sel: &Selectable) -> Option<Self>
+    where
+        Self: Sized,
+    {
+        if let Selectable::LoadoutAAR(item) = sel {
+            return Some(item.clone());
+        }
+        None
+    }
+}
+impl ToSelectable for AWACSLoadout {
+    fn to_selectable(&self) -> Selectable {
+        Selectable::LoadoutAWACS(self.to_owned())
+    }
+
+    fn from_selectable(sel: &Selectable) -> Option<Self>
+    where
+        Self: Sized,
+    {
+        if let Selectable::LoadoutAWACS(item) = sel {
+            return Some(item.clone());
         }
         None
     }

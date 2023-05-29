@@ -2,12 +2,12 @@ use bevy_reflect::{FromReflect, Reflect};
 use serde::{Deserialize, Serialize};
 
 use crate::loadouts::{
-    AARLoadout, AWACSLoadout, AirframeLoadout, CAPLoadout, Loadouts, StrikeLoadout,
+    AARLoadout, AWACSLoadout, AirframeLoadout, AntiShipLoadout, CAPLoadout, Loadouts, StrikeLoadout,
 };
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
 pub struct LoadoutsInternal {
-    pub antiship: Vec<StrikeLoadout>,
+    pub antiship: Vec<AntiShipLoadout>,
     pub cap: Vec<CAPLoadout>,
     pub strike: Vec<StrikeLoadout>,
     pub awacs: Vec<AWACSLoadout>,

@@ -38,10 +38,45 @@ impl Default for AirframeLoadout {
     }
 }
 
-pub type AntiShipLoadout = StrikeLoadout;
-
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
 pub struct StrikeLoadout {
+    pub minscore: f64,
+    pub support: Support,
+    #[serde(rename = "weaponType")]
+    pub weapon_type: String,
+    pub expend: String,
+    pub day: bool,
+    pub night: bool,
+    #[serde(rename = "adverseWeather")]
+    pub adverse_weather: bool,
+    pub range: f64,
+    pub capability: u32,
+    pub firepower: u32,
+    #[serde(rename = "vCruise")]
+    pub v_cruise: f64,
+    #[serde(rename = "vAttack")]
+    pub v_attack: f64,
+    #[serde(rename = "hCruise")]
+    pub h_cruise: f64,
+    #[serde(rename = "hAttack")]
+    pub h_attack: f64,
+    pub standoff: Option<f64>,
+    #[serde(rename = "tStation")]
+    #[serde(default)]
+    pub t_station: u32,
+    #[serde(rename = "LDSD")]
+    pub ldsd: bool,
+    pub stores: Payload,
+    #[serde(default)]
+    pub self_escort: bool,
+    pub sortie_rate: u32,
+    #[serde(default)]
+    pub _airframe: String,
+    pub _name: String,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
+pub struct AntiShipLoadout {
     pub minscore: f64,
     pub support: Support,
     #[serde(rename = "weaponType")]
@@ -170,6 +205,30 @@ fn common_headers() -> Vec<HeaderField> {
         HeaderField::new("range", "Range (nm)", FieldType::DistanceNM, true),
         HeaderField::new("capability", "Capability", FieldType::Int, true),
         HeaderField::new("firepower", "Firepower", FieldType::Int, true),
+        HeaderField::new(
+            "v_cruise",
+            "Cruise Speed (knots TAS)",
+            FieldType::SpeedKnotsTAS,
+            true,
+        ),
+        HeaderField::new(
+            "h_cruise",
+            "Cruise Altitude (ft)",
+            FieldType::AltitudeFeet,
+            true,
+        ),
+        HeaderField::new(
+            "v_attack",
+            "Attack Speed (knots TAS)",
+            FieldType::SpeedKnotsTAS,
+            true,
+        ),
+        HeaderField::new(
+            "h_attack",
+            "Attack Altitude (ft)",
+            FieldType::AltitudeFeet,
+            true,
+        ),
     ]
 }
 
@@ -270,7 +329,7 @@ impl NewFromMission for Loadouts {
                     "Anti-ship Strike" => {
                         unit_record.anti_ship.as_mut().unwrap().insert(
                             u.name.to_owned(),
-                            StrikeLoadout {
+                            AntiShipLoadout {
                                 minscore: 0.3,
                                 support: Support {
                                     escort: true,
@@ -358,26 +417,12 @@ impl NewFromMission for Loadouts {
 impl Editable for CAPLoadout {
     fn get_header() -> Vec<HeaderField> {
         let mut common = common_headers();
-        common.extend(vec![
-            HeaderField::new(
-                "v_cruise",
-                "Cruise Speed (knots TAS)",
-                FieldType::SpeedKnotsTAS,
-                true,
-            ),
-            HeaderField::new(
-                "h_cruise",
-                "Cruise Altitude (ft)",
-                FieldType::AltitudeFeet,
-                true,
-            ),
-            HeaderField::new(
-                "t_station",
-                "Time on station (min)",
-                FieldType::DurationMin,
-                true,
-            ),
-        ]);
+        common.extend(vec![HeaderField::new(
+            "t_station",
+            "Time on station (min)",
+            FieldType::DurationMin,
+            true,
+        )]);
         common
     }
 
@@ -406,32 +451,100 @@ impl Editable for CAPLoadout {
     }
 }
 
+impl Editable for AARLoadout {
+    fn get_header() -> Vec<HeaderField> {
+        let mut common = common_headers();
+        common.extend(vec![HeaderField::new(
+            "t_station",
+            "Time on station (min)",
+            FieldType::DurationMin,
+            true,
+        )]);
+        common
+    }
+
+    fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {
+        instance
+            .loadouts
+            .aar
+            .iter_mut()
+            .find(|item| item._name == name)
+            .unwrap()
+    }
+
+    fn get_name(&self) -> String {
+        self._name.to_owned()
+    }
+
+    fn validate(&self, _: &DCEInstance) -> ValidationResult {
+        let errors = Vec::default();
+
+        // todo: Probably want to put some limits on speeds/altitudes
+
+        if errors.is_empty() {
+            return ValidationResult::Pass;
+        }
+        ValidationResult::Fail(errors)
+    }
+}
+
+impl Editable for AWACSLoadout {
+    fn get_header() -> Vec<HeaderField> {
+        let mut common = common_headers();
+        common.extend(vec![HeaderField::new(
+            "t_station",
+            "Time on station (min)",
+            FieldType::DurationMin,
+            true,
+        )]);
+        common
+    }
+
+    fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {
+        instance
+            .loadouts
+            .awacs
+            .iter_mut()
+            .find(|item| item._name == name)
+            .unwrap()
+    }
+
+    fn get_name(&self) -> String {
+        self._name.to_owned()
+    }
+
+    fn validate(&self, _: &DCEInstance) -> ValidationResult {
+        let errors = Vec::default();
+
+        // todo: Probably want to put some limits on speeds/altitudes
+
+        if errors.is_empty() {
+            return ValidationResult::Pass;
+        }
+        ValidationResult::Fail(errors)
+    }
+}
+
 impl Editable for StrikeLoadout {
     fn get_header() -> Vec<HeaderField> {
         let mut common = common_headers();
         common.extend(vec![
             HeaderField::new(
-                "v_cruise",
-                "Cruise Speed (knots TAS)",
-                FieldType::SpeedKnotsTAS,
+                "weapon_type",
+                "Weapon Type",
+                FieldType::FixedEnum(vec![
+                    "Bombs".into(),
+                    "Rockets".into(),
+                    "ASM".into(),
+                    "Guided bombs".into(),
+                ]),
                 true,
             ),
+            // attackType: "Dive"
             HeaderField::new(
-                "h_cruise",
-                "Cruise Altitude (ft)",
-                FieldType::AltitudeFeet,
-                true,
-            ),
-            HeaderField::new(
-                "v_attack",
-                "Attack Speed (knots TAS)",
-                FieldType::SpeedKnotsTAS,
-                true,
-            ),
-            HeaderField::new(
-                "h_attack",
-                "Attack Altitude (ft)",
-                FieldType::AltitudeFeet,
+                "expend",
+                "Expend Quantity",
+                FieldType::FixedEnum(vec!["All".into(), "Auto".into()]),
                 true,
             ),
         ]);
@@ -441,6 +554,55 @@ impl Editable for StrikeLoadout {
         instance
             .loadouts
             .strike
+            .iter_mut()
+            .find(|item| item._name == name)
+            .unwrap()
+    }
+
+    fn get_name(&self) -> String {
+        self._name.to_owned()
+    }
+
+    fn validate(&self, _: &DCEInstance) -> ValidationResult {
+        let errors = Vec::default();
+
+        // todo: Probably want to put some limits on speeds/altitudes
+        if errors.is_empty() {
+            return ValidationResult::Pass;
+        }
+        ValidationResult::Fail(errors)
+    }
+}
+
+impl Editable for AntiShipLoadout {
+    fn get_header() -> Vec<HeaderField> {
+        let mut common = common_headers();
+        common.extend(vec![
+            HeaderField::new(
+                "weapon_type",
+                "Weapon Type",
+                FieldType::FixedEnum(vec![
+                    "Bombs".into(),
+                    "Rockets".into(),
+                    "ASM".into(),
+                    "Guided bombs".into(),
+                ]),
+                true,
+            ),
+            // attackType: "Dive"
+            HeaderField::new(
+                "expend",
+                "Expend Quantity",
+                FieldType::FixedEnum(vec!["All".into(), "Auto".into()]),
+                true,
+            ),
+        ]);
+        common
+    }
+    fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {
+        instance
+            .loadouts
+            .antiship
             .iter_mut()
             .find(|item| item._name == name)
             .unwrap()

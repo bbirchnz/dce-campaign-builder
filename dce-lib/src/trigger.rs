@@ -159,6 +159,18 @@ impl Editable for Trigger {
             .find(|item| item._name == name)
             .expect("Item must exist in trigger vec")
     }
+
+    fn can_reset_from_miz() -> bool {
+        true
+    }
+
+    fn reset_all_from_miz<'a>(instance: &'a mut crate::DCEInstance) -> Result<(), anyhow::Error> {
+        let new_triggers = triggers_to_flat(&Triggers::new_from_mission(&instance.mission)?);
+
+        instance.triggers = new_triggers;
+
+        Ok(())
+    }
 }
 
 #[cfg(test)]

@@ -1,3 +1,4 @@
+/// Projections and airbase exports generated using methods from [PyDCS](https://github.com/pydcs/dcs)
 use std::collections::HashMap;
 
 use anyhow::anyhow;
@@ -57,6 +58,34 @@ pub fn dcs_airbases_for_theatre(theatre: &str) -> Result<Airports, anyhow::Error
     match theatre {
         "Falklands" => Ok(Airports::from_lua_str(
             include_str!("..\\lua\\standlist_sa.lua"),
+            "airports",
+        )?),
+        "Caucasus" => Ok(Airports::from_lua_str(
+            include_str!("..\\lua\\standlist_cauc.lua"),
+            "airports",
+        )?),
+        "MarianaIslands" => Ok(Airports::from_lua_str(
+            include_str!("..\\lua\\standlist_mar.lua"),
+            "airports",
+        )?),
+        "Nevada" => Ok(Airports::from_lua_str(
+            include_str!("..\\lua\\standlist_nv.lua"),
+            "airports",
+        )?),
+        "Normandy" => Ok(Airports::from_lua_str(
+            include_str!("..\\lua\\standlist_norm.lua"),
+            "airports",
+        )?),
+        "PersianGulf" => Ok(Airports::from_lua_str(
+            include_str!("..\\lua\\standlist_pg.lua"),
+            "airports",
+        )?),
+        "Syria" => Ok(Airports::from_lua_str(
+            include_str!("..\\lua\\standlist_sy.lua"),
+            "airports",
+        )?),
+        "TheChannel" => Ok(Airports::from_lua_str(
+            include_str!("..\\lua\\standlist_ch.lua"),
             "airports",
         )?),
         _ => Err(anyhow!("Couldn't get DCS airbases for {theatre}")),

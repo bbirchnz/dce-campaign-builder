@@ -3,7 +3,9 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     editable::{Editable, FieldType, HeaderField, ValidationError, ValidationResult},
-    DCEInstance,
+    target_list::TargetList,
+    target_list_internal::TargetListInternal,
+    DCEInstance, NewFromMission,
 };
 
 use super::TargetFirepower;
@@ -85,5 +87,18 @@ impl Editable for AWACS {
             return ValidationResult::Pass;
         }
         ValidationResult::Fail(errors)
+    }
+
+    fn can_reset_from_miz() -> bool {
+        true
+    }
+
+    fn reset_all_from_miz<'a>(instance: &'a mut DCEInstance) -> Result<(), anyhow::Error> {
+        let new_target_list =
+            TargetListInternal::from_target_list(&TargetList::new_from_mission(&instance.mission)?);
+
+        instance.target_list.awacs = new_target_list.awacs;
+
+        Ok(())
     }
 }

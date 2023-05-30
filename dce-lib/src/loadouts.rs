@@ -2,6 +2,7 @@ use std::collections::HashMap;
 
 use crate::{
     editable::{Editable, FieldType, HeaderField, ValidationResult},
+    loadouts_internal::LoadoutsInternal,
     mission::Payload,
     serde_utils::LuaFileBased,
     DCEInstance, NewFromMission,
@@ -449,6 +450,19 @@ impl Editable for CAPLoadout {
         }
         ValidationResult::Fail(errors)
     }
+
+    fn can_reset_from_miz() -> bool {
+        true
+    }
+
+    fn reset_all_from_miz<'a>(instance: &'a mut DCEInstance) -> Result<(), anyhow::Error> {
+        let new_loadouts =
+            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.mission)?);
+
+        instance.loadouts.cap = new_loadouts.cap;
+
+        Ok(())
+    }
 }
 
 impl Editable for AARLoadout {
@@ -486,6 +500,18 @@ impl Editable for AARLoadout {
         }
         ValidationResult::Fail(errors)
     }
+    fn can_reset_from_miz() -> bool {
+        true
+    }
+
+    fn reset_all_from_miz<'a>(instance: &'a mut DCEInstance) -> Result<(), anyhow::Error> {
+        let new_loadouts =
+            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.mission)?);
+
+        instance.loadouts.aar = new_loadouts.aar;
+
+        Ok(())
+    }
 }
 
 impl Editable for AWACSLoadout {
@@ -522,6 +548,19 @@ impl Editable for AWACSLoadout {
             return ValidationResult::Pass;
         }
         ValidationResult::Fail(errors)
+    }
+
+    fn can_reset_from_miz() -> bool {
+        true
+    }
+
+    fn reset_all_from_miz<'a>(instance: &'a mut DCEInstance) -> Result<(), anyhow::Error> {
+        let new_loadouts =
+            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.mission)?);
+
+        instance.loadouts.awacs = new_loadouts.awacs;
+
+        Ok(())
     }
 }
 
@@ -572,6 +611,19 @@ impl Editable for StrikeLoadout {
         }
         ValidationResult::Fail(errors)
     }
+
+    fn can_reset_from_miz() -> bool {
+        true
+    }
+
+    fn reset_all_from_miz<'a>(instance: &'a mut DCEInstance) -> Result<(), anyhow::Error> {
+        let new_loadouts =
+            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.mission)?);
+
+        instance.loadouts.strike = new_loadouts.strike;
+
+        Ok(())
+    }
 }
 
 impl Editable for AntiShipLoadout {
@@ -620,6 +672,19 @@ impl Editable for AntiShipLoadout {
             return ValidationResult::Pass;
         }
         ValidationResult::Fail(errors)
+    }
+
+    fn can_reset_from_miz() -> bool {
+        true
+    }
+
+    fn reset_all_from_miz<'a>(instance: &'a mut DCEInstance) -> Result<(), anyhow::Error> {
+        let new_loadouts =
+            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.mission)?);
+
+        instance.loadouts.antiship = new_loadouts.antiship;
+
+        Ok(())
     }
 }
 

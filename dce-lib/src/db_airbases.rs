@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 use crate::{
+    db_airbases_internal::DBAirbasesInternal,
     dcs_airbase_export::dcs_airbases_for_theatre,
     editable::{Editable, FieldType, HeaderField, ValidationError, ValidationResult},
     serde_utils::LuaFileBased,
@@ -271,6 +272,21 @@ impl Editable for FixedAirBase {
         }
         ValidationResult::Fail(errors)
     }
+
+    fn can_reset_from_miz() -> bool {
+        true
+    }
+
+    fn reset_all_from_miz<'a>(instance: &'a mut DCEInstance) -> Result<(), anyhow::Error> {
+        let new_airbases = DBAirbasesInternal::from_db_airbases(
+            &DBAirbases::new_from_mission(&instance.mission)?,
+            &instance.mission_warehouses,
+        );
+
+        instance.airbases.fixed = new_airbases.fixed;
+
+        Ok(())
+    }
 }
 
 impl Editable for ShipBase {
@@ -319,6 +335,21 @@ impl Editable for ShipBase {
         }
         ValidationResult::Fail(errors)
     }
+
+    fn can_reset_from_miz() -> bool {
+        true
+    }
+
+    fn reset_all_from_miz<'a>(instance: &'a mut DCEInstance) -> Result<(), anyhow::Error> {
+        let new_airbases = DBAirbasesInternal::from_db_airbases(
+            &DBAirbases::new_from_mission(&instance.mission)?,
+            &instance.mission_warehouses,
+        );
+
+        instance.airbases.ship = new_airbases.ship;
+
+        Ok(())
+    }
 }
 
 impl Editable for AirStartBase {
@@ -360,6 +391,21 @@ impl Editable for AirStartBase {
             return ValidationResult::Pass;
         }
         ValidationResult::Fail(errors)
+    }
+
+    fn can_reset_from_miz() -> bool {
+        true
+    }
+
+    fn reset_all_from_miz<'a>(instance: &'a mut DCEInstance) -> Result<(), anyhow::Error> {
+        let new_airbases = DBAirbasesInternal::from_db_airbases(
+            &DBAirbases::new_from_mission(&instance.mission)?,
+            &instance.mission_warehouses,
+        );
+
+        instance.airbases.air_start = new_airbases.air_start;
+
+        Ok(())
     }
 }
 

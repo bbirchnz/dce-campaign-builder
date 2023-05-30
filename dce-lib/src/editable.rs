@@ -6,6 +6,7 @@ use crate::{trigger::Actions, DCEInstance};
 use anyhow::anyhow;
 use chrono::{NaiveTime, Timelike};
 
+/// Common methods for editable entities
 pub trait Editable {
     fn get_name(&self) -> String;
 
@@ -13,6 +14,21 @@ pub trait Editable {
 
     fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self;
     fn get_header() -> Vec<HeaderField>;
+
+    /// Returns bool indicating where this type can be reset to default values.
+    ///
+    /// Use to decide whether to draw buttons for example
+    fn can_reset_from_miz() -> bool {
+        false
+    }
+
+    /// Wipe out the list of entities and recreate them from the mission.
+    ///
+    /// Use when you have updated the base mission (say with new loadouts) and you want to
+    /// bring the changes into the campaign.
+    fn reset_all_from_miz<'a>(_: &'a mut DCEInstance) -> Result<(), anyhow::Error> {
+        Ok(())
+    }
 }
 
 // pub trait TableHeader {

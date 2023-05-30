@@ -154,10 +154,6 @@ impl Mappables for DBAirbasesInternal {
             // result.insert(item._name.to_owned(), AirBase::Farp(item.clone()));
         });
 
-        self.reserve.iter().for_each(|_| {
-            // result.insert(item._name.to_owned(), AirBase::Reserve(item.clone()));
-        });
-
         self.air_start.iter().for_each(|item| {
             result.push(MapPoint::new_from_dcs(
                 item.x,

@@ -16,8 +16,8 @@ use dce_lib::{
 };
 use dioxus::prelude::*;
 use dioxus_desktop::{use_window, wry::http::Response, Config};
-use fermi::{use_atom_ref, use_atom_root, use_init_atom_root, AtomRef};
-use log::{info, trace, warn};
+use fermi::{use_atom_ref, use_atom_root, use_init_atom_root, Atom, AtomRef};
+use log::{trace, warn};
 use selectable::Selectable;
 use simple_logger::SimpleLogger;
 
@@ -34,6 +34,7 @@ mod selectable;
 
 static INSTANCE: AtomRef<Option<DCEInstance>> = |_| None;
 static SELECTED: AtomRef<Selectable> = |_| Selectable::None;
+static INSTANCE_DIRTY: Atom<bool> = |_| false;
 
 struct AppProps {
     rx: async_channel::Receiver<MapPoint>,
@@ -151,6 +152,7 @@ fn main_body(cx: Scope) -> Element {
         format!("width: {}px", edit_width_state)
     };
 
+    // height for the edit table at the bottom
     let edit_table_height = if let Selectable::None = selected_form.to_owned() {
         ""
     } else {
@@ -160,6 +162,7 @@ fn main_body(cx: Scope) -> Element {
     cx.render(rsx! {
         div {
             class: "top-8 flex absolute inset-0 bg-slate-50",
+            // catch movement during edit col width drag
             onmousemove: |ev| {
                 if *dragging_state.get() {
                     let current_x = ev.screen_coordinates().x;
@@ -171,6 +174,7 @@ fn main_body(cx: Scope) -> Element {
                     mouse_x_state.set(current_x);
                 }
             },
+            // catch end of edit col width event
             onmouseup: |_| { dragging_state.set(false) },
             // selector col
             div { class: "basis-12 shrink-0 min-h-0 bg-sky-500 flex flex-col items-center",
@@ -304,7 +308,6 @@ fn main_body(cx: Scope) -> Element {
                 onmousedown: |ev| {
                     mouse_x_state.set(ev.screen_coordinates().x);
                     dragging_state.set(true);
-                    info!("mouse down event: {ev:?}");
                 }
             }
 
@@ -314,53 +317,49 @@ fn main_body(cx: Scope) -> Element {
                 div { class: "{edit_table_height} grow-0 overflow-y-auto",
                     match *selected_table {
                         Selectable::Squadron(_) => rsx!{
-                            rsx::table { headers: Squadron::get_header(), data: instance.oob_air.red.iter().chain(instance.oob_air.blue.iter()).cloned().collect::<Vec<Squadron>>() }
+                            rsx::table { data: instance.oob_air.red.iter().chain(instance.oob_air.blue.iter()).cloned().collect::<Vec<Squadron>>() }
                         },
                         Selectable::TargetStrike(_) => rsx! {
-                            rsx::table { headers: Strike::get_header(), data: instance.target_list.strike.to_vec() }
+                            rsx::table { data: instance.target_list.strike.to_vec() }
                         },
                         Selectable::TargetCAP(_) => rsx! {
-                            rsx::table { headers: CAP::get_header(), data: instance.target_list.cap.to_vec() }
+                            rsx::table {  data: instance.target_list.cap.to_vec() }
                         },
                         Selectable::TargetAntiShip(_) => rsx! {
-                            rsx::table { headers: AntiShipStrike::get_header(), data: instance.target_list.antiship.to_vec() }
+                            rsx::table { data: instance.target_list.antiship.to_vec() }
                         },
                         Selectable::TargetAWACS(_) => rsx! {
-                            rsx::table { headers: AWACS::get_header(), data: instance.target_list.awacs.to_vec() }
+                            rsx::table { data: instance.target_list.awacs.to_vec() }
                         },
                         Selectable::TargetAAR(_) => rsx! {
-                            rsx::table { headers: Refueling::get_header(), data: instance.target_list.refuel.to_vec() }
+                            rsx::table { data: instance.target_list.refuel.to_vec() }
                         },
                         Selectable::FixedAirBase(_) => rsx! {
-                            rsx::table { headers: FixedAirBase::get_header(), data: instance.airbases.fixed.to_vec() }
+                            rsx::table { data: instance.airbases.fixed.to_vec() }
                         },
                         Selectable::ShipAirBase(_) => rsx! {
-                            rsx::table { headers: ShipBase::get_header(), data: instance.airbases.ship.to_vec() }
+                            rsx::table { data: instance.airbases.ship.to_vec() }
                         },
                         Selectable::AirstartBase(_) => rsx! {
-                            rsx::table { headers: AirStartBase::get_header(), data: instance.airbases.air_start.to_vec() }
-                        },
-                        // not the right things to do, but if we don't there will be an empty space:
-                        Selectable::CampaignSettings(_) => rsx! {
-                            rsx::table { headers: FixedAirBase::get_header(), data: instance.airbases.fixed.to_vec() }
+                            rsx::table { data: instance.airbases.air_start.to_vec() }
                         },
                         Selectable::LoadoutCAP(_) => rsx! {
-                            rsx::table { headers: CAPLoadout::get_header(), data: instance.loadouts.cap.to_vec() }
+                            rsx::table { data: instance.loadouts.cap.to_vec() }
                         },
                         Selectable::LoadoutStrike(_) => rsx! {
-                            rsx::table { headers: StrikeLoadout::get_header(), data: instance.loadouts.strike.to_vec() }
+                            rsx::table { data: instance.loadouts.strike.to_vec() }
                         },
                         Selectable::LoadoutAntiship(_) => rsx! {
-                            rsx::table { headers: AntiShipLoadout::get_header(), data: instance.loadouts.antiship.to_vec() }
+                            rsx::table { data: instance.loadouts.antiship.to_vec() }
                         },
                         Selectable::LoadoutAAR(_) => rsx! {
-                            rsx::table { headers: AARLoadout::get_header(), data: instance.loadouts.aar.to_vec() }
+                            rsx::table { data: instance.loadouts.aar.to_vec() }
                         },
                         Selectable::LoadoutAWACS(_) => rsx! {
-                            rsx::table { headers: AWACSLoadout::get_header(), data: instance.loadouts.awacs.to_vec() }
+                            rsx::table { data: instance.loadouts.awacs.to_vec() }
                         },
                         Selectable::Trigger(_) => rsx! {
-                            rsx::table { headers: Trigger::get_header(), data: instance.triggers.to_vec() }
+                            rsx::table { data: instance.triggers.to_vec() }
                         },
                         _ => rsx!{{}}
                         }

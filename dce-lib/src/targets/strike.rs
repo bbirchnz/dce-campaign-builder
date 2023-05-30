@@ -1,6 +1,8 @@
 use crate::{
     editable::{Editable, FieldType, HeaderField, ValidationError, ValidationResult},
-    DCEInstance,
+    target_list::TargetList,
+    target_list_internal::TargetListInternal,
+    DCEInstance, NewFromMission,
 };
 use bevy_reflect::{FromReflect, Reflect};
 use serde::{Deserialize, Serialize};
@@ -130,5 +132,18 @@ impl Editable for Strike {
             return ValidationResult::Pass;
         }
         ValidationResult::Fail(errors)
+    }
+
+    fn can_reset_from_miz() -> bool {
+        true
+    }
+
+    fn reset_all_from_miz<'a>(instance: &'a mut DCEInstance) -> Result<(), anyhow::Error> {
+        let new_target_list =
+            TargetListInternal::from_target_list(&TargetList::new_from_mission(&instance.mission)?);
+
+        instance.target_list.strike = new_target_list.strike;
+
+        Ok(())
     }
 }

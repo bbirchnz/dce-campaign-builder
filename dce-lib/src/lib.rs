@@ -149,6 +149,21 @@ impl DCEInstance {
         Ok(instance)
     }
 
+    /// Replace the mission and mission warehouse tags with new content from the miz file
+    ///
+    /// Use when you've updated the base mission, but don't want to start from scratch
+    ///
+    /// Will not replace any DCE content (targets, squadrons etc)
+    pub fn replace_miz(&mut self, miz_file: &str) -> Result<(), anyhow::Error> {
+        let mission = Mission::from_miz(miz_file)?;
+        let mission_warehouses = Warehouses::from_miz(miz_file)?;
+
+        self.mission = mission;
+        self.mission_warehouses = mission_warehouses;
+
+        Ok(())
+    }
+
     /// Exports the full structure in DCE files and folder structures
     ///
     /// When given the path to DCE's campaigns folder it will create all files

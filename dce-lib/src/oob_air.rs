@@ -238,6 +238,18 @@ impl Editable for Squadron {
         }
         ValidationResult::Fail(errors)
     }
+
+    fn can_reset_from_miz() -> bool {
+        true
+    }
+
+    fn reset_all_from_miz<'a>(instance: &'a mut DCEInstance) -> Result<(), anyhow::Error> {
+        let new_oob_air = OobAir::new_from_mission(&instance.mission)?;
+
+        instance.oob_air = new_oob_air;
+
+        Ok(())
+    }
 }
 
 #[cfg(test)]

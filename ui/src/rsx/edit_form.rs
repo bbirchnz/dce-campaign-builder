@@ -7,13 +7,13 @@ use dce_lib::{
     DCEInstance,
 };
 use dioxus::prelude::*;
-use fermi::{use_atom_ref, UseAtomRef};
+use fermi::{use_atom_ref, use_atom_state, AtomState, UseAtomRef};
 use itertools::Itertools;
 use log::{trace, warn};
 
 use crate::{
     selectable::{Selectable, ToSelectable},
-    INSTANCE, SELECTED,
+    INSTANCE, INSTANCE_DIRTY, SELECTED,
 };
 
 fn fieldtype_to_input(field: &FieldType) -> String {
@@ -65,6 +65,7 @@ where
 {
     trace!("render edit form");
     let atom_instance = use_atom_ref(cx, INSTANCE);
+    let atom_dirty = use_atom_state(cx, INSTANCE_DIRTY);
 
     let item_from_props = T::from_selectable(&cx.props.item).unwrap();
 
@@ -93,6 +94,7 @@ where
             current_item,
             atom_instance,
             atom_selectable,
+            atom_dirty,
             orig_name,
             validation_state,
         );
@@ -131,6 +133,7 @@ where
                                         mut_item,
                                         atom_instance,
                                         use_atom_ref(cx, SELECTED),
+                                        atom_dirty,
                                         orig_name,
                                         validation_state,
                                     );
@@ -143,6 +146,7 @@ where
                                         mut_item,
                                         atom_instance,
                                         use_atom_ref(cx, SELECTED),
+                                        atom_dirty,
                                         orig_name,
                                         validation_state,
                                     );
@@ -343,6 +347,7 @@ fn validate_and_apply<T>(
     current_item: RefMut<T>,
     atom_instance: &UseAtomRef<Option<DCEInstance>>,
     atom_selectable: &UseAtomRef<Selectable>,
+    atom_dirty: &AtomState<bool>,
     orig_name: &UseState<String>,
     validation_state: &UseState<ValidationResult>,
 ) where
@@ -367,7 +372,7 @@ fn validate_and_apply<T>(
             *selectable = item_to_change.to_selectable();
 
             orig_name.modify(|_| current_item.get_name());
-
+            atom_dirty.set(true);
             validation_state.modify(|_| ValidationResult::Pass);
         }
         ValidationResult::Fail(errors) => {

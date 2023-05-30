@@ -1,11 +1,11 @@
 use dce_lib::DCEInstance;
 use dioxus::prelude::*;
 use dioxus_desktop::use_window;
-use fermi::use_atom_ref;
+use fermi::{use_atom_ref, use_atom_state};
 use log::{trace, warn};
 use native_dialog::FileDialog;
 
-use crate::INSTANCE;
+use crate::{INSTANCE, INSTANCE_DIRTY};
 
 #[derive(PartialEq, Props)]
 pub struct MenuBarProps {
@@ -17,6 +17,12 @@ pub fn menu_bar(cx: Scope<MenuBarProps>) -> Element {
     let w = use_window(cx);
     let toggled = use_state(cx, || false);
     let atom_instance = use_atom_ref(cx, INSTANCE);
+    let atom_dirty = use_atom_state(cx, INSTANCE_DIRTY);
+
+    let dirty_state = match atom_dirty.get() {
+        true => " *",
+        false => "",
+    };
 
     let is_loaded = atom_instance.read().is_some();
 
@@ -93,6 +99,7 @@ pub fn menu_bar(cx: Scope<MenuBarProps>) -> Element {
                         warn!("Failed to save instance with error: {}", e)
                     }
                 }
+                atom_dirty.set(false);
             }
             Ok(None) => {}
             Err(e) => warn!("Save file failed with error: {}", e),
@@ -116,6 +123,28 @@ pub fn menu_bar(cx: Scope<MenuBarProps>) -> Element {
         };
     };
 
+    let update_from_miz_click = move |_| {
+        trace!("Update template miz clicked");
+        let result = FileDialog::new()
+            .add_filter("DCS Mission", &["miz"])
+            .show_open_single_file();
+        let mut write_instance = atom_instance.write();
+        let mut_instance = write_instance
+            .as_mut()
+            .expect("Should have a DCE instance loaded");
+
+        match result {
+            Ok(Some(path)) => {
+                if let Err(e) = mut_instance.replace_miz(&path.to_string_lossy()) {
+                    warn!("Failed to parse miz with error: {}", e);
+                }
+                atom_dirty.set(true);
+            }
+            Ok(None) => {}
+            Err(e) => warn!("Open file failed with error: {}", e),
+        };
+    };
+
     cx.render(rsx! {
         div { class: "fixed top-0 left-0 right-0 flex items-stretch bg-sky-500 text-slate-700 h-8 cursor-default select-none menubar",
             icon_button { onclick: new_click, tooltip: "Create new campaign from template DCS miz", "" }
@@ -128,6 +157,11 @@ pub fn menu_bar(cx: Scope<MenuBarProps>) -> Element {
                         ""
                     }
                     icon_button {
+                        onclick: update_from_miz_click,
+                        tooltip: "Load updated template DCS miz. Does not change any DCE content.",
+                        "\u{E8B6}"
+                    }
+                    icon_button {
                         onclick: export_click,
                         tooltip: "Generate zip for DCE_Manager",
                         ""
@@ -137,7 +171,7 @@ pub fn menu_bar(cx: Scope<MenuBarProps>) -> Element {
             div {
                 class: "flex flex-grow items-center justify-center",
                 onmousedown: move |_| w.drag(),
-                div { "{cx.props.title}" }
+                div { "{cx.props.title}{dirty_state}" }
             }
             div {
                 class: "flex items-center font-thin px-4 hover:bg-neutral-300 icon",

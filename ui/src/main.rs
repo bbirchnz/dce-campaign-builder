@@ -1,6 +1,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 #![cfg_attr(debug_assertions, windows_subsystem = "console")]
-
 use dce_lib::{
     campaign_header::Header,
     db_airbases::{AirStartBase, FixedAirBase, ShipBase},
@@ -14,8 +13,18 @@ use dce_lib::{
     trigger::Trigger,
     DCEInstance,
 };
+
 use dioxus::prelude::*;
-use dioxus_desktop::{use_window, wry::http::Response, Config};
+use dioxus_desktop::tao::event::ElementState::Pressed;
+use dioxus_desktop::tao::event::ElementState::Released;
+use dioxus_desktop::tao::keyboard::KeyCode::ControlLeft;
+use dioxus_desktop::tao::keyboard::KeyCode::KeyS;
+use dioxus_desktop::{
+    tao::{self, event::DeviceEvent},
+    use_window,
+    wry::http::Response,
+    Config,
+};
 use fermi::{use_atom_ref, use_atom_root, use_init_atom_root, Atom, AtomRef};
 use log::{trace, warn};
 use selectable::Selectable;
@@ -80,6 +89,29 @@ fn app(cx: Scope<AppProps>) -> Element {
     use_init_atom_root(cx);
 
     let w = use_window(cx);
+
+    let s_state = use_state(cx, || false);
+    let ctrl_state = use_state(cx, || false);
+
+    // setup handler to detect CTRL-S for save
+    w.create_wry_event_handler(move |event, _| {
+        if let tao::event::Event::DeviceEvent { event, .. } = event {
+            if let DeviceEvent::Key(rke) = event {
+                if rke.physical_key == KeyS && rke.state == Pressed {
+                    trace!("s key pressed")
+                }
+                if rke.physical_key == KeyS && rke.state == Released {
+                    trace!("s key released")
+                }
+                if rke.physical_key == ControlLeft && rke.state == Pressed {
+                    trace!("ctrl key pressed")
+                }
+                if rke.physical_key == ControlLeft && rke.state == Released {
+                    trace!("ctrl key released")
+                }
+            }
+        }
+    });
     w.set_title("DCE");
     w.set_decorations(false);
 

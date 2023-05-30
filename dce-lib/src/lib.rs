@@ -114,8 +114,16 @@ impl DCEInstance {
         let mission = Mission::from_miz(miz_file)?;
         let mission_warehouses = Warehouses::from_miz(miz_file)?;
 
+        let airbases = DBAirbasesInternal::from_db_airbases(
+            &DBAirbases::new_from_mission(&mission)?,
+            &mission_warehouses,
+        );
+
         let mut oob_air = OobAir::new_from_mission(&mission)?;
         oob_air.set_player_defaults();
+        // this needs to happen after the conversion to DBAirbasesInternal as thats
+        // where the correct sides are set from the warehouses file
+        oob_air.set_to_closest_base(&mission, &airbases.to_db_airbases())?;
 
         Ok(DCEInstance {
             target_list: TargetListInternal::from_target_list(&TargetList::new_from_mission(
@@ -125,10 +133,7 @@ impl DCEInstance {
             projection: projection_from_theatre(&mission.theatre)?,
             base_path,
             campaign_header: Header::new_from_mission(&mission)?,
-            airbases: DBAirbasesInternal::from_db_airbases(
-                &DBAirbases::new_from_mission(&mission)?,
-                &mission_warehouses,
-            ),
+            airbases,
             triggers: triggers_to_flat(&Triggers::new_from_mission(&mission)?),
             loadouts: LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&mission)?),
             conf_mod: ConfMod::new(),

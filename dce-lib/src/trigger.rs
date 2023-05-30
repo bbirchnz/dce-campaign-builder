@@ -192,8 +192,6 @@ impl Editable for Trigger {
     fn can_add_new() -> bool {
         true
     }
-
-    
 }
 
 #[cfg(test)]

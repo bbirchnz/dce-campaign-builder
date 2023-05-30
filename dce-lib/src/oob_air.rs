@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 use std::{collections::HashMap, iter::repeat};
 
 use crate::{
-    db_airbases::DBAirbases,
+    db_airbases::{AirBase, DBAirbases},
     editable::{Editable, FieldType, HeaderField, ValidationError, ValidationResult},
     mappable::Mappables,
     mission::{Country, Mission},
@@ -70,6 +70,84 @@ impl OobAir {
         self.red.iter_mut().for_each(|s| {
             s.player = false;
         });
+    }
+
+    pub fn set_to_closest_base(
+        &mut self,
+        mission: &Mission,
+        airbases: &DBAirbases,
+    ) -> Result<(), anyhow::Error> {
+        let ship_group = mission.get_ship_groups();
+        let air_group = mission.get_plane_groups();
+
+        let mappable_bases = airbases
+            .iter()
+            .filter_map(|(name, a)| match a {
+                AirBase::Fixed(ab) => Some((name, &ab.side, ab.x, ab.y)),
+                AirBase::Ship(ab) => {
+                    let ship = ship_group
+                        .iter()
+                        .flat_map(|g| g.units.as_slice())
+                        .find(|s| &s.name == &ab.unitname)
+                        .expect("Must be a ship unit that matches airbase");
+                    Some((name, &ab.side, ship.x, ship.y))
+                }
+                AirBase::AirStart(ab) => Some((name, &ab.side, ab.x, ab.y)),
+                _ => None,
+            })
+            .collect::<Vec<_>>();
+
+        let distance = |x1: f64, y1: f64, x2: f64, y2: f64| -> f64 {
+            let delta_x = x1 - x2;
+            let delta_y = y1 - y2;
+            return (delta_x.powi(2) + delta_y.powi(2)).sqrt();
+        };
+
+        // blue
+        for sqn in self.blue.iter_mut() {
+            let sqn_group = air_group
+                .iter()
+                .find(|ag| ag.name == sqn.name)
+                .expect("Air group exists with same name as squadron");
+            let mut bases = mappable_bases
+                .iter()
+                .filter_map(|(name, side, x, y)| {
+                    if *side == "blue" {
+                        return Some((
+                            name.to_string(),
+                            distance(*x, *y, sqn_group.x, sqn_group.y),
+                        ));
+                    }
+                    None
+                })
+                .collect::<Vec<_>>();
+            bases.sort_by(|(_, dist), (_, dist2)| dist.partial_cmp(dist2).expect("no nan"));
+            sqn.base = bases.first().expect("at least one blue base").0.to_owned();
+        }
+
+        // red
+        for sqn in self.red.iter_mut() {
+            let sqn_group = air_group
+                .iter()
+                .find(|ag| ag.name == sqn.name)
+                .expect("Air group exists with same name as squadron");
+            let mut bases = mappable_bases
+                .iter()
+                .filter_map(|(name, side, x, y)| {
+                    if *side == "red" {
+                        return Some((
+                            name.to_string(),
+                            distance(*x, *y, sqn_group.x, sqn_group.y),
+                        ));
+                    }
+                    None
+                })
+                .collect::<Vec<_>>();
+            bases.sort_by(|(_, dist), (_, dist2)| dist.partial_cmp(dist2).expect("no nan"));
+            sqn.base = bases.first().expect("at least one red base").0.to_owned();
+        }
+
+        Ok(())
     }
 }
 
@@ -244,7 +322,9 @@ impl Editable for Squadron {
     }
 
     fn reset_all_from_miz<'a>(instance: &'a mut DCEInstance) -> Result<(), anyhow::Error> {
-        let new_oob_air = OobAir::new_from_mission(&instance.mission)?;
+        let mut new_oob_air = OobAir::new_from_mission(&instance.mission)?;
+        new_oob_air.set_player_defaults();
+        new_oob_air.set_to_closest_base(&instance.mission, &instance.airbases.to_db_airbases())?;
 
         instance.oob_air = new_oob_air;
 

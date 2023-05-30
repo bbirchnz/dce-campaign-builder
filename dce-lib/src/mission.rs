@@ -260,6 +260,20 @@ impl Mission {
         result
     }
 
+    pub fn get_plane_groups(&self) -> Vec<&PlaneGroup> {
+        let result = self
+            .coalition
+            .blue
+            .countries
+            .iter()
+            .chain(self.coalition.red.countries.iter())
+            .filter_map(|c| c.plane.as_ref())
+            .flat_map(|i| i.groups.as_slice())
+            .collect::<Vec<_>>();
+
+        result
+    }
+
     pub fn get_ship_groups(&self) -> Vec<&ShipGroup> {
         let result = self
             .coalition

@@ -463,6 +463,17 @@ impl Editable for CAPLoadout {
 
         Ok(())
     }
+
+    fn delete_by_name(instance: &mut DCEInstance, name: &str) -> Result<(), anyhow::Error> {
+        let container = &mut instance.loadouts.cap;
+
+        if let Some(index) = container.iter().position(|i| i._name == name) {
+            container.remove(index);
+            return Ok(());
+        }
+
+        Err(anyhow!("Didn't find {}", name))
+    }
 }
 
 impl Editable for AARLoadout {
@@ -511,6 +522,17 @@ impl Editable for AARLoadout {
         instance.loadouts.aar = new_loadouts.aar;
 
         Ok(())
+    }
+
+    fn delete_by_name(instance: &mut DCEInstance, name: &str) -> Result<(), anyhow::Error> {
+        let container = &mut instance.loadouts.aar;
+
+        if let Some(index) = container.iter().position(|i| i._name == name) {
+            container.remove(index);
+            return Ok(());
+        }
+
+        Err(anyhow!("Didn't find {}", name))
     }
 }
 
@@ -561,6 +583,17 @@ impl Editable for AWACSLoadout {
         instance.loadouts.awacs = new_loadouts.awacs;
 
         Ok(())
+    }
+
+    fn delete_by_name(instance: &mut DCEInstance, name: &str) -> Result<(), anyhow::Error> {
+        let container = &mut instance.loadouts.awacs;
+
+        if let Some(index) = container.iter().position(|i| i._name == name) {
+            container.remove(index);
+            return Ok(());
+        }
+
+        Err(anyhow!("Didn't find {}", name))
     }
 }
 
@@ -624,6 +657,16 @@ impl Editable for StrikeLoadout {
 
         Ok(())
     }
+    fn delete_by_name(instance: &mut DCEInstance, name: &str) -> Result<(), anyhow::Error> {
+        let container = &mut instance.loadouts.strike;
+
+        if let Some(index) = container.iter().position(|i| i._name == name) {
+            container.remove(index);
+            return Ok(());
+        }
+
+        Err(anyhow!("Didn't find {}", name))
+    }
 }
 
 impl Editable for AntiShipLoadout {
@@ -685,6 +728,17 @@ impl Editable for AntiShipLoadout {
         instance.loadouts.antiship = new_loadouts.antiship;
 
         Ok(())
+    }
+
+    fn delete_by_name(instance: &mut DCEInstance, name: &str) -> Result<(), anyhow::Error> {
+        let container = &mut instance.loadouts.antiship;
+
+        if let Some(index) = container.iter().position(|i| i._name == name) {
+            container.remove(index);
+            return Ok(());
+        }
+
+        Err(anyhow!("Didn't find {}", name))
     }
 }
 

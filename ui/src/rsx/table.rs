@@ -43,19 +43,41 @@ where
                     for h in headers.iter() {
                         th { class: "p-1 border-slate-300 font-normal", "{h.display.to_owned()}" }
                     }
+                    if T::can_delete() {
+                        rsx!{
+                            th { class: "p-1 border-slate-300 font-normal w-10", }
+                        }
+                    }
                 }
             }
             tbody {
-                for squad in cx.props.data.iter() {
+                for item in cx.props.data.iter() {
                     tr {
                         class: "divide-x hover:bg-slate-200",
                         onclick: move |_| {
                             let mut selected = use_atom_ref(cx, SELECTED).write();
-                            info!("Got row {:?}", squad);
-                            *selected = squad.to_selectable();
+                            info!("Got row {:?}", item);
+                            *selected = item.to_selectable();
                         },
                         for h in headers.iter() {
-                            td { class: "p-1 border-slate-300", "{h.get_value_string(squad).to_owned()}" }
+                            td { class: "p-1 border-slate-300", "{h.get_value_string(item).to_owned()}" }
+                        }
+                        if T::can_delete() {
+                            rsx!{
+                                td {
+                                    class: "p-1 border-slate-300",
+                                    button {
+                                        class: "icon w-full",
+                                        onclick: move |_| {
+                                            let mut instance = use_atom_ref(cx, INSTANCE).write();
+                                            T::delete_by_name(instance.as_mut().unwrap(), item.get_name().as_str()).expect("Item should exist and be deleted");
+                                            // mark the instance dirty
+                                            use_atom_state(cx, INSTANCE_DIRTY).set(true);
+                                        },
+                                        "\u{E74D}"
+                                    }
+                                }
+                            }
                         }
                     }
                 }

@@ -1,3 +1,4 @@
+use anyhow::anyhow;
 use bevy_reflect::{FromReflect, Reflect};
 use serde::{Deserialize, Serialize};
 
@@ -140,6 +141,10 @@ impl Editable for Header {
             return ValidationResult::Pass;
         }
         ValidationResult::Fail(errors)
+    }
+
+    fn delete_by_name(_: &mut DCEInstance, _: &str) -> Result<(), anyhow::Error> {
+        Err(anyhow!("Can't delete the campaign settings!"))
     }
 }
 

@@ -26,8 +26,18 @@ pub trait Editable {
     ///
     /// Use when you have updated the base mission (say with new loadouts) and you want to
     /// bring the changes into the campaign.
-    fn reset_all_from_miz<'a>(_: &'a mut DCEInstance) -> Result<(), anyhow::Error> {
+    fn reset_all_from_miz(_: &mut DCEInstance) -> Result<(), anyhow::Error> {
         Ok(())
+    }
+
+    fn delete_by_name(instance: &mut DCEInstance, name: &str) -> Result<(), anyhow::Error>;
+
+    fn can_delete() -> bool {
+        false
+    }
+
+    fn can_add_new() -> bool {
+        false
     }
 }
 

@@ -8,8 +8,10 @@ use crate::{
     editable::{Editable, FieldType, HeaderField, ValidationError, ValidationResult},
     lua_utils::load_trigger_mocks,
     serde_utils::LuaFileBased,
-    NewFromMission,
+    DCEInstance, NewFromMission,
 };
+
+use anyhow::anyhow;
 
 /// A Hashmap string/trigger as serialized to lua
 pub type Triggers = HashMap<String, Trigger>;
@@ -164,13 +166,34 @@ impl Editable for Trigger {
         true
     }
 
-    fn reset_all_from_miz<'a>(instance: &'a mut crate::DCEInstance) -> Result<(), anyhow::Error> {
+    fn reset_all_from_miz(instance: &mut crate::DCEInstance) -> Result<(), anyhow::Error> {
         let new_triggers = triggers_to_flat(&Triggers::new_from_mission(&instance.mission)?);
 
         instance.triggers = new_triggers;
 
         Ok(())
     }
+
+    fn delete_by_name(instance: &mut DCEInstance, name: &str) -> Result<(), anyhow::Error> {
+        let container = &mut instance.triggers;
+
+        if let Some(index) = container.iter().position(|i| i._name == name) {
+            container.remove(index);
+            return Ok(());
+        }
+
+        Err(anyhow!("Didn't find {}", name))
+    }
+
+    fn can_delete() -> bool {
+        true
+    }
+
+    fn can_add_new() -> bool {
+        true
+    }
+
+    
 }
 
 #[cfg(test)]

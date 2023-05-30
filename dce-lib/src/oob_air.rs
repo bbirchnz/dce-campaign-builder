@@ -250,6 +250,19 @@ impl Editable for Squadron {
 
         Ok(())
     }
+
+    fn delete_by_name(instance: &mut DCEInstance, name: &str) -> Result<(), anyhow::Error> {
+        if let Some(index) = instance.oob_air.blue.iter().position(|i| i.name == name) {
+            instance.oob_air.blue.remove(index);
+            return Ok(());
+        }
+        if let Some(index) = instance.oob_air.red.iter().position(|i| i.name == name) {
+            instance.oob_air.red.remove(index);
+            return Ok(());
+        }
+
+        Err(anyhow!("Didn't find {}", name))
+    }
 }
 
 #[cfg(test)]

@@ -7,6 +7,7 @@ use crate::{
     target_list_internal::TargetListInternal,
     DCEInstance, NewFromMission,
 };
+use anyhow::anyhow;
 
 use super::TargetFirepower;
 
@@ -102,5 +103,16 @@ impl Editable for CAP {
         instance.target_list.cap = new_target_list.cap;
 
         Ok(())
+    }
+
+    fn delete_by_name(instance: &mut DCEInstance, name: &str) -> Result<(), anyhow::Error> {
+        let container = &mut instance.target_list.cap;
+
+        if let Some(index) = container.iter().position(|i| i._name == name) {
+            container.remove(index);
+            return Ok(());
+        }
+
+        Err(anyhow!("Didn't find {}", name))
     }
 }

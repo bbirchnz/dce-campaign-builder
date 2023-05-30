@@ -11,6 +11,7 @@ use crate::{
     DCEInstance, NewFromMission,
 };
 
+use anyhow::anyhow;
 pub type DBAirbases = HashMap<String, AirBase>;
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
@@ -287,6 +288,17 @@ impl Editable for FixedAirBase {
 
         Ok(())
     }
+
+    fn delete_by_name(instance: &mut DCEInstance, name: &str) -> Result<(), anyhow::Error> {
+        let container = &mut instance.airbases.fixed;
+
+        if let Some(index) = container.iter().position(|i| i._name == name) {
+            container.remove(index);
+            return Ok(());
+        }
+
+        Err(anyhow!("Didn't find {}", name))
+    }
 }
 
 impl Editable for ShipBase {
@@ -350,6 +362,17 @@ impl Editable for ShipBase {
 
         Ok(())
     }
+
+    fn delete_by_name(instance: &mut DCEInstance, name: &str) -> Result<(), anyhow::Error> {
+        let container = &mut instance.airbases.ship;
+
+        if let Some(index) = container.iter().position(|i| i._name == name) {
+            container.remove(index);
+            return Ok(());
+        }
+
+        Err(anyhow!("Didn't find {}", name))
+    }
 }
 
 impl Editable for AirStartBase {
@@ -406,6 +429,17 @@ impl Editable for AirStartBase {
         instance.airbases.air_start = new_airbases.air_start;
 
         Ok(())
+    }
+
+    fn delete_by_name(instance: &mut DCEInstance, name: &str) -> Result<(), anyhow::Error> {
+        let container = &mut instance.airbases.air_start;
+
+        if let Some(index) = container.iter().position(|i| i._name == name) {
+            container.remove(index);
+            return Ok(());
+        }
+
+        Err(anyhow!("Didn't find {}", name))
     }
 }
 

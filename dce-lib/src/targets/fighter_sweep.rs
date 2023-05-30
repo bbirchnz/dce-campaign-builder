@@ -1,14 +1,14 @@
 use bevy_reflect::{FromReflect, Reflect};
 use serde::{Deserialize, Serialize};
 
+use super::TargetFirepower;
 use crate::{
     editable::{Editable, FieldType, HeaderField, ValidationError, ValidationResult},
     target_list::TargetList,
     target_list_internal::TargetListInternal,
     DCEInstance, NewFromMission,
 };
-
-use super::TargetFirepower;
+use anyhow::anyhow;
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
 pub struct FighterSweep {
@@ -78,5 +78,16 @@ impl Editable for FighterSweep {
         instance.target_list.fighter_sweep = new_target_list.fighter_sweep;
 
         Ok(())
+    }
+
+    fn delete_by_name(instance: &mut DCEInstance, name: &str) -> Result<(), anyhow::Error> {
+        let container = &mut instance.target_list.fighter_sweep;
+
+        if let Some(index) = container.iter().position(|i| i._name == name) {
+            container.remove(index);
+            return Ok(());
+        }
+
+        Err(anyhow!("Didn't find {}", name))
     }
 }

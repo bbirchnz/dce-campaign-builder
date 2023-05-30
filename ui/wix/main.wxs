@@ -60,7 +60,7 @@
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
 
   <Product
-    Id='6bb4fcac-3c1c-4fce-adda-2114ec3a39ac'
+    Id='*'
     Name='DCE Campaign Builder'
     UpgradeCode='0AEC7FB3-8AB3-4F02-9B25-04382CB07C3D'
     Manufacturer='Ben Birch'
@@ -78,7 +78,7 @@
       SummaryCodepage='1252'
     />
 
-    <MajorUpgrade
+    <MajorUpgrade AllowSameVersionUpgrades="yes"
       Schedule='afterInstallInitialize'
       DowngradeErrorMessage='A newer version of [ProductName] is already installed. Setup will now exit.' />
 
@@ -319,28 +319,13 @@
                 KeyPath='yes' />
             </Component>
 
-            <Component Id='plane_blue' Guid='d2f8485c-9efc-4e23-a3e8-f46ece87c7aa'>
+            <!-- Plane SVG -->
+            <Component Id='svg_plane' Guid='0dfd186a-5e2d-435b-a69e-e1026540ce6b'>
               <File
-                Id='plane_blue_file'
-                Name='plane_blue.png'
+                Id='svg_plane_file'
+                Name='plane.svg'
                 DiskId='1'
-                Source='$(var.CargoTargetBinDir)\..\..\ui\images\plane_blue.png'
-                KeyPath='yes' />
-            </Component>
-            <Component Id='plane_red' Guid='0e59a80f-513d-4bc9-86a5-0b05f95f6f30'>
-              <File
-                Id='plane_red_file'
-                Name='plane_red.png'
-                DiskId='1'
-                Source='$(var.CargoTargetBinDir)\..\..\ui\images\plane_red.png'
-                KeyPath='yes' />
-            </Component>
-            <Component Id='plane_grey' Guid='80b68ba6-605c-43bb-b7dd-11e66708bd6e'>
-              <File
-                Id='plane_grey_file'
-                Name='plane_grey.png'
-                DiskId='1'
-                Source='$(var.CargoTargetBinDir)\..\..\ui\images\plane_grey.png'
+                Source='$(var.CargoTargetBinDir)\..\..\ui\images\plane.svg'
                 KeyPath='yes' />
             </Component>
 
@@ -432,9 +417,7 @@
       <ComponentRef Id='svg_target_none' />
       <ComponentRef Id='svg_target_ship' />
       <ComponentRef Id='svg_target_strike' />
-      <ComponentRef Id='plane_blue' />
-      <ComponentRef Id='plane_red' />
-      <ComponentRef Id='plane_grey' />
+      <ComponentRef Id='svg_plane' />
       <ComponentRef Id='settings_grey' />
       <ComponentRef Id='layers' />
       <ComponentRef Id='layers2x' />

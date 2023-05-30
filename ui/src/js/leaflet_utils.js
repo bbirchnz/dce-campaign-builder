@@ -81,19 +81,19 @@ function draw_map(div_id, markers) {
       tooltipAnchor: [16, 0],
     });
 
-    map.__blue_plane_icon = L.icon({
-      iconUrl: "/images/plane_blue.png",
+    map.__blue_plane_icon = L.divIcon({
+      html: "<img src='/images/plane.svg'/>",
+      className: "svg_blue marker_no_bg",
       iconSize: [32, 32],
       iconAnchor: [16, 16],
-      popupAnchor: [0, -16],
       tooltipAnchor: [16, 0],
     });
 
-    map.__red_plane_icon = L.icon({
-      iconUrl: "/images/plane_red.png",
+    map.__red_plane_icon = L.divIcon({
+      html: "<img src='/images/plane.svg'/>",
+      className: "svg_red marker_no_bg",
       iconSize: [32, 32],
       iconAnchor: [16, 16],
-      popupAnchor: [0, -16],
       tooltipAnchor: [16, 0],
     });
 

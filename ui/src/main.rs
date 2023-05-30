@@ -238,7 +238,7 @@ fn main_body(cx: Scope) -> Element {
                         on_click: |_| select_first_aar_loadout(cx)
                     }
                 }
-                icon_button { path: "images/plane_grey.png".into(), on_click: |_| select_first_squadron(cx) }
+                icon_button { path: "images/plane.svg".into(), on_click: |_| select_first_squadron(cx) }
                 icon_button {
                     path: "images/settings_grey.png".into(),
                     on_click: |_| select_campaign_settings(cx)

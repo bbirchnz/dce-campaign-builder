@@ -156,7 +156,14 @@ fn app(cx: Scope<AppProps>) -> Element {
             }
             else {
                 rsx! {
-                    "Help"
+                    div { 
+                        class: "top-8 flex absolute inset-0 bg-slate-50 items-center justify-center",
+                        div {
+                            class: "",
+                            "Click ", span{ class:"icon", "" }, 
+                                " to start a new campaign from a DCS mission file"
+                        }
+                    }
                 }
             }
         }

@@ -60,6 +60,8 @@ pub struct FixedAirBase {
     limited_park_number: u16,
     #[serde(default)]
     pub _name: String,
+    #[serde(default)]
+    pub inactive: bool,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
@@ -73,6 +75,8 @@ pub struct ShipBase {
     pub limited_park_number: u32,
     #[serde(default)]
     pub _name: String,
+    #[serde(default)]
+    pub inactive: bool,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
@@ -90,6 +94,8 @@ pub struct FarpBase {
     divert: bool,
     #[serde(default)]
     pub _name: String,
+    #[serde(default)]
+    pub inactive: bool,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
@@ -161,7 +167,8 @@ impl NewFromMission for DBAirbases {
                         tacan: None,
                         ils: None,
                         limited_park_number: dcs_ab.stands.len() as u16,
-                        _name: "".into(),
+                        _name: dcs_ab.frequencies.name.to_owned(),
+                        inactive: false,
                     }),
                 )
             })
@@ -188,7 +195,8 @@ impl NewFromMission for DBAirbases {
                         atc_frequency: None,
                         side: "blue".into(),
                         limited_park_number: 4,
-                        _name: "".into(),
+                        _name: s.name.to_owned(),
+                        inactive: false,
                     }),
                 ))
             })
@@ -209,7 +217,7 @@ impl NewFromMission for DBAirbases {
                     atc_frequency: "".into(),
                     base_air_start: true,
                     side: parts[0].to_lowercase(),
-                    _name: "".into(),
+                    _name: parts[2].to_owned(),
                 }),
             ))
         });
@@ -243,6 +251,7 @@ impl Editable for FixedAirBase {
                 FieldType::DurationMin,
                 true,
             ),
+            HeaderField::new("inactive", "Inactive", FieldType::Bool, true),
         ]
     }
     fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {
@@ -317,6 +326,7 @@ impl Editable for ShipBase {
                 FieldType::Int,
                 true,
             ),
+            HeaderField::new("inactive", "Inactive", FieldType::Bool, true),
         ]
     }
     fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {
@@ -385,6 +395,7 @@ impl Editable for AirStartBase {
                 FieldType::FixedEnum(vec!["blue".into(), "red".into(), "neutral".into()]),
                 false,
             ),
+            HeaderField::new("inactive", "Inactive", FieldType::Bool, true),
         ]
     }
     fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {

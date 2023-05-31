@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 
 use bevy_reflect::{FromReflect, Reflect};
+use itertools::Itertools;
 use mlua::Lua;
 use serde::{Deserialize, Serialize};
 
@@ -51,6 +52,18 @@ pub struct Trigger {
     pub _name: String,
 }
 
+impl Trigger {
+    pub fn new(name: &str, condition: &str, actions: &[&str], active: bool, once: bool) -> Trigger {
+        Trigger {
+            active,
+            once,
+            condition: condition.into(),
+            action: Actions::Many(actions.iter().map(|s| s.to_string()).collect_vec()),
+            _name: name.into(),
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
 #[serde(untagged)]
 pub enum Actions {
@@ -92,16 +105,84 @@ impl NewFromMission for Triggers {
     where
         Self: Sized,
     {
-        Ok(HashMap::from([(
-            "Campaign Briefing".into(),
-            Trigger {
-                active: true,
-                once: true,
-                condition: "true".into(),
-                action: Actions::One("Action.Text(\"Welcome to your new campaign\")".into()),
-                _name: "Campaign Briefing".into(),
-            },
-        )]))
+        Ok(HashMap::from([
+            (
+                "Campaign Briefing".into(),
+                Trigger::new(
+                    "Campaign Briefing",
+                    "true",
+                    &["Action.Text(\"Welcome to your new campaign\")"],
+                    true,
+                    true,
+                ),
+            ),
+            (
+                "Campaign Victory".into(),
+                Trigger::new(
+                    "Campaign Victory",
+                    "GroundTarget[\"blue\"].percent < 40",
+                    &[
+                        "Action.CampaignEnd(\"win\")",
+                        "Action.Text(\"After heavy losses the enemy is waving the white flag!\")",
+                    ],
+                    true,
+                    true,
+                ),
+            ),
+            (
+                "Campaign Loss".into(),
+                Trigger::new(
+                    "Campaign Loss",
+                    "GroundTarget[\"red\"].percent < 20",
+                    &[
+                        "Action.CampaignEnd(\"loss\")",
+                        "Action.Text(\"We've suffered heavy losses, its all over!\")",
+                    ],
+                    true,
+                    true,
+                ),
+            ),
+            (
+                "Blue Ground Target Briefing Intel".into(),
+                Trigger::new(
+                    "Blue Ground Target Briefing Intel",
+                    "true",
+                    &["Action.AddGroundTargetIntel(\"blue\")"],
+                    true,
+                    false,
+                ),
+            ),
+            (
+                "Red Ground Target Briefing Intel".into(),
+                Trigger::new(
+                    "Red Ground Target Briefing Intel",
+                    "true",
+                    &["Action.AddGroundTargetIntel(\"red\")"],
+                    true,
+                    false,
+                ),
+            ),
+            (
+                "Ground Unit Repair".into(),
+                Trigger::new(
+                    "Ground Unit Repair",
+                    "true",
+                    &["Action.GroundUnitRepair()"],
+                    true,
+                    false,
+                ),
+            ),
+            (
+                "Air Unit Repair".into(),
+                Trigger::new(
+                    "Air Unit Repair",
+                    "true",
+                    &["Action.AirUnitRepair()"],
+                    true,
+                    false,
+                ),
+            ),
+        ]))
     }
 }
 

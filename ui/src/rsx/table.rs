@@ -19,6 +19,7 @@ where
     let headers = T::get_header();
     let atom_instance = use_atom_ref(cx, INSTANCE);
     let atom_dirty = use_atom_state(cx, INSTANCE_DIRTY);
+    let atom_selected = use_atom_ref(cx, SELECTED);
 
     cx.render(rsx! {
         if T::can_reset_from_miz() {
@@ -55,7 +56,7 @@ where
                     tr {
                         class: "divide-x hover:bg-slate-200",
                         onclick: move |_| {
-                            let mut selected = use_atom_ref(cx, SELECTED).write();
+                            let mut selected = atom_selected.write();
                             info!("Got row {:?}", item);
                             *selected = item.to_selectable();
                         },
@@ -69,7 +70,7 @@ where
                                     button {
                                         class: "icon w-full",
                                         onclick: move |_| {
-                                            let mut instance = use_atom_ref(cx, INSTANCE).write();
+                                            let mut instance = atom_instance.write();
                                             T::delete_by_name(instance.as_mut().unwrap(), item.get_name().as_str()).expect("Item should exist and be deleted");
                                             // mark the instance dirty
                                             use_atom_state(cx, INSTANCE_DIRTY).set(true);

@@ -156,7 +156,7 @@ fn app(cx: Scope<AppProps>) -> Element {
             }
             else {
                 rsx! {
-                    div { 
+                    div {
                         class: "top-8 flex absolute inset-0 bg-slate-50 items-center justify-center",
                         div {
                             class: "",

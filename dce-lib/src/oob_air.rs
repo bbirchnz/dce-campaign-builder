@@ -88,7 +88,7 @@ impl OobAir {
                     let ship = ship_group
                         .iter()
                         .flat_map(|g| g.units.as_slice())
-                        .find(|s| &s.name == &ab.unitname)
+                        .find(|s| s.name == ab.unitname)
                         .expect("Must be a ship unit that matches airbase");
                     Some((name, &ab.side, ship.x, ship.y))
                 }
@@ -100,7 +100,7 @@ impl OobAir {
         let distance = |x1: f64, y1: f64, x2: f64, y2: f64| -> f64 {
             let delta_x = x1 - x2;
             let delta_y = y1 - y2;
-            return (delta_x.powi(2) + delta_y.powi(2)).sqrt();
+            (delta_x.powi(2) + delta_y.powi(2)).sqrt()
         };
 
         // blue
@@ -321,7 +321,7 @@ impl Editable for Squadron {
         true
     }
 
-    fn reset_all_from_miz<'a>(instance: &'a mut DCEInstance) -> Result<(), anyhow::Error> {
+    fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
         let mut new_oob_air = OobAir::new_from_mission(&instance.mission)?;
         new_oob_air.set_player_defaults();
         new_oob_air.set_to_closest_base(&instance.mission, &instance.airbases.to_db_airbases())?;

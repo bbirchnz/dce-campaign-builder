@@ -18,7 +18,7 @@ pub struct Strike {
     pub inactive: bool,
     pub firepower: TargetFirepower,
     #[serde(default = "default_class")]
-    pub class: String,
+    pub class: Option<String>,
     #[serde(rename = "name")]
     pub class_template: Option<String>,
     pub elements: Option<Vec<StrikeElement>>,
@@ -32,8 +32,8 @@ pub struct Strike {
     pub _firepower_max: u32,
 }
 
-fn default_class() -> String {
-    "static".to_string()
+fn default_class() -> Option<String> {
+    Some("static".to_string())
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
@@ -89,8 +89,8 @@ impl Editable for Strike {
             ));
         }
         if let Some(vg_name) = self.class_template.clone() {
-            match self.class.as_str() {
-                "vehicle" => {
+            match self.class.as_ref() {
+                Some(class) if class.as_str() == "vehicle" => {
                     if !instance
                         .mission
                         .get_vehicle_groups()
@@ -104,7 +104,7 @@ impl Editable for Strike {
                         ));
                     }
                 }
-                "ship" => {
+                Some(class) if class.as_str() == "ship" => {
                     if !instance
                         .mission
                         .get_ship_groups()
@@ -119,11 +119,14 @@ impl Editable for Strike {
                     }
                 }
                 _ => {
-                    errors.push(ValidationError::new(
-                        "class",
-                        "Target Class",
-                        "Target class must be vehicle or ship",
-                    ));
+                    // only an error if elements is None
+                    if self.elements.is_none() {
+                        errors.push(ValidationError::new(
+                            "class",
+                            "Target Class",
+                            "Target class must be vehicle or ship",
+                        ));
+                    }
                 }
             }
         }
@@ -138,7 +141,7 @@ impl Editable for Strike {
         true
     }
 
-    fn reset_all_from_miz<'a>(instance: &'a mut DCEInstance) -> Result<(), anyhow::Error> {
+    fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
         let new_target_list =
             TargetListInternal::from_target_list(&TargetList::new_from_mission(&instance.mission)?);
 

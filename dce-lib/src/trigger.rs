@@ -136,7 +136,7 @@ impl NewFromMission for Triggers {
                     "GroundTarget[\"red\"].percent < 20",
                     &[
                         "Action.CampaignEnd(\"loss\")",
-                        "Action.Text(\"We've suffered heavy losses, its all over!\")",
+                        "Action.Text(\"We have suffered heavy losses, its all over!\")",
                     ],
                     true,
                     true,

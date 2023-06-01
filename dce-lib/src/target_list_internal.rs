@@ -5,8 +5,13 @@ use crate::{
     projections::{convert_dcs_lat_lon, offset},
     target_list::{self, Target, TargetList},
     targets::{
-        anti_ship::AntiShipStrike, awacs::AWACS, cap::CAP, fighter_sweep::FighterSweep,
-        intercept::Intercept, refueling::Refueling, strike::Strike,
+        anti_ship::AntiShipStrike,
+        awacs::AWACS,
+        cap::CAP,
+        fighter_sweep::FighterSweep,
+        intercept::Intercept,
+        refueling::Refueling,
+        strike::{Strike, StrikeElement},
     },
 };
 use anyhow::anyhow;
@@ -225,6 +230,9 @@ impl Mappables for TargetListInternal {
         proj: &Proj,
     ) -> Vec<crate::mappable::MapPoint> {
         let mut map_points = Vec::default();
+        let all_vehicle_groups = instance.mission.get_vehicle_groups();
+        let all_static_groups = instance.mission.get_static_groups();
+        let all_ship_groups = instance.mission.get_ship_groups();
 
         self.cap.iter().for_each(|cap| {
             let zone = instance.mission.get_zone_by_name(&cap.ref_point);
@@ -317,10 +325,8 @@ impl Mappables for TargetListInternal {
         });
 
         self.strike.iter().for_each(|strike| {
-            if strike.class == "vehicle" && strike.class_template.is_some() {
-                let all_groups = instance.mission.get_vehicle_groups();
-
-                let groups = all_groups
+            if strike.class == Some("vehicle".to_string()) && strike.class_template.is_some() {
+                let groups = all_vehicle_groups
                     .iter()
                     .filter(|g| &g.name == strike.class_template.as_ref().unwrap())
                     .collect::<Vec<_>>();
@@ -336,13 +342,44 @@ impl Mappables for TargetListInternal {
                     ));
                 }
             }
+            if strike.class == Some("static".to_string()) && strike.elements.is_some() {
+                for el in strike.elements.as_ref().unwrap().iter() {
+                    if let StrikeElement::NamedStatic(named) = el {
+                        let sg = all_static_groups
+                            .iter()
+                            .find(|i| i.name == named.name)
+                            .expect("Must be a static group with the same name");
+                        map_points.push(MapPoint::new_from_dcs(
+                            sg.x,
+                            sg.y,
+                            &strike.text,
+                            &strike._side,
+                            "TargetStrike",
+                            proj,
+                        ))
+                    }
+                }
+            }
+            // for some reason strikes on fixed coords have class = None
+            if strike.class == None && strike.elements.is_some() {
+                for el in strike.elements.as_ref().unwrap().iter() {
+                    if let StrikeElement::FixedCoord(fixed) = el {
+                        map_points.push(MapPoint::new_from_dcs(
+                            fixed.x,
+                            fixed.y,
+                            &strike.text,
+                            &strike._side,
+                            "TargetStrike",
+                            proj,
+                        ))
+                    }
+                }
+            }
         });
 
         self.antiship.iter().for_each(|antiship| {
             if antiship.class == "ship" && antiship.class_template.is_some() {
-                let all_groups = instance.mission.get_ship_groups();
-
-                let groups = all_groups
+                let groups = all_ship_groups
                     .iter()
                     .filter(|g| &g.name == antiship.class_template.as_ref().unwrap())
                     .collect::<Vec<_>>();

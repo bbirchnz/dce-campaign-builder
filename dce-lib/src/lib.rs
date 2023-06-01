@@ -1,9 +1,10 @@
 use std::{
     fs::{self, File},
-    io::{self, Write},
+    io::{Write},
     path::Path,
 };
 
+use bin_data::{BinData, BinItem};
 use campaign_header::Header;
 use cmp_file::CMPFile;
 use conf_mod::ConfMod;
@@ -20,8 +21,9 @@ use serde_utils::LuaFileBased;
 use target_list::TargetList;
 use target_list_internal::TargetListInternal;
 use trigger::{flat_to_triggers, triggers_to_flat, Triggers, TriggersFlat};
-use zip::{write::FileOptions, ZipWriter};
 
+
+pub mod bin_data;
 pub mod campaign_header;
 pub mod cmp_file;
 pub mod conf_mod;
@@ -57,10 +59,11 @@ pub struct DCEInstance {
     pub base_path: String,
     pub campaign_header: Header,
     pub conf_mod: ConfMod,
+    pub bin_data: BinData,
 }
 
 impl DCEInstance {
-    pub fn new(path: String) -> Result<DCEInstance, anyhow::Error> {
+    pub fn new_from_existing_campaign(path: String) -> Result<DCEInstance, anyhow::Error> {
         let mission = Mission::from_miz(&format!("{}/base_mission.miz", path))?;
         let mission_warehouses = Warehouses::from_miz(&format!("{}/base_mission.miz", path))?;
 
@@ -92,6 +95,18 @@ impl DCEInstance {
 
         let header = Header::from_lua_file(format!("{}/camp_init.lua", path), "camp")?;
 
+        let bin_data = BinData {
+            template_miz: BinItem::new_from_file(
+                "base_mission.miz",
+                &format!("{}/base_mission.miz", path),
+            )?,
+            images: Vec::default(),
+            sounds: vec![BinItem::from_stored_resource(
+                "alarme.wav",
+                include_bytes!("../resources/alarme.wav"),
+            )],
+        };
+
         Ok(DCEInstance {
             oob_air,
             airbases,
@@ -104,6 +119,7 @@ impl DCEInstance {
             conf_mod,
             base_path: path,
             campaign_header: header,
+            bin_data,
         })
     }
 
@@ -125,6 +141,15 @@ impl DCEInstance {
         // where the correct sides are set from the warehouses file
         oob_air.set_to_closest_base(&mission, &airbases.to_db_airbases())?;
 
+        let bin_data = BinData {
+            template_miz: BinItem::new_from_file("base_mission.miz", miz_file)?,
+            images: Vec::default(),
+            sounds: vec![BinItem::from_stored_resource(
+                "alarme.wav",
+                include_bytes!("../resources/alarme.wav"),
+            )],
+        };
+
         Ok(DCEInstance {
             target_list: TargetListInternal::from_target_list(&TargetList::new_from_mission(
                 &mission,
@@ -139,6 +164,7 @@ impl DCEInstance {
             conf_mod: ConfMod::new(),
             mission,
             mission_warehouses,
+            bin_data,
         })
     }
 
@@ -198,18 +224,34 @@ impl DCEInstance {
             "campaign",
         )?;
 
+        // write sounds:
+        for sound in self.bin_data.sounds.iter() {
+            fs::write(
+                camp_path.join("Sounds").join(&sound.name),
+                sound.data.as_slice(),
+            )?;
+        }
+
+        // write images:
+        for image in self.bin_data.images.iter() {
+            fs::write(
+                camp_path.join("Images").join(&image.name),
+                image.data.as_slice(),
+            )?;
+        }
+
         // create placeholder first and ongoings as copies of the base_mission
-        fs::copy(
-            Path::new(&self.base_path).join("base_mission.miz"),
+        fs::write(
             base_path.join(format!("{}_first.miz", &camp_name)),
+            &self.bin_data.template_miz.data,
         )?;
-        fs::copy(
-            Path::new(&self.base_path).join("base_mission.miz"),
+        fs::write(
             base_path.join(format!("{}_ongoing.miz", &camp_name)),
+            &self.bin_data.template_miz.data,
         )?;
-        fs::copy(
-            Path::new(&self.base_path).join("base_mission.miz"),
+        fs::write(
             init_path.join("base_mission.miz"),
+            &self.bin_data.template_miz.data,
         )?;
 
         // create FirstMission.bat and SkipMission.bat
@@ -220,11 +262,6 @@ impl DCEInstance {
         fs::write(
             camp_path.join("SkipMission.bat"),
             include_str!("../resources/SkipMission.bat"),
-        )?;
-        // and the sound that seem required
-        fs::write(
-            camp_path.join("Sounds").join("alarme.wav"),
-            include_bytes!("../resources/alarme.wav"),
         )?;
         fs::write(
             init_path.join("path.bat"),
@@ -329,36 +366,43 @@ REM After each change, You must launch the FirsMission.bat for it to be taken in
             &options,
         )?;
 
-        // create placeholder first and ongoings as copies of the base_mission
-        copy_to_zip(
-            Path::new(&self.base_path)
-                .join("base_mission.miz")
-                .to_str()
-                .expect("Should be a valid path"),
+        // write sounds:
+        for sound in self.bin_data.sounds.iter() {
+            zip.start_file(
+                campaign_folder.to_owned() + &format!("Sounds/{}", sound.name),
+                options,
+            )?;
+            zip.write_all(&sound.data)?;
+        }
+
+        // write images:
+        for image in self.bin_data.images.iter() {
+            zip.start_file(
+                campaign_folder.to_owned() + &format!("Images/{}", image.name),
+                options,
+            )?;
+            zip.write_all(&image.data)?;
+        }
+
+        // write base_mission
+        zip.start_file(
+            campaign_folder.to_owned() + "Init/base_mission.miz",
+            options,
+        )?;
+        zip.write_all(&self.bin_data.template_miz.data)?;
+
+        // and placeholder first and ongoing copies:
+        zip.start_file(
             &(dce_campaigns_folder.to_owned() + &format!("{}_first.miz", &camp_name)),
-            &mut zip,
-            &options,
+            options,
         )?;
+        zip.write_all(&self.bin_data.template_miz.data)?;
 
-        copy_to_zip(
-            Path::new(&self.base_path)
-                .join("base_mission.miz")
-                .to_str()
-                .expect("Should be a valid path"),
+        zip.start_file(
             &(dce_campaigns_folder + &format!("{}_ongoing.miz", &camp_name)),
-            &mut zip,
-            &options,
+            options,
         )?;
-
-        copy_to_zip(
-            Path::new(&self.base_path)
-                .join("base_mission.miz")
-                .to_str()
-                .expect("Should be a valid path"),
-            &(campaign_folder.to_owned() + "init/base_mission.miz"),
-            &mut zip,
-            &options,
-        )?;
+        zip.write_all(&self.bin_data.template_miz.data)?;
 
         // create FirstMission.bat and SkipMission.bat
         zip.start_file(campaign_folder.to_owned() + "FirstMission.bat", options)?;
@@ -366,10 +410,6 @@ REM After each change, You must launch the FirsMission.bat for it to be taken in
 
         zip.start_file(campaign_folder.to_owned() + "SkipMission.bat", options)?;
         zip.write_all(include_str!("../resources/SkipMission.bat").as_bytes())?;
-
-        // and the sound that seem required.
-        zip.start_file(campaign_folder.to_owned() + "Sounds/alarme.wav", options)?;
-        zip.write_all(include_bytes!("../resources/alarme.wav"))?;
 
         // build our lua files
         self.target_list.to_target_list()?.add_to_zip(
@@ -435,23 +475,6 @@ REM After each change, You must launch the FirsMission.bat for it to be taken in
     }
 }
 
-fn copy_to_zip<T>(
-    file_path: &str,
-    zip_path: &str,
-    zip: &mut ZipWriter<T>,
-    options: &FileOptions,
-) -> Result<(), anyhow::Error>
-where
-    T: Write + io::Seek,
-{
-    let buf = fs::read(file_path)?;
-
-    zip.start_file(zip_path, *options)?;
-    zip.write_all(buf.as_slice())?;
-
-    Ok(())
-}
-
 trait NewFromMission {
     fn new_from_mission(mission: &Mission) -> Result<Self, anyhow::Error>
     where
@@ -464,7 +487,7 @@ mod tests {
 
     #[test]
     fn load_init() {
-        DCEInstance::new("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\War over Tchad 1987-Blue-Mirage-F1EE-3-30 Lorraine\\Init".into()).unwrap();
+        DCEInstance::new_from_existing_campaign("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\War over Tchad 1987-Blue-Mirage-F1EE-3-30 Lorraine\\Init".into()).unwrap();
     }
 
     #[test]

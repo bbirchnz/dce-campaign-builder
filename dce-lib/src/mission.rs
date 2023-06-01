@@ -288,6 +288,20 @@ impl Mission {
         result
     }
 
+    pub fn get_static_groups(&self) -> Vec<&StaticGroup> {
+        let result = self
+            .coalition
+            .blue
+            .countries
+            .iter()
+            .chain(self.coalition.red.countries.iter())
+            .filter_map(|c| c._static.as_ref())
+            .flat_map(|i| i.groups.as_slice())
+            .collect::<Vec<_>>();
+
+        result
+    }
+
     pub fn get_zone_by_name(&self, name: &String) -> Result<&TriggerZone, anyhow::Error> {
         self.triggers
             .zones

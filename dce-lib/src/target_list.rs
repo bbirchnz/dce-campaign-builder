@@ -1,17 +1,22 @@
-use std::{collections::HashMap, iter::repeat};
-
 use serde::{Deserialize, Serialize};
+use std::{collections::HashMap, iter::repeat};
 
 use crate::{
     serde_utils::LuaFileBased,
     targets::{
-        anti_ship::AntiShipStrike, awacs::AWACS, cap::CAP, fighter_sweep::FighterSweep,
-        intercept::Intercept, refueling::Refueling, strike::Strike, TargetFirepower,
+        anti_ship::AntiShipStrike,
+        awacs::AWACS,
+        cap::CAP,
+        fighter_sweep::FighterSweep,
+        intercept::Intercept,
+        refueling::Refueling,
+        strike::{Strike, StrikeElement, StrikeFixedCoordTarget, StrikeNamedStaticTarget},
+        TargetFirepower,
     },
     NewFromMission,
 };
 
-use log::warn;
+use log::{warn, info};
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 pub struct TargetList {
@@ -109,6 +114,44 @@ impl NewFromMission for TargetList {
                         }),
                     );
                 }
+                "STATICSTRIKE" => {
+                    let targets = match name_splits[0] {
+                        "BLUE" => &mut blue_targets,
+                        _ => &mut red_targets,
+                    };
+
+                    if name_splits.len() < 4 {
+                        panic!("Failed to process {}, should be <SIDE>_STATICSTRIKE_<TGT GROUP NAME>_<TGT NAME>", &z.name);
+                    }
+
+                    let tgt_element = StrikeElement::FixedCoord(StrikeFixedCoordTarget {
+                        name: name_splits[3].to_owned(),
+                        x: z.x,
+                        y: z.y,
+                    });
+
+                    if let Some(Target::Strike(existing_target)) = targets.get_mut(name_splits[2]) {
+                        existing_target.elements.as_mut().expect("There should be elements initialised").push(tgt_element);
+                    }
+                    else {
+                        // if it doesn't exist, create a whole new strike target.
+                        let new_target = Strike {
+                            priority: 1,
+                            text: name_splits[2].to_owned(),
+                            inactive: false,
+                            firepower: TargetFirepower { min: 2, max: 4 },
+                            class: None,
+                            class_template: None,
+                            elements: Some(vec![tgt_element]),
+                            _name: name_splits[2].to_owned(),
+                            _side: name_splits[0].to_lowercase(),
+                            _firepower_min: 2,
+                            _firepower_max: 4,
+                        };
+    
+                        targets.insert(name_splits[2].to_owned(), Target::Strike(new_target));
+                    }
+                }
                 _ => {
                     warn!("Didn't know what to do with zone {}", z.name);
                 }
@@ -135,26 +178,23 @@ impl NewFromMission for TargetList {
                     _ => &mut red_targets,
                 };
 
-                match name_splits[0] {
-                    "STRIKE" => {
-                        targets.insert(
-                            name_splits[1].to_owned(),
-                            Target::Strike(Strike {
-                                priority: 1,
-                                text: name_splits[1].to_owned(),
-                                inactive: false,
-                                firepower: TargetFirepower { min: 2, max: 2 },
-                                class: "vehicle".to_owned(),
-                                class_template: Some(vg.name.to_owned()),
-                                elements: None,
-                                _name: vg.name.to_owned(),
-                                _side: "blue".into(),
-                                _firepower_min: 2,
-                                _firepower_max: 2,
-                            }),
-                        );
-                    }
-                    _ => {}
+                if name_splits[0] == "STRIKE" {
+                    targets.insert(
+                        name_splits[1].to_owned(),
+                        Target::Strike(Strike {
+                            priority: 1,
+                            text: name_splits[1].to_owned(),
+                            inactive: false,
+                            firepower: TargetFirepower { min: 2, max: 2 },
+                            class: Some("vehicle".to_owned()),
+                            class_template: Some(vg.name.to_owned()),
+                            elements: None,
+                            _name: vg.name.to_owned(),
+                            _side: "blue".into(),
+                            _firepower_min: 2,
+                            _firepower_max: 2,
+                        }),
+                    );
                 }
             });
 
@@ -190,6 +230,61 @@ impl NewFromMission for TargetList {
                     }),
                 );
             });
+        
+        // add static groups:
+        mission
+        .coalition
+        .red
+        .countries
+        .iter()
+        .zip(repeat("red"))
+        .chain(mission.coalition.blue.countries.iter().zip(repeat("blue")))
+        .filter_map(|(c, side)| c._static.as_ref().zip(Some(side)))
+        .flat_map(|(sgd, side)| sgd.groups.as_slice().iter().zip(repeat(side)))
+        .for_each(|(sg, side)| {
+            let name_splits = sg.name.split('_').collect::<Vec<_>>();
+            let targets = match side {
+                // target group with red side = target for blue to attack
+                "BLUE" => &mut red_targets,
+                _ => &mut blue_targets,
+            };
+
+            if name_splits[0] != "STATICSTRIKE" {
+                info!("Not generating static strike target for {}, if you want this as a target rename as STATICSTRIKE_<TGT GROUP NAME>_<TGT NAME>", sg.name);
+                return;
+            }
+
+            if name_splits.len() < 3 {
+                panic!("Failed to process {}, should be STATICSTRIKE_<TGT GROUP NAME>_<TGT NAME>", &sg.name);
+            }
+
+            let tgt_element = StrikeElement::NamedStatic(StrikeNamedStaticTarget{
+                name: sg.name.to_owned(),
+            });
+
+            if let Some(Target::Strike(existing_target)) = targets.get_mut(name_splits[1]) {
+                existing_target.elements.as_mut().expect("There should be elements initialised").push(tgt_element);
+            }
+            else {
+                // if it doesn't exist, create a whole new strike target.
+                let new_target = Strike {
+                    priority: 1,
+                    text: name_splits[1].to_owned(),
+                    inactive: false,
+                    firepower: TargetFirepower { min: 2, max: 4 },
+                    class: Some("static".to_owned()),
+                    class_template: None,
+                    elements: Some(vec![tgt_element]),
+                    _name: name_splits[1].to_owned(),
+                    _side: side.to_owned(),
+                    _firepower_min: 2,
+                    _firepower_max: 4,
+                };
+
+                targets.insert(name_splits[1].to_owned(), Target::Strike(new_target));
+            }
+        });
+
 
         Ok(TargetList {
             blue: blue_targets,

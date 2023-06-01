@@ -455,7 +455,7 @@ impl Editable for CAPLoadout {
         true
     }
 
-    fn reset_all_from_miz<'a>(instance: &'a mut DCEInstance) -> Result<(), anyhow::Error> {
+    fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
         let new_loadouts =
             LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.mission)?);
 
@@ -515,7 +515,7 @@ impl Editable for AARLoadout {
         true
     }
 
-    fn reset_all_from_miz<'a>(instance: &'a mut DCEInstance) -> Result<(), anyhow::Error> {
+    fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
         let new_loadouts =
             LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.mission)?);
 
@@ -576,7 +576,7 @@ impl Editable for AWACSLoadout {
         true
     }
 
-    fn reset_all_from_miz<'a>(instance: &'a mut DCEInstance) -> Result<(), anyhow::Error> {
+    fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
         let new_loadouts =
             LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.mission)?);
 
@@ -649,7 +649,7 @@ impl Editable for StrikeLoadout {
         true
     }
 
-    fn reset_all_from_miz<'a>(instance: &'a mut DCEInstance) -> Result<(), anyhow::Error> {
+    fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
         let new_loadouts =
             LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.mission)?);
 
@@ -721,7 +721,7 @@ impl Editable for AntiShipLoadout {
         true
     }
 
-    fn reset_all_from_miz<'a>(instance: &'a mut DCEInstance) -> Result<(), anyhow::Error> {
+    fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
         let new_loadouts =
             LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.mission)?);
 

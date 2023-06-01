@@ -88,7 +88,7 @@ impl Editable for Refueling {
         true
     }
 
-    fn reset_all_from_miz<'a>(instance: &'a mut DCEInstance) -> Result<(), anyhow::Error> {
+    fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
         let new_target_list =
             TargetListInternal::from_target_list(&TargetList::new_from_mission(&instance.mission)?);
 

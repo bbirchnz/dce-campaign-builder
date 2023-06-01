@@ -95,20 +95,22 @@ fn app(cx: Scope<AppProps>) -> Element {
 
     // setup handler to detect CTRL-S for save
     w.create_wry_event_handler(move |event, _| {
-        if let tao::event::Event::DeviceEvent { event, .. } = event {
-            if let DeviceEvent::Key(rke) = event {
-                if rke.physical_key == KeyS && rke.state == Pressed {
-                    trace!("s key pressed")
-                }
-                if rke.physical_key == KeyS && rke.state == Released {
-                    trace!("s key released")
-                }
-                if rke.physical_key == ControlLeft && rke.state == Pressed {
-                    trace!("ctrl key pressed")
-                }
-                if rke.physical_key == ControlLeft && rke.state == Released {
-                    trace!("ctrl key released")
-                }
+        if let tao::event::Event::DeviceEvent {
+            event: DeviceEvent::Key(rke),
+            ..
+        } = event
+        {
+            if rke.physical_key == KeyS && rke.state == Pressed {
+                trace!("s key pressed")
+            }
+            if rke.physical_key == KeyS && rke.state == Released {
+                trace!("s key released")
+            }
+            if rke.physical_key == ControlLeft && rke.state == Pressed {
+                trace!("ctrl key pressed")
+            }
+            if rke.physical_key == ControlLeft && rke.state == Released {
+                trace!("ctrl key released")
             }
         }
     });

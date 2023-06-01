@@ -287,7 +287,7 @@ impl Editable for FixedAirBase {
         true
     }
 
-    fn reset_all_from_miz<'a>(instance: &'a mut DCEInstance) -> Result<(), anyhow::Error> {
+    fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
         let new_airbases = DBAirbasesInternal::from_db_airbases(
             &DBAirbases::new_from_mission(&instance.mission)?,
             &instance.mission_warehouses,
@@ -362,7 +362,7 @@ impl Editable for ShipBase {
         true
     }
 
-    fn reset_all_from_miz<'a>(instance: &'a mut DCEInstance) -> Result<(), anyhow::Error> {
+    fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
         let new_airbases = DBAirbasesInternal::from_db_airbases(
             &DBAirbases::new_from_mission(&instance.mission)?,
             &instance.mission_warehouses,
@@ -431,7 +431,7 @@ impl Editable for AirStartBase {
         true
     }
 
-    fn reset_all_from_miz<'a>(instance: &'a mut DCEInstance) -> Result<(), anyhow::Error> {
+    fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
         let new_airbases = DBAirbasesInternal::from_db_airbases(
             &DBAirbases::new_from_mission(&instance.mission)?,
             &instance.mission_warehouses,

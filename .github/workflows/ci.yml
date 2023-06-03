@@ -59,3 +59,15 @@ jobs:
         with:
           name: installer
           path: target/wix/dce_builder*.msi
+      - name: release build
+        shell: bash
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          export PKG_CONFIG_PATH="$VCPKG_ROOT/installed/x64-windows/lib/pkgconfig"
+          export PATH=$PATH:$(pwd)/wix/tools/
+          cargo wix --package=ui --nocapture --name=dce_builder --version=${{  github.ref_name }}
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: target/wix/dce_builder-${{ github.ref_name }}-x86_64.msi

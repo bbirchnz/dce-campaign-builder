@@ -2,7 +2,8 @@ use bevy_reflect::{FromReflect, Reflect};
 use serde::{Deserialize, Serialize};
 
 use crate::loadouts::{
-    AARLoadout, AWACSLoadout, AirframeLoadout, AntiShipLoadout, CAPLoadout, Loadouts, StrikeLoadout,
+    AARLoadout, AWACSLoadout, AirframeLoadout, AntiShipLoadout, CAPLoadout, EscortLoadout,
+    Loadouts, StrikeLoadout,
 };
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
@@ -12,6 +13,7 @@ pub struct LoadoutsInternal {
     pub strike: Vec<StrikeLoadout>,
     pub awacs: Vec<AWACSLoadout>,
     pub aar: Vec<AARLoadout>,
+    pub escort: Vec<EscortLoadout>,
 }
 
 impl LoadoutsInternal {
@@ -21,6 +23,7 @@ impl LoadoutsInternal {
         let mut strike = Vec::default();
         let mut awacs = Vec::default();
         let mut aar = Vec::default();
+        let mut escort = Vec::default();
 
         loadouts.iter().for_each(|(af, loadout_collection)| {
             if let Some(s) = &loadout_collection.strike {
@@ -63,6 +66,14 @@ impl LoadoutsInternal {
                     aar.push(v)
                 });
             }
+            if let Some(s) = &loadout_collection.escort {
+                s.iter().for_each(|(name, v)| {
+                    let mut v = v.to_owned();
+                    v._airframe = af.to_owned();
+                    v._name = name.to_owned();
+                    escort.push(v)
+                });
+            }
         });
 
         LoadoutsInternal {
@@ -71,6 +82,7 @@ impl LoadoutsInternal {
             strike,
             awacs,
             aar,
+            escort,
         }
     }
 
@@ -127,6 +139,17 @@ impl LoadoutsInternal {
                 .or_insert(AirframeLoadout::default());
             unit_record
                 .aar
+                .as_mut()
+                .unwrap()
+                .insert(l._name.to_owned(), l.to_owned());
+        });
+
+        self.escort.iter().for_each(|l| {
+            let unit_record = loadout
+                .entry(l._airframe.to_owned())
+                .or_insert(AirframeLoadout::default());
+            unit_record
+                .escort
                 .as_mut()
                 .unwrap()
                 .insert(l._name.to_owned(), l.to_owned());

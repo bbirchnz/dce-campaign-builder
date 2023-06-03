@@ -228,6 +228,23 @@ pub fn select_first_antiship_loadout(cx: Scope) {
     }
 }
 
+pub fn select_first_escort_loadout(cx: Scope) {
+    let atom_instance = use_atom_ref(cx, INSTANCE);
+    let atom_selected = use_atom_ref(cx, SELECTED);
+
+    if let Some(item) = atom_instance
+        .read()
+        .as_ref()
+        .unwrap()
+        .loadouts
+        .escort
+        .first()
+    {
+        let mut writable = atom_selected.write();
+        *writable = Selectable::LoadoutEscort(item.clone());
+    }
+}
+
 pub fn select_first_trigger(cx: Scope) {
     let atom_instance = use_atom_ref(cx, INSTANCE);
     let atom_selected = use_atom_ref(cx, SELECTED);

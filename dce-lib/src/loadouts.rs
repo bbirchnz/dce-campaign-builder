@@ -25,6 +25,8 @@ pub struct AirframeLoadout {
     pub awacs: Option<HashMap<String, AWACSLoadout>>,
     #[serde(rename = "Refueling")]
     pub aar: Option<HashMap<String, AARLoadout>>,
+    #[serde(rename = "Escort")]
+    pub escort: Option<HashMap<String, EscortLoadout>>,
 }
 
 impl Default for AirframeLoadout {
@@ -35,6 +37,7 @@ impl Default for AirframeLoadout {
             cap: Some(Default::default()),
             awacs: Some(Default::default()),
             aar: Some(Default::default()),
+            escort: Some(Default::default()),
         }
     }
 }
@@ -189,6 +192,27 @@ pub struct AARLoadout {
     #[serde(rename = "tStation")]
     #[serde(default)]
     pub t_station: u32,
+    pub stores: Payload,
+    #[serde(default)]
+    pub sortie_rate: u32,
+    pub _airframe: String,
+    pub _name: String,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
+pub struct EscortLoadout {
+    pub day: bool,
+    pub night: bool,
+    #[serde(rename = "adverseWeather")]
+    pub adverse_weather: bool,
+    pub range: f64,
+    pub capability: u32,
+    pub firepower: u32,
+    #[serde(rename = "vCruise")]
+    pub v_cruise: f64,
+    #[serde(rename = "LDSD")]
+    pub ldsd: bool,
+    pub standoff: f64,
     pub stores: Payload,
     #[serde(default)]
     pub sortie_rate: u32,
@@ -403,6 +427,27 @@ impl NewFromMission for Loadouts {
                                 sortie_rate: 12,
                                 _airframe: u._type.to_owned(),
                                 _name: u.name.to_owned(),
+                            },
+                        );
+                        Ok(())
+                    }
+                    "Escort" => {
+                        unit_record.escort.as_mut().unwrap().insert(
+                            u.name.to_owned(),
+                            EscortLoadout {
+                                day: true,
+                                night: true,
+                                adverse_weather: true,
+                                range: 500000.,
+                                capability: 1,
+                                firepower: 1,
+                                v_cruise: 200.,
+                                stores: u.payload.clone(),
+                                sortie_rate: 12,
+                                _airframe: u._type.to_owned(),
+                                _name: u.name.to_owned(),
+                                ldsd: true,
+                                standoff: 50000.,
                             },
                         );
                         Ok(())
@@ -726,6 +771,68 @@ impl Editable for AntiShipLoadout {
             LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.mission)?);
 
         instance.loadouts.antiship = new_loadouts.antiship;
+
+        Ok(())
+    }
+
+    fn delete_by_name(instance: &mut DCEInstance, name: &str) -> Result<(), anyhow::Error> {
+        let container = &mut instance.loadouts.antiship;
+
+        if let Some(index) = container.iter().position(|i| i._name == name) {
+            container.remove(index);
+            return Ok(());
+        }
+
+        Err(anyhow!("Didn't find {}", name))
+    }
+}
+
+impl Editable for EscortLoadout {
+    fn get_header() -> Vec<HeaderField> {
+        vec![
+            HeaderField::new("_name", "Name", FieldType::String, true),
+            HeaderField::new("_airframe", "AirFrame", FieldType::String, false),
+            HeaderField::new("day", "Day", FieldType::Bool, true),
+            HeaderField::new("night", "Night", FieldType::Bool, true),
+            HeaderField::new("adverse_weather", "Adverse Weather", FieldType::Bool, true),
+            HeaderField::new("range", "Range (nm)", FieldType::DistanceNM, true),
+            HeaderField::new("standoff", "Engagement Range", FieldType::DistanceNM, true),
+            HeaderField::new("capability", "Capability", FieldType::Int, true),
+            HeaderField::new("firepower", "Firepower", FieldType::Int, true),
+        ]
+    }
+    fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {
+        instance
+            .loadouts
+            .escort
+            .iter_mut()
+            .find(|item| item._name == name)
+            .unwrap()
+    }
+
+    fn get_name(&self) -> String {
+        self._name.to_owned()
+    }
+
+    fn validate(&self, _: &DCEInstance) -> ValidationResult {
+        let errors = Vec::default();
+
+        // todo: Probably want to put some limits on speeds/altitudes
+        if errors.is_empty() {
+            return ValidationResult::Pass;
+        }
+        ValidationResult::Fail(errors)
+    }
+
+    fn can_reset_from_miz() -> bool {
+        true
+    }
+
+    fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
+        let new_loadouts =
+            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.mission)?);
+
+        instance.loadouts.escort = new_loadouts.escort;
 
         Ok(())
     }

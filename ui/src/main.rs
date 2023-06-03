@@ -4,7 +4,7 @@ use dce_lib::{
     campaign_header::Header,
     db_airbases::{AirStartBase, FixedAirBase, ShipBase},
     editable::Editable,
-    loadouts::{AARLoadout, AWACSLoadout, AntiShipLoadout, CAPLoadout, StrikeLoadout},
+    loadouts::{AARLoadout, AWACSLoadout, AntiShipLoadout, CAPLoadout, StrikeLoadout, EscortLoadout},
     mappable::MapPoint,
     oob_air::Squadron,
     targets::{
@@ -271,6 +271,10 @@ fn main_body(cx: Scope) -> Element {
                         on_click: |_| select_first_antiship_loadout(cx)
                     }
                     icon_button {
+                        path: "images/loadout_escort.svg".into(),
+                        on_click: |_| select_first_escort_loadout(cx)
+                    }
+                    icon_button {
                         path: "images/loadout_awacs.svg".into(),
                         on_click: |_| select_first_awacs_loadout(cx)
                     }
@@ -337,6 +341,9 @@ fn main_body(cx: Scope) -> Element {
                     Selectable::LoadoutAWACS(_) => rsx!{
                         edit_form::<AWACSLoadout> { headers: AWACSLoadout::get_header(), title: "Edit AWACS Loadout".into(), item: selected_form.clone()}
                     },
+                    Selectable::LoadoutEscort(_) => rsx!{
+                        edit_form::<EscortLoadout> { headers: EscortLoadout::get_header(), title: "Edit Escort Loadout".into(), item: selected_form.clone()}
+                    },
                     Selectable::Trigger(_) => rsx!{
                         edit_form::<Trigger> { headers: Trigger::get_header(), title: "Edit Trigger".into(), item: selected_form.clone()}
                     },
@@ -398,6 +405,9 @@ fn main_body(cx: Scope) -> Element {
                         },
                         Selectable::LoadoutAWACS(_) => rsx! {
                             rsx::table { data: instance.loadouts.awacs.to_vec() }
+                        },
+                        Selectable::LoadoutEscort(_) => rsx! {
+                            rsx::table { data: instance.loadouts.escort.to_vec() }
                         },
                         Selectable::Trigger(_) => rsx! {
                             rsx::table { data: instance.triggers.to_vec() }

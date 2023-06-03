@@ -187,55 +187,67 @@ impl NewFromMission for OobAir {
     }
 }
 
+/// setup a hashmap so we can lookup and check if a squadron already exists.
+/// this is used when more than 4 roles are to be assigned to a squadron, and therefore
+/// multiple groups need to be created. So long as they are named <"squadron name">_"anything else"> it should work
 fn side_to_squadrons(countries: &[Country], base: String) -> Vec<Squadron> {
+    let mut squadron_hm: HashMap<String, Squadron> = HashMap::default();
+
     countries
         .iter()
         .filter_map(|c| c.plane.as_ref().zip(Some(&c.name)))
         .flat_map(|(vg, country)| vg.groups.iter().zip(repeat(country)))
-        .filter_map(|(vg, country)| {
-            let unit = vg.units.get(0)?;
-            Some(Squadron {
-                name: vg.name.to_owned(),
-                inactive: false,
-                player: false,
-                _type: unit._type.to_owned(),
-                country: country.to_owned(),
-                livery: LiveryEnum::One(unit.livery_id.to_owned()),
-                base: base.to_owned(),
-                skill: unit.skill.to_owned(),
-                tasks: vg
-                    .units
-                    .iter()
-                    .map(|u| {
-                        (
-                            u.name
-                                .split('_')
-                                .map(|s| s.to_owned())
-                                .collect::<Vec<String>>()[1]
-                                .to_owned(),
-                            true,
-                        )
-                    })
-                    .collect(),
-                tasks_coef: Some(
-                    vg.units
-                        .iter()
-                        .map(|u| {
-                            (
-                                u.name
-                                    .split('_')
-                                    .map(|s| s.to_owned())
-                                    .collect::<Vec<String>>()[1]
-                                    .to_owned(),
-                                1.0f32,
-                            )
-                        })
-                        .collect(),
-                ),
-                number: 6,
-                reserve: 6,
-            })
-        })
+        .for_each(|(vg, country)| {
+            let unit = vg
+                .units
+                .get(0)
+                .expect("Plane Group must have at least one unit");
+            let name_parts = vg.name.split('_').collect::<Vec<_>>();
+            let squadron_name = name_parts[0];
+
+            let squadron = squadron_hm
+                .entry(squadron_name.to_string())
+                .or_insert(Squadron {
+                    name: squadron_name.to_owned(),
+                    inactive: false,
+                    player: false,
+                    _type: unit._type.to_owned(),
+                    country: country.to_owned(),
+                    livery: LiveryEnum::Many(Vec::default()),
+                    base: base.to_owned(),
+                    skill: unit.skill.to_owned(),
+                    tasks: HashMap::default(),
+                    tasks_coef: Some(HashMap::default()),
+                    number: 6,
+                    reserve: 6,
+                });
+            // cycle through the units, add liveries and tasks:
+            vg.units.iter().for_each(|unit| {
+                // add liveries
+                let livery = unit.livery_id.to_owned();
+                if let LiveryEnum::Many(vec) = &mut squadron.livery {
+                    if vec.iter().find(|l| **l == livery).is_none() {
+                        vec.push(livery);
+                    }
+                }
+                // add task:
+                let task = unit
+                    .name
+                    .split('_')
+                    .map(|s| s.to_owned())
+                    .collect::<Vec<String>>()[1]
+                    .to_owned();
+
+                squadron.tasks.insert(task.to_owned(), true);
+
+                // and task coef:
+                squadron.tasks_coef.as_mut().unwrap().insert(task, 1_f32);
+            });
+        });
+
+    squadron_hm
+        .iter()
+        .map(|(_, v)| v.to_owned())
         .collect::<Vec<_>>()
 }
 
@@ -279,6 +291,7 @@ impl Editable for Squadron {
         vec![
             HeaderField::new("name", "Name", FieldType::String, true),
             HeaderField::new("base", "Base", FieldType::String, true),
+            HeaderField::new("player", "Player Squadron", FieldType::Bool, true),
             HeaderField::new("country", "Country", FieldType::String, false),
             HeaderField::new("_type", "Airframe", FieldType::String, false),
             HeaderField::new("number", "Number", FieldType::Int, true),

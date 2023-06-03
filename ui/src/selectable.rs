@@ -1,7 +1,9 @@
 use dce_lib::{
     campaign_header::Header,
     db_airbases::{AirStartBase, FixedAirBase, ShipBase},
-    loadouts::{AARLoadout, AWACSLoadout, AntiShipLoadout, CAPLoadout, StrikeLoadout},
+    loadouts::{
+        AARLoadout, AWACSLoadout, AntiShipLoadout, CAPLoadout, EscortLoadout, StrikeLoadout,
+    },
     mappable::MapPoint,
     oob_air::Squadron,
     targets::{
@@ -28,6 +30,7 @@ pub enum Selectable {
     LoadoutAntiship(AntiShipLoadout),
     LoadoutAWACS(AWACSLoadout),
     LoadoutAAR(AARLoadout),
+    LoadoutEscort(EscortLoadout),
     Trigger(Trigger),
     None,
 }
@@ -367,6 +370,22 @@ impl ToSelectable for AWACSLoadout {
         Self: Sized,
     {
         if let Selectable::LoadoutAWACS(item) = sel {
+            return Some(item.clone());
+        }
+        None
+    }
+}
+
+impl ToSelectable for EscortLoadout {
+    fn to_selectable(&self) -> Selectable {
+        Selectable::LoadoutEscort(self.to_owned())
+    }
+
+    fn from_selectable(sel: &Selectable) -> Option<Self>
+    where
+        Self: Sized,
+    {
+        if let Selectable::LoadoutEscort(item) = sel {
             return Some(item.clone());
         }
         None

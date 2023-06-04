@@ -57,6 +57,7 @@ pub struct Country {
     pub vehicle: Option<VehicleGroupDummy>,
     pub ship: Option<ShipGroupDummy>,
     pub plane: Option<PlaneGroupDummy>,
+    pub helicopter: Option<PlaneGroupDummy>,
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
@@ -261,13 +262,17 @@ impl Mission {
     }
 
     pub fn get_plane_groups(&self) -> Vec<&PlaneGroup> {
-        let result = self
+        let countries = self
             .coalition
             .blue
             .countries
             .iter()
-            .chain(self.coalition.red.countries.iter())
+            .chain(self.coalition.red.countries.iter());
+
+        let result = countries
+            .clone()
             .filter_map(|c| c.plane.as_ref())
+            .chain(countries.filter_map(|c: &Country| c.helicopter.as_ref()))
             .flat_map(|i| i.groups.as_slice())
             .collect::<Vec<_>>();
 
@@ -318,34 +323,11 @@ mod tests {
     use super::Mission;
 
     #[test]
-    fn load_example() {
-        let result = Mission::from_lua_file("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\War over Tchad 1987-Blue-Mirage-F1EE-3-30 Lorraine\\Init\\base_mission\\mission".into(), "mission".into());
-
-        result.unwrap();
-    }
-
-    #[test]
-    fn save_example() {
-        let loaded = Mission::from_lua_file("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\War over Tchad 1987-Blue-Mirage-F1EE-3-30 Lorraine\\Init\\base_mission\\mission".into(), "mission".into()).unwrap();
-        loaded
-            .to_lua_file("mission".into(), "mission".into())
-            .unwrap();
-    }
-
-    #[test]
     fn load_from_miz() {
-        let loaded = Mission::from_miz("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\War over Tchad 1987-Blue-Mirage-F1EE-3-30 Lorraine\\Init\\base_mission.miz".into()).unwrap();
+        let loaded =
+            Mission::from_miz("test_resources\\base_mission_falklands.miz".into()).unwrap();
         loaded
             .to_lua_file("mission2".into(), "mission".into())
-            .unwrap();
-    }
-
-    #[test]
-
-    fn save_sa_example() {
-        let loaded = Mission::from_miz("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\Falklands v1\\Init\\base_mission.miz".into()).unwrap();
-        loaded
-            .to_lua_file("mission_sa".into(), "mission".into())
             .unwrap();
     }
 }

@@ -8,6 +8,7 @@ use crate::{selectable::Selectable, INSTANCE, SELECTED};
 pub fn select_first_fixed_airbase(cx: Scope) {
     let atom_instance = use_atom_ref(cx, INSTANCE);
     let atom_selected = use_atom_ref(cx, SELECTED);
+    let mut writable = atom_selected.write();
 
     if let Some(fixed) = atom_instance
         .read()
@@ -17,22 +18,26 @@ pub fn select_first_fixed_airbase(cx: Scope) {
         .fixed
         .first()
     {
-        let mut writable = atom_selected.write();
-        *writable = Selectable::FixedAirBase(fixed.clone());
+        *writable = Selectable::FixedAirBase(Some(fixed.clone()));
+    } else {
+        *writable = Selectable::FixedAirBase(None);
     }
 }
 pub fn select_first_ship_airbase(cx: Scope) {
     let atom_instance = use_atom_ref(cx, INSTANCE);
     let atom_selected = use_atom_ref(cx, SELECTED);
+    let mut writable = atom_selected.write();
 
     if let Some(item) = atom_instance.read().as_ref().unwrap().airbases.ship.first() {
-        let mut writable = atom_selected.write();
-        *writable = Selectable::ShipAirBase(item.clone());
+        *writable = Selectable::ShipAirBase(Some(item.clone()));
+    } else {
+        *writable = Selectable::ShipAirBase(None);
     }
 }
 pub fn select_first_airstart_airbase(cx: Scope) {
     let atom_instance = use_atom_ref(cx, INSTANCE);
     let atom_selected = use_atom_ref(cx, SELECTED);
+    let mut writable = atom_selected.write();
 
     if let Some(item) = atom_instance
         .read()
@@ -42,14 +47,16 @@ pub fn select_first_airstart_airbase(cx: Scope) {
         .air_start
         .first()
     {
-        let mut writable = atom_selected.write();
-        *writable = Selectable::AirstartBase(item.clone());
+        *writable = Selectable::AirstartBase(Some(item.clone()));
+    } else {
+        *writable = Selectable::AirstartBase(None);
     }
 }
 
 pub fn select_first_strike_target(cx: Scope) {
     let atom_instance = use_atom_ref(cx, INSTANCE);
     let atom_selected = use_atom_ref(cx, SELECTED);
+    let mut writable = atom_selected.write();
 
     if let Some(item) = atom_instance
         .read()
@@ -59,14 +66,16 @@ pub fn select_first_strike_target(cx: Scope) {
         .strike
         .first()
     {
-        let mut writable = atom_selected.write();
-        *writable = Selectable::TargetStrike(item.clone());
+        *writable = Selectable::TargetStrike(Some(item.clone()));
+    } else {
+        *writable = Selectable::TargetStrike(None);
     }
 }
 
 pub fn select_first_cap_target(cx: Scope) {
     let atom_instance = use_atom_ref(cx, INSTANCE);
     let atom_selected = use_atom_ref(cx, SELECTED);
+    let mut writable = atom_selected.write();
 
     if let Some(item) = atom_instance
         .read()
@@ -76,8 +85,9 @@ pub fn select_first_cap_target(cx: Scope) {
         .cap
         .first()
     {
-        let mut writable = atom_selected.write();
-        *writable = Selectable::TargetCAP(item.clone());
+        *writable = Selectable::TargetCAP(Some(item.clone()));
+    } else {
+        *writable = Selectable::TargetCAP(None);
     }
 }
 
@@ -103,6 +113,7 @@ pub fn select_first_intercept_target(cx: Scope) {
 pub fn select_first_ship_target(cx: Scope) {
     let atom_instance = use_atom_ref(cx, INSTANCE);
     let atom_selected = use_atom_ref(cx, SELECTED);
+    let mut writable = atom_selected.write();
 
     if let Some(item) = atom_instance
         .read()
@@ -112,14 +123,16 @@ pub fn select_first_ship_target(cx: Scope) {
         .antiship
         .first()
     {
-        let mut writable = atom_selected.write();
-        *writable = Selectable::TargetAntiShip(item.clone());
+        *writable = Selectable::TargetAntiShip(Some(item.clone()));
+    } else {
+        *writable = Selectable::TargetAntiShip(None);
     }
 }
 
 pub fn select_first_aar_target(cx: Scope) {
     let atom_instance = use_atom_ref(cx, INSTANCE);
     let atom_selected = use_atom_ref(cx, SELECTED);
+    let mut writable = atom_selected.write();
 
     if let Some(item) = atom_instance
         .read()
@@ -129,14 +142,16 @@ pub fn select_first_aar_target(cx: Scope) {
         .refuel
         .first()
     {
-        let mut writable = atom_selected.write();
-        *writable = Selectable::TargetAAR(item.clone());
+        *writable = Selectable::TargetAAR(Some(item.clone()));
+    } else {
+        *writable = Selectable::TargetAAR(None);
     }
 }
 
 pub fn select_first_awacs_target(cx: Scope) {
     let atom_instance = use_atom_ref(cx, INSTANCE);
     let atom_selected = use_atom_ref(cx, SELECTED);
+    let mut writable = atom_selected.write();
 
     if let Some(item) = atom_instance
         .read()
@@ -146,18 +161,24 @@ pub fn select_first_awacs_target(cx: Scope) {
         .awacs
         .first()
     {
-        let mut writable = atom_selected.write();
-        *writable = Selectable::TargetAWACS(item.clone());
+        *writable = Selectable::TargetAWACS(Some(item.clone()));
+    } else {
+        *writable = Selectable::TargetAWACS(None);
     }
 }
 
 pub fn select_first_squadron(cx: Scope) {
     let atom_instance = use_atom_ref(cx, INSTANCE);
     let atom_selected = use_atom_ref(cx, SELECTED);
+    let mut writable = atom_selected.write();
 
-    if let Some(item) = atom_instance.read().as_ref().unwrap().oob_air.blue.first() {
-        let mut writable = atom_selected.write();
-        *writable = Selectable::Squadron(item.clone());
+    let instance_read = atom_instance.read();
+    let oob_air = &instance_read.as_ref().unwrap().oob_air;
+
+    if let Some(item) = oob_air.blue.iter().chain(oob_air.red.iter()).find(|_| true) {
+        *writable = Selectable::Squadron(Some(item.clone()));
+    } else {
+        *writable = Selectable::Squadron(None);
     }
 }
 
@@ -179,16 +200,19 @@ pub fn select_campaign_settings(cx: Scope) {
 pub fn select_first_cap_loadout(cx: Scope) {
     let atom_instance = use_atom_ref(cx, INSTANCE);
     let atom_selected = use_atom_ref(cx, SELECTED);
+    let mut writable = atom_selected.write();
 
     if let Some(item) = atom_instance.read().as_ref().unwrap().loadouts.cap.first() {
-        let mut writable = atom_selected.write();
-        *writable = Selectable::LoadoutCAP(item.clone());
+        *writable = Selectable::LoadoutCAP(Some(item.clone()));
+    } else {
+        *writable = Selectable::LoadoutCAP(None);
     }
 }
 
 pub fn select_first_strike_loadout(cx: Scope) {
     let atom_instance = use_atom_ref(cx, INSTANCE);
     let atom_selected = use_atom_ref(cx, SELECTED);
+    let mut writable = atom_selected.write();
 
     if let Some(item) = atom_instance
         .read()
@@ -198,14 +222,16 @@ pub fn select_first_strike_loadout(cx: Scope) {
         .strike
         .first()
     {
-        let mut writable = atom_selected.write();
-        *writable = Selectable::LoadoutStrike(item.clone());
+        *writable = Selectable::LoadoutStrike(Some(item.clone()));
+    } else {
+        *writable = Selectable::LoadoutStrike(None);
     }
 }
 
 pub fn select_first_awacs_loadout(cx: Scope) {
     let atom_instance = use_atom_ref(cx, INSTANCE);
     let atom_selected = use_atom_ref(cx, SELECTED);
+    let mut writable = atom_selected.write();
 
     if let Some(item) = atom_instance
         .read()
@@ -215,24 +241,28 @@ pub fn select_first_awacs_loadout(cx: Scope) {
         .awacs
         .first()
     {
-        let mut writable = atom_selected.write();
-        *writable = Selectable::LoadoutAWACS(item.clone());
+        *writable = Selectable::LoadoutAWACS(Some(item.clone()));
+    } else {
+        *writable = Selectable::LoadoutAWACS(None);
     }
 }
 
 pub fn select_first_aar_loadout(cx: Scope) {
     let atom_instance = use_atom_ref(cx, INSTANCE);
     let atom_selected = use_atom_ref(cx, SELECTED);
+    let mut writable = atom_selected.write();
 
     if let Some(item) = atom_instance.read().as_ref().unwrap().loadouts.aar.first() {
-        let mut writable = atom_selected.write();
-        *writable = Selectable::LoadoutAAR(item.clone());
+        *writable = Selectable::LoadoutAAR(Some(item.clone()));
+    } else {
+        *writable = Selectable::LoadoutAAR(None);
     }
 }
 
 pub fn select_first_antiship_loadout(cx: Scope) {
     let atom_instance = use_atom_ref(cx, INSTANCE);
     let atom_selected = use_atom_ref(cx, SELECTED);
+    let mut writable = atom_selected.write();
 
     if let Some(item) = atom_instance
         .read()
@@ -242,14 +272,16 @@ pub fn select_first_antiship_loadout(cx: Scope) {
         .antiship
         .first()
     {
-        let mut writable = atom_selected.write();
-        *writable = Selectable::LoadoutAntiship(item.clone());
+        *writable = Selectable::LoadoutAntiship(Some(item.clone()));
+    } else {
+        *writable = Selectable::LoadoutAntiship(None);
     }
 }
 
 pub fn select_first_escort_loadout(cx: Scope) {
     let atom_instance = use_atom_ref(cx, INSTANCE);
     let atom_selected = use_atom_ref(cx, SELECTED);
+    let mut writable = atom_selected.write();
 
     if let Some(item) = atom_instance
         .read()
@@ -259,14 +291,16 @@ pub fn select_first_escort_loadout(cx: Scope) {
         .escort
         .first()
     {
-        let mut writable = atom_selected.write();
-        *writable = Selectable::LoadoutEscort(item.clone());
+        *writable = Selectable::LoadoutEscort(Some(item.clone()));
+    } else {
+        *writable = Selectable::LoadoutEscort(None);
     }
 }
 
 pub fn select_first_intercept_loadout(cx: Scope) {
     let atom_instance = use_atom_ref(cx, INSTANCE);
     let atom_selected = use_atom_ref(cx, SELECTED);
+    let mut writable = atom_selected.write();
 
     if let Some(item) = atom_instance
         .read()
@@ -276,17 +310,20 @@ pub fn select_first_intercept_loadout(cx: Scope) {
         .intercept
         .first()
     {
-        let mut writable = atom_selected.write();
-        *writable = Selectable::LoadoutIntercept(item.clone());
+        *writable = Selectable::LoadoutIntercept(Some(item.clone()));
+    } else {
+        *writable = Selectable::LoadoutIntercept(None);
     }
 }
 
 pub fn select_first_trigger(cx: Scope) {
     let atom_instance = use_atom_ref(cx, INSTANCE);
     let atom_selected = use_atom_ref(cx, SELECTED);
+    let mut writable = atom_selected.write();
 
     if let Some(item) = atom_instance.read().as_ref().unwrap().triggers.first() {
-        let mut writable = atom_selected.write();
-        *writable = Selectable::Trigger(item.clone());
+        *writable = Selectable::Trigger(Some(item.clone()));
+    } else {
+        *writable = Selectable::Trigger(None);
     }
 }

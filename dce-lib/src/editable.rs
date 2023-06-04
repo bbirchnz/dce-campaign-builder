@@ -289,22 +289,17 @@ impl HeaderField {
         match self.type_ {
             FieldType::String => apply_value(item, &self.field, &value.to_owned()),
             FieldType::Float(_) => {
-                apply_value(
-                    item,
-                    &self.field,
-                    &value
-                        .parse::<f64>()
-                        .unwrap_or_else(|_| panic!("Can't parse {} to f64", &value)),
-                );
+                let parsed = value.parse::<f64>();
+                if parsed.is_ok() {
+                    apply_value(item, &self.field, parsed.as_ref().unwrap());
+                }
             }
             FieldType::Int => {
-                apply_value(
-                    item,
-                    &self.field,
-                    &value
-                        .parse::<u32>()
-                        .unwrap_or_else(|_| panic!("Can't parse {} to u32", &value)),
-                );
+                let parsed = &value.parse::<u32>();
+
+                if parsed.is_ok() {
+                    apply_value(item, &self.field, parsed.as_ref().unwrap());
+                }
             }
             FieldType::Enum => todo!(),
             FieldType::Debug => todo!(),

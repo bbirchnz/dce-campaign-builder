@@ -214,6 +214,11 @@ fn side_to_squadrons(countries: &[Country], base: String) -> Vec<Squadron> {
     countries
         .iter()
         .filter_map(|c| c.plane.as_ref().zip(Some(&c.name)))
+        .chain(
+            countries
+                .iter()
+                .filter_map(|c| c.helicopter.as_ref().zip(Some(&c.name))),
+        )
         .flat_map(|(vg, country)| vg.groups.iter().zip(repeat(country)))
         .for_each(|(vg, country)| {
             let unit = vg
@@ -395,6 +400,7 @@ impl Editable for Squadron {
                         s.player = false;
                     }
                 }
+                item.player = true;
                 Ok(())
             };
 
@@ -409,47 +415,14 @@ impl Editable for Squadron {
 #[cfg(test)]
 mod tests {
 
-    use bevy_reflect::Struct;
-
     use crate::{mission::Mission, serde_utils::LuaFileBased, NewFromMission};
 
     use super::OobAir;
 
     #[test]
-    fn introspection() {
-        let oob =  OobAir::from_lua_file("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\War over Tchad 1987-Blue-Mirage-F1EE-3-30 Lorraine\\Init\\oob_air_init.lua".into(), "oob_air".into()).unwrap();
-
-        for (i, value) in oob.iter_fields().enumerate() {
-            let field_name = oob.name_at(i).unwrap();
-            if let Some(value) = value.downcast_ref::<u32>() {
-                println!("{} is a u32 with the value: {}", field_name, *value);
-            }
-
-            println!(
-                "{} is type {}",
-                field_name,
-                value.get_type_info().type_name()
-            );
-        }
-    }
-
-    #[test]
-    fn load_example() {
-        let result = OobAir::from_lua_file("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\War over Tchad 1987-Blue-Mirage-F1EE-3-30 Lorraine\\Init\\oob_air_init.lua".into(), "oob_air".into());
-
-        result.unwrap();
-    }
-
-    #[test]
-    fn save_example() {
-        let oob = OobAir::from_lua_file("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\War over Tchad 1987-Blue-Mirage-F1EE-3-30 Lorraine\\Init\\oob_air_init.lua".into(), "oob_air".into()).unwrap();
-        oob.to_lua_file("test.lua".into(), "oob_air".into())
-            .unwrap();
-    }
-
-    #[test]
     fn from_miz() {
-        let mission = Mission::from_miz("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\Falklands v1\\Init\\base_mission.miz".into()).unwrap();
+        let mission =
+            Mission::from_miz("test_resources\\base_mission_falklands.miz".into()).unwrap();
         let oob = OobAir::new_from_mission(&mission).unwrap();
 
         oob.to_lua_file("oob_sa.lua".into(), "oob_air".into())

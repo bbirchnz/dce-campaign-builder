@@ -299,13 +299,17 @@ impl NewFromMission for Loadouts {
         Self: Sized,
     {
         let mut loadout: Loadouts = HashMap::default();
-        mission
+        let countries = mission
             .coalition
             .blue
             .countries
             .iter()
-            .chain(mission.coalition.red.countries.iter())
+            .chain(mission.coalition.red.countries.iter());
+
+        countries
+            .clone()
             .filter_map(|c| c.plane.as_ref())
+            .chain(countries.filter_map(|c| c.helicopter.as_ref()))
             .flat_map(|pg| pg.groups.as_slice())
             .flat_map(|g| g.units.as_slice())
             .try_for_each(|u| {

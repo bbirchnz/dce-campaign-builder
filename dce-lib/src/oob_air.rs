@@ -8,7 +8,9 @@ use std::{collections::HashMap, iter::repeat};
 
 use crate::{
     db_airbases::{AirBase, DBAirbases},
-    editable::{Editable, FieldType, HeaderField, ValidationError, ValidationResult},
+    editable::{
+        Editable, EntityTemplateAction, FieldType, HeaderField, ValidationError, ValidationResult,
+    },
     mappable::Mappables,
     mission::{Country, Mission},
     serde_utils::LuaFileBased,
@@ -149,6 +151,22 @@ impl OobAir {
 
         Ok(())
     }
+
+    pub fn squadrons_for_airbase(&self, ab_name: &str) -> Vec<Squadron> {
+        let mut squadrons = Vec::default();
+
+        self.blue
+            .iter()
+            .filter(|s| s.base == ab_name)
+            .for_each(|s| squadrons.push(s.to_owned()));
+
+        self.red
+            .iter()
+            .filter(|s| s.base == ab_name)
+            .for_each(|s| squadrons.push(s.to_owned()));
+
+        squadrons
+    }
 }
 
 impl NewFromMission for OobAir {
@@ -226,7 +244,7 @@ fn side_to_squadrons(countries: &[Country], base: String) -> Vec<Squadron> {
                 // add liveries
                 let livery = unit.livery_id.to_owned();
                 if let LiveryEnum::Many(vec) = &mut squadron.livery {
-                    if vec.iter().find(|l| **l == livery).is_none() {
+                    if !vec.iter().any(|l| **l == livery) {
                         vec.push(livery);
                     }
                 }
@@ -246,8 +264,8 @@ fn side_to_squadrons(countries: &[Country], base: String) -> Vec<Squadron> {
         });
 
     squadron_hm
-        .iter()
-        .map(|(_, v)| v.to_owned())
+        .values()
+        .map(|v| v.to_owned())
         .collect::<Vec<_>>()
 }
 
@@ -355,6 +373,36 @@ impl Editable for Squadron {
         }
 
         Err(anyhow!("Didn't find {}", name))
+    }
+
+    fn actions_one_entity() -> Vec<EntityTemplateAction<Self>>
+    where
+        Self: Sized,
+    {
+        let set_player =
+            |item: &mut Self, instance: &mut DCEInstance| -> Result<(), anyhow::Error> {
+                for s in instance.oob_air.blue.iter_mut() {
+                    if s.get_name() == item.get_name() {
+                        s.player = true;
+                    } else {
+                        s.player = false;
+                    }
+                }
+                for s in instance.oob_air.red.iter_mut() {
+                    if s.get_name() == item.get_name() {
+                        s.player = true;
+                    } else {
+                        s.player = false;
+                    }
+                }
+                Ok(())
+            };
+
+        vec![EntityTemplateAction::new(
+            "Set as player",
+            "Set this as the playable squadron",
+            set_player,
+        )]
     }
 }
 

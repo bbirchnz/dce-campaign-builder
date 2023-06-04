@@ -277,6 +277,14 @@
                 Source='$(var.CargoTargetBinDir)\..\..\ui\images\target_strike.svg'
                 KeyPath='yes' />
             </Component>
+            <Component Id='svg_target_intercept' Guid='294fbb46-c976-4d15-8f34-39742f58e276'>
+              <File
+                Id='svg_target_intercept_file'
+                Name='target_intercept.svg'
+                DiskId='1'
+                Source='$(var.CargoTargetBinDir)\..\..\ui\images\target_intercept.svg'
+                KeyPath='yes' />
+            </Component>
             <!-- loadout svgs -->
             <Component Id='svg_loadout_aar' Guid='a2eb62a3-8c40-4e8c-bcd1-656ab42ad5bc'>
               <File
@@ -316,6 +324,22 @@
                 Name='loadout_strike.svg'
                 DiskId='1'
                 Source='$(var.CargoTargetBinDir)\..\..\ui\images\loadout_strike.svg'
+                KeyPath='yes' />
+            </Component>
+            <Component Id='svg_loadout_escort' Guid='dda3cb32-96ab-4d5e-bc35-bf8a5c13217a'>
+              <File
+                Id='svg_loadout_escort_file'
+                Name='loadout_escort.svg'
+                DiskId='1'
+                Source='$(var.CargoTargetBinDir)\..\..\ui\images\loadout_escort.svg'
+                KeyPath='yes' />
+            </Component>
+            <Component Id='svg_loadout_intercept' Guid='fc48ba8e-45ea-43d6-9098-a85075f805bc'>
+              <File
+                Id='svg_loadout_intercept_file'
+                Name='loadout_intercept.svg'
+                DiskId='1'
+                Source='$(var.CargoTargetBinDir)\..\..\ui\images\loadout_intercept.svg'
                 KeyPath='yes' />
             </Component>
 
@@ -410,6 +434,8 @@
       <ComponentRef Id='svg_loadout_awacs' />
       <ComponentRef Id='svg_loadout_cap' />
       <ComponentRef Id='svg_loadout_strike' />
+      <ComponentRef Id='svg_loadout_intercept' />
+      <ComponentRef Id='svg_loadout_escort' />
 
       <ComponentRef Id='svg_target_aar' />
       <ComponentRef Id='svg_target_awacs' />
@@ -417,6 +443,7 @@
       <ComponentRef Id='svg_target_none' />
       <ComponentRef Id='svg_target_ship' />
       <ComponentRef Id='svg_target_strike' />
+      <ComponentRef Id='svg_target_intercept' />
       <ComponentRef Id='svg_plane' />
       <ComponentRef Id='settings_grey' />
       <ComponentRef Id='layers' />

@@ -1,6 +1,6 @@
 use std::{
     fs::{self, File},
-    io::{Write},
+    io::Write,
     path::Path,
 };
 
@@ -21,7 +21,6 @@ use serde_utils::LuaFileBased;
 use target_list::TargetList;
 use target_list_internal::TargetListInternal;
 use trigger::{flat_to_triggers, triggers_to_flat, Triggers, TriggersFlat};
-
 
 pub mod bin_data;
 pub mod campaign_header;

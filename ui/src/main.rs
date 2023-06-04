@@ -4,11 +4,15 @@ use dce_lib::{
     campaign_header::Header,
     db_airbases::{AirStartBase, FixedAirBase, ShipBase},
     editable::Editable,
-    loadouts::{AARLoadout, AWACSLoadout, AntiShipLoadout, CAPLoadout, StrikeLoadout, EscortLoadout},
+    loadouts::{
+        AARLoadout, AWACSLoadout, AntiShipLoadout, CAPLoadout, EscortLoadout, InterceptLoadout,
+        StrikeLoadout,
+    },
     mappable::MapPoint,
     oob_air::Squadron,
     targets::{
-        anti_ship::AntiShipStrike, awacs::AWACS, cap::CAP, refueling::Refueling, strike::Strike,
+        anti_ship::AntiShipStrike, awacs::AWACS, cap::CAP, intercept::Intercept,
+        refueling::Refueling, strike::Strike,
     },
     trigger::Trigger,
     DCEInstance,
@@ -90,8 +94,11 @@ fn app(cx: Scope<AppProps>) -> Element {
 
     let w = use_window(cx);
 
-    let s_state = use_state(cx, || false);
-    let ctrl_state = use_state(cx, || false);
+    // WIP - ctrl-s for save
+    // can catch the event but probably need to setup an async channel to actually get it to dioxus
+    // context
+    let _s_state = use_state(cx, || false);
+    let _ctrl_state = use_state(cx, || false);
 
     // setup handler to detect CTRL-S for save
     w.create_wry_event_handler(move |event, _| {
@@ -249,6 +256,10 @@ fn main_body(cx: Scope) -> Element {
                         on_click: |_| select_first_cap_target(cx)
                     }
                     icon_button {
+                        path: "images/target_intercept.svg".into(),
+                        on_click: |_| select_first_intercept_target(cx)
+                    }
+                    icon_button {
                         path: "images/target_aar.svg".into(),
                         on_click: |_| select_first_aar_target(cx)
                     }
@@ -273,6 +284,10 @@ fn main_body(cx: Scope) -> Element {
                     icon_button {
                         path: "images/loadout_escort.svg".into(),
                         on_click: |_| select_first_escort_loadout(cx)
+                    }
+                    icon_button {
+                        path: "images/loadout_intercept.svg".into(),
+                        on_click: |_| select_first_intercept_loadout(cx)
                     }
                     icon_button {
                         path: "images/loadout_awacs.svg".into(),
@@ -314,6 +329,9 @@ fn main_body(cx: Scope) -> Element {
                     Selectable::TargetAntiShip(_) => rsx!{
                         edit_form::<AntiShipStrike> { headers: AntiShipStrike::get_header(), title: "Edit Anti-ship Strike".into(), item: selected_form.clone()}
                     },
+                    Selectable::TargetIntercept(Some(_)) => rsx!{
+                        edit_form::<Intercept> { headers: Intercept::get_header(), title: "Edit Intercept".into(), item: selected_form.clone()}
+                    },
                     Selectable::FixedAirBase(_) => rsx!{
                         edit_form::<FixedAirBase> { headers: FixedAirBase::get_header(), title: "Edit Airbase".into(), item: selected_form.clone()}
                     },
@@ -344,10 +362,13 @@ fn main_body(cx: Scope) -> Element {
                     Selectable::LoadoutEscort(_) => rsx!{
                         edit_form::<EscortLoadout> { headers: EscortLoadout::get_header(), title: "Edit Escort Loadout".into(), item: selected_form.clone()}
                     },
+                    Selectable::LoadoutIntercept(_) => rsx!{
+                        edit_form::<InterceptLoadout> { headers: InterceptLoadout::get_header(), title: "Edit Intercept Loadout".into(), item: selected_form.clone()}
+                    },
                     Selectable::Trigger(_) => rsx!{
                         edit_form::<Trigger> { headers: Trigger::get_header(), title: "Edit Trigger".into(), item: selected_form.clone()}
                     },
-                    _ => rsx!{{}}
+                    Selectable::None | Selectable::TargetIntercept(None) => rsx!{{}}
                 }
             }
             // divider
@@ -382,6 +403,9 @@ fn main_body(cx: Scope) -> Element {
                         Selectable::TargetAAR(_) => rsx! {
                             rsx::table { data: instance.target_list.refuel.to_vec() }
                         },
+                        Selectable::TargetIntercept(_) => rsx! {
+                            rsx::table { data: instance.target_list.intercept.to_vec() }
+                        },
                         Selectable::FixedAirBase(_) => rsx! {
                             rsx::table { data: instance.airbases.fixed.to_vec() }
                         },
@@ -409,10 +433,15 @@ fn main_body(cx: Scope) -> Element {
                         Selectable::LoadoutEscort(_) => rsx! {
                             rsx::table { data: instance.loadouts.escort.to_vec() }
                         },
+                        Selectable::LoadoutIntercept(_) => rsx! {
+                            rsx::table { data: instance.loadouts.intercept.to_vec() }
+                        },
                         Selectable::Trigger(_) => rsx! {
                             rsx::table { data: instance.triggers.to_vec() }
                         },
-                        _ => rsx!{{}}
+                        Selectable::None | Selectable::CampaignSettings(_) => rsx! {
+                            {}
+                        },
                         }
                 }
             }

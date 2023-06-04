@@ -361,7 +361,7 @@ impl Mappables for TargetListInternal {
                 }
             }
             // for some reason strikes on fixed coords have class = None
-            if strike.class == None && strike.elements.is_some() {
+            if strike.class.is_none() && strike.elements.is_some() {
                 for el in strike.elements.as_ref().unwrap().iter() {
                     if let StrikeElement::FixedCoord(fixed) = el {
                         map_points.push(MapPoint::new_from_dcs(

@@ -3,10 +3,11 @@ use serde::{Deserialize, Serialize};
 
 use super::TargetFirepower;
 use crate::{
-    editable::{Editable, FieldType, HeaderField, ValidationError, ValidationResult},
-    target_list::TargetList,
-    target_list_internal::TargetListInternal,
-    DCEInstance, NewFromMission,
+    editable::{
+        AllEntityTemplateAction, Editable, FieldType, HeaderField, ValidationError,
+        ValidationResult,
+    },
+    DCEInstance,
 };
 use anyhow::anyhow;
 
@@ -18,6 +19,7 @@ pub struct Intercept {
     pub base: String,
     #[serde(default)]
     pub inactive: bool,
+    pub radius: f64,
     pub firepower: TargetFirepower,
     #[serde(default)]
     pub _name: String,
@@ -35,6 +37,7 @@ impl Editable for Intercept {
             HeaderField::new("text", "Display Text", FieldType::String, true),
             HeaderField::new("_side", "Side", FieldType::String, false),
             HeaderField::new("priority", "Priority", FieldType::Int, true),
+            HeaderField::new("radius", "Radius (nm)", FieldType::DistanceNM, true),
             HeaderField::new("inactive", "Inactive", FieldType::Bool, true),
         ]
     }
@@ -68,17 +71,8 @@ impl Editable for Intercept {
         ValidationResult::Fail(errors)
     }
 
-    fn can_reset_from_miz() -> bool {
+    fn can_delete() -> bool {
         true
-    }
-
-    fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
-        let new_target_list =
-            TargetListInternal::from_target_list(&TargetList::new_from_mission(&instance.mission)?);
-
-        instance.target_list.intercept = new_target_list.intercept;
-
-        Ok(())
     }
 
     fn delete_by_name(instance: &mut DCEInstance, name: &str) -> Result<(), anyhow::Error> {
@@ -90,5 +84,75 @@ impl Editable for Intercept {
         }
 
         Err(anyhow!("Didn't find {}", name))
+    }
+
+    fn actions_all_entities() -> Vec<AllEntityTemplateAction> {
+        vec![AllEntityTemplateAction::new(
+            "Generate Intercepts",
+            "Generates an intercept task for each base with a capable squadron",
+            Intercept::generate_intercepts,
+        )]
+    }
+}
+
+impl Intercept {
+    fn generate_intercepts(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
+        let mut new_intercepts: Vec<Intercept> = Vec::default();
+        // fixed airbases
+        instance
+            .airbases
+            .fixed
+            .iter()
+            .filter(|fixed| {
+                let squadrons = instance.oob_air.squadrons_for_airbase(fixed._name.as_str());
+                fixed.side != "neutral"
+                    && squadrons.iter().any(|s| s.tasks.contains_key("Intercept"))
+            })
+            .for_each(|fixed| {
+                let name = fixed._name.to_owned() + " Alert";
+                new_intercepts.push(Intercept {
+                    priority: 5,
+                    text: name.to_owned(),
+                    base: fixed._name.to_owned(),
+                    inactive: false,
+                    radius: 200000.,
+                    firepower: TargetFirepower { min: 2, max: 2 },
+                    _name: name,
+                    _side: fixed.side.to_owned(),
+                    _firepower_min: 2,
+                    _firepower_max: 2,
+                })
+            });
+
+        // ship bases:
+        instance
+            .airbases
+            .ship
+            .iter()
+            .filter(|ship| {
+                let squadrons = instance.oob_air.squadrons_for_airbase(ship._name.as_str());
+                ship.side != "neutral"
+                    && squadrons.iter().any(|s| s.tasks.contains_key("Intercept"))
+            })
+            .for_each(|ship| {
+                let name = ship._name.to_owned() + " Alert";
+                new_intercepts.push(Intercept {
+                    priority: 5,
+                    text: name.to_owned(),
+                    base: ship._name.to_owned(),
+                    inactive: false,
+                    radius: 200000.,
+                    firepower: TargetFirepower { min: 2, max: 2 },
+                    _name: name,
+                    _side: ship.side.to_owned(),
+                    _firepower_min: 2,
+                    _firepower_max: 2,
+                })
+            });
+
+        let intercepts = &mut instance.target_list.intercept;
+        intercepts.append(&mut new_intercepts);
+
+        Ok(())
     }
 }

@@ -16,7 +16,7 @@ use crate::{
     NewFromMission,
 };
 
-use log::{warn, info};
+use log::{info, warn};
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 pub struct TargetList {
@@ -148,7 +148,6 @@ impl NewFromMission for TargetList {
                             _firepower_min: 2,
                             _firepower_max: 4,
                         };
-    
                         targets.insert(name_splits[2].to_owned(), Target::Strike(new_target));
                     }
                 }
@@ -230,7 +229,7 @@ impl NewFromMission for TargetList {
                     }),
                 );
             });
-        
+
         // add static groups:
         mission
         .coalition
@@ -284,7 +283,6 @@ impl NewFromMission for TargetList {
                 targets.insert(name_splits[1].to_owned(), Target::Strike(new_target));
             }
         });
-
 
         Ok(TargetList {
             blue: blue_targets,

@@ -105,6 +105,8 @@ where
         .filter(|h| fieldtype_editable(&h.type_))
         .collect::<Vec<_>>();
 
+    let entity_actions = T::actions_one_entity();
+
     cx.render(rsx!{
         div { class: "p-2 m-2 rounded bg-sky-200",
             h4 { class: "font-semibold flex",
@@ -195,6 +197,31 @@ where
                     }
                 }
                 render_errors { result: validation_state.get().to_owned() }
+            }
+            if !entity_actions.is_empty() {
+                rsx!{
+                    for a in entity_actions {
+                        rsx!{
+                            button {
+                                class: "p-1 bg-slate-100 hover:bg-slate-300 rounded border-slate-500 border-2 ml-2 tooltip",
+                                onclick: move |_| {
+                                    let mut atom_instance = atom_instance.write();
+                                    let mut_instance = atom_instance.as_mut().expect("DCE instance is loaded");
+                                    let mut mut_item = item_state.make_mut();
+                                    match (a.function)(&mut mut_item, mut_instance) {
+                                        Ok(()) => {},
+                                        Err(_) => {}
+                                    };
+                                },
+                                span {
+                                    class: "tooltiptext",
+                                    "{a.description}"
+                                }
+                                "{a.name}"
+                            }
+                        }
+                    }
+                }
             }
         }
     })

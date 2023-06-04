@@ -2,12 +2,14 @@ use dce_lib::{
     campaign_header::Header,
     db_airbases::{AirStartBase, FixedAirBase, ShipBase},
     loadouts::{
-        AARLoadout, AWACSLoadout, AntiShipLoadout, CAPLoadout, EscortLoadout, StrikeLoadout,
+        AARLoadout, AWACSLoadout, AntiShipLoadout, CAPLoadout, EscortLoadout, InterceptLoadout,
+        StrikeLoadout,
     },
     mappable::MapPoint,
     oob_air::Squadron,
     targets::{
-        anti_ship::AntiShipStrike, awacs::AWACS, cap::CAP, refueling::Refueling, strike::Strike,
+        anti_ship::AntiShipStrike, awacs::AWACS, cap::CAP, intercept::Intercept,
+        refueling::Refueling, strike::Strike,
     },
     trigger::Trigger,
     DCEInstance,
@@ -21,6 +23,8 @@ pub enum Selectable {
     TargetAntiShip(AntiShipStrike),
     TargetAAR(Refueling),
     TargetAWACS(AWACS),
+    // has to be option as there might not be any defined
+    TargetIntercept(Option<Intercept>),
     FixedAirBase(FixedAirBase),
     ShipAirBase(ShipBase),
     AirstartBase(AirStartBase),
@@ -31,6 +35,7 @@ pub enum Selectable {
     LoadoutAWACS(AWACSLoadout),
     LoadoutAAR(AARLoadout),
     LoadoutEscort(EscortLoadout),
+    LoadoutIntercept(InterceptLoadout),
     Trigger(Trigger),
     None,
 }
@@ -235,6 +240,22 @@ impl ToSelectable for AntiShipStrike {
     }
 }
 
+impl ToSelectable for Intercept {
+    fn to_selectable(&self) -> Selectable {
+        Selectable::TargetIntercept(Some(self.clone()))
+    }
+
+    fn from_selectable(sel: &Selectable) -> Option<Self>
+    where
+        Self: Sized,
+    {
+        if let Selectable::TargetIntercept(Some(t)) = sel {
+            return Some(t.clone());
+        }
+        None
+    }
+}
+
 impl ToSelectable for FixedAirBase {
     fn to_selectable(&self) -> Selectable {
         Selectable::FixedAirBase(self.clone())
@@ -386,6 +407,22 @@ impl ToSelectable for EscortLoadout {
         Self: Sized,
     {
         if let Selectable::LoadoutEscort(item) = sel {
+            return Some(item.clone());
+        }
+        None
+    }
+}
+
+impl ToSelectable for InterceptLoadout {
+    fn to_selectable(&self) -> Selectable {
+        Selectable::LoadoutIntercept(self.to_owned())
+    }
+
+    fn from_selectable(sel: &Selectable) -> Option<Self>
+    where
+        Self: Sized,
+    {
+        if let Selectable::LoadoutIntercept(item) = sel {
             return Some(item.clone());
         }
         None

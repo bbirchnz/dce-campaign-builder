@@ -39,9 +39,82 @@ pub trait Editable {
     fn can_add_new() -> bool {
         false
     }
+
+    /// returns a vec of functions that can make changes
+    /// to the whole set, or really anything in the DCEInstance.
+    ///
+    /// Will be used to create an array of buttons in the UI.
+    ///
+    /// Example: "create intercepts for all capable squadrons"
+    fn actions_all_entities() -> Vec<AllEntityTemplateAction> {
+        // default is no actions defined
+        Vec::default()
+    }
+
+    /// returns a vec of functions that can apply changes to a single entity
+    ///
+    /// Will be used to create an array of buttons in the UI on that entity
+    ///
+    /// Example: "Set this strike loadout up for good defaults for a low level bomb attack"
+    fn actions_one_entity() -> Vec<EntityTemplateAction<Self>>
+    where
+        Self: Sized,
+    {
+        // default is no actions defined
+        Vec::default()
+    }
 }
 
-// pub trait TableHeader {
+/// An action that can be applied to the full DCEInstance and perform multiple entity
+/// changes (e.g. delete and recreate all Intercept targets)
+pub struct AllEntityTemplateAction {
+    /// short name for use in button text
+    pub name: String,
+    /// description for use in tooltop
+    pub description: String,
+    /// function to execute when button clicked
+    pub function: fn(&mut DCEInstance) -> Result<(), anyhow::Error>,
+}
+
+/// An action that while intended to affect one entity,
+/// it can be applied to the full DCEInstance and perform multiple entity
+/// changes - e.g. set player to squadron needs to also edit all other squadrons
+pub struct EntityTemplateAction<T> {
+    /// short name for use in button text
+    pub name: String,
+    /// description for use in tooltop
+    pub description: String,
+    /// function to execute when button clicked
+    pub function: fn(&mut T, &mut DCEInstance) -> Result<(), anyhow::Error>,
+}
+
+impl<T> EntityTemplateAction<T> {
+    pub fn new(
+        name: &str,
+        description: &str,
+        function: fn(&mut T, &mut DCEInstance) -> Result<(), anyhow::Error>,
+    ) -> EntityTemplateAction<T> {
+        EntityTemplateAction {
+            name: name.to_owned(),
+            description: description.to_owned(),
+            function,
+        }
+    }
+}
+
+impl AllEntityTemplateAction {
+    pub fn new(
+        name: &str,
+        description: &str,
+        function: fn(&mut DCEInstance) -> Result<(), anyhow::Error>,
+    ) -> AllEntityTemplateAction {
+        AllEntityTemplateAction {
+            name: name.to_owned(),
+            description: description.to_owned(),
+            function,
+        }
+    }
+}
 
 #[derive(PartialEq, Debug, Clone)]
 pub struct HeaderField {

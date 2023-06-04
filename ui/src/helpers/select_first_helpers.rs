@@ -81,6 +81,25 @@ pub fn select_first_cap_target(cx: Scope) {
     }
 }
 
+pub fn select_first_intercept_target(cx: Scope) {
+    let atom_instance = use_atom_ref(cx, INSTANCE);
+    let atom_selected = use_atom_ref(cx, SELECTED);
+    let mut writable = atom_selected.write();
+
+    if let Some(item) = atom_instance
+        .read()
+        .as_ref()
+        .unwrap()
+        .target_list
+        .intercept
+        .first()
+    {
+        *writable = Selectable::TargetIntercept(Some(item.clone()));
+    } else {
+        *writable = Selectable::TargetIntercept(None);
+    }
+}
+
 pub fn select_first_ship_target(cx: Scope) {
     let atom_instance = use_atom_ref(cx, INSTANCE);
     let atom_selected = use_atom_ref(cx, SELECTED);
@@ -242,6 +261,23 @@ pub fn select_first_escort_loadout(cx: Scope) {
     {
         let mut writable = atom_selected.write();
         *writable = Selectable::LoadoutEscort(item.clone());
+    }
+}
+
+pub fn select_first_intercept_loadout(cx: Scope) {
+    let atom_instance = use_atom_ref(cx, INSTANCE);
+    let atom_selected = use_atom_ref(cx, SELECTED);
+
+    if let Some(item) = atom_instance
+        .read()
+        .as_ref()
+        .unwrap()
+        .loadouts
+        .intercept
+        .first()
+    {
+        let mut writable = atom_selected.write();
+        *writable = Selectable::LoadoutIntercept(item.clone());
     }
 }
 

@@ -273,10 +273,6 @@ impl Editable for Trigger {
         true
     }
 
-    fn can_add_new() -> bool {
-        true
-    }
-
     fn actions_all_entities() -> Vec<AllEntityTemplateAction> {
         let create_new = AllEntityTemplateAction::new("Add new", "Add a new trigger", |instance| {
             // make sure we haven't already got a "New Action"

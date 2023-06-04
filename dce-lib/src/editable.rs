@@ -36,10 +36,6 @@ pub trait Editable {
         false
     }
 
-    fn can_add_new() -> bool {
-        false
-    }
-
     /// returns a vec of functions that can make changes
     /// to the whole set, or really anything in the DCEInstance.
     ///

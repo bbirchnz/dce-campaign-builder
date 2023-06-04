@@ -475,7 +475,7 @@ fn main_body(cx: Scope) -> Element {
 struct IconButtonProps<'a> {
     path: String,
     on_click: EventHandler<'a, MouseEvent>,
-    tooltip: Option<&'a str>
+    tooltip: Option<&'a str>,
 }
 
 fn icon_button<'a>(cx: Scope<'a, IconButtonProps<'a>>) -> Element<'a> {

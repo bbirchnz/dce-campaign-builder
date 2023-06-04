@@ -6,7 +6,10 @@ use mlua::Lua;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    editable::{Editable, FieldType, HeaderField, ValidationError, ValidationResult},
+    editable::{
+        AllEntityTemplateAction, Editable, FieldType, HeaderField, ValidationError,
+        ValidationResult,
+    },
     lua_utils::load_trigger_mocks,
     serde_utils::LuaFileBased,
     DCEInstance, NewFromMission,
@@ -272,6 +275,34 @@ impl Editable for Trigger {
 
     fn can_add_new() -> bool {
         true
+    }
+
+    fn actions_all_entities() -> Vec<AllEntityTemplateAction> {
+        let create_new = AllEntityTemplateAction::new("Add new", "Add a new trigger", |instance| {
+            // make sure we haven't already got a "New Action"
+            let existing_names = instance
+                .triggers
+                .iter()
+                .filter(|i| i.get_name().contains("New Action"))
+                .sorted_by(|i, i2| Ord::cmp(&i.get_name().len(), &i2.get_name().len()))
+                .collect::<Vec<_>>();
+            let name;
+            if existing_names.is_empty() {
+                name = "New Action".to_string();
+            } else {
+                name = existing_names.last().unwrap().get_name() + "_1";
+            }
+            instance.triggers.push(Trigger {
+                active: true,
+                once: false,
+                condition: "true".into(),
+                action: Actions::Many(vec!["".into()]),
+                _name: name,
+            });
+            Ok(())
+        });
+
+        vec![create_new]
     }
 }
 

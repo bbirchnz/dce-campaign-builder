@@ -1,8 +1,11 @@
 use super::TargetFirepower;
 use crate::{
-    editable::{Editable, FieldType, HeaderField, ValidationError, ValidationResult},
+    editable::{
+        Editable, EntityTemplateAction, FieldType, HeaderField, ValidationError, ValidationResult,
+    },
     target_list::TargetList,
     target_list_internal::TargetListInternal,
+    trigger::{Actions, Trigger},
     DCEInstance, NewFromMission,
 };
 use anyhow::anyhow;
@@ -168,5 +171,41 @@ impl Editable for Strike {
         }
 
         Err(anyhow!("Didn't find {}", name))
+    }
+
+    fn actions_one_entity() -> Vec<crate::editable::EntityTemplateAction<Self>>
+    where
+        Self: Sized,
+    {
+        let hide_action = EntityTemplateAction::new("Hide Target", "Hide and disable the target and its associated group by creating a set of triggers that can be adjusted", 
+        |item: &mut Strike, instance| {
+
+            if item.class.is_some() && item.class.as_ref().unwrap() == "vehicle" && item.class_template.is_some() {
+                let actions = vec![
+                    // target inactive
+                    format!("Action.TargetActive(\"{}\", false)", item.get_name()),
+                    // hide group in mission editor
+                    format!("Action.GroupHidden(\"{}\", true)", item.class_template.as_ref().unwrap()),
+                    // set group probability to zero (in the mission editor, but won't show in mission)
+                    format!("Action.GroupProbability(\"{}\", 0)", item.class_template.as_ref().unwrap()),
+                    ];
+
+                    let trigger = Trigger {
+                    active: true,
+                    once: false,
+                    condition: "true".into(),
+                    action: Actions::Many(actions),
+                    _name: item.text.to_owned() + " - Hide",
+                };
+                // sets target inactive now, so its obvious in the UI
+                item.inactive = true;
+                instance.triggers.push(trigger);
+                return Ok(())
+            }
+
+            Err(anyhow::anyhow!("Only works for Strike targets on ground vehicle groups"))
+        });
+
+        vec![hide_action]
     }
 }

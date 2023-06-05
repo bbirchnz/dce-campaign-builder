@@ -177,6 +177,20 @@ impl HeaderField {
                     Actions::Many(actions) => actions.to_owned(),
                 }
             }
+            FieldType::VecString => {
+                // returns the vec string, or a vec with an empty string (so we get one edit box, this is removed on save)
+                let items = item
+                    .field(&self.field)
+                    .unwrap_or_else(|| panic!("Field {} should exist", &self.field))
+                    .downcast_ref::<Vec<String>>()
+                    .unwrap_or_else(|| panic!("Failed to get field {} as Actions", &self.field))
+                    .to_vec();
+                if items.is_empty() {
+                    vec!["".into()]
+                } else {
+                    items
+                }
+            }
             _ => {
                 warn!(
                     "get_value_stringvec called with a {:?} that doesn't need it",
@@ -207,6 +221,22 @@ impl HeaderField {
                     .apply(&action);
                 Ok(())
             }
+            FieldType::VecString => {
+                let field = item
+                    .field_mut(&self.field)
+                    .ok_or(anyhow!("Couldn't get field {}", &self.field))?
+                    .downcast_mut::<Vec<String>>()
+                    .unwrap_or_else(|| {
+                        panic!("Failed to get field {} as Vec<String>", &self.field)
+                    });
+                // if we get nothing but a single empty string, assume its completely empty
+                if field.len() == 1 && field[0].len() == 0 {
+                    *field = Vec::default();
+                } else {
+                    *field = values;
+                }
+                Ok(())
+            }
             _ => Err(anyhow!(
                 "set_value_from_stringvec called with a {:?} that doesn't need it",
                 self
@@ -217,6 +247,17 @@ impl HeaderField {
     pub fn get_value_string(&self, item: &dyn Struct) -> String {
         match self.type_ {
             FieldType::String => get_string(item, &self.field),
+            FieldType::OptionString => {
+                let val = item
+                    .field(&self.field)
+                    .unwrap_or_else(|| panic!("Field {} should exist", &self.field))
+                    .downcast_ref::<Option<String>>()
+                    .unwrap_or_else(|| panic!("Failed to get field {} as bool", &self.field));
+                match val {
+                    Some(str) => str.to_owned(),
+                    None => "".to_owned(),
+                }
+            }
             FieldType::Float(func) => {
                 let value = get_f64(item, &self.field);
                 func(value)
@@ -271,13 +312,23 @@ impl HeaderField {
                     .field(&self.field)
                     .unwrap_or_else(|| panic!("Field {} should exist", &self.field))
                     .downcast_ref::<Actions>()
-                    .unwrap_or_else(|| panic!("Failed to get field {} as bool", &self.field));
+                    .unwrap_or_else(|| panic!("Failed to get field {} as Actions", &self.field));
                 match val {
                     Actions::One(_) => "1".into(),
                     Actions::Many(actions) => format!("{}", actions.len()),
                 }
             }
             FieldType::FixedEnum(_) => get_string(item, &self.field),
+            FieldType::VecString => {
+                let val = item
+                    .field(&self.field)
+                    .unwrap_or_else(|| panic!("Field {} should exist", &self.field))
+                    .downcast_ref::<Vec<String>>()
+                    .unwrap_or_else(|| {
+                        panic!("Failed to get field {} as Vec<String>", &self.field)
+                    });
+                val.join(", ")
+            }
         }
     }
 
@@ -288,6 +339,13 @@ impl HeaderField {
     ) -> Result<(), anyhow::Error> {
         match self.type_ {
             FieldType::String => apply_value(item, &self.field, &value.to_owned()),
+            FieldType::OptionString => {
+                if value != "" {
+                    apply_value(item, &self.field, &Some(value.to_owned()))
+                } else {
+                    apply_value(item, &self.field, &None::<String>)
+                }
+            }
             FieldType::Float(_) => {
                 let parsed = value.parse::<f64>();
                 if parsed.is_ok() {
@@ -336,6 +394,9 @@ impl HeaderField {
                 apply_value(item, &self.field, &value.to_owned());
             }
             FieldType::FixedEnum(_) => apply_value(item, &self.field, &value.to_owned()),
+            FieldType::VecString => {
+                apply_value(item, &self.field, &value.to_owned());
+            }
         };
         Ok(())
     }
@@ -386,4 +447,6 @@ pub enum FieldType {
     DurationMin,
     TriggerActions,
     FixedEnum(Vec<String>),
+    OptionString,
+    VecString,
 }

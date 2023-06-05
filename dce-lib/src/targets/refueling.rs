@@ -25,6 +25,8 @@ pub struct Refueling {
     pub _name: String,
     #[serde(default)]
     pub _side: String,
+    #[serde(default)]
+    pub attributes: Vec<String>,
 }
 
 impl Editable for Refueling {
@@ -46,6 +48,7 @@ impl Editable for Refueling {
                 true,
             ),
             HeaderField::new("inactive", "Inactive", FieldType::Bool, true),
+            HeaderField::new("attributes", "Loadout Tags", FieldType::VecString, true),
         ]
     }
     fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {

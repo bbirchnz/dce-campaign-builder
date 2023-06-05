@@ -80,6 +80,8 @@ pub struct StrikeLoadout {
     #[serde(default)]
     pub _airframe: String,
     pub _name: String,
+    #[serde(default)]
+    pub attributes: Vec<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
@@ -117,6 +119,8 @@ pub struct AntiShipLoadout {
     #[serde(default)]
     pub _airframe: String,
     pub _name: String,
+    #[serde(default)]
+    pub attributes: Vec<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
@@ -146,6 +150,8 @@ pub struct CAPLoadout {
     pub sortie_rate: u32,
     pub _airframe: String,
     pub _name: String,
+    #[serde(default)]
+    pub attributes: Vec<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
@@ -173,6 +179,8 @@ pub struct AWACSLoadout {
     pub sortie_rate: u32,
     pub _airframe: String,
     pub _name: String,
+    #[serde(default)]
+    pub attributes: Vec<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
@@ -200,6 +208,8 @@ pub struct AARLoadout {
     pub sortie_rate: u32,
     pub _airframe: String,
     pub _name: String,
+    #[serde(default)]
+    pub attributes: Vec<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
@@ -221,6 +231,8 @@ pub struct EscortLoadout {
     pub sortie_rate: u32,
     pub _airframe: String,
     pub _name: String,
+    #[serde(default)]
+    pub attributes: Vec<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
@@ -239,6 +251,8 @@ pub struct InterceptLoadout {
     pub sortie_rate: u32,
     pub _airframe: String,
     pub _name: String,
+    #[serde(default)]
+    pub attributes: Vec<String>,
 }
 
 fn common_headers() -> Vec<HeaderField> {
@@ -348,6 +362,7 @@ impl NewFromMission for Loadouts {
                                 sortie_rate: 6,
                                 _airframe: u._type.to_owned(),
                                 _name: u.name.to_owned(),
+                                attributes: Vec::default(),
                             },
                         );
                         Ok(())
@@ -372,6 +387,7 @@ impl NewFromMission for Loadouts {
                                 sortie_rate: 6,
                                 _airframe: u._type.to_owned(),
                                 _name: u.name.to_owned(),
+                                attributes: Vec::default(),
                             },
                         );
                         Ok(())
@@ -406,6 +422,7 @@ impl NewFromMission for Loadouts {
                                 sortie_rate: 6,
                                 _airframe: u._type.to_owned(),
                                 _name: u.name.to_owned(),
+                                attributes: Vec::default(),
                             },
                         );
                         Ok(())
@@ -429,6 +446,7 @@ impl NewFromMission for Loadouts {
                                 sortie_rate: 12,
                                 _airframe: u._type.to_owned(),
                                 _name: u.name.to_owned(),
+                                attributes: Vec::default(),
                             },
                         );
                         Ok(())
@@ -452,6 +470,7 @@ impl NewFromMission for Loadouts {
                                 sortie_rate: 12,
                                 _airframe: u._type.to_owned(),
                                 _name: u.name.to_owned(),
+                                attributes: Vec::default(),
                             },
                         );
                         Ok(())
@@ -473,6 +492,7 @@ impl NewFromMission for Loadouts {
                                 _name: u.name.to_owned(),
                                 ldsd: true,
                                 standoff: 50000.,
+                                attributes: Vec::default(),
                             },
                         );
                         Ok(())
@@ -492,6 +512,7 @@ impl NewFromMission for Loadouts {
                                 _airframe: u._type.to_owned(),
                                 _name: u.name.to_owned(),
                                 ldsd: true,
+                                attributes: Vec::default(),
                             },
                         );
                         Ok(())
@@ -507,12 +528,15 @@ impl NewFromMission for Loadouts {
 impl Editable for CAPLoadout {
     fn get_header() -> Vec<HeaderField> {
         let mut common = common_headers();
-        common.extend(vec![HeaderField::new(
-            "t_station",
-            "Time on station (min)",
-            FieldType::DurationMin,
-            true,
-        )]);
+        common.extend(vec![
+            HeaderField::new(
+                "t_station",
+                "Time on station (min)",
+                FieldType::DurationMin,
+                true,
+            ),
+            HeaderField::new("attributes", "Loadout Tags", FieldType::VecString, true),
+        ]);
         common
     }
 
@@ -568,12 +592,15 @@ impl Editable for CAPLoadout {
 impl Editable for AARLoadout {
     fn get_header() -> Vec<HeaderField> {
         let mut common = common_headers();
-        common.extend(vec![HeaderField::new(
-            "t_station",
-            "Time on station (min)",
-            FieldType::DurationMin,
-            true,
-        )]);
+        common.extend(vec![
+            HeaderField::new(
+                "t_station",
+                "Time on station (min)",
+                FieldType::DurationMin,
+                true,
+            ),
+            HeaderField::new("attributes", "Loadout Tags", FieldType::VecString, true),
+        ]);
         common
     }
 
@@ -628,12 +655,15 @@ impl Editable for AARLoadout {
 impl Editable for AWACSLoadout {
     fn get_header() -> Vec<HeaderField> {
         let mut common = common_headers();
-        common.extend(vec![HeaderField::new(
-            "t_station",
-            "Time on station (min)",
-            FieldType::DurationMin,
-            true,
-        )]);
+        common.extend(vec![
+            HeaderField::new(
+                "t_station",
+                "Time on station (min)",
+                FieldType::DurationMin,
+                true,
+            ),
+            HeaderField::new("attributes", "Loadout Tags", FieldType::VecString, true),
+        ]);
         common
     }
 
@@ -708,6 +738,7 @@ impl Editable for StrikeLoadout {
                 FieldType::FixedEnum(vec!["All".into(), "Auto".into()]),
                 true,
             ),
+            HeaderField::new("attributes", "Loadout Tags", FieldType::VecString, true),
         ]);
         common
     }
@@ -780,6 +811,7 @@ impl Editable for AntiShipLoadout {
                 FieldType::FixedEnum(vec!["All".into(), "Auto".into()]),
                 true,
             ),
+            HeaderField::new("attributes", "Loadout Tags", FieldType::VecString, true),
         ]);
         common
     }
@@ -843,6 +875,7 @@ impl Editable for EscortLoadout {
             HeaderField::new("standoff", "Engagement Range", FieldType::DistanceNM, true),
             HeaderField::new("capability", "Capability", FieldType::Int, true),
             HeaderField::new("firepower", "Firepower", FieldType::Int, true),
+            HeaderField::new("attributes", "Loadout Tags", FieldType::VecString, true),
         ]
     }
     fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {
@@ -904,6 +937,7 @@ impl Editable for InterceptLoadout {
             HeaderField::new("range", "Range (nm)", FieldType::DistanceNM, true),
             HeaderField::new("capability", "Capability", FieldType::Int, true),
             HeaderField::new("firepower", "Firepower", FieldType::Int, true),
+            HeaderField::new("attributes", "Loadout Tags", FieldType::VecString, true),
         ]
     }
     fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {

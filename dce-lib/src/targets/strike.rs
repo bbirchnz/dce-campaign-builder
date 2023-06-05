@@ -30,6 +30,8 @@ pub struct Strike {
     pub _firepower_min: u32,
     #[serde(default)]
     pub _firepower_max: u32,
+    #[serde(default)]
+    pub attributes: Vec<String>,
 }
 
 fn default_class() -> Option<String> {
@@ -64,6 +66,13 @@ impl Editable for Strike {
             HeaderField::new("_firepower_min", "Min Req Firepower", FieldType::Int, true),
             HeaderField::new("_firepower_max", "Max Req Firepower", FieldType::Int, true),
             HeaderField::new("inactive", "Inactive", FieldType::Bool, true),
+            HeaderField::new(
+                "class_template",
+                "DCS Group Name",
+                FieldType::OptionString,
+                false,
+            ),
+            HeaderField::new("attributes", "Loadout Tags", FieldType::VecString, true),
         ]
     }
     fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {

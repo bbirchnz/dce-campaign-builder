@@ -29,6 +29,8 @@ pub struct Intercept {
     pub _firepower_min: u32,
     #[serde(default)]
     pub _firepower_max: u32,
+    #[serde(default)]
+    pub attributes: Vec<String>,
 }
 
 impl Editable for Intercept {
@@ -39,6 +41,7 @@ impl Editable for Intercept {
             HeaderField::new("priority", "Priority", FieldType::Int, true),
             HeaderField::new("radius", "Radius (nm)", FieldType::DistanceNM, true),
             HeaderField::new("inactive", "Inactive", FieldType::Bool, true),
+            HeaderField::new("attributes", "Loadout Tags", FieldType::VecString, true),
         ]
     }
     fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {
@@ -121,6 +124,7 @@ impl Intercept {
                     _side: fixed.side.to_owned(),
                     _firepower_min: 2,
                     _firepower_max: 2,
+                    attributes: Vec::default(),
                 })
             });
 
@@ -147,6 +151,7 @@ impl Intercept {
                     _side: ship.side.to_owned(),
                     _firepower_min: 2,
                     _firepower_max: 2,
+                    attributes: Vec::default(),
                 })
             });
 

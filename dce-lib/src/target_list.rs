@@ -63,6 +63,7 @@ impl NewFromMission for TargetList {
                             _side: name_splits[0].to_lowercase(),
                             _firepower_min: 2,
                             _firepower_max: 2,
+                            attributes: Vec::default(),
                         }),
                     );
                 }
@@ -86,6 +87,7 @@ impl NewFromMission for TargetList {
                             firepower: TargetFirepower { min: 1, max: 1 },
                             _name: z.name.to_owned(),
                             _side: name_splits[0].to_lowercase(),
+                            attributes: Vec::default(),
                         }),
                     );
                 }
@@ -111,6 +113,7 @@ impl NewFromMission for TargetList {
                             _side: name_splits[0].to_lowercase(),
                             _firepower_min: 1,
                             _firepower_max: 1,
+                            attributes: Vec::default(),
                         }),
                     );
                 }
@@ -147,6 +150,7 @@ impl NewFromMission for TargetList {
                             _side: name_splits[0].to_lowercase(),
                             _firepower_min: 2,
                             _firepower_max: 4,
+                            attributes: Vec::default(),
                         };
                         targets.insert(name_splits[2].to_owned(), Target::Strike(new_target));
                     }
@@ -192,6 +196,7 @@ impl NewFromMission for TargetList {
                             _side: "blue".into(),
                             _firepower_min: 2,
                             _firepower_max: 2,
+                            attributes: Vec::default(),
                         }),
                     );
                 }
@@ -226,6 +231,7 @@ impl NewFromMission for TargetList {
                         _side: "blue".into(),
                         _firepower_min: 2,
                         _firepower_max: 4,
+                        attributes: Vec::default(),
                     }),
                 );
             });
@@ -278,6 +284,7 @@ impl NewFromMission for TargetList {
                     _side: side.to_owned(),
                     _firepower_min: 2,
                     _firepower_max: 4,
+                    attributes: Vec::default(),
                 };
 
                 targets.insert(name_splits[1].to_owned(), Target::Strike(new_target));

@@ -19,6 +19,7 @@ use crate::{
 fn fieldtype_to_input(field: &FieldType) -> String {
     match field {
         FieldType::String => "text".into(),
+        FieldType::OptionString => "text".into(),
         FieldType::Float(_) => "number".into(),
         FieldType::Int => "number".into(),
         FieldType::Enum => "text".into(),
@@ -31,12 +32,14 @@ fn fieldtype_to_input(field: &FieldType) -> String {
         FieldType::DurationMin => "number".into(),
         FieldType::TriggerActions => "text".into(),
         FieldType::FixedEnum(_) => "select".into(),
+        FieldType::VecString => "text".into(),
     }
 }
 
 fn fieldtype_editable(field: &FieldType) -> bool {
     match field {
         FieldType::String => true,
+        FieldType::OptionString => true,
         FieldType::Float(_) => true,
         FieldType::Int => true,
         FieldType::Enum => false,
@@ -49,6 +52,7 @@ fn fieldtype_editable(field: &FieldType) -> bool {
         FieldType::DurationMin => true,
         FieldType::TriggerActions => true,
         FieldType::FixedEnum(_) => true,
+        FieldType::VecString => true,
     }
 }
 
@@ -124,7 +128,7 @@ where
                 for h in usable_headers {
                     match &h.type_ {
                         // Trigger actions have to render as one input per action
-                        FieldType::TriggerActions => rsx!{
+                        FieldType::TriggerActions | FieldType::VecString => rsx!{
                             render_triggeractions {
                                 header: h.clone(),
                                 item: item_state.get().to_owned(),
@@ -264,7 +268,7 @@ where
 {
     let h = &cx.props.header;
     cx.render(rsx!{
-        label { class: "p-1 w-full", "Actions" }
+        label { class: "p-1 w-full", "{h.display}" }
         for (i , action) in h.get_value_stringvec(&cx.props.item).iter().enumerate() {
             rsx! {
                 div {
@@ -303,7 +307,7 @@ where
     let headers = T::get_header();
     for h in headers.iter().filter(|h| h.editable) {
         match h.type_ {
-            FieldType::TriggerActions => {
+            FieldType::TriggerActions | FieldType::VecString => {
                 let values = stringvec_for_field(values, &h.display);
 
                 if let Err(e) = h.set_value_from_stringvec(&mut **item, values) {
@@ -314,7 +318,7 @@ where
                 let v = values.get(&h.display).unwrap_or_else(|| {
                     panic!(
                         "There must be a value for field {:?} in formevent",
-                        &h.type_
+                        &h.field
                     )
                 });
                 if let Err(e) = h.set_value_fromstr(&mut **item, v) {

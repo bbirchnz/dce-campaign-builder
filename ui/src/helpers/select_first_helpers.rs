@@ -297,6 +297,37 @@ pub fn select_first_escort_loadout(cx: Scope) {
     }
 }
 
+pub fn select_first_sead_loadout(cx: Scope) {
+    let atom_instance = use_atom_ref(cx, INSTANCE);
+    let atom_selected = use_atom_ref(cx, SELECTED);
+    let mut writable = atom_selected.write();
+
+    if let Some(item) = atom_instance.read().as_ref().unwrap().loadouts.sead.first() {
+        *writable = Selectable::LoadoutSEAD(Some(item.clone()));
+    } else {
+        *writable = Selectable::LoadoutSEAD(None);
+    }
+}
+
+pub fn select_first_transport_loadout(cx: Scope) {
+    let atom_instance = use_atom_ref(cx, INSTANCE);
+    let atom_selected = use_atom_ref(cx, SELECTED);
+    let mut writable = atom_selected.write();
+
+    if let Some(item) = atom_instance
+        .read()
+        .as_ref()
+        .unwrap()
+        .loadouts
+        .transport
+        .first()
+    {
+        *writable = Selectable::LoadoutTransport(Some(item.clone()));
+    } else {
+        *writable = Selectable::LoadoutTransport(None);
+    }
+}
+
 pub fn select_first_intercept_loadout(cx: Scope) {
     let atom_instance = use_atom_ref(cx, INSTANCE);
     let atom_selected = use_atom_ref(cx, SELECTED);

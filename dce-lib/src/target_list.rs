@@ -151,6 +151,7 @@ impl NewFromMission for TargetList {
                             _firepower_min: 2,
                             _firepower_max: 4,
                             attributes: Vec::default(),
+                            picture: Vec::default(),
                         };
                         targets.insert(name_splits[2].to_owned(), Target::Strike(new_target));
                     }
@@ -197,6 +198,7 @@ impl NewFromMission for TargetList {
                             _firepower_min: 2,
                             _firepower_max: 2,
                             attributes: Vec::default(),
+                            picture: Vec::default(),
                         }),
                     );
                 }
@@ -285,6 +287,7 @@ impl NewFromMission for TargetList {
                     _firepower_min: 2,
                     _firepower_max: 4,
                     attributes: Vec::default(),
+                    picture: Vec::default(),
                 };
 
                 targets.insert(name_splits[1].to_owned(), Target::Strike(new_target));

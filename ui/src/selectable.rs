@@ -3,7 +3,7 @@ use dce_lib::{
     db_airbases::{AirStartBase, FixedAirBase, ShipBase},
     loadouts::{
         AARLoadout, AWACSLoadout, AntiShipLoadout, CAPLoadout, EscortLoadout, InterceptLoadout,
-        StrikeLoadout,
+        SEADLoadout, StrikeLoadout, TransportLoadout,
     },
     mappable::MapPoint,
     oob_air::Squadron,
@@ -36,6 +36,8 @@ pub enum Selectable {
     LoadoutAAR(Option<AARLoadout>),
     LoadoutEscort(Option<EscortLoadout>),
     LoadoutIntercept(Option<InterceptLoadout>),
+    LoadoutSEAD(Option<SEADLoadout>),
+    LoadoutTransport(Option<TransportLoadout>),
     Trigger(Option<Trigger>),
     None,
 }
@@ -423,6 +425,38 @@ impl ToSelectable for InterceptLoadout {
         Self: Sized,
     {
         if let Selectable::LoadoutIntercept(Some(item)) = sel {
+            return Some(item.clone());
+        }
+        None
+    }
+}
+
+impl ToSelectable for SEADLoadout {
+    fn to_selectable(&self) -> Selectable {
+        Selectable::LoadoutSEAD(Some(self.to_owned()))
+    }
+
+    fn from_selectable(sel: &Selectable) -> Option<Self>
+    where
+        Self: Sized,
+    {
+        if let Selectable::LoadoutSEAD(Some(item)) = sel {
+            return Some(item.clone());
+        }
+        None
+    }
+}
+
+impl ToSelectable for TransportLoadout {
+    fn to_selectable(&self) -> Selectable {
+        Selectable::LoadoutTransport(Some(self.to_owned()))
+    }
+
+    fn from_selectable(sel: &Selectable) -> Option<Self>
+    where
+        Self: Sized,
+    {
+        if let Selectable::LoadoutTransport(Some(item)) = sel {
             return Some(item.clone());
         }
         None

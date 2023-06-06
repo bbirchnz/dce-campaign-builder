@@ -6,7 +6,7 @@ use dce_lib::{
     editable::Editable,
     loadouts::{
         AARLoadout, AWACSLoadout, AntiShipLoadout, CAPLoadout, EscortLoadout, InterceptLoadout,
-        StrikeLoadout,
+        SEADLoadout, StrikeLoadout, TransportLoadout,
     },
     mappable::MapPoint,
     oob_air::Squadron,
@@ -299,6 +299,11 @@ fn main_body(cx: Scope) -> Element {
                         tooltip: "Escort loadouts and flight profiles"
                     }
                     icon_button {
+                        path: "images/loadout_sead.svg".into(),
+                        on_click: |_| select_first_sead_loadout(cx),
+                        tooltip: "SEAD escort loadouts and flight profiles"
+                    }
+                    icon_button {
                         path: "images/loadout_intercept.svg".into(),
                         on_click: |_| select_first_intercept_loadout(cx),
                         tooltip: "Ground controlled intercept loadouts and flight profiles"
@@ -312,6 +317,11 @@ fn main_body(cx: Scope) -> Element {
                         path: "images/loadout_aar.svg".into(),
                         on_click: |_| select_first_aar_loadout(cx),
                         tooltip: "Air to air refueling loadouts and flight profiles"
+                    }
+                    icon_button {
+                        path: "images/loadout_transport.svg".into(),
+                        on_click: |_| select_first_transport_loadout(cx),
+                        tooltip: "Transport loadouts and flight profiles"
                     }
                 }
                 icon_button {
@@ -387,6 +397,12 @@ fn main_body(cx: Scope) -> Element {
                     Selectable::LoadoutIntercept(_) => rsx!{
                         edit_form::<InterceptLoadout> { headers: InterceptLoadout::get_header(), title: "Edit Intercept Loadout".into(), item: selected_form.clone()}
                     },
+                    Selectable::LoadoutSEAD(_) => rsx!{
+                        edit_form::<SEADLoadout> { headers: SEADLoadout::get_header(), title: "Edit SEAD Loadout".into(), item: selected_form.clone()}
+                    },
+                    Selectable::LoadoutTransport(_) => rsx!{
+                        edit_form::<TransportLoadout> { headers: TransportLoadout::get_header(), title: "Edit Transport Loadout".into(), item: selected_form.clone()}
+                    },
                     Selectable::Trigger(_) => rsx!{
                         edit_form::<Trigger> { headers: Trigger::get_header(), title: "Edit Trigger".into(), item: selected_form.clone()}
                     },
@@ -457,6 +473,12 @@ fn main_body(cx: Scope) -> Element {
                         },
                         Selectable::LoadoutIntercept(_) => rsx! {
                             rsx::table { data: instance.loadouts.intercept.to_vec() }
+                        },
+                        Selectable::LoadoutSEAD(_) => rsx! {
+                            rsx::table { data: instance.loadouts.sead.to_vec() }
+                        },
+                        Selectable::LoadoutTransport(_) => rsx! {
+                            rsx::table { data: instance.loadouts.transport.to_vec() }
                         },
                         Selectable::Trigger(_) => rsx! {
                             rsx::table { data: instance.triggers.to_vec() }

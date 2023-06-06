@@ -342,6 +342,22 @@
                 Source='$(var.CargoTargetBinDir)\..\..\ui\images\loadout_intercept.svg'
                 KeyPath='yes' />
             </Component>
+            <Component Id='svg_loadout_sead' Guid='fa679939-7b4b-4962-a91d-c2ef0f89fa0a'>
+              <File
+                Id='svg_loadout_sead_file'
+                Name='loadout_sead.svg'
+                DiskId='1'
+                Source='$(var.CargoTargetBinDir)\..\..\ui\images\loadout_sead.svg'
+                KeyPath='yes' />
+            </Component>
+            <Component Id='svg_loadout_transport' Guid='4e40292b-a292-45bd-b268-4bcfbd82b92c'>
+              <File
+                Id='svg_loadout_transport_file'
+                Name='loadout_transport.svg'
+                DiskId='1'
+                Source='$(var.CargoTargetBinDir)\..\..\ui\images\loadout_transport.svg'
+                KeyPath='yes' />
+            </Component>
 
             <!-- Plane SVG -->
             <Component Id='svg_plane' Guid='0dfd186a-5e2d-435b-a69e-e1026540ce6b'>
@@ -436,6 +452,8 @@
       <ComponentRef Id='svg_loadout_strike' />
       <ComponentRef Id='svg_loadout_intercept' />
       <ComponentRef Id='svg_loadout_escort' />
+      <ComponentRef Id='svg_loadout_sead' />
+      <ComponentRef Id='svg_loadout_transport' />
 
       <ComponentRef Id='svg_target_aar' />
       <ComponentRef Id='svg_target_awacs' />

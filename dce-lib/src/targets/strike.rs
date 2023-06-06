@@ -35,6 +35,8 @@ pub struct Strike {
     pub _firepower_max: u32,
     #[serde(default)]
     pub attributes: Vec<String>,
+    #[serde(default)]
+    pub picture: Vec<String>,
 }
 
 fn default_class() -> Option<String> {
@@ -75,6 +77,7 @@ impl Editable for Strike {
                 FieldType::OptionString,
                 false,
             ),
+            HeaderField::new("picture", "Briefing Images", FieldType::VecString, true),
             HeaderField::new("attributes", "Loadout Tags", FieldType::VecString, true),
         ]
     }
@@ -139,6 +142,19 @@ impl Editable for Strike {
                             "Target class must be vehicle or ship",
                         ));
                     }
+                }
+            }
+        }
+
+        // this will often have just a single empty string if nothing in UI
+        if self.picture.len() != 1 || self.picture[0].len() > 0 {
+            for p in &self.picture {
+                if !instance.bin_data.images.iter().any(|i| &i.name == p) {
+                    errors.push(ValidationError::new(
+                        "picture",
+                        "Briefing Images",
+                        &format!("{} is not a valid image", p),
+                    ));
                 }
             }
         }

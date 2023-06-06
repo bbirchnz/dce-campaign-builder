@@ -27,8 +27,12 @@ pub struct AirframeLoadout {
     pub aar: Option<HashMap<String, AARLoadout>>,
     #[serde(rename = "Escort")]
     pub escort: Option<HashMap<String, EscortLoadout>>,
+    #[serde(rename = "SEAD")]
+    pub sead: Option<HashMap<String, SEADLoadout>>,
     #[serde(rename = "Intercept")]
     pub intercept: Option<HashMap<String, InterceptLoadout>>,
+    #[serde(rename = "Transport")]
+    pub transport: Option<HashMap<String, TransportLoadout>>,
 }
 
 impl Default for AirframeLoadout {
@@ -40,7 +44,9 @@ impl Default for AirframeLoadout {
             awacs: Some(Default::default()),
             aar: Some(Default::default()),
             escort: Some(Default::default()),
+            sead: Some(Default::default()),
             intercept: Some(Default::default()),
+            transport: Some(Default::default()),
         }
     }
 }
@@ -254,6 +260,56 @@ pub struct InterceptLoadout {
     #[serde(default)]
     pub attributes: Vec<String>,
 }
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
+pub struct TransportLoadout {
+    pub day: bool,
+    pub night: bool,
+    #[serde(rename = "adverseWeather")]
+    pub adverse_weather: bool,
+    pub range: f64,
+    pub capability: u32,
+    pub firepower: u32,
+    #[serde(rename = "vCruise")]
+    pub v_cruise: f64,
+    #[serde(rename = "vAttack")]
+    pub v_attack: f64,
+    #[serde(rename = "hCruise")]
+    pub h_cruise: f64,
+    #[serde(rename = "hAttack")]
+    pub h_attack: f64,
+    pub stores: Payload,
+    #[serde(default)]
+    pub sortie_rate: u32,
+    pub _airframe: String,
+    pub _name: String,
+    #[serde(default)]
+    pub attributes: Vec<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
+pub struct SEADLoadout {
+    pub day: bool,
+    pub night: bool,
+    #[serde(rename = "adverseWeather")]
+    pub adverse_weather: bool,
+    pub range: f64,
+    pub capability: u32,
+    pub firepower: u32,
+    #[serde(rename = "vCruise")]
+    pub v_cruise: f64,
+    #[serde(rename = "LDSD")]
+    pub stores: Payload,
+    #[serde(default)]
+    pub sortie_rate: u32,
+    pub _airframe: String,
+    pub _name: String,
+    #[serde(default)]
+    pub attributes: Vec<String>,
+}
+
+// SAR
+// CSAR
 
 fn common_headers() -> Vec<HeaderField> {
     vec![
@@ -517,6 +573,49 @@ impl NewFromMission for Loadouts {
                         );
                         Ok(())
                     }
+                    "SEAD" => {
+                        unit_record.sead.as_mut().unwrap().insert(
+                            u.name.to_owned(),
+                            SEADLoadout {
+                                day: true,
+                                night: true,
+                                adverse_weather: true,
+                                range: 500000.,
+                                capability: 1,
+                                firepower: 1,
+                                stores: u.payload.clone(),
+                                sortie_rate: 12,
+                                _airframe: u._type.to_owned(),
+                                _name: u.name.to_owned(),
+                                attributes: Vec::default(),
+                                v_cruise: 200.,
+                            },
+                        );
+                        Ok(())
+                    }
+                    "Transport" => {
+                        unit_record.transport.as_mut().unwrap().insert(
+                            u.name.to_owned(),
+                            TransportLoadout {
+                                day: true,
+                                night: true,
+                                adverse_weather: true,
+                                range: 500000.,
+                                capability: 1,
+                                firepower: 1,
+                                stores: u.payload.clone(),
+                                sortie_rate: 12,
+                                _airframe: u._type.to_owned(),
+                                _name: u.name.to_owned(),
+                                attributes: Vec::default(),
+                                v_cruise: 152.778,
+                                v_attack: 138.889,
+                                h_cruise: 7315.2,
+                                h_attack: 7315.2,
+                            },
+                        );
+                        Ok(())
+                    }
                     _ => Err(anyhow!("Don't know how to handle loadout {}", u.name)),
                 }
             })?;
@@ -642,6 +741,66 @@ impl Editable for AARLoadout {
 
     fn delete_by_name(instance: &mut DCEInstance, name: &str) -> Result<(), anyhow::Error> {
         let container = &mut instance.loadouts.aar;
+
+        if let Some(index) = container.iter().position(|i| i._name == name) {
+            container.remove(index);
+            return Ok(());
+        }
+
+        Err(anyhow!("Didn't find {}", name))
+    }
+}
+
+impl Editable for TransportLoadout {
+    fn get_header() -> Vec<HeaderField> {
+        let mut common = common_headers();
+        common.extend(vec![HeaderField::new(
+            "attributes",
+            "Loadout Tags",
+            FieldType::VecString,
+            true,
+        )]);
+        common
+    }
+
+    fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {
+        instance
+            .loadouts
+            .transport
+            .iter_mut()
+            .find(|item| item._name == name)
+            .unwrap()
+    }
+
+    fn get_name(&self) -> String {
+        self._name.to_owned()
+    }
+
+    fn validate(&self, _: &DCEInstance) -> ValidationResult {
+        let errors = Vec::default();
+
+        // todo: Probably want to put some limits on speeds/altitudes
+
+        if errors.is_empty() {
+            return ValidationResult::Pass;
+        }
+        ValidationResult::Fail(errors)
+    }
+    fn can_reset_from_miz() -> bool {
+        true
+    }
+
+    fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
+        let new_loadouts =
+            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.mission)?);
+
+        instance.loadouts.transport = new_loadouts.transport;
+
+        Ok(())
+    }
+
+    fn delete_by_name(instance: &mut DCEInstance, name: &str) -> Result<(), anyhow::Error> {
+        let container = &mut instance.loadouts.transport;
 
         if let Some(index) = container.iter().position(|i| i._name == name) {
             container.remove(index);
@@ -916,6 +1075,68 @@ impl Editable for EscortLoadout {
 
     fn delete_by_name(instance: &mut DCEInstance, name: &str) -> Result<(), anyhow::Error> {
         let container = &mut instance.loadouts.escort;
+
+        if let Some(index) = container.iter().position(|i| i._name == name) {
+            container.remove(index);
+            return Ok(());
+        }
+
+        Err(anyhow!("Didn't find {}", name))
+    }
+}
+
+impl Editable for SEADLoadout {
+    fn get_header() -> Vec<HeaderField> {
+        vec![
+            HeaderField::new("_name", "Name", FieldType::String, true),
+            HeaderField::new("_airframe", "AirFrame", FieldType::String, false),
+            HeaderField::new("day", "Day", FieldType::Bool, true),
+            HeaderField::new("night", "Night", FieldType::Bool, true),
+            HeaderField::new("adverse_weather", "Adverse Weather", FieldType::Bool, true),
+            HeaderField::new("range", "Range (nm)", FieldType::DistanceNM, true),
+            HeaderField::new("capability", "Capability", FieldType::Int, true),
+            HeaderField::new("firepower", "Firepower", FieldType::Int, true),
+            HeaderField::new("attributes", "Loadout Tags", FieldType::VecString, true),
+        ]
+    }
+    fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {
+        instance
+            .loadouts
+            .sead
+            .iter_mut()
+            .find(|item| item._name == name)
+            .unwrap()
+    }
+
+    fn get_name(&self) -> String {
+        self._name.to_owned()
+    }
+
+    fn validate(&self, _: &DCEInstance) -> ValidationResult {
+        let errors = Vec::default();
+
+        // todo: Probably want to put some limits on speeds/altitudes
+        if errors.is_empty() {
+            return ValidationResult::Pass;
+        }
+        ValidationResult::Fail(errors)
+    }
+
+    fn can_reset_from_miz() -> bool {
+        true
+    }
+
+    fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
+        let new_loadouts =
+            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.mission)?);
+
+        instance.loadouts.sead = new_loadouts.sead;
+
+        Ok(())
+    }
+
+    fn delete_by_name(instance: &mut DCEInstance, name: &str) -> Result<(), anyhow::Error> {
+        let container = &mut instance.loadouts.sead;
 
         if let Some(index) = container.iter().position(|i| i._name == name) {
             container.remove(index);

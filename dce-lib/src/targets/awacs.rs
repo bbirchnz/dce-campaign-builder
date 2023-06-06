@@ -28,8 +28,8 @@ pub struct AWACS {
     pub _firepower_min: u32,
     #[serde(default)]
     pub _firepower_max: u32,
-    // #[serde(default)]
-    // pub attributes: Option<Vec<String>>,
+    #[serde(default)]
+    pub attributes: Vec<String>,
 }
 
 impl Editable for AWACS {
@@ -51,6 +51,7 @@ impl Editable for AWACS {
                 true,
             ),
             HeaderField::new("inactive", "Inactive", FieldType::Bool, true),
+            HeaderField::new("attributes", "Loadout Tags", FieldType::VecString, true),
         ]
     }
     fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {

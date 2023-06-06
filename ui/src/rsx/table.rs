@@ -25,6 +25,7 @@ where
         if T::can_reset_from_miz() {
             rsx!{
                 button {
+                    class: "p-1 bg-slate-100 hover:bg-slate-300 rounded border-slate-500 border-2 ml-2 tooltip",
                     onclick: move |_| {
                         let mut atom_instance = atom_instance.write();
                         let mut_instance = atom_instance.as_mut().expect("DCE instance is loaded");
@@ -34,7 +35,31 @@ where
                         }
                         atom_dirty.set(true);
                     },
+                    span {
+                        class: "tooltiptext",
+                        "Deletes all from this list and recreates from the loaded template mission"
+                    }
                     "Reset to Miz"
+                }
+            }
+        }
+        for a in T::actions_all_entities() {
+            rsx! {
+                button {
+                    class: "p-1 bg-slate-100 hover:bg-slate-300 rounded border-slate-500 border-2 ml-2 tooltip",
+                    onclick: move |_| {
+                        let mut atom_instance = atom_instance.write();
+                        let mut_instance = atom_instance.as_mut().expect("DCE instance is loaded");
+                        match (a.function)(mut_instance) {
+                            Ok(()) => {},
+                            Err(_) => {}
+                        };
+                    },
+                    span {
+                        class: "tooltiptext",
+                        "{a.description}"
+                    }
+                    "{a.name}"
                 }
             }
         }

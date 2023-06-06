@@ -1,8 +1,11 @@
 use super::TargetFirepower;
 use crate::{
-    editable::{Editable, FieldType, HeaderField, ValidationError, ValidationResult},
+    editable::{
+        Editable, EntityTemplateAction, FieldType, HeaderField, ValidationError, ValidationResult,
+    },
     target_list::TargetList,
     target_list_internal::TargetListInternal,
+    trigger::{Actions, Trigger},
     DCEInstance, NewFromMission,
 };
 use anyhow::anyhow;
@@ -30,6 +33,10 @@ pub struct Strike {
     pub _firepower_min: u32,
     #[serde(default)]
     pub _firepower_max: u32,
+    #[serde(default)]
+    pub attributes: Vec<String>,
+    #[serde(default)]
+    pub picture: Vec<String>,
 }
 
 fn default_class() -> Option<String> {
@@ -64,6 +71,14 @@ impl Editable for Strike {
             HeaderField::new("_firepower_min", "Min Req Firepower", FieldType::Int, true),
             HeaderField::new("_firepower_max", "Max Req Firepower", FieldType::Int, true),
             HeaderField::new("inactive", "Inactive", FieldType::Bool, true),
+            HeaderField::new(
+                "class_template",
+                "DCS Group Name",
+                FieldType::OptionString,
+                false,
+            ),
+            HeaderField::new("picture", "Briefing Images", FieldType::VecString, true),
+            HeaderField::new("attributes", "Loadout Tags", FieldType::VecString, true),
         ]
     }
     fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {
@@ -131,6 +146,19 @@ impl Editable for Strike {
             }
         }
 
+        // this will often have just a single empty string if nothing in UI
+        if self.picture.len() != 1 || self.picture[0].len() > 0 {
+            for p in &self.picture {
+                if !instance.bin_data.images.iter().any(|i| &i.name == p) {
+                    errors.push(ValidationError::new(
+                        "picture",
+                        "Briefing Images",
+                        &format!("{} is not a valid image", p),
+                    ));
+                }
+            }
+        }
+
         if errors.is_empty() {
             return ValidationResult::Pass;
         }
@@ -159,5 +187,41 @@ impl Editable for Strike {
         }
 
         Err(anyhow!("Didn't find {}", name))
+    }
+
+    fn actions_one_entity() -> Vec<crate::editable::EntityTemplateAction<Self>>
+    where
+        Self: Sized,
+    {
+        let hide_action = EntityTemplateAction::new("Hide Target", "Hide and disable the target and its associated group by creating a set of triggers that can be adjusted", 
+        |item: &mut Strike, instance| {
+
+            if item.class.is_some() && item.class.as_ref().unwrap() == "vehicle" && item.class_template.is_some() {
+                let actions = vec![
+                    // target inactive
+                    format!("Action.TargetActive(\"{}\", false)", item.get_name()),
+                    // hide group in mission editor
+                    format!("Action.GroupHidden(\"{}\", true)", item.class_template.as_ref().unwrap()),
+                    // set group probability to zero (in the mission editor, but won't show in mission)
+                    format!("Action.GroupProbability(\"{}\", 0)", item.class_template.as_ref().unwrap()),
+                    ];
+
+                    let trigger = Trigger {
+                    active: true,
+                    once: false,
+                    condition: "true".into(),
+                    action: Actions::Many(actions),
+                    _name: item.text.to_owned() + " - Hide",
+                };
+                // sets target inactive now, so its obvious in the UI
+                item.inactive = true;
+                instance.triggers.push(trigger);
+                return Ok(())
+            }
+
+            Err(anyhow::anyhow!("Only works for Strike targets on ground vehicle groups"))
+        });
+
+        vec![hide_action]
     }
 }

@@ -4,11 +4,15 @@ use dce_lib::{
     campaign_header::Header,
     db_airbases::{AirStartBase, FixedAirBase, ShipBase},
     editable::Editable,
-    loadouts::{AARLoadout, AWACSLoadout, AntiShipLoadout, CAPLoadout, StrikeLoadout},
+    loadouts::{
+        AARLoadout, AWACSLoadout, AntiShipLoadout, CAPLoadout, EscortLoadout, InterceptLoadout,
+        SEADLoadout, StrikeLoadout, TransportLoadout,
+    },
     mappable::MapPoint,
     oob_air::Squadron,
     targets::{
-        anti_ship::AntiShipStrike, awacs::AWACS, cap::CAP, refueling::Refueling, strike::Strike,
+        anti_ship::AntiShipStrike, awacs::AWACS, cap::CAP, intercept::Intercept,
+        refueling::Refueling, strike::Strike,
     },
     trigger::Trigger,
     DCEInstance,
@@ -90,8 +94,11 @@ fn app(cx: Scope<AppProps>) -> Element {
 
     let w = use_window(cx);
 
-    let s_state = use_state(cx, || false);
-    let ctrl_state = use_state(cx, || false);
+    // WIP - ctrl-s for save
+    // can catch the event but probably need to setup an async channel to actually get it to dioxus
+    // context
+    let _s_state = use_state(cx, || false);
+    let _ctrl_state = use_state(cx, || false);
 
     // setup handler to detect CTRL-S for save
     w.create_wry_event_handler(move |event, _| {
@@ -224,69 +231,113 @@ fn main_body(cx: Scope) -> Element {
                     base_icon_url: "images/airfield_fixed.svg",
                     icon_button {
                         path: "images/airfield_fixed.svg".into(),
-                        on_click: |_| select_first_fixed_airbase(cx)
+                        on_click: |_| select_first_fixed_airbase(cx),
+                        tooltip: "Fixed airbases"
                     }
                     icon_button {
                         path: "images/airfield_ship.svg".into(),
-                        on_click: |_| select_first_ship_airbase(cx)
+                        on_click: |_| select_first_ship_airbase(cx),
+                        tooltip: "Aircraft carriers"
                     }
                     icon_button {
                         path: "images/airfield_airstart.svg".into(),
-                        on_click: |_| select_first_airstart_airbase(cx)
+                        on_click: |_| select_first_airstart_airbase(cx),
+                        tooltip: "Airstart/virtual airbases"
                     }
                 }
                 popout_menu { onclick: |_| select_first_cap_target(cx), base_icon_url: "images/target_none.svg",
                     icon_button {
                         path: "images/target_strike.svg".into(),
-                        on_click: |_| select_first_strike_target(cx)
+                        on_click: |_| select_first_strike_target(cx),
+                        tooltip: "Strike targets"
                     }
                     icon_button {
                         path: "images/target_ship.svg".into(),
-                        on_click: |_| select_first_ship_target(cx)
+                        on_click: |_| select_first_ship_target(cx),
+                        tooltip: "Anti-ship strike targets"
                     }
                     icon_button {
                         path: "images/target_cap.svg".into(),
-                        on_click: |_| select_first_cap_target(cx)
+                        on_click: |_| select_first_cap_target(cx),
+                        tooltip: "Combat air patrol zones"
+                    }
+                    icon_button {
+                        path: "images/target_intercept.svg".into(),
+                        on_click: |_| select_first_intercept_target(cx),
+                        tooltip: "Ground Controlled Intercept tasks"
                     }
                     icon_button {
                         path: "images/target_aar.svg".into(),
-                        on_click: |_| select_first_aar_target(cx)
+                        on_click: |_| select_first_aar_target(cx),
+                        tooltip: "Air to air refueling zones"
                     }
                     icon_button {
                         path: "images/target_awacs.svg".into(),
-                        on_click: |_| select_first_awacs_target(cx)
+                        on_click: |_| select_first_awacs_target(cx),
+                        tooltip: "AWACS patrol zones"
                     }
                 }
                 popout_menu { onclick: |_| select_first_cap_loadout(cx), base_icon_url: "images/loadout_cap.svg",
                     icon_button {
                         path: "images/loadout_cap.svg".into(),
-                        on_click: |_| select_first_cap_loadout(cx)
+                        on_click: |_| select_first_cap_loadout(cx),
+                        tooltip: "Combat air patrol loadouts and flight profiles"
                     }
                     icon_button {
                         path: "images/loadout_strike.svg".into(),
-                        on_click: |_| select_first_strike_loadout(cx)
+                        on_click: |_| select_first_strike_loadout(cx),
+                        tooltip: "Strike loadouts and flight profiles"
                     }
                     icon_button {
                         path: "images/loadout_antiship.svg".into(),
-                        on_click: |_| select_first_antiship_loadout(cx)
+                        on_click: |_| select_first_antiship_loadout(cx),
+                        tooltip: "Anti-ship strike loadouts and flight profiles"
+                    }
+                    icon_button {
+                        path: "images/loadout_escort.svg".into(),
+                        on_click: |_| select_first_escort_loadout(cx),
+                        tooltip: "Escort loadouts and flight profiles"
+                    }
+                    icon_button {
+                        path: "images/loadout_sead.svg".into(),
+                        on_click: |_| select_first_sead_loadout(cx),
+                        tooltip: "SEAD escort loadouts and flight profiles"
+                    }
+                    icon_button {
+                        path: "images/loadout_intercept.svg".into(),
+                        on_click: |_| select_first_intercept_loadout(cx),
+                        tooltip: "Ground controlled intercept loadouts and flight profiles"
                     }
                     icon_button {
                         path: "images/loadout_awacs.svg".into(),
-                        on_click: |_| select_first_awacs_loadout(cx)
+                        on_click: |_| select_first_awacs_loadout(cx),
+                        tooltip: "AWACS loadouts and flight profiles"
                     }
                     icon_button {
                         path: "images/loadout_aar.svg".into(),
-                        on_click: |_| select_first_aar_loadout(cx)
+                        on_click: |_| select_first_aar_loadout(cx),
+                        tooltip: "Air to air refueling loadouts and flight profiles"
+                    }
+                    icon_button {
+                        path: "images/loadout_transport.svg".into(),
+                        on_click: |_| select_first_transport_loadout(cx),
+                        tooltip: "Transport loadouts and flight profiles"
                     }
                 }
-                icon_button { path: "images/plane.svg".into(), on_click: |_| select_first_squadron(cx) }
                 icon_button {
-                    path: "images/settings_grey.png".into(),
-                    on_click: |_| select_campaign_settings(cx)
+                    path: "images/plane.svg".into(),
+                    on_click: |_| select_first_squadron(cx),
+                    tooltip: "Squadrons"
                 }
                 icon_button {
                     path: "images/settings_grey.png".into(),
-                    on_click: |_| select_first_trigger(cx)
+                    on_click: |_| select_campaign_settings(cx),
+                    tooltip: "Campaign settings"
+                }
+                icon_button {
+                    path: "images/settings_grey.png".into(),
+                    on_click: |_| select_first_trigger(cx),
+                    tooltip: "Campaign actions and triggers"
                 }
             }
             // edit col
@@ -309,6 +360,9 @@ fn main_body(cx: Scope) -> Element {
                     },
                     Selectable::TargetAntiShip(_) => rsx!{
                         edit_form::<AntiShipStrike> { headers: AntiShipStrike::get_header(), title: "Edit Anti-ship Strike".into(), item: selected_form.clone()}
+                    },
+                    Selectable::TargetIntercept(Some(_)) => rsx!{
+                        edit_form::<Intercept> { headers: Intercept::get_header(), title: "Edit Intercept".into(), item: selected_form.clone()}
                     },
                     Selectable::FixedAirBase(_) => rsx!{
                         edit_form::<FixedAirBase> { headers: FixedAirBase::get_header(), title: "Edit Airbase".into(), item: selected_form.clone()}
@@ -337,10 +391,22 @@ fn main_body(cx: Scope) -> Element {
                     Selectable::LoadoutAWACS(_) => rsx!{
                         edit_form::<AWACSLoadout> { headers: AWACSLoadout::get_header(), title: "Edit AWACS Loadout".into(), item: selected_form.clone()}
                     },
+                    Selectable::LoadoutEscort(_) => rsx!{
+                        edit_form::<EscortLoadout> { headers: EscortLoadout::get_header(), title: "Edit Escort Loadout".into(), item: selected_form.clone()}
+                    },
+                    Selectable::LoadoutIntercept(_) => rsx!{
+                        edit_form::<InterceptLoadout> { headers: InterceptLoadout::get_header(), title: "Edit Intercept Loadout".into(), item: selected_form.clone()}
+                    },
+                    Selectable::LoadoutSEAD(_) => rsx!{
+                        edit_form::<SEADLoadout> { headers: SEADLoadout::get_header(), title: "Edit SEAD Loadout".into(), item: selected_form.clone()}
+                    },
+                    Selectable::LoadoutTransport(_) => rsx!{
+                        edit_form::<TransportLoadout> { headers: TransportLoadout::get_header(), title: "Edit Transport Loadout".into(), item: selected_form.clone()}
+                    },
                     Selectable::Trigger(_) => rsx!{
                         edit_form::<Trigger> { headers: Trigger::get_header(), title: "Edit Trigger".into(), item: selected_form.clone()}
                     },
-                    _ => rsx!{{}}
+                    Selectable::None | Selectable::TargetIntercept(None) => rsx!{{}}
                 }
             }
             // divider
@@ -375,6 +441,9 @@ fn main_body(cx: Scope) -> Element {
                         Selectable::TargetAAR(_) => rsx! {
                             rsx::table { data: instance.target_list.refuel.to_vec() }
                         },
+                        Selectable::TargetIntercept(_) => rsx! {
+                            rsx::table { data: instance.target_list.intercept.to_vec() }
+                        },
                         Selectable::FixedAirBase(_) => rsx! {
                             rsx::table { data: instance.airbases.fixed.to_vec() }
                         },
@@ -399,10 +468,24 @@ fn main_body(cx: Scope) -> Element {
                         Selectable::LoadoutAWACS(_) => rsx! {
                             rsx::table { data: instance.loadouts.awacs.to_vec() }
                         },
+                        Selectable::LoadoutEscort(_) => rsx! {
+                            rsx::table { data: instance.loadouts.escort.to_vec() }
+                        },
+                        Selectable::LoadoutIntercept(_) => rsx! {
+                            rsx::table { data: instance.loadouts.intercept.to_vec() }
+                        },
+                        Selectable::LoadoutSEAD(_) => rsx! {
+                            rsx::table { data: instance.loadouts.sead.to_vec() }
+                        },
+                        Selectable::LoadoutTransport(_) => rsx! {
+                            rsx::table { data: instance.loadouts.transport.to_vec() }
+                        },
                         Selectable::Trigger(_) => rsx! {
                             rsx::table { data: instance.triggers.to_vec() }
                         },
-                        _ => rsx!{{}}
+                        Selectable::None | Selectable::CampaignSettings(_) => rsx! {
+                            {}
+                        },
                         }
                 }
             }
@@ -414,16 +497,27 @@ fn main_body(cx: Scope) -> Element {
 struct IconButtonProps<'a> {
     path: String,
     on_click: EventHandler<'a, MouseEvent>,
+    tooltip: Option<&'a str>,
 }
 
 fn icon_button<'a>(cx: Scope<'a, IconButtonProps<'a>>) -> Element<'a> {
     cx.render(rsx! {
-        img {
-            class: "mt-1 mb-1 p-1 rounded opacity-70 hover:opacity-100 hover:bg-sky-600",
-            src: "{cx.props.path}",
-            width: 40,
-            height: 40,
-            onclick: |e| cx.props.on_click.call(e)
+        div { class: "tooltip",
+            img {
+                class: "mt-1 mb-1 p-1 rounded opacity-70 hover:opacity-100 hover:bg-sky-600 tooltip",
+                src: "{cx.props.path}",
+                width: 40,
+                height: 40,
+                onclick: |e| cx.props.on_click.call(e)
+            }
+            if cx.props.tooltip.is_some() {
+                rsx! {
+                    span {
+                        class: "tooltiptext",
+                        "{cx.props.tooltip.unwrap()}"
+                    }
+                }
+            }
         }
     })
 }

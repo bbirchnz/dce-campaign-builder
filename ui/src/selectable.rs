@@ -1,11 +1,15 @@
 use dce_lib::{
     campaign_header::Header,
     db_airbases::{AirStartBase, FixedAirBase, ShipBase},
-    loadouts::{AARLoadout, AWACSLoadout, AntiShipLoadout, CAPLoadout, StrikeLoadout},
+    loadouts::{
+        AARLoadout, AWACSLoadout, AntiShipLoadout, CAPLoadout, EscortLoadout, InterceptLoadout,
+        SEADLoadout, StrikeLoadout, TransportLoadout,
+    },
     mappable::MapPoint,
     oob_air::Squadron,
     targets::{
-        anti_ship::AntiShipStrike, awacs::AWACS, cap::CAP, refueling::Refueling, strike::Strike,
+        anti_ship::AntiShipStrike, awacs::AWACS, cap::CAP, intercept::Intercept,
+        refueling::Refueling, strike::Strike,
     },
     trigger::Trigger,
     DCEInstance,
@@ -13,22 +17,28 @@ use dce_lib::{
 
 #[derive(Clone, PartialEq)]
 pub enum Selectable {
-    Squadron(Squadron),
-    TargetStrike(Strike),
-    TargetCAP(CAP),
-    TargetAntiShip(AntiShipStrike),
-    TargetAAR(Refueling),
-    TargetAWACS(AWACS),
-    FixedAirBase(FixedAirBase),
-    ShipAirBase(ShipBase),
-    AirstartBase(AirStartBase),
+    Squadron(Option<Squadron>),
+    TargetStrike(Option<Strike>),
+    TargetCAP(Option<CAP>),
+    TargetAntiShip(Option<AntiShipStrike>),
+    TargetAAR(Option<Refueling>),
+    TargetAWACS(Option<AWACS>),
+    // has to be option as there might not be any defined
+    TargetIntercept(Option<Intercept>),
+    FixedAirBase(Option<FixedAirBase>),
+    ShipAirBase(Option<ShipBase>),
+    AirstartBase(Option<AirStartBase>),
     CampaignSettings(Header),
-    LoadoutCAP(CAPLoadout),
-    LoadoutStrike(StrikeLoadout),
-    LoadoutAntiship(AntiShipLoadout),
-    LoadoutAWACS(AWACSLoadout),
-    LoadoutAAR(AARLoadout),
-    Trigger(Trigger),
+    LoadoutCAP(Option<CAPLoadout>),
+    LoadoutStrike(Option<StrikeLoadout>),
+    LoadoutAntiship(Option<AntiShipLoadout>),
+    LoadoutAWACS(Option<AWACSLoadout>),
+    LoadoutAAR(Option<AARLoadout>),
+    LoadoutEscort(Option<EscortLoadout>),
+    LoadoutIntercept(Option<InterceptLoadout>),
+    LoadoutSEAD(Option<SEADLoadout>),
+    LoadoutTransport(Option<TransportLoadout>),
+    Trigger(Option<Trigger>),
     None,
 }
 
@@ -43,7 +53,7 @@ impl Selectable {
                     .find(|c| c._name == map_point.name)
                     .unwrap()
                     .clone();
-                Selectable::TargetCAP(cap)
+                Selectable::TargetCAP(Some(cap))
             }
             "TargetStrike" => {
                 let item = instance
@@ -53,7 +63,7 @@ impl Selectable {
                     .find(|c| c._name == map_point.name)
                     .unwrap()
                     .clone();
-                Selectable::TargetStrike(item)
+                Selectable::TargetStrike(Some(item))
             }
             "TargetAntiShipStrike" => {
                 let item = instance
@@ -63,7 +73,7 @@ impl Selectable {
                     .find(|c| c._name == map_point.name)
                     .unwrap()
                     .clone();
-                Selectable::TargetAntiShip(item)
+                Selectable::TargetAntiShip(Some(item))
             }
             "TargetRefuel" => {
                 let item = instance
@@ -73,7 +83,7 @@ impl Selectable {
                     .find(|c| c._name == map_point.name)
                     .unwrap()
                     .clone();
-                Selectable::TargetAAR(item)
+                Selectable::TargetAAR(Some(item))
             }
             "TargetAWACS" => {
                 let item = instance
@@ -83,7 +93,7 @@ impl Selectable {
                     .find(|c| c._name == map_point.name)
                     .unwrap()
                     .clone();
-                Selectable::TargetAWACS(item)
+                Selectable::TargetAWACS(Some(item))
             }
             "Squadron" => {
                 let item = instance
@@ -94,7 +104,7 @@ impl Selectable {
                     .find(|c| c.name == map_point.name)
                     .unwrap()
                     .clone();
-                Selectable::Squadron(item)
+                Selectable::Squadron(Some(item))
             }
             "FixedAirBase" => {
                 let item = instance
@@ -104,7 +114,7 @@ impl Selectable {
                     .find(|item| item._name == map_point.name)
                     .unwrap()
                     .clone();
-                Selectable::FixedAirBase(item)
+                Selectable::FixedAirBase(Some(item))
             }
             "ShipAirBase" => {
                 let item = instance
@@ -114,7 +124,7 @@ impl Selectable {
                     .find(|item| item._name == map_point.name)
                     .unwrap()
                     .clone();
-                Selectable::ShipAirBase(item)
+                Selectable::ShipAirBase(Some(item))
             }
             "Airstart" => {
                 let item = instance
@@ -124,7 +134,7 @@ impl Selectable {
                     .find(|item| item._name == map_point.name)
                     .unwrap()
                     .clone();
-                Selectable::AirstartBase(item)
+                Selectable::AirstartBase(Some(item))
             }
             _ => Selectable::None,
         }
@@ -141,11 +151,11 @@ pub trait ToSelectable {
 
 impl ToSelectable for Squadron {
     fn to_selectable(&self) -> Selectable {
-        Selectable::Squadron(self.clone())
+        Selectable::Squadron(Some(self.clone()))
     }
 
     fn from_selectable(sel: &Selectable) -> Option<Self> {
-        if let Selectable::Squadron(squad) = sel {
+        if let Selectable::Squadron(Some(squad)) = sel {
             return Some(squad.clone());
         }
         None
@@ -154,14 +164,14 @@ impl ToSelectable for Squadron {
 
 impl ToSelectable for Strike {
     fn to_selectable(&self) -> Selectable {
-        Selectable::TargetStrike(self.clone())
+        Selectable::TargetStrike(Some(self.clone()))
     }
 
     fn from_selectable(sel: &Selectable) -> Option<Self>
     where
         Self: Sized,
     {
-        if let Selectable::TargetStrike(t) = sel {
+        if let Selectable::TargetStrike(Some(t)) = sel {
             return Some(t.clone());
         }
         None
@@ -170,14 +180,14 @@ impl ToSelectable for Strike {
 
 impl ToSelectable for CAP {
     fn to_selectable(&self) -> Selectable {
-        Selectable::TargetCAP(self.clone())
+        Selectable::TargetCAP(Some(self.clone()))
     }
 
     fn from_selectable(sel: &Selectable) -> Option<Self>
     where
         Self: Sized,
     {
-        if let Selectable::TargetCAP(t) = sel {
+        if let Selectable::TargetCAP(Some(t)) = sel {
             return Some(t.clone());
         }
         None
@@ -186,14 +196,14 @@ impl ToSelectable for CAP {
 
 impl ToSelectable for AWACS {
     fn to_selectable(&self) -> Selectable {
-        Selectable::TargetAWACS(self.clone())
+        Selectable::TargetAWACS(Some(self.clone()))
     }
 
     fn from_selectable(sel: &Selectable) -> Option<Self>
     where
         Self: Sized,
     {
-        if let Selectable::TargetAWACS(t) = sel {
+        if let Selectable::TargetAWACS(Some(t)) = sel {
             return Some(t.clone());
         }
         None
@@ -202,14 +212,14 @@ impl ToSelectable for AWACS {
 
 impl ToSelectable for Refueling {
     fn to_selectable(&self) -> Selectable {
-        Selectable::TargetAAR(self.clone())
+        Selectable::TargetAAR(Some(self.clone()))
     }
 
     fn from_selectable(sel: &Selectable) -> Option<Self>
     where
         Self: Sized,
     {
-        if let Selectable::TargetAAR(t) = sel {
+        if let Selectable::TargetAAR(Some(t)) = sel {
             return Some(t.clone());
         }
         None
@@ -218,14 +228,30 @@ impl ToSelectable for Refueling {
 
 impl ToSelectable for AntiShipStrike {
     fn to_selectable(&self) -> Selectable {
-        Selectable::TargetAntiShip(self.clone())
+        Selectable::TargetAntiShip(Some(self.clone()))
     }
 
     fn from_selectable(sel: &Selectable) -> Option<Self>
     where
         Self: Sized,
     {
-        if let Selectable::TargetAntiShip(t) = sel {
+        if let Selectable::TargetAntiShip(Some(t)) = sel {
+            return Some(t.clone());
+        }
+        None
+    }
+}
+
+impl ToSelectable for Intercept {
+    fn to_selectable(&self) -> Selectable {
+        Selectable::TargetIntercept(Some(self.clone()))
+    }
+
+    fn from_selectable(sel: &Selectable) -> Option<Self>
+    where
+        Self: Sized,
+    {
+        if let Selectable::TargetIntercept(Some(t)) = sel {
             return Some(t.clone());
         }
         None
@@ -234,14 +260,14 @@ impl ToSelectable for AntiShipStrike {
 
 impl ToSelectable for FixedAirBase {
     fn to_selectable(&self) -> Selectable {
-        Selectable::FixedAirBase(self.clone())
+        Selectable::FixedAirBase(Some(self.clone()))
     }
 
     fn from_selectable(sel: &Selectable) -> Option<Self>
     where
         Self: Sized,
     {
-        if let Selectable::FixedAirBase(t) = sel {
+        if let Selectable::FixedAirBase(Some(t)) = sel {
             return Some(t.clone());
         }
         None
@@ -250,14 +276,14 @@ impl ToSelectable for FixedAirBase {
 
 impl ToSelectable for AirStartBase {
     fn to_selectable(&self) -> Selectable {
-        Selectable::AirstartBase(self.clone())
+        Selectable::AirstartBase(Some(self.clone()))
     }
 
     fn from_selectable(sel: &Selectable) -> Option<Self>
     where
         Self: Sized,
     {
-        if let Selectable::AirstartBase(t) = sel {
+        if let Selectable::AirstartBase(Some(t)) = sel {
             return Some(t.clone());
         }
         None
@@ -266,14 +292,14 @@ impl ToSelectable for AirStartBase {
 
 impl ToSelectable for ShipBase {
     fn to_selectable(&self) -> Selectable {
-        Selectable::ShipAirBase(self.clone())
+        Selectable::ShipAirBase(Some(self.clone()))
     }
 
     fn from_selectable(sel: &Selectable) -> Option<Self>
     where
         Self: Sized,
     {
-        if let Selectable::ShipAirBase(t) = sel {
+        if let Selectable::ShipAirBase(Some(t)) = sel {
             return Some(t.clone());
         }
         None
@@ -298,14 +324,14 @@ impl ToSelectable for Header {
 
 impl ToSelectable for CAPLoadout {
     fn to_selectable(&self) -> Selectable {
-        Selectable::LoadoutCAP(self.to_owned())
+        Selectable::LoadoutCAP(Some(self.to_owned()))
     }
 
     fn from_selectable(sel: &Selectable) -> Option<Self>
     where
         Self: Sized,
     {
-        if let Selectable::LoadoutCAP(cap) = sel {
+        if let Selectable::LoadoutCAP(Some(cap)) = sel {
             return Some(cap.clone());
         }
         None
@@ -314,14 +340,14 @@ impl ToSelectable for CAPLoadout {
 
 impl ToSelectable for StrikeLoadout {
     fn to_selectable(&self) -> Selectable {
-        Selectable::LoadoutStrike(self.to_owned())
+        Selectable::LoadoutStrike(Some(self.to_owned()))
     }
 
     fn from_selectable(sel: &Selectable) -> Option<Self>
     where
         Self: Sized,
     {
-        if let Selectable::LoadoutStrike(strike) = sel {
+        if let Selectable::LoadoutStrike(Some(strike)) = sel {
             return Some(strike.clone());
         }
         None
@@ -329,14 +355,14 @@ impl ToSelectable for StrikeLoadout {
 }
 impl ToSelectable for AntiShipLoadout {
     fn to_selectable(&self) -> Selectable {
-        Selectable::LoadoutAntiship(self.to_owned())
+        Selectable::LoadoutAntiship(Some(self.to_owned()))
     }
 
     fn from_selectable(sel: &Selectable) -> Option<Self>
     where
         Self: Sized,
     {
-        if let Selectable::LoadoutAntiship(item) = sel {
+        if let Selectable::LoadoutAntiship(Some(item)) = sel {
             return Some(item.clone());
         }
         None
@@ -344,14 +370,14 @@ impl ToSelectable for AntiShipLoadout {
 }
 impl ToSelectable for AARLoadout {
     fn to_selectable(&self) -> Selectable {
-        Selectable::LoadoutAAR(self.to_owned())
+        Selectable::LoadoutAAR(Some(self.to_owned()))
     }
 
     fn from_selectable(sel: &Selectable) -> Option<Self>
     where
         Self: Sized,
     {
-        if let Selectable::LoadoutAAR(item) = sel {
+        if let Selectable::LoadoutAAR(Some(item)) = sel {
             return Some(item.clone());
         }
         None
@@ -359,14 +385,78 @@ impl ToSelectable for AARLoadout {
 }
 impl ToSelectable for AWACSLoadout {
     fn to_selectable(&self) -> Selectable {
-        Selectable::LoadoutAWACS(self.to_owned())
+        Selectable::LoadoutAWACS(Some(self.to_owned()))
     }
 
     fn from_selectable(sel: &Selectable) -> Option<Self>
     where
         Self: Sized,
     {
-        if let Selectable::LoadoutAWACS(item) = sel {
+        if let Selectable::LoadoutAWACS(Some(item)) = sel {
+            return Some(item.clone());
+        }
+        None
+    }
+}
+
+impl ToSelectable for EscortLoadout {
+    fn to_selectable(&self) -> Selectable {
+        Selectable::LoadoutEscort(Some(self.to_owned()))
+    }
+
+    fn from_selectable(sel: &Selectable) -> Option<Self>
+    where
+        Self: Sized,
+    {
+        if let Selectable::LoadoutEscort(Some(item)) = sel {
+            return Some(item.clone());
+        }
+        None
+    }
+}
+
+impl ToSelectable for InterceptLoadout {
+    fn to_selectable(&self) -> Selectable {
+        Selectable::LoadoutIntercept(Some(self.to_owned()))
+    }
+
+    fn from_selectable(sel: &Selectable) -> Option<Self>
+    where
+        Self: Sized,
+    {
+        if let Selectable::LoadoutIntercept(Some(item)) = sel {
+            return Some(item.clone());
+        }
+        None
+    }
+}
+
+impl ToSelectable for SEADLoadout {
+    fn to_selectable(&self) -> Selectable {
+        Selectable::LoadoutSEAD(Some(self.to_owned()))
+    }
+
+    fn from_selectable(sel: &Selectable) -> Option<Self>
+    where
+        Self: Sized,
+    {
+        if let Selectable::LoadoutSEAD(Some(item)) = sel {
+            return Some(item.clone());
+        }
+        None
+    }
+}
+
+impl ToSelectable for TransportLoadout {
+    fn to_selectable(&self) -> Selectable {
+        Selectable::LoadoutTransport(Some(self.to_owned()))
+    }
+
+    fn from_selectable(sel: &Selectable) -> Option<Self>
+    where
+        Self: Sized,
+    {
+        if let Selectable::LoadoutTransport(Some(item)) = sel {
             return Some(item.clone());
         }
         None
@@ -375,14 +465,14 @@ impl ToSelectable for AWACSLoadout {
 
 impl ToSelectable for Trigger {
     fn to_selectable(&self) -> Selectable {
-        Selectable::Trigger(self.to_owned())
+        Selectable::Trigger(Some(self.to_owned()))
     }
 
     fn from_selectable(sel: &Selectable) -> Option<Self>
     where
         Self: Sized,
     {
-        if let Selectable::Trigger(trigger) = sel {
+        if let Selectable::Trigger(Some(trigger)) = sel {
             return Some(trigger.clone());
         }
         None

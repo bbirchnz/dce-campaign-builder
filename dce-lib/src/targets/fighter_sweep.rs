@@ -27,6 +27,8 @@ pub struct FighterSweep {
     pub _firepower_min: u32,
     #[serde(default)]
     pub _firepower_max: u32,
+    #[serde(default)]
+    pub attributes: Vec<String>,
 }
 
 impl Editable for FighterSweep {
@@ -36,6 +38,7 @@ impl Editable for FighterSweep {
             HeaderField::new("_side", "Side", FieldType::String, false),
             HeaderField::new("priority", "Priority", FieldType::Int, true),
             HeaderField::new("inactive", "Inactive", FieldType::Bool, true),
+            HeaderField::new("attributes", "Loadout Tags", FieldType::VecString, true),
         ]
     }
     fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {

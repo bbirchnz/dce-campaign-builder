@@ -19,6 +19,7 @@ use crate::{
 fn fieldtype_to_input(field: &FieldType) -> String {
     match field {
         FieldType::String => "text".into(),
+        FieldType::OptionString => "text".into(),
         FieldType::Float(_) => "number".into(),
         FieldType::Int => "number".into(),
         FieldType::Enum => "text".into(),
@@ -31,12 +32,14 @@ fn fieldtype_to_input(field: &FieldType) -> String {
         FieldType::DurationMin => "number".into(),
         FieldType::TriggerActions => "text".into(),
         FieldType::FixedEnum(_) => "select".into(),
+        FieldType::VecString => "text".into(),
     }
 }
 
 fn fieldtype_editable(field: &FieldType) -> bool {
     match field {
         FieldType::String => true,
+        FieldType::OptionString => true,
         FieldType::Float(_) => true,
         FieldType::Int => true,
         FieldType::Enum => false,
@@ -49,6 +52,7 @@ fn fieldtype_editable(field: &FieldType) -> bool {
         FieldType::DurationMin => true,
         FieldType::TriggerActions => true,
         FieldType::FixedEnum(_) => true,
+        FieldType::VecString => true,
     }
 }
 
@@ -105,6 +109,8 @@ where
         .filter(|h| fieldtype_editable(&h.type_))
         .collect::<Vec<_>>();
 
+    let entity_actions = T::actions_one_entity();
+
     cx.render(rsx!{
         div { class: "p-2 m-2 rounded bg-sky-200",
             h4 { class: "font-semibold flex",
@@ -122,7 +128,7 @@ where
                 for h in usable_headers {
                     match &h.type_ {
                         // Trigger actions have to render as one input per action
-                        FieldType::TriggerActions => rsx!{
+                        FieldType::TriggerActions | FieldType::VecString => rsx!{
                             render_triggeractions {
                                 header: h.clone(),
                                 item: item_state.get().to_owned(),
@@ -196,6 +202,31 @@ where
                 }
                 render_errors { result: validation_state.get().to_owned() }
             }
+            if !entity_actions.is_empty() {
+                rsx!{
+                    for a in entity_actions {
+                        rsx!{
+                            button {
+                                class: "p-1 bg-slate-100 hover:bg-slate-300 rounded border-slate-500 border-2 ml-2 tooltip",
+                                onclick: move |_| {
+                                    let mut atom_instance = atom_instance.write();
+                                    let mut_instance = atom_instance.as_mut().expect("DCE instance is loaded");
+                                    let mut mut_item = item_state.make_mut();
+                                    match (a.function)(&mut mut_item, mut_instance) {
+                                        Ok(()) => {},
+                                        Err(_) => {}
+                                    };
+                                },
+                                span {
+                                    class: "tooltiptext",
+                                    "{a.description}"
+                                }
+                                "{a.name}"
+                            }
+                        }
+                    }
+                }
+            }
         }
     })
 }
@@ -237,7 +268,7 @@ where
 {
     let h = &cx.props.header;
     cx.render(rsx!{
-        label { class: "p-1 w-full", "Actions" }
+        label { class: "p-1 w-full", "{h.display}" }
         for (i , action) in h.get_value_stringvec(&cx.props.item).iter().enumerate() {
             rsx! {
                 div {
@@ -276,7 +307,7 @@ where
     let headers = T::get_header();
     for h in headers.iter().filter(|h| h.editable) {
         match h.type_ {
-            FieldType::TriggerActions => {
+            FieldType::TriggerActions | FieldType::VecString => {
                 let values = stringvec_for_field(values, &h.display);
 
                 if let Err(e) = h.set_value_from_stringvec(&mut **item, values) {
@@ -287,7 +318,7 @@ where
                 let v = values.get(&h.display).unwrap_or_else(|| {
                     panic!(
                         "There must be a value for field {:?} in formevent",
-                        &h.type_
+                        &h.field
                     )
                 });
                 if let Err(e) = h.set_value_fromstr(&mut **item, v) {

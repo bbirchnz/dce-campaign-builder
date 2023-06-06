@@ -8,7 +8,9 @@ use std::{collections::HashMap, iter::repeat};
 
 use crate::{
     db_airbases::{AirBase, DBAirbases},
-    editable::{Editable, FieldType, HeaderField, ValidationError, ValidationResult},
+    editable::{
+        Editable, EntityTemplateAction, FieldType, HeaderField, ValidationError, ValidationResult,
+    },
     mappable::Mappables,
     mission::{Country, Mission},
     serde_utils::LuaFileBased,
@@ -149,6 +151,22 @@ impl OobAir {
 
         Ok(())
     }
+
+    pub fn squadrons_for_airbase(&self, ab_name: &str) -> Vec<Squadron> {
+        let mut squadrons = Vec::default();
+
+        self.blue
+            .iter()
+            .filter(|s| s.base == ab_name)
+            .for_each(|s| squadrons.push(s.to_owned()));
+
+        self.red
+            .iter()
+            .filter(|s| s.base == ab_name)
+            .for_each(|s| squadrons.push(s.to_owned()));
+
+        squadrons
+    }
 }
 
 impl NewFromMission for OobAir {
@@ -187,55 +205,72 @@ impl NewFromMission for OobAir {
     }
 }
 
+/// setup a hashmap so we can lookup and check if a squadron already exists.
+/// this is used when more than 4 roles are to be assigned to a squadron, and therefore
+/// multiple groups need to be created. So long as they are named <"squadron name">_"anything else"> it should work
 fn side_to_squadrons(countries: &[Country], base: String) -> Vec<Squadron> {
+    let mut squadron_hm: HashMap<String, Squadron> = HashMap::default();
+
     countries
         .iter()
         .filter_map(|c| c.plane.as_ref().zip(Some(&c.name)))
+        .chain(
+            countries
+                .iter()
+                .filter_map(|c| c.helicopter.as_ref().zip(Some(&c.name))),
+        )
         .flat_map(|(vg, country)| vg.groups.iter().zip(repeat(country)))
-        .filter_map(|(vg, country)| {
-            let unit = vg.units.get(0)?;
-            Some(Squadron {
-                name: vg.name.to_owned(),
-                inactive: false,
-                player: false,
-                _type: unit._type.to_owned(),
-                country: country.to_owned(),
-                livery: LiveryEnum::One(unit.livery_id.to_owned()),
-                base: base.to_owned(),
-                skill: unit.skill.to_owned(),
-                tasks: vg
-                    .units
-                    .iter()
-                    .map(|u| {
-                        (
-                            u.name
-                                .split('_')
-                                .map(|s| s.to_owned())
-                                .collect::<Vec<String>>()[1]
-                                .to_owned(),
-                            true,
-                        )
-                    })
-                    .collect(),
-                tasks_coef: Some(
-                    vg.units
-                        .iter()
-                        .map(|u| {
-                            (
-                                u.name
-                                    .split('_')
-                                    .map(|s| s.to_owned())
-                                    .collect::<Vec<String>>()[1]
-                                    .to_owned(),
-                                1.0f32,
-                            )
-                        })
-                        .collect(),
-                ),
-                number: 6,
-                reserve: 6,
-            })
-        })
+        .for_each(|(vg, country)| {
+            let unit = vg
+                .units
+                .get(0)
+                .expect("Plane Group must have at least one unit");
+            let name_parts = vg.name.split('_').collect::<Vec<_>>();
+            let squadron_name = name_parts[0];
+
+            let squadron = squadron_hm
+                .entry(squadron_name.to_string())
+                .or_insert(Squadron {
+                    name: squadron_name.to_owned(),
+                    inactive: false,
+                    player: false,
+                    _type: unit._type.to_owned(),
+                    country: country.to_owned(),
+                    livery: LiveryEnum::Many(Vec::default()),
+                    base: base.to_owned(),
+                    skill: unit.skill.to_owned(),
+                    tasks: HashMap::default(),
+                    tasks_coef: Some(HashMap::default()),
+                    number: 6,
+                    reserve: 6,
+                });
+            // cycle through the units, add liveries and tasks:
+            vg.units.iter().for_each(|unit| {
+                // add liveries
+                let livery = unit.livery_id.to_owned();
+                if let LiveryEnum::Many(vec) = &mut squadron.livery {
+                    if !vec.iter().any(|l| **l == livery) {
+                        vec.push(livery);
+                    }
+                }
+                // add task:
+                let task = unit
+                    .name
+                    .split('_')
+                    .map(|s| s.to_owned())
+                    .collect::<Vec<String>>()[1]
+                    .to_owned();
+
+                squadron.tasks.insert(task.to_owned(), true);
+
+                // and task coef:
+                squadron.tasks_coef.as_mut().unwrap().insert(task, 1_f32);
+            });
+        });
+
+    squadron_hm
+        .values()
+        .map(|v| v.to_owned())
         .collect::<Vec<_>>()
 }
 
@@ -279,6 +314,7 @@ impl Editable for Squadron {
         vec![
             HeaderField::new("name", "Name", FieldType::String, true),
             HeaderField::new("base", "Base", FieldType::String, true),
+            HeaderField::new("player", "Player Squadron", FieldType::Bool, true),
             HeaderField::new("country", "Country", FieldType::String, false),
             HeaderField::new("_type", "Airframe", FieldType::String, false),
             HeaderField::new("number", "Number", FieldType::Int, true),
@@ -343,52 +379,50 @@ impl Editable for Squadron {
 
         Err(anyhow!("Didn't find {}", name))
     }
+
+    fn actions_one_entity() -> Vec<EntityTemplateAction<Self>>
+    where
+        Self: Sized,
+    {
+        let set_player =
+            |item: &mut Self, instance: &mut DCEInstance| -> Result<(), anyhow::Error> {
+                for s in instance.oob_air.blue.iter_mut() {
+                    if s.get_name() == item.get_name() {
+                        s.player = true;
+                    } else {
+                        s.player = false;
+                    }
+                }
+                for s in instance.oob_air.red.iter_mut() {
+                    if s.get_name() == item.get_name() {
+                        s.player = true;
+                    } else {
+                        s.player = false;
+                    }
+                }
+                item.player = true;
+                Ok(())
+            };
+
+        vec![EntityTemplateAction::new(
+            "Set as player",
+            "Set this as the playable squadron",
+            set_player,
+        )]
+    }
 }
 
 #[cfg(test)]
 mod tests {
-
-    use bevy_reflect::Struct;
 
     use crate::{mission::Mission, serde_utils::LuaFileBased, NewFromMission};
 
     use super::OobAir;
 
     #[test]
-    fn introspection() {
-        let oob =  OobAir::from_lua_file("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\War over Tchad 1987-Blue-Mirage-F1EE-3-30 Lorraine\\Init\\oob_air_init.lua".into(), "oob_air".into()).unwrap();
-
-        for (i, value) in oob.iter_fields().enumerate() {
-            let field_name = oob.name_at(i).unwrap();
-            if let Some(value) = value.downcast_ref::<u32>() {
-                println!("{} is a u32 with the value: {}", field_name, *value);
-            }
-
-            println!(
-                "{} is type {}",
-                field_name,
-                value.get_type_info().type_name()
-            );
-        }
-    }
-
-    #[test]
-    fn load_example() {
-        let result = OobAir::from_lua_file("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\War over Tchad 1987-Blue-Mirage-F1EE-3-30 Lorraine\\Init\\oob_air_init.lua".into(), "oob_air".into());
-
-        result.unwrap();
-    }
-
-    #[test]
-    fn save_example() {
-        let oob = OobAir::from_lua_file("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\War over Tchad 1987-Blue-Mirage-F1EE-3-30 Lorraine\\Init\\oob_air_init.lua".into(), "oob_air".into()).unwrap();
-        oob.to_lua_file("test.lua".into(), "oob_air".into())
-            .unwrap();
-    }
-
-    #[test]
     fn from_miz() {
-        let mission = Mission::from_miz("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\Falklands v1\\Init\\base_mission.miz".into()).unwrap();
+        let mission =
+            Mission::from_miz("test_resources\\base_mission_falklands.miz".into()).unwrap();
         let oob = OobAir::new_from_mission(&mission).unwrap();
 
         oob.to_lua_file("oob_sa.lua".into(), "oob_air".into())

@@ -1,0 +1,11 @@
+<svg width="50" height="50" version="1.1" viewBox="0 0 13.229 13.229" xmlns="http://www.w3.org/2000/svg">
+ <text x="0.19328786" y="11.937475" font-family="'Segoe UI'" font-size="8.8694px" stroke-width=".22174" style="line-height:1.25" xml:space="preserve"><tspan x="0.19328786" y="11.937475" font-family="'Segoe UI'" font-size="2.3652px" stroke-width=".22174">TRANSPORT</tspan></text>
+ <g fill="none" stroke="#000">
+  <rect x="3.9688" y="5.2917" width="7.9375" height="1.3229" stroke-width=".26458"/>
+  <g stroke-width=".26458px">
+   <path d="m3.9688 5.2917-2.7394 0.65481 2.7394 0.66811v-1.3229"/>
+   <path d="m10.583 5.2917 1.3229-1.3229v1.3229h-1.3229"/>
+   <path d="m10.583 6.6146 1.3229 1.3229v-1.3229h-1.3229"/>
+  </g>
+ </g>
+</svg>

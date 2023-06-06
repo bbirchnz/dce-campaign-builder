@@ -25,6 +25,14 @@ pub struct AirframeLoadout {
     pub awacs: Option<HashMap<String, AWACSLoadout>>,
     #[serde(rename = "Refueling")]
     pub aar: Option<HashMap<String, AARLoadout>>,
+    #[serde(rename = "Escort")]
+    pub escort: Option<HashMap<String, EscortLoadout>>,
+    #[serde(rename = "SEAD")]
+    pub sead: Option<HashMap<String, SEADLoadout>>,
+    #[serde(rename = "Intercept")]
+    pub intercept: Option<HashMap<String, InterceptLoadout>>,
+    #[serde(rename = "Transport")]
+    pub transport: Option<HashMap<String, TransportLoadout>>,
 }
 
 impl Default for AirframeLoadout {
@@ -35,6 +43,10 @@ impl Default for AirframeLoadout {
             cap: Some(Default::default()),
             awacs: Some(Default::default()),
             aar: Some(Default::default()),
+            escort: Some(Default::default()),
+            sead: Some(Default::default()),
+            intercept: Some(Default::default()),
+            transport: Some(Default::default()),
         }
     }
 }
@@ -74,6 +86,8 @@ pub struct StrikeLoadout {
     #[serde(default)]
     pub _airframe: String,
     pub _name: String,
+    #[serde(default)]
+    pub attributes: Vec<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
@@ -111,6 +125,8 @@ pub struct AntiShipLoadout {
     #[serde(default)]
     pub _airframe: String,
     pub _name: String,
+    #[serde(default)]
+    pub attributes: Vec<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
@@ -140,6 +156,8 @@ pub struct CAPLoadout {
     pub sortie_rate: u32,
     pub _airframe: String,
     pub _name: String,
+    #[serde(default)]
+    pub attributes: Vec<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
@@ -167,6 +185,8 @@ pub struct AWACSLoadout {
     pub sortie_rate: u32,
     pub _airframe: String,
     pub _name: String,
+    #[serde(default)]
+    pub attributes: Vec<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
@@ -194,7 +214,102 @@ pub struct AARLoadout {
     pub sortie_rate: u32,
     pub _airframe: String,
     pub _name: String,
+    #[serde(default)]
+    pub attributes: Vec<String>,
 }
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
+pub struct EscortLoadout {
+    pub day: bool,
+    pub night: bool,
+    #[serde(rename = "adverseWeather")]
+    pub adverse_weather: bool,
+    pub range: f64,
+    pub capability: u32,
+    pub firepower: u32,
+    #[serde(rename = "vCruise")]
+    pub v_cruise: f64,
+    #[serde(rename = "LDSD")]
+    pub ldsd: bool,
+    pub standoff: f64,
+    pub stores: Payload,
+    #[serde(default)]
+    pub sortie_rate: u32,
+    pub _airframe: String,
+    pub _name: String,
+    #[serde(default)]
+    pub attributes: Vec<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
+pub struct InterceptLoadout {
+    pub day: bool,
+    pub night: bool,
+    #[serde(rename = "adverseWeather")]
+    pub adverse_weather: bool,
+    pub range: f64,
+    pub capability: u32,
+    pub firepower: u32,
+    #[serde(rename = "LDSD")]
+    pub ldsd: bool,
+    pub stores: Payload,
+    #[serde(default)]
+    pub sortie_rate: u32,
+    pub _airframe: String,
+    pub _name: String,
+    #[serde(default)]
+    pub attributes: Vec<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
+pub struct TransportLoadout {
+    pub day: bool,
+    pub night: bool,
+    #[serde(rename = "adverseWeather")]
+    pub adverse_weather: bool,
+    pub range: f64,
+    pub capability: u32,
+    pub firepower: u32,
+    #[serde(rename = "vCruise")]
+    pub v_cruise: f64,
+    #[serde(rename = "vAttack")]
+    pub v_attack: f64,
+    #[serde(rename = "hCruise")]
+    pub h_cruise: f64,
+    #[serde(rename = "hAttack")]
+    pub h_attack: f64,
+    pub stores: Payload,
+    #[serde(default)]
+    pub sortie_rate: u32,
+    pub _airframe: String,
+    pub _name: String,
+    #[serde(default)]
+    pub attributes: Vec<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
+pub struct SEADLoadout {
+    pub day: bool,
+    pub night: bool,
+    #[serde(rename = "adverseWeather")]
+    pub adverse_weather: bool,
+    pub range: f64,
+    pub capability: u32,
+    pub firepower: u32,
+    #[serde(rename = "vCruise")]
+    pub v_cruise: f64,
+    #[serde(rename = "LDSD")]
+    pub stores: Payload,
+    #[serde(default)]
+    pub sortie_rate: u32,
+    pub _airframe: String,
+    pub _name: String,
+    #[serde(default)]
+    pub attributes: Vec<String>,
+}
+
+// SAR
+// CSAR
 
 fn common_headers() -> Vec<HeaderField> {
     vec![
@@ -254,13 +369,17 @@ impl NewFromMission for Loadouts {
         Self: Sized,
     {
         let mut loadout: Loadouts = HashMap::default();
-        mission
+        let countries = mission
             .coalition
             .blue
             .countries
             .iter()
-            .chain(mission.coalition.red.countries.iter())
+            .chain(mission.coalition.red.countries.iter());
+
+        countries
+            .clone()
             .filter_map(|c| c.plane.as_ref())
+            .chain(countries.filter_map(|c| c.helicopter.as_ref()))
             .flat_map(|pg| pg.groups.as_slice())
             .flat_map(|g| g.units.as_slice())
             .try_for_each(|u| {
@@ -299,6 +418,7 @@ impl NewFromMission for Loadouts {
                                 sortie_rate: 6,
                                 _airframe: u._type.to_owned(),
                                 _name: u.name.to_owned(),
+                                attributes: Vec::default(),
                             },
                         );
                         Ok(())
@@ -323,6 +443,7 @@ impl NewFromMission for Loadouts {
                                 sortie_rate: 6,
                                 _airframe: u._type.to_owned(),
                                 _name: u.name.to_owned(),
+                                attributes: Vec::default(),
                             },
                         );
                         Ok(())
@@ -357,6 +478,7 @@ impl NewFromMission for Loadouts {
                                 sortie_rate: 6,
                                 _airframe: u._type.to_owned(),
                                 _name: u.name.to_owned(),
+                                attributes: Vec::default(),
                             },
                         );
                         Ok(())
@@ -380,6 +502,7 @@ impl NewFromMission for Loadouts {
                                 sortie_rate: 12,
                                 _airframe: u._type.to_owned(),
                                 _name: u.name.to_owned(),
+                                attributes: Vec::default(),
                             },
                         );
                         Ok(())
@@ -403,6 +526,92 @@ impl NewFromMission for Loadouts {
                                 sortie_rate: 12,
                                 _airframe: u._type.to_owned(),
                                 _name: u.name.to_owned(),
+                                attributes: Vec::default(),
+                            },
+                        );
+                        Ok(())
+                    }
+                    "Escort" => {
+                        unit_record.escort.as_mut().unwrap().insert(
+                            u.name.to_owned(),
+                            EscortLoadout {
+                                day: true,
+                                night: true,
+                                adverse_weather: true,
+                                range: 500000.,
+                                capability: 1,
+                                firepower: 1,
+                                v_cruise: 200.,
+                                stores: u.payload.clone(),
+                                sortie_rate: 12,
+                                _airframe: u._type.to_owned(),
+                                _name: u.name.to_owned(),
+                                ldsd: true,
+                                standoff: 50000.,
+                                attributes: Vec::default(),
+                            },
+                        );
+                        Ok(())
+                    }
+                    "Intercept" => {
+                        unit_record.intercept.as_mut().unwrap().insert(
+                            u.name.to_owned(),
+                            InterceptLoadout {
+                                day: true,
+                                night: true,
+                                adverse_weather: true,
+                                range: 500000.,
+                                capability: 1,
+                                firepower: 1,
+                                stores: u.payload.clone(),
+                                sortie_rate: 12,
+                                _airframe: u._type.to_owned(),
+                                _name: u.name.to_owned(),
+                                ldsd: true,
+                                attributes: Vec::default(),
+                            },
+                        );
+                        Ok(())
+                    }
+                    "SEAD" => {
+                        unit_record.sead.as_mut().unwrap().insert(
+                            u.name.to_owned(),
+                            SEADLoadout {
+                                day: true,
+                                night: true,
+                                adverse_weather: true,
+                                range: 500000.,
+                                capability: 1,
+                                firepower: 1,
+                                stores: u.payload.clone(),
+                                sortie_rate: 12,
+                                _airframe: u._type.to_owned(),
+                                _name: u.name.to_owned(),
+                                attributes: Vec::default(),
+                                v_cruise: 200.,
+                            },
+                        );
+                        Ok(())
+                    }
+                    "Transport" => {
+                        unit_record.transport.as_mut().unwrap().insert(
+                            u.name.to_owned(),
+                            TransportLoadout {
+                                day: true,
+                                night: true,
+                                adverse_weather: true,
+                                range: 500000.,
+                                capability: 1,
+                                firepower: 1,
+                                stores: u.payload.clone(),
+                                sortie_rate: 12,
+                                _airframe: u._type.to_owned(),
+                                _name: u.name.to_owned(),
+                                attributes: Vec::default(),
+                                v_cruise: 152.778,
+                                v_attack: 138.889,
+                                h_cruise: 7315.2,
+                                h_attack: 7315.2,
                             },
                         );
                         Ok(())
@@ -418,12 +627,15 @@ impl NewFromMission for Loadouts {
 impl Editable for CAPLoadout {
     fn get_header() -> Vec<HeaderField> {
         let mut common = common_headers();
-        common.extend(vec![HeaderField::new(
-            "t_station",
-            "Time on station (min)",
-            FieldType::DurationMin,
-            true,
-        )]);
+        common.extend(vec![
+            HeaderField::new(
+                "t_station",
+                "Time on station (min)",
+                FieldType::DurationMin,
+                true,
+            ),
+            HeaderField::new("attributes", "Loadout Tags", FieldType::VecString, true),
+        ]);
         common
     }
 
@@ -479,12 +691,15 @@ impl Editable for CAPLoadout {
 impl Editable for AARLoadout {
     fn get_header() -> Vec<HeaderField> {
         let mut common = common_headers();
-        common.extend(vec![HeaderField::new(
-            "t_station",
-            "Time on station (min)",
-            FieldType::DurationMin,
-            true,
-        )]);
+        common.extend(vec![
+            HeaderField::new(
+                "t_station",
+                "Time on station (min)",
+                FieldType::DurationMin,
+                true,
+            ),
+            HeaderField::new("attributes", "Loadout Tags", FieldType::VecString, true),
+        ]);
         common
     }
 
@@ -536,15 +751,78 @@ impl Editable for AARLoadout {
     }
 }
 
-impl Editable for AWACSLoadout {
+impl Editable for TransportLoadout {
     fn get_header() -> Vec<HeaderField> {
         let mut common = common_headers();
         common.extend(vec![HeaderField::new(
-            "t_station",
-            "Time on station (min)",
-            FieldType::DurationMin,
+            "attributes",
+            "Loadout Tags",
+            FieldType::VecString,
             true,
         )]);
+        common
+    }
+
+    fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {
+        instance
+            .loadouts
+            .transport
+            .iter_mut()
+            .find(|item| item._name == name)
+            .unwrap()
+    }
+
+    fn get_name(&self) -> String {
+        self._name.to_owned()
+    }
+
+    fn validate(&self, _: &DCEInstance) -> ValidationResult {
+        let errors = Vec::default();
+
+        // todo: Probably want to put some limits on speeds/altitudes
+
+        if errors.is_empty() {
+            return ValidationResult::Pass;
+        }
+        ValidationResult::Fail(errors)
+    }
+    fn can_reset_from_miz() -> bool {
+        true
+    }
+
+    fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
+        let new_loadouts =
+            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.mission)?);
+
+        instance.loadouts.transport = new_loadouts.transport;
+
+        Ok(())
+    }
+
+    fn delete_by_name(instance: &mut DCEInstance, name: &str) -> Result<(), anyhow::Error> {
+        let container = &mut instance.loadouts.transport;
+
+        if let Some(index) = container.iter().position(|i| i._name == name) {
+            container.remove(index);
+            return Ok(());
+        }
+
+        Err(anyhow!("Didn't find {}", name))
+    }
+}
+
+impl Editable for AWACSLoadout {
+    fn get_header() -> Vec<HeaderField> {
+        let mut common = common_headers();
+        common.extend(vec![
+            HeaderField::new(
+                "t_station",
+                "Time on station (min)",
+                FieldType::DurationMin,
+                true,
+            ),
+            HeaderField::new("attributes", "Loadout Tags", FieldType::VecString, true),
+        ]);
         common
     }
 
@@ -619,6 +897,7 @@ impl Editable for StrikeLoadout {
                 FieldType::FixedEnum(vec!["All".into(), "Auto".into()]),
                 true,
             ),
+            HeaderField::new("attributes", "Loadout Tags", FieldType::VecString, true),
         ]);
         common
     }
@@ -691,6 +970,7 @@ impl Editable for AntiShipLoadout {
                 FieldType::FixedEnum(vec!["All".into(), "Auto".into()]),
                 true,
             ),
+            HeaderField::new("attributes", "Loadout Tags", FieldType::VecString, true),
         ]);
         common
     }
@@ -732,6 +1012,188 @@ impl Editable for AntiShipLoadout {
 
     fn delete_by_name(instance: &mut DCEInstance, name: &str) -> Result<(), anyhow::Error> {
         let container = &mut instance.loadouts.antiship;
+
+        if let Some(index) = container.iter().position(|i| i._name == name) {
+            container.remove(index);
+            return Ok(());
+        }
+
+        Err(anyhow!("Didn't find {}", name))
+    }
+}
+
+impl Editable for EscortLoadout {
+    fn get_header() -> Vec<HeaderField> {
+        vec![
+            HeaderField::new("_name", "Name", FieldType::String, true),
+            HeaderField::new("_airframe", "AirFrame", FieldType::String, false),
+            HeaderField::new("day", "Day", FieldType::Bool, true),
+            HeaderField::new("night", "Night", FieldType::Bool, true),
+            HeaderField::new("adverse_weather", "Adverse Weather", FieldType::Bool, true),
+            HeaderField::new("range", "Range (nm)", FieldType::DistanceNM, true),
+            HeaderField::new("standoff", "Engagement Range", FieldType::DistanceNM, true),
+            HeaderField::new("capability", "Capability", FieldType::Int, true),
+            HeaderField::new("firepower", "Firepower", FieldType::Int, true),
+            HeaderField::new("attributes", "Loadout Tags", FieldType::VecString, true),
+        ]
+    }
+    fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {
+        instance
+            .loadouts
+            .escort
+            .iter_mut()
+            .find(|item| item._name == name)
+            .unwrap()
+    }
+
+    fn get_name(&self) -> String {
+        self._name.to_owned()
+    }
+
+    fn validate(&self, _: &DCEInstance) -> ValidationResult {
+        let errors = Vec::default();
+
+        // todo: Probably want to put some limits on speeds/altitudes
+        if errors.is_empty() {
+            return ValidationResult::Pass;
+        }
+        ValidationResult::Fail(errors)
+    }
+
+    fn can_reset_from_miz() -> bool {
+        true
+    }
+
+    fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
+        let new_loadouts =
+            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.mission)?);
+
+        instance.loadouts.escort = new_loadouts.escort;
+
+        Ok(())
+    }
+
+    fn delete_by_name(instance: &mut DCEInstance, name: &str) -> Result<(), anyhow::Error> {
+        let container = &mut instance.loadouts.escort;
+
+        if let Some(index) = container.iter().position(|i| i._name == name) {
+            container.remove(index);
+            return Ok(());
+        }
+
+        Err(anyhow!("Didn't find {}", name))
+    }
+}
+
+impl Editable for SEADLoadout {
+    fn get_header() -> Vec<HeaderField> {
+        vec![
+            HeaderField::new("_name", "Name", FieldType::String, true),
+            HeaderField::new("_airframe", "AirFrame", FieldType::String, false),
+            HeaderField::new("day", "Day", FieldType::Bool, true),
+            HeaderField::new("night", "Night", FieldType::Bool, true),
+            HeaderField::new("adverse_weather", "Adverse Weather", FieldType::Bool, true),
+            HeaderField::new("range", "Range (nm)", FieldType::DistanceNM, true),
+            HeaderField::new("capability", "Capability", FieldType::Int, true),
+            HeaderField::new("firepower", "Firepower", FieldType::Int, true),
+            HeaderField::new("attributes", "Loadout Tags", FieldType::VecString, true),
+        ]
+    }
+    fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {
+        instance
+            .loadouts
+            .sead
+            .iter_mut()
+            .find(|item| item._name == name)
+            .unwrap()
+    }
+
+    fn get_name(&self) -> String {
+        self._name.to_owned()
+    }
+
+    fn validate(&self, _: &DCEInstance) -> ValidationResult {
+        let errors = Vec::default();
+
+        // todo: Probably want to put some limits on speeds/altitudes
+        if errors.is_empty() {
+            return ValidationResult::Pass;
+        }
+        ValidationResult::Fail(errors)
+    }
+
+    fn can_reset_from_miz() -> bool {
+        true
+    }
+
+    fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
+        let new_loadouts =
+            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.mission)?);
+
+        instance.loadouts.sead = new_loadouts.sead;
+
+        Ok(())
+    }
+
+    fn delete_by_name(instance: &mut DCEInstance, name: &str) -> Result<(), anyhow::Error> {
+        let container = &mut instance.loadouts.sead;
+
+        if let Some(index) = container.iter().position(|i| i._name == name) {
+            container.remove(index);
+            return Ok(());
+        }
+
+        Err(anyhow!("Didn't find {}", name))
+    }
+}
+
+impl Editable for InterceptLoadout {
+    fn get_header() -> Vec<HeaderField> {
+        vec![
+            HeaderField::new("_name", "Name", FieldType::String, true),
+            HeaderField::new("_airframe", "AirFrame", FieldType::String, false),
+            HeaderField::new("day", "Day", FieldType::Bool, true),
+            HeaderField::new("night", "Night", FieldType::Bool, true),
+            HeaderField::new("adverse_weather", "Adverse Weather", FieldType::Bool, true),
+            HeaderField::new("range", "Range (nm)", FieldType::DistanceNM, true),
+            HeaderField::new("capability", "Capability", FieldType::Int, true),
+            HeaderField::new("firepower", "Firepower", FieldType::Int, true),
+            HeaderField::new("attributes", "Loadout Tags", FieldType::VecString, true),
+        ]
+    }
+    fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {
+        instance
+            .loadouts
+            .intercept
+            .iter_mut()
+            .find(|item| item._name == name)
+            .unwrap()
+    }
+
+    fn get_name(&self) -> String {
+        self._name.to_owned()
+    }
+
+    fn validate(&self, _: &DCEInstance) -> ValidationResult {
+        let errors = Vec::default();
+
+        // todo: Probably want to put some limits on speeds/altitudes
+        if errors.is_empty() {
+            return ValidationResult::Pass;
+        }
+        ValidationResult::Fail(errors)
+    }
+
+    fn can_reset_from_miz() -> bool {
+        false
+    }
+
+    fn can_delete() -> bool {
+        false
+    }
+
+    fn delete_by_name(instance: &mut DCEInstance, name: &str) -> Result<(), anyhow::Error> {
+        let container = &mut instance.loadouts.intercept;
 
         if let Some(index) = container.iter().position(|i| i._name == name) {
             container.remove(index);

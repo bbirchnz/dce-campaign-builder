@@ -298,7 +298,6 @@ pub struct SEADLoadout {
     pub firepower: u32,
     #[serde(rename = "vCruise")]
     pub v_cruise: f64,
-    #[serde(rename = "LDSD")]
     pub stores: Payload,
     #[serde(default)]
     pub sortie_rate: u32,

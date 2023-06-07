@@ -5,7 +5,7 @@ use std::{
 };
 
 use bin_data::{BinData, BinItem};
-use campaign_header::Header;
+use campaign_header::{Header, HeaderInternal};
 use cmp_file::CMPFile;
 use conf_mod::ConfMod;
 use db_airbases::DBAirbases;
@@ -56,7 +56,7 @@ pub struct DCEInstance {
     pub loadouts: LoadoutsInternal,
     pub projection: TransverseMercator,
     pub base_path: String,
-    pub campaign_header: Header,
+    pub campaign_header: HeaderInternal,
     pub conf_mod: ConfMod,
     pub bin_data: BinData,
 }
@@ -92,7 +92,7 @@ impl DCEInstance {
 
         let projection = projection_from_theatre(&mission.theatre)?;
 
-        let header = Header::from_lua_file(format!("{}/camp_init.lua", path), "camp")?;
+        let header = Header::from_lua_file(format!("{}/camp_init.lua", path), "camp")?.into();
 
         let bin_data = BinData {
             template_miz: BinItem::new_from_file(
@@ -156,7 +156,7 @@ impl DCEInstance {
             oob_air,
             projection: projection_from_theatre(&mission.theatre)?,
             base_path,
-            campaign_header: Header::new_from_mission(&mission)?,
+            campaign_header: Header::new_from_mission(&mission)?.into(),
             airbases,
             triggers: triggers_to_flat(&Triggers::new_from_mission(&mission)?),
             loadouts: LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&mission)?),
@@ -298,7 +298,8 @@ REM After each change, You must launch the FirsMission.bat for it to be taken in
                 .to_string(),
             "db_airbases",
         )?;
-        self.campaign_header.to_lua_file(
+        let header: Header = self.campaign_header.clone().into();
+        header.to_lua_file(
             init_path
                 .join("camp_init.lua")
                 .to_string_lossy()
@@ -425,7 +426,8 @@ REM After each change, You must launch the FirsMission.bat for it to be taken in
             &options,
         )?;
 
-        self.campaign_header.add_to_zip(
+        let header: Header = self.campaign_header.clone().into();
+        header.add_to_zip(
             "camp",
             &(campaign_folder.to_owned() + "init/camp_init.lua"),
             &mut zip,

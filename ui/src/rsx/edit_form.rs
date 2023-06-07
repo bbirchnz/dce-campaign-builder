@@ -33,6 +33,7 @@ fn fieldtype_to_input(field: &FieldType) -> String {
         FieldType::TriggerActions => "text".into(),
         FieldType::FixedEnum(_) => "select".into(),
         FieldType::VecString => "text".into(),
+        FieldType::DateStr => "date".into(),
     }
 }
 
@@ -53,6 +54,7 @@ fn fieldtype_editable(field: &FieldType) -> bool {
         FieldType::TriggerActions => true,
         FieldType::FixedEnum(_) => true,
         FieldType::VecString => true,
+        FieldType::DateStr => true,
     }
 }
 

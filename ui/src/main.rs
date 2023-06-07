@@ -1,7 +1,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 #![cfg_attr(debug_assertions, windows_subsystem = "console")]
 use dce_lib::{
-    campaign_header::Header,
+    campaign_header::HeaderInternal,
     db_airbases::{AirStartBase, FixedAirBase, ShipBase},
     editable::Editable,
     loadouts::{
@@ -374,7 +374,7 @@ fn main_body(cx: Scope) -> Element {
                         edit_form::<AirStartBase> { headers: AirStartBase::get_header(), title: "Edit Airstart".into(), item: selected_form.clone()}
                     },
                     Selectable::CampaignSettings(_) => rsx!{
-                        edit_form::<Header> { headers: Header::get_header(), title: "Campaign Settings".into(), item: selected_form.clone()}
+                        edit_form::<HeaderInternal> { headers: HeaderInternal::get_header(), title: "Campaign Settings".into(), item: selected_form.clone()}
                     },
                     Selectable::LoadoutCAP(_) => rsx!{
                         edit_form::<CAPLoadout> { headers: CAPLoadout::get_header(), title: "Edit CAP Loadout".into(), item: selected_form.clone()}

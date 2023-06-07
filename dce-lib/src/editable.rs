@@ -319,6 +319,7 @@ impl HeaderField {
                 }
             }
             FieldType::FixedEnum(_) => get_string(item, &self.field),
+            FieldType::DateStr => get_string(item, &self.field),
             FieldType::VecString => {
                 let val = item
                     .field(&self.field)
@@ -397,6 +398,7 @@ impl HeaderField {
             FieldType::VecString => {
                 apply_value(item, &self.field, &value.to_owned());
             }
+            FieldType::DateStr => apply_value(item, &self.field, &value.to_owned()),
         };
         Ok(())
     }
@@ -439,6 +441,7 @@ pub enum FieldType {
     Int,
     Enum,
     Debug,
+    DateStr,
     IntTime,
     Bool,
     AltitudeFeet,

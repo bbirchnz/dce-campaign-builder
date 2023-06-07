@@ -1,5 +1,5 @@
 use dce_lib::{
-    campaign_header::Header,
+    campaign_header::HeaderInternal,
     db_airbases::{AirStartBase, FixedAirBase, ShipBase},
     loadouts::{
         AARLoadout, AWACSLoadout, AntiShipLoadout, CAPLoadout, EscortLoadout, InterceptLoadout,
@@ -28,7 +28,7 @@ pub enum Selectable {
     FixedAirBase(Option<FixedAirBase>),
     ShipAirBase(Option<ShipBase>),
     AirstartBase(Option<AirStartBase>),
-    CampaignSettings(Header),
+    CampaignSettings(HeaderInternal),
     LoadoutCAP(Option<CAPLoadout>),
     LoadoutStrike(Option<StrikeLoadout>),
     LoadoutAntiship(Option<AntiShipLoadout>),
@@ -306,7 +306,7 @@ impl ToSelectable for ShipBase {
     }
 }
 
-impl ToSelectable for Header {
+impl ToSelectable for HeaderInternal {
     fn to_selectable(&self) -> Selectable {
         Selectable::CampaignSettings(self.clone())
     }

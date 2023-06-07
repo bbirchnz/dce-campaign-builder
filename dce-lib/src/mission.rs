@@ -15,11 +15,22 @@ pub struct Mission {
     pub theatre: String,
     pub coalition: CoalitionCollection,
     pub triggers: Triggers,
+    pub date: Date,
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 pub struct Triggers {
     pub zones: Vec<TriggerZone>,
+}
+
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+pub struct Date {
+    #[serde(rename = "Year")]
+    pub year: i32,
+    #[serde(rename = "Month")]
+    pub month: u32,
+    #[serde(rename = "Day")]
+    pub day: u32,
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]

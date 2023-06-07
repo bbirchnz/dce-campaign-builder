@@ -241,7 +241,7 @@ fn side_to_squadrons(countries: &[Country], base: String) -> Vec<Squadron> {
                     skill: unit.skill.to_owned(),
                     tasks: HashMap::default(),
                     tasks_coef: Some(HashMap::default()),
-                    number: 6,
+                    number: 12,
                     reserve: 6,
                 });
             // cycle through the units, add liveries and tasks:

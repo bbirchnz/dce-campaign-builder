@@ -209,7 +209,7 @@ fn main_body(cx: Scope) -> Element {
 
     cx.render(rsx! {
         div {
-            class: "top-8 flex absolute inset-0 bg-slate-50",
+            class: "top-8 bottom-6 flex absolute inset-0 bg-slate-50",
             // catch movement during edit col width drag
             onmousemove: |ev| {
                 if *dragging_state.get() {
@@ -424,64 +424,64 @@ fn main_body(cx: Scope) -> Element {
                 div { class: "{edit_table_height} grow-0 overflow-y-auto",
                     match *selected_table {
                         Selectable::Squadron(_) => rsx!{
-                            rsx::table { data: instance.oob_air.red.iter().chain(instance.oob_air.blue.iter()).cloned().collect::<Vec<Squadron>>() }
+                            rsx::table { title: "Squadrons", data: instance.oob_air.red.iter().chain(instance.oob_air.blue.iter()).cloned().collect::<Vec<Squadron>>() }
                         },
                         Selectable::TargetStrike(_) => rsx! {
-                            rsx::table { data: instance.target_list.strike.to_vec() }
+                            rsx::table { title: "Strike Targets", data: instance.target_list.strike.to_vec() }
                         },
                         Selectable::TargetCAP(_) => rsx! {
-                            rsx::table {  data: instance.target_list.cap.to_vec() }
+                            rsx::table {  title: "Combat Air Patrols", data: instance.target_list.cap.to_vec() }
                         },
                         Selectable::TargetAntiShip(_) => rsx! {
-                            rsx::table { data: instance.target_list.antiship.to_vec() }
+                            rsx::table { title: "Anti-ship Strike Targets", data: instance.target_list.antiship.to_vec() }
                         },
                         Selectable::TargetAWACS(_) => rsx! {
-                            rsx::table { data: instance.target_list.awacs.to_vec() }
+                            rsx::table { title: "AWACS Patrols", data: instance.target_list.awacs.to_vec() }
                         },
                         Selectable::TargetAAR(_) => rsx! {
-                            rsx::table { data: instance.target_list.refuel.to_vec() }
+                            rsx::table { title: "Refueling Zones", data: instance.target_list.refuel.to_vec() }
                         },
                         Selectable::TargetIntercept(_) => rsx! {
-                            rsx::table { data: instance.target_list.intercept.to_vec() }
+                            rsx::table { title: "Intercept Zones", data: instance.target_list.intercept.to_vec() }
                         },
                         Selectable::FixedAirBase(_) => rsx! {
-                            rsx::table { data: instance.airbases.fixed.to_vec() }
+                            rsx::table { title: "Airbases", data: instance.airbases.fixed.to_vec() }
                         },
                         Selectable::ShipAirBase(_) => rsx! {
-                            rsx::table { data: instance.airbases.ship.to_vec() }
+                            rsx::table { title: "Aircraft Carriers", data: instance.airbases.ship.to_vec() }
                         },
                         Selectable::AirstartBase(_) => rsx! {
-                            rsx::table { data: instance.airbases.air_start.to_vec() }
+                            rsx::table { title: "Air-start zones", data: instance.airbases.air_start.to_vec() }
                         },
                         Selectable::LoadoutCAP(_) => rsx! {
-                            rsx::table { data: instance.loadouts.cap.to_vec() }
+                            rsx::table { title: "CAP Loadout and Profiles", data: instance.loadouts.cap.to_vec() }
                         },
                         Selectable::LoadoutStrike(_) => rsx! {
-                            rsx::table { data: instance.loadouts.strike.to_vec() }
+                            rsx::table { title: "Strike Loadout and Profiles", data: instance.loadouts.strike.to_vec() }
                         },
                         Selectable::LoadoutAntiship(_) => rsx! {
-                            rsx::table { data: instance.loadouts.antiship.to_vec() }
+                            rsx::table { title: "Anti-ship Strike Loadout and Profiles", data: instance.loadouts.antiship.to_vec() }
                         },
                         Selectable::LoadoutAAR(_) => rsx! {
-                            rsx::table { data: instance.loadouts.aar.to_vec() }
+                            rsx::table { title: "Refueling Profiles", data: instance.loadouts.aar.to_vec() }
                         },
                         Selectable::LoadoutAWACS(_) => rsx! {
-                            rsx::table { data: instance.loadouts.awacs.to_vec() }
+                            rsx::table {title: "AWACS Profiles",  data: instance.loadouts.awacs.to_vec() }
                         },
                         Selectable::LoadoutEscort(_) => rsx! {
-                            rsx::table { data: instance.loadouts.escort.to_vec() }
+                            rsx::table { title: "Escort Loadout and Profiles", data: instance.loadouts.escort.to_vec() }
                         },
                         Selectable::LoadoutIntercept(_) => rsx! {
-                            rsx::table { data: instance.loadouts.intercept.to_vec() }
+                            rsx::table { title: "Intercept Loadout and Profiles", data: instance.loadouts.intercept.to_vec() }
                         },
                         Selectable::LoadoutSEAD(_) => rsx! {
-                            rsx::table { data: instance.loadouts.sead.to_vec() }
+                            rsx::table { title: "SEAD Escort Loadout and Profiles", data: instance.loadouts.sead.to_vec() }
                         },
                         Selectable::LoadoutTransport(_) => rsx! {
-                            rsx::table { data: instance.loadouts.transport.to_vec() }
+                            rsx::table { title: "Transport Profiles", data: instance.loadouts.transport.to_vec() }
                         },
                         Selectable::Trigger(_) => rsx! {
-                            rsx::table { data: instance.triggers.to_vec() }
+                            rsx::table { title: "Campaign Triggers and Actions", data: instance.triggers.to_vec() }
                         },
                         Selectable::None | Selectable::CampaignSettings(_) => rsx! {
                             {}
@@ -490,6 +490,7 @@ fn main_body(cx: Scope) -> Element {
                 }
             }
         }
+        div { class: "bg-sky-500 bottom-0 h-6 absolute w-full flex", "footer" }
     })
 }
 

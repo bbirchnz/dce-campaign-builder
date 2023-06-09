@@ -47,6 +47,11 @@ body {
     z-index: 10000;
 }
 
+.tooltip .tooltiptext.ttright {
+    left: auto;
+    right: 10px;
+}
+
 .tooltip:hover .tooltiptext {
     visibility: visible;
 }

@@ -111,6 +111,7 @@ pub struct VehicleGroup {
     pub y: f64,
     pub name: String,
     pub start_time: f64,
+    pub units: Vec<VehicleUnit>,
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
@@ -150,6 +151,24 @@ pub struct ShipUnit {
     pub heading: f64,
     pub frequency: u64,
     pub modulation: u8,
+}
+
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+pub struct VehicleUnit {
+    pub skill: String,
+    #[serde(default)]
+    #[serde(rename = "coldAtStart")]
+    pub cold_at_start: bool,
+    #[serde(rename = "type")]
+    pub _type: String,
+    #[serde(rename = "unitId")]
+    pub unit_id: u64,
+    pub x: f64,
+    pub y: f64,
+    pub name: String,
+    pub heading: f64,
+    #[serde(rename = "playerCanDrive")]
+    pub player_can_drive: Option<bool>,
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
@@ -242,6 +261,9 @@ pub struct StaticUnit {
     pub y: f64,
     pub name: String,
     pub heading: f64,
+    pub heliport_callsign_id: Option<u32>,
+    pub heliport_modulation: Option<u32>,
+    pub heliport_frequency: Option<String>,
 }
 
 impl LuaFileBased<'_> for Mission {}
@@ -324,6 +346,116 @@ impl Mission {
             .iter()
             .find(|z| &z.name == name)
             .ok_or(anyhow!("Can't find a refpoint/zone with name {}", name))
+    }
+
+    pub fn get_max_group_id(&self) -> u64 {
+        let mut id = 0;
+
+        self.coalition
+            .blue
+            .countries
+            .iter()
+            .chain(self.coalition.red.countries.iter())
+            .chain(self.coalition.neutrals.countries.iter())
+            .for_each(|c| {
+                if c._static.is_some() {
+                    c._static.as_ref().unwrap().groups.iter().for_each(|g| {
+                        id = id.max(g.group_id);
+                    });
+                }
+                if c.helicopter.is_some() {
+                    c.helicopter.as_ref().unwrap().groups.iter().for_each(|g| {
+                        id = id.max(g.group_id);
+                    });
+                }
+                if c.plane.is_some() {
+                    c.plane.as_ref().unwrap().groups.iter().for_each(|g| {
+                        id = id.max(g.group_id);
+                    });
+                }
+                if c.vehicle.is_some() {
+                    c.vehicle.as_ref().unwrap().groups.iter().for_each(|g| {
+                        id = id.max(g.group_id);
+                    });
+                }
+                if c.ship.is_some() {
+                    c.ship.as_ref().unwrap().groups.iter().for_each(|g| {
+                        id = id.max(g.group_id);
+                    });
+                }
+            });
+
+        id
+    }
+
+    pub fn get_max_unit_id(&self) -> u64 {
+        let mut id = 0;
+
+        self.coalition
+            .blue
+            .countries
+            .iter()
+            .chain(self.coalition.red.countries.iter())
+            .chain(self.coalition.neutrals.countries.iter())
+            .for_each(|c| {
+                if c._static.is_some() {
+                    c._static
+                        .as_ref()
+                        .unwrap()
+                        .groups
+                        .iter()
+                        .flat_map(|g| g.units.as_slice())
+                        .for_each(|u| {
+                            id = id.max(u.unit_id);
+                        });
+                }
+                if c.helicopter.is_some() {
+                    c.helicopter
+                        .as_ref()
+                        .unwrap()
+                        .groups
+                        .iter()
+                        .flat_map(|g| g.units.as_slice())
+                        .for_each(|u| {
+                            id = id.max(u.unit_id);
+                        });
+                }
+                if c.plane.is_some() {
+                    c.plane
+                        .as_ref()
+                        .unwrap()
+                        .groups
+                        .iter()
+                        .flat_map(|g| g.units.as_slice())
+                        .for_each(|u| {
+                            id = id.max(u.unit_id);
+                        });
+                }
+                if c.ship.is_some() {
+                    c.ship
+                        .as_ref()
+                        .unwrap()
+                        .groups
+                        .iter()
+                        .flat_map(|g| g.units.as_slice())
+                        .for_each(|u| {
+                            id = id.max(u.unit_id);
+                        });
+                }
+                if c.vehicle.is_some() {
+                    c.vehicle
+                        .as_ref()
+                        .unwrap()
+                        .groups
+                        .iter()
+                        .flat_map(|g| g.units.as_slice())
+                        .for_each(|u| {
+                            id = id.max(u.unit_id);
+                        });
+                }
+            });
+
+        id
     }
 }
 

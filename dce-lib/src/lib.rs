@@ -37,6 +37,7 @@ pub mod lua_utils;
 pub mod mappable;
 pub mod mission;
 pub mod mission_warehouses;
+pub mod miz_hacks;
 pub mod oob_air;
 pub mod projections;
 pub mod serde_utils;

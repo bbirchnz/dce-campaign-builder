@@ -127,6 +127,11 @@ impl DCEInstance {
         let path = Path::new(&miz_file);
         let base_path = path.parent().unwrap().to_str().unwrap().to_owned();
 
+        // apply patches to miz:
+        let miz_file_str = miz_hacks::apply_all_to_file(miz_file)?;
+        // from here on out use the modded miz
+        let miz_file = &miz_file_str;
+
         let mission = Mission::from_miz(miz_file)?;
         let mission_warehouses = Warehouses::from_miz(miz_file)?;
 
@@ -180,17 +185,25 @@ impl DCEInstance {
         Ok(instance)
     }
 
-    /// Replace the mission and mission warehouse tags with new content from the miz file
+    /// Replace the miz, mission and mission warehouse tags with new content from the miz file
     ///
     /// Use when you've updated the base mission, but don't want to start from scratch
     ///
     /// Will not replace any DCE content (targets, squadrons etc)
     pub fn replace_miz(&mut self, miz_file: &str) -> Result<(), anyhow::Error> {
+        // apply patches to miz:
+        let miz_file_str = miz_hacks::apply_all_to_file(miz_file)?;
+        // from here on out use the modded miz
+        let miz_file = &miz_file_str;
+
         let mission = Mission::from_miz(miz_file)?;
         let mission_warehouses = Warehouses::from_miz(miz_file)?;
 
         self.mission = mission;
         self.mission_warehouses = mission_warehouses;
+
+        let new_item = BinItem::new_from_file("base_mission.miz", miz_file)?;
+        self.bin_data.template_miz = new_item;
 
         Ok(())
     }

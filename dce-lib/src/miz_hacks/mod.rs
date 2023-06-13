@@ -1,6 +1,10 @@
 //! Collection of patches and so on the modify miz files
 
-use std::io::{Cursor, Read, Write};
+use std::{
+    fs::File,
+    io::{Cursor, Read, Write},
+    path::Path,
+};
 
 use itertools::Itertools;
 use mlua::{Lua, LuaSerdeExt};
@@ -11,6 +15,28 @@ use crate::{
     mission::{Mission, Route, StaticGroup, StaticGroupPoint, StaticUnit},
     serde_utils::LuaFileBased,
 };
+
+/// apply all miz hacks to this file and create a new one at the same path
+/// with filename _mod.miz
+///
+/// Returns new filename/path
+pub fn apply_all_to_file(path: &str) -> Result<String, anyhow::Error> {
+    let mut original = File::open(path)?;
+    let mut buffer = Vec::default();
+    original.read_to_end(&mut buffer)?;
+
+    // apply various hacks:
+    let new_content = zones_to_farps(&buffer, 128.00)?;
+
+    // new filename:
+    let p = Path::new(path);
+    let new_file_name = p.file_stem().unwrap().to_string_lossy().to_string() + "_mod.miz";
+    // save out to new file:
+    let mut new_file = File::create(&new_file_name)?;
+    new_file.write_all(&new_content)?;
+
+    Ok(new_file_name)
+}
 
 /// Create a new static group for a farp from zones named:
 /// <SIDE>_FARP_<Name>_<number> e.g. BLUE_FARP_Mt Death_1
@@ -71,6 +97,15 @@ pub fn zones_to_farps(miz_zip: &[u8], base_freq: f64) -> Result<Vec<u8>, anyhow:
             units: zones
                 .iter()
                 .map(|z| {
+                    let heading;
+                    if let Some(heading_str) = z.name.split('_').collect::<Vec<_>>().get(4) {
+                        heading = heading_str
+                            .parse::<f64>()
+                            .expect("Must be parsable as float");
+                    } else {
+                        heading = 0.;
+                    }
+
                     let unit = StaticUnit {
                         category: "Heliports".into(),
                         shape_name: Some("invisiblefarp".into()),
@@ -80,7 +115,7 @@ pub fn zones_to_farps(miz_zip: &[u8], base_freq: f64) -> Result<Vec<u8>, anyhow:
                         x: z.x,
                         y: z.y,
                         name: z.name.to_owned(),
-                        heading: 0.,
+                        heading,
                         heliport_callsign_id: Some(next_callsign_id), // London
                         heliport_modulation: Some(0),                 // AM=0
                         heliport_frequency: Some(format!("{next_freq:.1}")),
@@ -176,6 +211,18 @@ mod tests {
         let new_content = zones_to_farps(&buffer, 128.00).unwrap();
 
         let mut new_file = File::create("test_resources\\farp_test_new.miz").unwrap();
+        new_file.write_all(&new_content).unwrap();
+    }
+
+    #[test]
+    fn read_add_write2() {
+        let mut original = File::open("test_resources\\farp_test_sinai.miz").unwrap();
+        let mut buffer = Vec::default();
+        original.read_to_end(&mut buffer).unwrap();
+
+        let new_content = zones_to_farps(&buffer, 128.00).unwrap();
+
+        let mut new_file = File::create("test_resources\\farp_test_sinai_new.miz").unwrap();
         new_file.write_all(&new_content).unwrap();
     }
 }

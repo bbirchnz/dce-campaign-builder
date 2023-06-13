@@ -150,8 +150,15 @@ impl Mappables for DBAirbasesInternal {
             }
         });
 
-        self.farp.iter().for_each(|_| {
-            // result.insert(item._name.to_owned(), AirBase::Farp(item.clone()));
+        self.farp.iter().for_each(|item| {
+            result.push(MapPoint::new_from_dcs(
+                item.x,
+                item.y,
+                &item._name,
+                &item.side,
+                "FARP",
+                proj,
+            ));
         });
 
         self.air_start.iter().for_each(|item| {

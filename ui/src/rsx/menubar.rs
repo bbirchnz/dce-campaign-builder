@@ -1,4 +1,4 @@
-use dce_lib::{bin_data::BinItem, DCEInstance};
+use dce_lib::DCEInstance;
 use dioxus::prelude::*;
 use dioxus_desktop::use_window;
 use fermi::{use_atom_ref, use_atom_state};
@@ -136,12 +136,8 @@ pub fn menu_bar(cx: Scope<MenuBarProps>) -> Element {
         match result {
             Ok(Some(path)) => {
                 if let Err(e) = mut_instance.replace_miz(&path.to_string_lossy()) {
-                    warn!("Failed to parse miz with error: {}", e);
+                    warn!("Failed to update miz with error: {}", e);
                 }
-                match BinItem::new_from_file("base_mission.miz", &path.to_string_lossy()) {
-                    Ok(data) => mut_instance.bin_data.template_miz = data,
-                    Err(e) => warn!("Failed to copy miz into bin data with error: {}", e),
-                };
                 atom_dirty.set(true);
             }
             Ok(None) => {}

@@ -1,7 +1,7 @@
 use bevy_reflect::{FromReflect, Reflect};
-use itertools::Itertools;
+
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+use std::{collections::HashMap, iter::repeat};
 
 use crate::{
     db_airbases_internal::DBAirbasesInternal,
@@ -81,21 +81,23 @@ pub struct ShipBase {
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
 pub struct FarpBase {
-    x: f64,
-    y: f64,
-    elevation: f64,
+    pub x: f64,
+    pub y: f64,
+    pub elevation: f64,
     #[serde(rename = "airdromeId")]
-    airdrome_id: u16,
+    pub airdrome_id: u64,
     #[serde(rename = "helipadId")]
-    helipad_id: u16,
+    pub helipad_id: u64,
     #[serde(rename = "ATC_frequency")]
-    atc_frequency: String,
-    side: String,
-    divert: bool,
+    pub atc_frequency: String,
+    pub side: String,
+    pub divert: bool,
     #[serde(default)]
     pub _name: String,
     #[serde(default)]
     pub inactive: bool,
+    #[serde(rename = "LimitedParkNb")]
+    pub limited_park_number: Option<u16>,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
@@ -109,8 +111,6 @@ pub struct AirStartBase {
     atc_frequency: String,
     #[serde(rename = "BaseAirStart")]
     base_air_start: bool,
-    // #[serde(rename = "airdromeId")]
-    // airdrome_id: Option<u16>,
     pub side: String,
     #[serde(default)]
     pub _name: String,
@@ -148,17 +148,7 @@ impl NewFromMission for DBAirbases {
                         y: dcs_ab.frequencies.y,
                         elevation: dcs_ab.frequencies.height,
                         airdrome_id: dcs_ab.frequencies.airdrome_number,
-                        atc_frequency: dcs_ab
-                            .frequencies
-                            .frequency_list
-                            .iter()
-                            .sorted()
-                            .collect::<Vec<_>>()
-                            .last()
-                            .copied()
-                            .copied()
-                            .unwrap_or_default()
-                            .to_string(),
+                        atc_frequency: dcs_ab.get_first_freq(),
                         startup: 600,
                         side: "red".into(),
                         divert: false,
@@ -174,15 +164,12 @@ impl NewFromMission for DBAirbases {
             })
             .collect::<HashMap<_, _>>();
 
-        let ships_blue = mission
-            .coalition
-            .blue
-            .countries
-            .iter()
-            .filter_map(|i| i.ship.as_ref())
-            .flat_map(|i| i.groups.as_slice())
-            .flat_map(|i| i.units.as_slice())
-            .filter_map(|s| {
+        let ships = mission
+            .country_iter()
+            .filter_map(|(i, side)| i.ship.as_ref().zip(Some(side)))
+            .flat_map(|(i, side)| i.groups.as_slice().iter().zip(repeat(side)))
+            .flat_map(|(i, side)| i.units.as_slice().iter().zip(repeat(side)))
+            .filter_map(|(s, side)| {
                 let parts = s.name.split('_').collect::<Vec<_>>();
                 if parts.len() < 2 || parts[0] != "CV" {
                     return None;
@@ -193,7 +180,7 @@ impl NewFromMission for DBAirbases {
                         unitname: s.name.to_owned(),
                         startup: Some(600.),
                         atc_frequency: None,
-                        side: "blue".into(),
+                        side: side.to_owned(),
                         limited_park_number: 4,
                         _name: s.name.to_owned(),
                         inactive: false,
@@ -222,8 +209,49 @@ impl NewFromMission for DBAirbases {
             ))
         });
 
-        fixed.extend(ships_blue);
+        let farps = mission
+            .country_iter()
+            .filter_map(|(c, side)| c._static.as_ref().zip(Some(side)))
+            .flat_map(|(s, side)| s.groups.as_slice().iter().zip(repeat(side)))
+            .filter_map(|(sg, side)| {
+                let first_unit = sg
+                    .units
+                    .first()
+                    .expect("A static group must have at least one unit");
+                let parking_spots = if first_unit._type == "FARP" {
+                    4
+                } else {
+                    sg.units.len() as u16
+                };
+                match first_unit.category.as_str() {
+                    "Heliports" => Some((
+                        sg.name.to_owned(),
+                        AirBase::Farp(FarpBase {
+                            x: sg.x,
+                            y: sg.y,
+                            elevation: 0.,
+                            airdrome_id: first_unit.unit_id,
+                            helipad_id: first_unit.unit_id,
+                            atc_frequency: first_unit
+                                .heliport_frequency
+                                .as_ref()
+                                .unwrap()
+                                .to_owned(),
+                            side: side.to_owned(),
+                            divert: false,
+                            _name: sg.name.to_owned(),
+                            inactive: false,
+                            limited_park_number: Some(parking_spots),
+                        }),
+                    )),
+                    _ => None,
+                }
+            })
+            .collect::<HashMap<_, _>>();
+
+        fixed.extend(ships);
         fixed.extend(air_starts);
+        fixed.extend(farps);
         Ok(fixed)
     }
 }
@@ -300,6 +328,82 @@ impl Editable for FixedAirBase {
 
     fn delete_by_name(instance: &mut DCEInstance, name: &str) -> Result<(), anyhow::Error> {
         let container = &mut instance.airbases.fixed;
+
+        if let Some(index) = container.iter().position(|i| i._name == name) {
+            container.remove(index);
+            return Ok(());
+        }
+
+        Err(anyhow!("Didn't find {}", name))
+    }
+}
+
+impl Editable for FarpBase {
+    fn get_header() -> Vec<HeaderField> {
+        vec![
+            HeaderField::new("_name", "Name", FieldType::String, false),
+            HeaderField::new(
+                "elevation",
+                "Elevation",
+                FieldType::Float(|v| format!("{:.1}", v)),
+                false,
+            ),
+            HeaderField::new(
+                "side",
+                "Side",
+                FieldType::FixedEnum(vec!["blue".into(), "red".into(), "neutral".into()]),
+                true,
+            ),
+            HeaderField::new("divert", "Divert", FieldType::Bool, true),
+            HeaderField::new("inactive", "Inactive", FieldType::Bool, true),
+        ]
+    }
+    fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {
+        instance
+            .airbases
+            .farp
+            .iter_mut()
+            .find(|item| item._name == name)
+            .unwrap()
+    }
+    fn get_name(&self) -> String {
+        self._name.to_owned()
+    }
+
+    fn validate(&self, _: &DCEInstance) -> ValidationResult {
+        let mut errors = Vec::default();
+
+        if self.side != "blue" && self.side != "red" && self.side != "neutral" {
+            errors.push(ValidationError::new(
+                "side",
+                "Airbase Side",
+                "Side must be blue/red/neutral",
+            ));
+        }
+
+        if errors.is_empty() {
+            return ValidationResult::Pass;
+        }
+        ValidationResult::Fail(errors)
+    }
+
+    fn can_reset_from_miz() -> bool {
+        true
+    }
+
+    fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
+        let new_airbases = DBAirbasesInternal::from_db_airbases(
+            &DBAirbases::new_from_mission(&instance.mission)?,
+            &instance.mission_warehouses,
+        );
+
+        instance.airbases.farp = new_airbases.farp;
+
+        Ok(())
+    }
+
+    fn delete_by_name(instance: &mut DCEInstance, name: &str) -> Result<(), anyhow::Error> {
+        let container = &mut instance.airbases.farp;
 
         if let Some(index) = container.iter().position(|i| i._name == name) {
             container.remove(index);

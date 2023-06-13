@@ -1,4 +1,4 @@
-use std::{collections::HashMap, fs::File};
+use std::{collections::HashMap, fs::File, iter::repeat, slice::Iter};
 
 use bevy_reflect::{FromReflect, Reflect};
 use serde::{Deserialize, Serialize};
@@ -456,6 +456,22 @@ impl Mission {
             });
 
         id
+    }
+
+    /// Returns an immutable iter of countries zipped with side
+    pub fn country_iter(
+        &self,
+    ) -> std::iter::Chain<
+        std::iter::Zip<Iter<Country>, std::iter::Repeat<&str>>,
+        std::iter::Zip<Iter<Country>, std::iter::Repeat<&str>>,
+    > {
+        return self
+            .coalition
+            .blue
+            .countries
+            .iter()
+            .zip(repeat("blue"))
+            .chain(self.coalition.red.countries.iter().zip(repeat("red")));
     }
 }
 

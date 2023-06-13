@@ -95,6 +95,7 @@ impl OobAir {
                     Some((name, &ab.side, ship.x, ship.y))
                 }
                 AirBase::AirStart(ab) => Some((name, &ab.side, ab.x, ab.y)),
+                AirBase::Farp(ab) => Some((name, &ab.side, ab.x, ab.y)),
                 _ => None,
             })
             .collect::<Vec<_>>();

@@ -17,16 +17,35 @@ pub struct AirportSet {
     pub stands: Vec<Stand>,
 }
 
+impl AirportSet {
+    pub fn get_first_freq(&self) -> String {
+        let items = &self.frequencies.frequency_list;
+        let first = items.first();
+        match first {
+            Some(FrequencyItem::One(freq)) => freq.to_string(),
+            Some(FrequencyItem::Many(freqs)) => freqs.first().unwrap().to_string(),
+            None => "".into(),
+        }
+    }
+}
+
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 pub struct Frequencies {
     #[serde(rename = "frequencyList")]
-    pub frequency_list: Vec<u64>,
+    pub frequency_list: Vec<FrequencyItem>,
     #[serde(rename = "airdromeNumber")]
     pub airdrome_number: u32,
     pub x: f64,
     pub y: f64,
     pub height: f64,
     pub name: String,
+}
+
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+#[serde(untagged)]
+pub enum FrequencyItem {
+    One(u64),
+    Many(Vec<u64>),
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
@@ -86,6 +105,10 @@ pub fn dcs_airbases_for_theatre(theatre: &str) -> Result<Airports, anyhow::Error
         )?),
         "TheChannel" => Ok(Airports::from_lua_str(
             include_str!("..\\lua\\standlist_ch.lua"),
+            "airports",
+        )?),
+        "SinaiMap" => Ok(Airports::from_lua_str(
+            include_str!("..\\lua\\standlist_si.lua"),
             "airports",
         )?),
         _ => Err(anyhow!("Couldn't get DCS airbases for {theatre}")),

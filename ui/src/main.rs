@@ -2,7 +2,7 @@
 #![cfg_attr(debug_assertions, windows_subsystem = "console")]
 use dce_lib::{
     campaign_header::HeaderInternal,
-    db_airbases::{AirStartBase, FixedAirBase, ShipBase},
+    db_airbases::{AirStartBase, FarpBase, FixedAirBase, ShipBase},
     editable::Editable,
     loadouts::{
         AARLoadout, AWACSLoadout, AntiShipLoadout, CAPLoadout, EscortLoadout, InterceptLoadout,
@@ -244,6 +244,11 @@ fn main_body(cx: Scope) -> Element {
                         on_click: |_| select_first_airstart_airbase(cx),
                         tooltip: "Airstart/virtual airbases"
                     }
+                    icon_button {
+                        path: "images/airfield_farp.svg".into(),
+                        on_click: |_| select_first_farp_airbase(cx),
+                        tooltip: "FARPs"
+                    }
                 }
                 popout_menu { onclick: |_| select_first_cap_target(cx), base_icon_url: "images/target_none.svg",
                     icon_button {
@@ -373,6 +378,9 @@ fn main_body(cx: Scope) -> Element {
                     Selectable::AirstartBase(_) => rsx!{
                         edit_form::<AirStartBase> { headers: AirStartBase::get_header(), title: "Edit Airstart".into(), item: selected_form.clone()}
                     },
+                    Selectable::FARPBase(_) => rsx!{
+                        edit_form::<FarpBase> { headers: FarpBase::get_header(), title: "Edit FARP".into(), item: selected_form.clone()}
+                    },
                     Selectable::CampaignSettings(_) => rsx!{
                         edit_form::<HeaderInternal> { headers: HeaderInternal::get_header(), title: "Campaign Settings".into(), item: selected_form.clone()}
                     },
@@ -452,6 +460,9 @@ fn main_body(cx: Scope) -> Element {
                         },
                         Selectable::AirstartBase(_) => rsx! {
                             rsx::table { title: "Air-start zones", data: instance.airbases.air_start.to_vec() }
+                        },
+                        Selectable::FARPBase(_) => rsx! {
+                            rsx::table { title: "FARPs", data: instance.airbases.farp.to_vec() }
                         },
                         Selectable::LoadoutCAP(_) => rsx! {
                             rsx::table { title: "CAP Loadout and Profiles", data: instance.loadouts.cap.to_vec() }

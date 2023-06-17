@@ -7,7 +7,6 @@ use crate::{
         AirBase, AirStartBase, DBAirbases, FarpBase, FixedAirBase, ReserveBase, ShipBase,
     },
     mappable::{MapPoint, Mappables},
-    mission_warehouses::Warehouses,
 };
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
@@ -20,7 +19,7 @@ pub struct DBAirbasesInternal {
 }
 
 impl DBAirbasesInternal {
-    pub fn from_db_airbases(db_airbases: &DBAirbases, warehouses: &Warehouses) -> Self {
+    pub fn from_db_airbases(db_airbases: &DBAirbases) -> Self {
         let mut result = DBAirbasesInternal {
             fixed: Vec::default(),
             ship: Vec::default(),
@@ -32,12 +31,6 @@ impl DBAirbasesInternal {
         db_airbases.iter().for_each(|(key, value)| match value {
             AirBase::Fixed(item) => {
                 let mut item = item.clone();
-                // fix sides as we go
-                let warehouse = warehouses
-                    .airports
-                    .get(&item.airdrome_id)
-                    .expect("Airport must have an entry in warehouses");
-                item.side = warehouse.coalition.to_lowercase();
                 item._name = key.to_owned();
                 result.fixed.push(item);
             }
@@ -133,7 +126,7 @@ impl Mappables for DBAirbasesInternal {
         });
 
         self.ship.iter().for_each(|item| {
-            let groups = instance.mission.get_ship_groups();
+            let groups = instance.miz_env.mission.get_ship_groups();
             let unit = groups
                 .iter()
                 .flat_map(|g| g.units.as_slice())

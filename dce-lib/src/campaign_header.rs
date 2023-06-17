@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     editable::{Editable, FieldType, HeaderField, ValidationError, ValidationResult},
+    miz_environment::MizEnvironment,
     serde_utils::LuaFileBased,
     DCEInstance, NewFromMission,
 };
@@ -140,7 +141,7 @@ pub struct Weather {
 impl LuaFileBased<'_> for Header {}
 
 impl NewFromMission for Header {
-    fn new_from_mission(_mission: &crate::mission::Mission) -> Result<Self, anyhow::Error>
+    fn new_from_mission(miz: &MizEnvironment) -> Result<Self, anyhow::Error>
     where
         Self: Sized,
     {
@@ -150,9 +151,9 @@ impl NewFromMission for Header {
             version: "V0.1".into(),
             mission: 1,
             date: Date {
-                day: _mission.date.day,
-                month: _mission.date.month,
-                year: _mission.date.year,
+                day: miz.mission.date.day,
+                month: miz.mission.date.month,
+                year: miz.mission.date.year,
             },
             time: 11700,
             dawn: 19800,
@@ -259,29 +260,14 @@ impl Editable for HeaderInternal {
 
 #[cfg(test)]
 mod tests {
-    use crate::{mission::Mission, serde_utils::LuaFileBased, NewFromMission};
+    use crate::{miz_environment::MizEnvironment, serde_utils::LuaFileBased, NewFromMission};
 
     use super::Header;
 
     #[test]
-    fn load_example() {
-        let result = Header::from_lua_file("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\War over Tchad 1987-Blue-Mirage-F1EE-3-30 Lorraine\\Init\\camp_init.lua".into(), "camp".into());
-
-        result.unwrap();
-    }
-
-    #[test]
-    fn save_example() {
-        let loaded = Header::from_lua_file("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\War over Tchad 1987-Blue-Mirage-F1EE-3-30 Lorraine\\Init\\camp_init.lua".into(), "camp".into()).unwrap();
-        loaded
-            .to_lua_file("camp_init_sa.lua".into(), "camp".into())
-            .unwrap();
-    }
-
-    #[test]
     fn from_miz() {
-        let mission = Mission::from_miz("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\Falklands v1\\Init\\base_mission.miz".into()).unwrap();
-        let header = Header::new_from_mission(&mission).unwrap();
+        let miz = MizEnvironment::from_miz("test_resources\\base_mission_falklands.miz").unwrap();
+        let header = Header::new_from_mission(&miz).unwrap();
 
         header
             .to_lua_file("camp_init_sa.lua".into(), "camp".into())

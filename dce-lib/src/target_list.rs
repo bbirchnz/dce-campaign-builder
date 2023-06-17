@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 use std::{collections::HashMap, iter::repeat};
 
 use crate::{
+    miz_environment::MizEnvironment,
     serde_utils::LuaFileBased,
     targets::{
         anti_ship::AntiShipStrike,
@@ -27,14 +28,14 @@ pub struct TargetList {
 impl LuaFileBased<'_> for TargetList {}
 
 impl NewFromMission for TargetList {
-    fn new_from_mission(mission: &crate::mission::Mission) -> Result<Self, anyhow::Error>
+    fn new_from_mission(miz: &MizEnvironment) -> Result<Self, anyhow::Error>
     where
         Self: Sized,
     {
         let mut blue_targets: HashMap<String, Target> = HashMap::default();
         let mut red_targets: HashMap<String, Target> = HashMap::default();
 
-        mission.triggers.zones.iter().for_each(|z| {
+        miz.mission.triggers.zones.iter().for_each(|z| {
             let name_splits = z.name.split('_').collect::<Vec<_>>();
             if name_splits.len() < 2 {
                 warn!("Expect zone names to be of form <SIDE>_<TYPE>");
@@ -163,13 +164,8 @@ impl NewFromMission for TargetList {
         });
 
         // add vehicle groups
-        mission
-            .coalition
-            .red
-            .countries
-            .iter()
-            .zip(repeat("red"))
-            .chain(mission.coalition.blue.countries.iter().zip(repeat("blue")))
+        miz.mission
+            .country_iter()
             .filter_map(|(c, side)| c.vehicle.as_ref().zip(Some(side)))
             .flat_map(|(vgd, side)| vgd.groups.as_slice().iter().zip(repeat(side)))
             .for_each(|(vg, side)| {
@@ -205,13 +201,8 @@ impl NewFromMission for TargetList {
             });
 
         // add ship groups:
-        mission
-            .coalition
-            .red
-            .countries
-            .iter()
-            .zip(repeat("red"))
-            .chain(mission.coalition.blue.countries.iter().zip(repeat("blue")))
+        miz.mission
+            .country_iter()
             .filter_map(|(c, side)| c.ship.as_ref().zip(Some(side)))
             .flat_map(|(sgd, side)| sgd.groups.as_slice().iter().zip(repeat(side)))
             .for_each(|(sg, side)| {
@@ -239,13 +230,7 @@ impl NewFromMission for TargetList {
             });
 
         // add static groups:
-        mission
-        .coalition
-        .red
-        .countries
-        .iter()
-        .zip(repeat("red"))
-        .chain(mission.coalition.blue.countries.iter().zip(repeat("blue")))
+        miz.mission.country_iter()
         .filter_map(|(c, side)| c._static.as_ref().zip(Some(side)))
         .flat_map(|(sgd, side)| sgd.groups.as_slice().iter().zip(repeat(side)))
         .for_each(|(sg, side)| {
@@ -318,14 +303,14 @@ pub enum Target {
 #[cfg(test)]
 mod tests {
 
-    use crate::{mission::Mission, serde_utils::LuaFileBased, NewFromMission};
+    use crate::{miz_environment::MizEnvironment, serde_utils::LuaFileBased, NewFromMission};
 
     use super::TargetList;
 
     #[test]
     fn from_miz() {
-        let mission = Mission::from_miz("test_resources\\base_mission.miz".into()).unwrap();
-        let targets = TargetList::new_from_mission(&mission).unwrap();
+        let miz = MizEnvironment::from_miz("test_resources\\base_mission.miz".into()).unwrap();
+        let targets = TargetList::new_from_mission(&miz).unwrap();
 
         targets
             .to_lua_file("..\\target\\targetlist.lua".into(), "target_list".into())

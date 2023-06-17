@@ -7,6 +7,7 @@ use crate::{
     db_airbases_internal::DBAirbasesInternal,
     dcs_airbase_export::dcs_airbases_for_theatre,
     editable::{Editable, FieldType, HeaderField, ValidationError, ValidationResult},
+    miz_environment::MizEnvironment,
     serde_utils::LuaFileBased,
     DCEInstance, NewFromMission,
 };
@@ -132,15 +133,20 @@ pub struct ReserveBase {
 impl LuaFileBased<'_> for DBAirbases {}
 
 impl NewFromMission for DBAirbases {
-    fn new_from_mission(mission: &crate::mission::Mission) -> Result<Self, anyhow::Error>
+    fn new_from_mission(miz: &MizEnvironment) -> Result<Self, anyhow::Error>
     where
         Self: Sized,
     {
-        let dcs_airbases = dcs_airbases_for_theatre(&mission.theatre)?;
+        let dcs_airbases = dcs_airbases_for_theatre(&miz.mission.theatre)?;
 
         let mut fixed = dcs_airbases
             .values()
             .map(|dcs_ab| {
+                let warehouse = miz
+                    .warehouses
+                    .airports
+                    .get(&dcs_ab.frequencies.airdrome_number)
+                    .expect("Airport must have an entry in warehouses");
                 (
                     dcs_ab.frequencies.name.to_owned(),
                     AirBase::Fixed(FixedAirBase {
@@ -150,7 +156,7 @@ impl NewFromMission for DBAirbases {
                         airdrome_id: dcs_ab.frequencies.airdrome_number,
                         atc_frequency: dcs_ab.get_first_freq(),
                         startup: 600,
-                        side: "red".into(),
+                        side: warehouse.coalition.to_lowercase(),
                         divert: false,
                         vor: None,
                         ndb: None,
@@ -164,7 +170,8 @@ impl NewFromMission for DBAirbases {
             })
             .collect::<HashMap<_, _>>();
 
-        let ships = mission
+        let ships = miz
+            .mission
             .country_iter()
             .filter_map(|(i, side)| i.ship.as_ref().zip(Some(side)))
             .flat_map(|(i, side)| i.groups.as_slice().iter().zip(repeat(side)))
@@ -189,7 +196,7 @@ impl NewFromMission for DBAirbases {
             })
             .collect::<HashMap<_, _>>();
 
-        let air_starts = mission.triggers.zones.iter().filter_map(|z| {
+        let air_starts = miz.mission.triggers.zones.iter().filter_map(|z| {
             let parts = z.name.split('_').collect::<Vec<_>>();
             if parts.len() < 3 || parts[1] != "AIRSTART" {
                 return None;
@@ -209,7 +216,8 @@ impl NewFromMission for DBAirbases {
             ))
         });
 
-        let farps = mission
+        let farps = miz
+            .mission
             .country_iter()
             .filter_map(|(c, side)| c._static.as_ref().zip(Some(side)))
             .flat_map(|(s, side)| s.groups.as_slice().iter().zip(repeat(side)))
@@ -316,10 +324,8 @@ impl Editable for FixedAirBase {
     }
 
     fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
-        let new_airbases = DBAirbasesInternal::from_db_airbases(
-            &DBAirbases::new_from_mission(&instance.mission)?,
-            &instance.mission_warehouses,
-        );
+        let new_airbases =
+            DBAirbasesInternal::from_db_airbases(&DBAirbases::new_from_mission(&instance.miz_env)?);
 
         instance.airbases.fixed = new_airbases.fixed;
 
@@ -392,10 +398,8 @@ impl Editable for FarpBase {
     }
 
     fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
-        let new_airbases = DBAirbasesInternal::from_db_airbases(
-            &DBAirbases::new_from_mission(&instance.mission)?,
-            &instance.mission_warehouses,
-        );
+        let new_airbases =
+            DBAirbasesInternal::from_db_airbases(&DBAirbases::new_from_mission(&instance.miz_env)?);
 
         instance.airbases.farp = new_airbases.farp;
 
@@ -467,10 +471,8 @@ impl Editable for ShipBase {
     }
 
     fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
-        let new_airbases = DBAirbasesInternal::from_db_airbases(
-            &DBAirbases::new_from_mission(&instance.mission)?,
-            &instance.mission_warehouses,
-        );
+        let new_airbases =
+            DBAirbasesInternal::from_db_airbases(&DBAirbases::new_from_mission(&instance.miz_env)?);
 
         instance.airbases.ship = new_airbases.ship;
 
@@ -536,10 +538,8 @@ impl Editable for AirStartBase {
     }
 
     fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
-        let new_airbases = DBAirbasesInternal::from_db_airbases(
-            &DBAirbases::new_from_mission(&instance.mission)?,
-            &instance.mission_warehouses,
-        );
+        let new_airbases =
+            DBAirbasesInternal::from_db_airbases(&DBAirbases::new_from_mission(&instance.miz_env)?);
 
         instance.airbases.air_start = new_airbases.air_start;
 
@@ -560,28 +560,15 @@ impl Editable for AirStartBase {
 
 #[cfg(test)]
 mod tests {
-    use crate::{mission::Mission, serde_utils::LuaFileBased, NewFromMission};
+    use crate::{miz_environment::MizEnvironment, serde_utils::LuaFileBased, NewFromMission};
 
     use super::DBAirbases;
 
     #[test]
-    fn load_example() {
-        let result = DBAirbases::from_lua_file("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\War over Tchad 1987-Blue-Mirage-F1EE-3-30 Lorraine\\Init\\db_airbases.lua".into(), "db_airbases".into());
-
-        result.unwrap();
-    }
-
-    #[test]
-    fn save_example() {
-        let oob = DBAirbases::from_lua_file("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\War over Tchad 1987-Blue-Mirage-F1EE-3-30 Lorraine\\Init\\db_airbases.lua".into(), "db_airbases".into()).unwrap();
-        oob.to_lua_file("db_airbases.lua".into(), "db_airbases".into())
-            .unwrap();
-    }
-
-    #[test]
     fn from_miz() {
-        let mission = Mission::from_miz("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\Falklands v1\\Init\\base_mission.miz".into()).unwrap();
-        let airbases = DBAirbases::new_from_mission(&mission).unwrap();
+        let miz_env =
+            MizEnvironment::from_miz("test_resources\\base_mission_falklands.miz").unwrap();
+        let airbases = DBAirbases::new_from_mission(&miz_env).unwrap();
 
         airbases
             .to_lua_file("db_airbases_sa.lua".into(), "db_airbases".into())

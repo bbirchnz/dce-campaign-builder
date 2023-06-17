@@ -13,6 +13,7 @@ use crate::{
     },
     mappable::Mappables,
     mission::{Country, Mission},
+    miz_environment::MizEnvironment,
     serde_utils::LuaFileBased,
     DCEInstance, NewFromMission,
 };
@@ -74,7 +75,7 @@ impl OobAir {
         });
     }
 
-    pub fn set_to_closest_base(
+    fn set_to_closest_base(
         &mut self,
         mission: &Mission,
         airbases: &DBAirbases,
@@ -171,9 +172,9 @@ impl OobAir {
 }
 
 impl NewFromMission for OobAir {
-    fn new_from_mission(mission: &Mission) -> Result<Self, anyhow::Error> {
+    fn new_from_mission(miz: &MizEnvironment) -> Result<Self, anyhow::Error> {
         // get first airbase for each side:
-        let airbases = DBAirbases::new_from_mission(mission)?;
+        let airbases = DBAirbases::new_from_mission(miz)?;
 
         let blue_airbases = airbases
             .iter()
@@ -193,16 +194,20 @@ impl NewFromMission for OobAir {
             .first()
             .ok_or(anyhow!("No red airbases found in mission"))?;
 
-        Ok(OobAir {
+        let mut oob_air = OobAir {
             blue: side_to_squadrons(
-                mission.coalition.blue.countries.as_slice(),
+                miz.mission.coalition.blue.countries.as_slice(),
                 first_blue_name.to_string(),
             ),
             red: side_to_squadrons(
-                mission.coalition.red.countries.as_slice(),
+                miz.mission.coalition.red.countries.as_slice(),
                 first_red_name.to_string(),
             ),
-        })
+        };
+
+        oob_air.set_to_closest_base(&miz.mission, &airbases)?;
+
+        Ok(oob_air)
     }
 }
 
@@ -359,9 +364,12 @@ impl Editable for Squadron {
     }
 
     fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
-        let mut new_oob_air = OobAir::new_from_mission(&instance.mission)?;
+        let mut new_oob_air = OobAir::new_from_mission(&instance.miz_env)?;
         new_oob_air.set_player_defaults();
-        new_oob_air.set_to_closest_base(&instance.mission, &instance.airbases.to_db_airbases())?;
+        new_oob_air.set_to_closest_base(
+            &instance.miz_env.mission,
+            &instance.airbases.to_db_airbases(),
+        )?;
 
         instance.oob_air = new_oob_air;
 
@@ -416,15 +424,15 @@ impl Editable for Squadron {
 #[cfg(test)]
 mod tests {
 
-    use crate::{mission::Mission, serde_utils::LuaFileBased, NewFromMission};
+    use crate::{miz_environment::MizEnvironment, serde_utils::LuaFileBased, NewFromMission};
 
     use super::OobAir;
 
     #[test]
     fn from_miz() {
-        let mission =
-            Mission::from_miz("test_resources\\base_mission_falklands.miz".into()).unwrap();
-        let oob = OobAir::new_from_mission(&mission).unwrap();
+        let miz =
+            MizEnvironment::from_miz("test_resources\\base_mission_falklands.miz".into()).unwrap();
+        let oob = OobAir::new_from_mission(&miz).unwrap();
 
         oob.to_lua_file("oob_sa.lua".into(), "oob_air".into())
             .unwrap();

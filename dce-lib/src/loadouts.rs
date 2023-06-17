@@ -4,6 +4,7 @@ use crate::{
     editable::{Editable, FieldType, HeaderField, ValidationResult},
     loadouts_internal::LoadoutsInternal,
     mission::Payload,
+    miz_environment::MizEnvironment,
     serde_utils::LuaFileBased,
     DCEInstance, NewFromMission,
 };
@@ -363,17 +364,18 @@ pub struct Support {
 impl LuaFileBased<'_> for Loadouts {}
 
 impl NewFromMission for Loadouts {
-    fn new_from_mission(mission: &crate::mission::Mission) -> Result<Self, anyhow::Error>
+    fn new_from_mission(miz: &MizEnvironment) -> Result<Self, anyhow::Error>
     where
         Self: Sized,
     {
         let mut loadout: Loadouts = HashMap::default();
-        let countries = mission
+        let countries = miz
+            .mission
             .coalition
             .blue
             .countries
             .iter()
-            .chain(mission.coalition.red.countries.iter());
+            .chain(miz.mission.coalition.red.countries.iter());
 
         countries
             .clone()
@@ -668,7 +670,7 @@ impl Editable for CAPLoadout {
 
     fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
         let new_loadouts =
-            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.mission)?);
+            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.miz_env)?);
 
         instance.loadouts.cap = new_loadouts.cap;
 
@@ -731,7 +733,7 @@ impl Editable for AARLoadout {
 
     fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
         let new_loadouts =
-            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.mission)?);
+            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.miz_env)?);
 
         instance.loadouts.aar = new_loadouts.aar;
 
@@ -791,7 +793,7 @@ impl Editable for TransportLoadout {
 
     fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
         let new_loadouts =
-            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.mission)?);
+            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.miz_env)?);
 
         instance.loadouts.transport = new_loadouts.transport;
 
@@ -855,7 +857,7 @@ impl Editable for AWACSLoadout {
 
     fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
         let new_loadouts =
-            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.mission)?);
+            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.miz_env)?);
 
         instance.loadouts.awacs = new_loadouts.awacs;
 
@@ -929,7 +931,7 @@ impl Editable for StrikeLoadout {
 
     fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
         let new_loadouts =
-            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.mission)?);
+            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.miz_env)?);
 
         instance.loadouts.strike = new_loadouts.strike;
 
@@ -1002,7 +1004,7 @@ impl Editable for AntiShipLoadout {
 
     fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
         let new_loadouts =
-            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.mission)?);
+            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.miz_env)?);
 
         instance.loadouts.antiship = new_loadouts.antiship;
 
@@ -1065,7 +1067,7 @@ impl Editable for EscortLoadout {
 
     fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
         let new_loadouts =
-            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.mission)?);
+            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.miz_env)?);
 
         instance.loadouts.escort = new_loadouts.escort;
 
@@ -1127,7 +1129,7 @@ impl Editable for SEADLoadout {
 
     fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
         let new_loadouts =
-            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.mission)?);
+            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.miz_env)?);
 
         instance.loadouts.sead = new_loadouts.sead;
 
@@ -1205,14 +1207,14 @@ impl Editable for InterceptLoadout {
 
 #[cfg(test)]
 mod tests {
-    use crate::{mission::Mission, serde_utils::LuaFileBased, NewFromMission};
+    use crate::{miz_environment::MizEnvironment, serde_utils::LuaFileBased, NewFromMission};
 
     use super::Loadouts;
 
     #[test]
     fn from_miz() {
-        let mission = Mission::from_miz("test_resources\\base_mission.miz".into()).unwrap();
-        let loadouts = Loadouts::new_from_mission(&mission).unwrap();
+        let miz = MizEnvironment::from_miz("test_resources\\base_mission.miz".into()).unwrap();
+        let loadouts = Loadouts::new_from_mission(&miz).unwrap();
 
         loadouts
             .to_lua_file("..\\target\\db_loadouts.lua".into(), "db_loadouts".into())

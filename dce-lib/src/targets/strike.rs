@@ -107,6 +107,7 @@ impl Editable for Strike {
             match self.class.as_ref() {
                 Some(class) if class.as_str() == "vehicle" => {
                     if !instance
+                        .miz_env
                         .mission
                         .get_vehicle_groups()
                         .iter()
@@ -121,6 +122,7 @@ impl Editable for Strike {
                 }
                 Some(class) if class.as_str() == "ship" => {
                     if !instance
+                        .miz_env
                         .mission
                         .get_ship_groups()
                         .iter()
@@ -171,7 +173,7 @@ impl Editable for Strike {
 
     fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
         let new_target_list =
-            TargetListInternal::from_target_list(&TargetList::new_from_mission(&instance.mission)?);
+            TargetListInternal::from_target_list(&TargetList::new_from_mission(&instance.miz_env)?);
 
         instance.target_list.strike = new_target_list.strike;
 

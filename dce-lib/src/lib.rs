@@ -82,7 +82,17 @@ impl DCEInstance {
 
         let bin_data = BinData {
             template_miz: BinItem::new_from_file("base_mission.miz", miz_file)?,
-            images: Vec::default(),
+            // images: Vec::default(),
+            images: vec![
+                BinItem::from_stored_resource(
+                    "Frontline.png",
+                    include_bytes!("../resources/Frontline.png"),
+                ),
+                BinItem::from_stored_resource(
+                    "Aozou.png",
+                    include_bytes!("../resources/Aozou.png"),
+                ),
+            ],
             sounds: vec![BinItem::from_stored_resource(
                 "alarme.wav",
                 include_bytes!("../resources/alarme.wav"),
@@ -461,7 +471,7 @@ mod tests {
     #[case("test_resources\\base_mission_falklands.miz")]
     #[case("test_resources\\base_mission_sinai_farps.miz")]
     #[case("test_resources\\base_mission_syria.miz")]
-    #[case("test_resources\\sinai_80s.miz")]
+    #[case("test_resources\\sinai 80s.miz")]
     fn from_miz(#[case] path: &str) {
         DCEInstance::new_from_miz(path).unwrap();
     }

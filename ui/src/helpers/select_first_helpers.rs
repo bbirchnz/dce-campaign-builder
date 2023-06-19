@@ -370,3 +370,22 @@ pub fn select_first_trigger(cx: Scope) {
         *writable = Selectable::Trigger(None);
     }
 }
+
+pub fn select_first_image(cx: Scope) {
+    let atom_instance = use_atom_ref(cx, INSTANCE);
+    let atom_selected = use_atom_ref(cx, SELECTED);
+    let mut writable = atom_selected.write();
+
+    if let Some(item) = atom_instance
+        .read()
+        .as_ref()
+        .unwrap()
+        .bin_data
+        .images
+        .first()
+    {
+        *writable = Selectable::Image(Some(item.clone()));
+    } else {
+        *writable = Selectable::Image(None);
+    }
+}

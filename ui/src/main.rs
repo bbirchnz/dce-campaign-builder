@@ -1,6 +1,9 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 #![cfg_attr(debug_assertions, windows_subsystem = "console")]
+use std::{borrow::Cow, cell::RefCell, sync::mpsc};
+
 use dce_lib::{
+    bin_data::BinItem,
     campaign_header::HeaderInternal,
     db_airbases::{AirStartBase, FarpBase, FixedAirBase, ShipBase},
     editable::Editable,
@@ -19,10 +22,10 @@ use dce_lib::{
 };
 
 use dioxus::prelude::*;
-use dioxus_desktop::tao::event::ElementState::Pressed;
 use dioxus_desktop::tao::event::ElementState::Released;
 use dioxus_desktop::tao::keyboard::KeyCode::ControlLeft;
 use dioxus_desktop::tao::keyboard::KeyCode::KeyS;
+use dioxus_desktop::{tao::event::ElementState::Pressed, wry::http::StatusCode};
 use dioxus_desktop::{
     tao::{self, event::DeviceEvent},
     use_window,
@@ -38,7 +41,7 @@ use directories::ProjectDirs;
 
 use crate::{
     helpers::select_first_helpers::*,
-    rsx::{edit_form, menu_bar},
+    rsx::{edit_form, image_edit, image_table, menu_bar},
 };
 
 mod helpers;
@@ -48,20 +51,28 @@ mod selectable;
 static INSTANCE: AtomRef<Option<DCEInstance>> = |_| None;
 static SELECTED: AtomRef<Selectable> = |_| Selectable::None;
 static INSTANCE_DIRTY: Atom<bool> = |_| false;
+static IMAGE_LIST_TX: AtomRef<Option<mpsc::Sender<Vec<BinItem>>>> = |_| None;
 
 struct AppProps {
-    rx: async_channel::Receiver<MapPoint>,
+    rx_mappoint: async_channel::Receiver<MapPoint>,
+    tx_vec_binitem: mpsc::Sender<Vec<BinItem>>,
 }
 
 fn main() {
     SimpleLogger::new().init().unwrap();
     // launch the dioxus app in a webview
 
-    let (s, r) = async_channel::unbounded::<MapPoint>();
+    let image_vec: RefCell<Option<Vec<BinItem>>> = None.into();
+
+    let (tx_mappoint, rx_mappoint) = async_channel::unbounded::<MapPoint>();
+    let (tx_vec_binitem, rx_vec_binitem) = mpsc::channel::<Vec<BinItem>>();
 
     dioxus_desktop::launch_with_props(
         app,
-        AppProps { rx: r },
+        AppProps {
+            rx_mappoint,
+            tx_vec_binitem,
+        },
         Config::default()
             .with_custom_protocol("testprotocol".into(), move |req| {
                 // this handle callbacks of clicked objects in leaflet
@@ -70,7 +81,7 @@ fn main() {
                 );
                 if let Ok(map_point) = obj {
                     trace!("Got from WebView/Sending to channel {:?}", map_point);
-                    s.send_blocking(map_point).unwrap();
+                    tx_mappoint.send_blocking(map_point).unwrap();
                 } else {
                     warn!(
                         "Failed to parse {:?} with error {:?}",
@@ -80,6 +91,33 @@ fn main() {
                 }
 
                 Ok(Response::new(vec![].into()))
+            })
+            .with_custom_protocol("imagesprotocol".into(), move |req| {
+                // make sure we've got the latest vec:
+                while let Ok(data) = rx_vec_binitem.try_recv() {
+                    image_vec.borrow_mut().replace(data);
+                }
+
+                // remove leading '/' from path
+                let requested_image = req.uri().path().strip_prefix('/').unwrap();
+
+                // now see if we've got the image requested:
+                if let Some(v) = image_vec.borrow().as_ref() {
+                    if let Some(image) = v.iter().find(|bd| bd.name == requested_image) {
+                        let response = Response::builder()
+                            .header("Content-Type", "image/png")
+                            .header("Content-Length", image.data.len().to_string())
+                            .status(StatusCode::OK)
+                            .body(Cow::Owned(image.data.to_vec()));
+
+                        return response.map_err(|e| e.into());
+                    }
+                }
+
+                return Response::builder()
+                    .status(StatusCode::NOT_FOUND)
+                    .body(vec![].into())
+                    .map_err(|e| e.into());
             })
             .with_data_directory(
                 ProjectDirs::from("com", "BB", "DCE Builder")
@@ -124,16 +162,26 @@ fn app(cx: Scope<AppProps>) -> Element {
     w.set_title("DCE");
     w.set_decorations(false);
 
+    // state to allow things to run once only. I'm sure theres a hook for this..
+    let initialised_state = use_state(cx, || false);
+
     let atom_instance = use_atom_ref(cx, INSTANCE);
     let atom_selected = use_atom_ref(cx, SELECTED);
+    let atom_image_list_tx = use_atom_ref(cx, IMAGE_LIST_TX);
+
+    if !initialised_state {
+        let mut write_atom_image_list_tx = atom_image_list_tx.write();
+        write_atom_image_list_tx.replace(cx.props.tx_vec_binitem.to_owned());
+        initialised_state.set(true);
+    }
 
     let instance_loaded = atom_instance.read().is_some();
     let atoms = use_atom_root(cx);
-    let rx = cx.props.rx.to_owned();
 
     use_coroutine(cx, move |_: UnboundedReceiver<i32>| {
         let atom_selected = atom_selected.to_owned();
         let atoms = atoms.to_owned();
+        let rx = cx.props.rx_mappoint.to_owned();
 
         async move {
             while let Ok(item) = rx.recv().await {
@@ -344,6 +392,11 @@ fn main_body(cx: Scope) -> Element {
                     on_click: |_| select_first_trigger(cx),
                     tooltip: "Campaign actions and triggers"
                 }
+                icon_button {
+                    path: "images/settings_grey.png".into(),
+                    on_click: |_| select_first_image(cx),
+                    tooltip: "Campaign and target images"
+                }
             }
             // edit col
             div { class: "shrink-0 min-h-0 bg-sky-100", style: "{edit_col_width}",
@@ -413,6 +466,9 @@ fn main_body(cx: Scope) -> Element {
                     },
                     Selectable::Trigger(_) => rsx!{
                         edit_form::<Trigger> { headers: Trigger::get_header(), title: "Edit Trigger".into(), item: selected_form.clone()}
+                    },
+                    Selectable::Image(_) => rsx! {
+                        image_edit {item: selected_form.clone()}
                     },
                     Selectable::None | Selectable::TargetIntercept(None) => rsx!{{}}
                 }
@@ -494,12 +550,17 @@ fn main_body(cx: Scope) -> Element {
                         Selectable::Trigger(_) => rsx! {
                             rsx::table { title: "Campaign Triggers and Actions", data: instance.triggers.to_vec() }
                         },
+                        Selectable::Image(_) => rsx! {
+                            image_table {data: instance.bin_data.images.to_vec()}
+                        },
                         Selectable::None | Selectable::CampaignSettings(_) => rsx! {
                             {}
                         },
                         }
                 }
             }
+            // right edge border
+            div { class: "basis-1 shrink-0 min-h-0 bg-sky-500" }
         }
         div { class: "bg-sky-500 bottom-0 h-6 absolute w-full flex", "footer" }
     })

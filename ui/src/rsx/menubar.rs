@@ -5,7 +5,7 @@ use fermi::{use_atom_ref, use_atom_state};
 use log::{trace, warn};
 use native_dialog::FileDialog;
 
-use crate::{INSTANCE, INSTANCE_DIRTY};
+use crate::{IMAGE_LIST_TX, INSTANCE, INSTANCE_DIRTY};
 
 #[derive(PartialEq, Props)]
 pub struct MenuBarProps {
@@ -18,6 +18,7 @@ pub fn menu_bar(cx: Scope<MenuBarProps>) -> Element {
     let toggled = use_state(cx, || false);
     let atom_instance = use_atom_ref(cx, INSTANCE);
     let atom_dirty = use_atom_state(cx, INSTANCE_DIRTY);
+    let atom_image_tx = use_atom_ref(cx, IMAGE_LIST_TX);
 
     let dirty_state = match atom_dirty.get() {
         true => " *",
@@ -62,6 +63,14 @@ pub fn menu_bar(cx: Scope<MenuBarProps>) -> Element {
         match result {
             Ok(Some(path)) => match DCEInstance::new_from_miz(&path.to_string_lossy()) {
                 Ok(new_instance) => {
+                    // update bin_images vec:
+                    let readable = atom_image_tx.read();
+                    readable
+                        .as_ref()
+                        .unwrap()
+                        .send(new_instance.bin_data.images.clone())
+                        .unwrap();
+
                     let mut writable = atom_instance.write();
                     let _ = writable.insert(new_instance);
                 }

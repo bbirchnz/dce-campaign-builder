@@ -9,7 +9,7 @@ pub struct BinData {
     pub sounds: Vec<BinItem>,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone, PartialEq)]
 pub struct BinItem {
     pub name: String,
     #[serde(with = "base64")]

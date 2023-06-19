@@ -1,4 +1,5 @@
 use dce_lib::{
+    bin_data::BinItem,
     campaign_header::HeaderInternal,
     db_airbases::{AirStartBase, FarpBase, FixedAirBase, ShipBase},
     loadouts::{
@@ -40,6 +41,7 @@ pub enum Selectable {
     LoadoutSEAD(Option<SEADLoadout>),
     LoadoutTransport(Option<TransportLoadout>),
     Trigger(Option<Trigger>),
+    Image(Option<BinItem>),
     None,
 }
 
@@ -500,6 +502,22 @@ impl ToSelectable for FarpBase {
         Self: Sized,
     {
         if let Selectable::FARPBase(Some(trigger)) = sel {
+            return Some(trigger.clone());
+        }
+        None
+    }
+}
+
+impl ToSelectable for BinItem {
+    fn to_selectable(&self) -> Selectable {
+        Selectable::Image(Some(self.to_owned()))
+    }
+
+    fn from_selectable(sel: &Selectable) -> Option<Self>
+    where
+        Self: Sized,
+    {
+        if let Selectable::Image(Some(trigger)) = sel {
             return Some(trigger.clone());
         }
         None

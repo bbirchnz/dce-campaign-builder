@@ -1,7 +1,10 @@
+use std::any;
+
 use super::TargetFirepower;
 use crate::{
     editable::{
-        Editable, EntityTemplateAction, FieldType, HeaderField, ValidationError, ValidationResult,
+        AllEntityTemplateAction, Editable, EntityTemplateAction, FieldType, HeaderField,
+        ValidationError, ValidationResult,
     },
     target_list::TargetList,
     target_list_internal::TargetListInternal,
@@ -135,13 +138,27 @@ impl Editable for Strike {
                         ));
                     }
                 }
+                Some(class) if class.as_str() == "airbase" => {
+                    if !instance
+                        .airbases
+                        .fixed
+                        .iter()
+                        .any(|f| f.get_name() == vg_name)
+                    {
+                        errors.push(ValidationError::new(
+                            "class_template",
+                            "Target group name",
+                            "Target group must be a fixed airbase name if class is airbase",
+                        ))
+                    }
+                }
                 _ => {
                     // only an error if elements is None
                     if self.elements.is_none() {
                         errors.push(ValidationError::new(
                             "class",
                             "Target Class",
-                            "Target class must be vehicle or ship",
+                            "Target class must be vehicle, ship, or airbase",
                         ));
                     }
                 }
@@ -225,5 +242,56 @@ impl Editable for Strike {
         });
 
         vec![hide_action]
+    }
+
+    fn actions_all_entities() -> Vec<crate::editable::AllEntityTemplateAction> {
+        vec![AllEntityTemplateAction::new(
+            "Generate OCA Strikes",
+            "Generates an OCA strike for all airbases with squadrons",
+            Strike::generate_airbase_strikes,
+        )]
+    }
+}
+
+impl Strike {
+    fn generate_airbase_strikes(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
+        let mut new_strikes: Vec<Strike> = Vec::default();
+
+        // for each airbase with a squadron, generate a strike target
+        instance
+            .airbases
+            .fixed
+            .iter()
+            .filter(|fixed| {
+                fixed.side != "neutral"
+                    && instance.oob_air.squadrons_for_airbase(&fixed._name).len() > 0
+            })
+            .for_each(|fixed| {
+                let name = fixed.get_name() + " OCA Strike";
+                new_strikes.push(Strike {
+                    priority: 1,
+                    text: name.to_owned(),
+                    inactive: false,
+                    firepower: TargetFirepower { min: 2, max: 4 },
+                    class: Some("airbase".to_string()),
+                    class_template: Some(fixed.get_name()),
+                    elements: None,
+                    _name: name.to_owned(),
+                    _side: if fixed.side == "red" {
+                        "blue".to_string()
+                    } else {
+                        "red".to_string()
+                    },
+                    _firepower_min: 2,
+                    _firepower_max: 4,
+                    attributes: Vec::default(),
+                    picture: Vec::default(),
+                })
+            });
+
+        let strikes = &mut instance.target_list.strike;
+        strikes.append(&mut new_strikes);
+
+        Ok(())
     }
 }

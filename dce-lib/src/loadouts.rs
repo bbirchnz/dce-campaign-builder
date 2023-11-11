@@ -1186,11 +1186,20 @@ impl Editable for InterceptLoadout {
     }
 
     fn can_reset_from_miz() -> bool {
-        false
+        true
     }
 
     fn can_delete() -> bool {
         false
+    }
+
+    fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
+        let new_loadouts =
+            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.miz_env)?);
+
+        instance.loadouts.intercept = new_loadouts.intercept;
+
+        Ok(())
     }
 
     fn delete_by_name(instance: &mut DCEInstance, name: &str) -> Result<(), anyhow::Error> {

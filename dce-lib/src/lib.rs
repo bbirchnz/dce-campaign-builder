@@ -36,6 +36,7 @@ pub mod loadouts_internal;
 pub mod lua_utils;
 pub mod mappable;
 pub mod mission;
+pub mod mission_dictionary;
 pub mod mission_warehouses;
 pub mod miz_environment;
 pub mod miz_hacks;

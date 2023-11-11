@@ -16,6 +16,7 @@ pub struct Mission {
     pub coalition: CoalitionCollection,
     pub triggers: Triggers,
     pub date: Date,
+    pub sortie: String,
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]

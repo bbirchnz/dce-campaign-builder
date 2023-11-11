@@ -73,6 +73,8 @@ pub struct ConfMod {
     pub load_mist: bool,
     #[serde(rename = "cheat_Mode_Eye")]
     pub cheat_mode_eye: bool,
+    #[serde(rename = "ejectedPilotFrequency")]
+    pub ejected_pilot_frequency: EjectedPilotFrequencies,
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
@@ -85,6 +87,21 @@ pub struct PruneScriptConf {
     pub prune_static: bool,
     #[serde(rename = "ForcedPruneSam")]
     pub force_prune_sam: bool,
+}
+
+#[derive(Deserialize, Serialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
+pub struct EjectedPilotFrequencies {
+    pub blue: EjectedFrequencies,
+    pub red: EjectedFrequencies,
+    pub neutral: EjectedFrequencies,
+}
+
+#[derive(Deserialize, Serialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
+pub struct EjectedFrequencies {
+    #[serde(rename = "GuardEjection")]
+    pub guard: u32,
+    #[serde(rename = "radioBeacon")]
+    pub beacon: u32,
 }
 
 impl ConfMod {
@@ -132,6 +149,20 @@ impl ConfMod {
             load_ctld: false,
             load_mist: false,
             cheat_mode_eye: false,
+            ejected_pilot_frequency: EjectedPilotFrequencies {
+                blue: EjectedFrequencies {
+                    guard: 243000000,
+                    beacon: 121500000,
+                },
+                red: EjectedFrequencies {
+                    guard: 114115000,
+                    beacon: 114585000,
+                },
+                neutral: EjectedFrequencies {
+                    guard: 243000000,
+                    beacon: 121500000,
+                },
+            },
         }
     }
 }
@@ -302,6 +333,7 @@ pictureBrief = {
 
 "#;
 
-        Ok(key.to_owned() + " = " + &table + "\n" + version_str)
+        // Ok(key.to_owned() + " = " + &table + "\n" + version_str)
+        Ok(version_str.to_owned() + "\n" + key + " = " + &table + "\n")
     }
 }

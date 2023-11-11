@@ -145,9 +145,15 @@ impl NewFromMission for Header {
     where
         Self: Sized,
     {
+        let miz_title = miz.dict_str(&miz.mission.sortie).to_string();
         Ok(Header {
             original: true,
-            title: "New Campaign".into(),
+            title: if miz_title.len() > 0 {
+                miz_title
+            } else {
+                log::info!("Template miz has no title set - using \"New Campaign\"");
+                "New Campaign".into()
+            },
             version: "V0.1".into(),
             mission: 1,
             date: Date {

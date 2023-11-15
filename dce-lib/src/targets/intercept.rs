@@ -99,7 +99,7 @@ impl Editable for Intercept {
 }
 
 impl Intercept {
-    fn generate_intercepts(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
+    pub fn generate_intercepts(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
         let mut new_intercepts: Vec<Intercept> = Vec::default();
         // fixed airbases
         instance

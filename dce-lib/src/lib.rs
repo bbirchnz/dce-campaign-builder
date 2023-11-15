@@ -20,6 +20,7 @@ use serde::{Deserialize, Serialize};
 use serde_utils::LuaFileBased;
 use target_list::TargetList;
 use target_list_internal::TargetListInternal;
+use targets::{intercept::Intercept, strike::Strike};
 use trigger::{flat_to_triggers, triggers_to_flat, Triggers, TriggersFlat};
 
 pub mod bin_data;
@@ -100,7 +101,7 @@ impl DCEInstance {
             )],
         };
 
-        Ok(DCEInstance {
+        let mut dce_instance = DCEInstance {
             target_list: TargetListInternal::from_target_list(&TargetList::new_from_mission(
                 &miz_env,
             )?),
@@ -114,7 +115,13 @@ impl DCEInstance {
             conf_mod: ConfMod::new(),
             miz_env,
             bin_data,
-        })
+        };
+
+        // apply intercepts and oca strikes that need the full environment
+        Intercept::generate_intercepts(&mut dce_instance)?;
+        Strike::generate_airbase_strikes(&mut dce_instance)?;
+
+        Ok(dce_instance)
     }
 
     pub fn save_to_json(&self, file_name: &str) -> Result<(), anyhow::Error> {

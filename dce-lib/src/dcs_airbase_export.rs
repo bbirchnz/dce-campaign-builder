@@ -27,6 +27,36 @@ impl AirportSet {
             None => "".into(),
         }
     }
+
+    pub fn get_first_uhf_freq(&self) -> String {
+        let items = &self.frequencies.frequency_list;
+        let first_uhf = items
+            .iter()
+            .filter_map(|f| match f {
+                FrequencyItem::One(f) => {
+                    if f >= &225000000 && f <= &400000000 {
+                        Some(f)
+                    } else {
+                        None
+                    }
+                }
+                FrequencyItem::Many(fs) => fs
+                    .iter()
+                    .filter(|f| {
+                        if f >= &&225000000 && f <= &&400000000 {
+                            true
+                        } else {
+                            false
+                        }
+                    })
+                    .next(),
+            })
+            .next();
+        match first_uhf {
+            Some(f) => (*f as f64 / 1000000.).to_string(),
+            None => "".into(),
+        }
+    }
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]

@@ -154,7 +154,7 @@ impl NewFromMission for DBAirbases {
                         y: dcs_ab.frequencies.y,
                         elevation: dcs_ab.frequencies.height,
                         airdrome_id: dcs_ab.frequencies.airdrome_number,
-                        atc_frequency: dcs_ab.get_first_freq(),
+                        atc_frequency: dcs_ab.get_first_uhf_freq(),
                         startup: 600,
                         side: warehouse.coalition.to_lowercase(),
                         divert: false,
@@ -186,7 +186,7 @@ impl NewFromMission for DBAirbases {
                     AirBase::Ship(ShipBase {
                         unitname: s.name.to_owned(),
                         startup: Some(600.),
-                        atc_frequency: None,
+                        atc_frequency: Some((s.frequency as f64 / 1000000.).to_string()),
                         side: side.to_owned(),
                         limited_park_number: 4,
                         _name: s.name.to_owned(),
@@ -287,6 +287,7 @@ impl Editable for FixedAirBase {
                 FieldType::DurationMin,
                 true,
             ),
+            HeaderField::new("atc_frequency", "Frequency", FieldType::String, false),
             HeaderField::new("inactive", "Inactive", FieldType::Bool, true),
         ]
     }

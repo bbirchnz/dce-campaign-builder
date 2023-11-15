@@ -1,5 +1,3 @@
-use std::any;
-
 use super::TargetFirepower;
 use crate::{
     editable::{
@@ -254,7 +252,7 @@ impl Editable for Strike {
 }
 
 impl Strike {
-    fn generate_airbase_strikes(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
+    pub fn generate_airbase_strikes(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
         let mut new_strikes: Vec<Strike> = Vec::default();
 
         // for each airbase with a squadron, generate a strike target
@@ -272,7 +270,7 @@ impl Strike {
                     priority: 1,
                     text: name.to_owned(),
                     inactive: false,
-                    firepower: TargetFirepower { min: 2, max: 4 },
+                    firepower: TargetFirepower { min: 2, max: 2 },
                     class: Some("airbase".to_string()),
                     class_template: Some(fixed.get_name()),
                     elements: None,
@@ -283,7 +281,7 @@ impl Strike {
                         "red".to_string()
                     },
                     _firepower_min: 2,
-                    _firepower_max: 4,
+                    _firepower_max: 2,
                     attributes: Vec::default(),
                     picture: Vec::default(),
                 })

@@ -41,8 +41,8 @@ impl NewFromMission for TargetList {
                 warn!("Expect zone names to be of form <SIDE>_<TYPE>");
             }
 
-            match name_splits[1] {
-                "CAP" => {
+            match name_splits[1].to_lowercase().as_str() {
+                "cap" => {
                     let targets = match name_splits[0] {
                         "BLUE" => &mut blue_targets,
                         _ => &mut red_targets,
@@ -68,7 +68,7 @@ impl NewFromMission for TargetList {
                         }),
                     );
                 }
-                "Refueling" => {
+                "refueling" => {
                     let targets = match name_splits[0] {
                         "BLUE" => &mut blue_targets,
                         _ => &mut red_targets,
@@ -92,7 +92,7 @@ impl NewFromMission for TargetList {
                         }),
                     );
                 }
-                "AWACS" => {
+                "awacs" => {
                     let targets = match name_splits[0] {
                         "BLUE" => &mut blue_targets,
                         _ => &mut red_targets,
@@ -118,7 +118,19 @@ impl NewFromMission for TargetList {
                         }),
                     );
                 }
-                "STATICSTRIKE" => {
+                "fightersweep" => {
+                    let targets = match name_splits[0] {
+                        "BLUE" => &mut blue_targets,
+                        _ => &mut red_targets,
+                    };
+                    targets.insert(
+                        z.name.to_owned(),
+                        Target::FighterSweep(
+                            FighterSweep { priority: 1, text: z.name.to_owned(), x: z.x, y: z.y, inactive: false, firepower: TargetFirepower { min: 2, max: 2 }, _name: z.name.to_owned(), _side: name_splits[0].to_lowercase(), _firepower_min: 2, _firepower_max: 2, attributes: Vec::default() }
+                        ),
+                    );
+                }
+                "staticstrike" => {
                     let targets = match name_splits[0] {
                         "BLUE" => &mut blue_targets,
                         _ => &mut red_targets,

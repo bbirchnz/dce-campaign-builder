@@ -11,6 +11,7 @@ use crate::{
     editable::{
         Editable, EntityTemplateAction, FieldType, HeaderField, ValidationError, ValidationResult,
     },
+    loadouts::str_to_task,
     mappable::Mappables,
     mission::{Country, Mission},
     miz_environment::MizEnvironment,
@@ -198,11 +199,11 @@ impl NewFromMission for OobAir {
             blue: side_to_squadrons(
                 miz.mission.coalition.blue.countries.as_slice(),
                 first_blue_name.to_string(),
-            ),
+            )?,
             red: side_to_squadrons(
                 miz.mission.coalition.red.countries.as_slice(),
                 first_red_name.to_string(),
-            ),
+            )?,
         };
 
         oob_air.set_to_closest_base(&miz.mission, &airbases)?;
@@ -214,7 +215,7 @@ impl NewFromMission for OobAir {
 /// setup a hashmap so we can lookup and check if a squadron already exists.
 /// this is used when more than 4 roles are to be assigned to a squadron, and therefore
 /// multiple groups need to be created. So long as they are named <"squadron name">_"anything else"> it should work
-fn side_to_squadrons(countries: &[Country], base: String) -> Vec<Squadron> {
+fn side_to_squadrons(countries: &[Country], base: String) -> Result<Vec<Squadron>, anyhow::Error> {
     let mut squadron_hm: HashMap<String, Squadron> = HashMap::default();
 
     countries
@@ -226,7 +227,7 @@ fn side_to_squadrons(countries: &[Country], base: String) -> Vec<Squadron> {
                 .filter_map(|c| c.helicopter.as_ref().zip(Some(&c.name))),
         )
         .flat_map(|(vg, country)| vg.groups.iter().zip(repeat(country)))
-        .for_each(|(vg, country)| {
+        .try_for_each(|(vg, country)| {
             let unit = vg
                 .units
                 .get(0)
@@ -251,7 +252,7 @@ fn side_to_squadrons(countries: &[Country], base: String) -> Vec<Squadron> {
                     reserve: 6,
                 });
             // cycle through the units, add liveries and tasks:
-            vg.units.iter().for_each(|unit| {
+            for unit in vg.units.iter() {
                 // add liveries
                 let livery = unit.livery_id.to_owned();
                 if let LiveryEnum::Many(vec) = &mut squadron.livery {
@@ -267,17 +268,23 @@ fn side_to_squadrons(countries: &[Country], base: String) -> Vec<Squadron> {
                     .collect::<Vec<String>>()[1]
                     .to_owned();
 
+                // check casing and convert as needed
+                let task = str_to_task(task.as_str())?;
+
                 squadron.tasks.insert(task.to_owned(), true);
 
                 // and task coef:
                 squadron.tasks_coef.as_mut().unwrap().insert(task, 1_f32);
-            });
-        });
+            }
+            Ok::<(), anyhow::Error>(())
+        })?;
 
-    squadron_hm
+    let result = squadron_hm
         .values()
         .map(|v| v.to_owned())
-        .collect::<Vec<_>>()
+        .collect::<Vec<_>>();
+
+    Ok(result)
 }
 
 impl Mappables for OobAir {

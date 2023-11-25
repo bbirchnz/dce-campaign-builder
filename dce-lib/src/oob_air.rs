@@ -426,6 +426,54 @@ impl Editable for Squadron {
             set_player,
         )]
     }
+
+    fn related(&self, instance: &DCEInstance) -> Vec<Box<dyn Editable>> {
+        let mut res: Vec<Box<dyn Editable>> = Vec::default();
+
+        // add parent airbase:
+        let abs = instance.airbases.to_db_airbases();
+
+        let ab = abs
+            .iter()
+            .find(|(name, _)| name.as_str() == self.get_name())
+            .as_ref()
+            .unwrap()
+            .1
+            .to_editable()
+            .expect("Not a reserve airbase");
+
+        res.push(ab);
+
+        // add loadouts:
+        let all_loadouts = instance.loadouts.to_loadouts();
+
+        let (_, loadouts) = all_loadouts
+            .iter()
+            .filter(|(name, _)| name.as_str() == self._type)
+            .next()
+            .expect("There should be a loadout for this aircraft");
+
+        if loadouts.aar.is_some() {
+            res.append(&mut convert_loadouts(
+                &loadouts
+                    .aar
+                    .as_ref()
+                    .unwrap()
+                    .iter()
+                    .map(|(_, _type)| _type)
+                    .collect::<Vec<_>>(),
+            ));
+        }
+
+        res
+    }
+}
+
+fn convert_loadouts<T>(items: &[&T]) -> Vec<Box<dyn Editable>>
+where
+    T: Editable,
+{
+    todo!()
 }
 
 #[cfg(test)]

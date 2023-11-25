@@ -12,13 +12,20 @@ pub trait Editable {
 
     fn validate(&self, instance: &DCEInstance) -> ValidationResult;
 
-    fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self;
-    fn get_header() -> Vec<HeaderField>;
+    fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self
+    where
+        Self: Sized;
+    fn get_header() -> Vec<HeaderField>
+    where
+        Self: Sized;
 
     /// Returns bool indicating where this type can be reset to default values.
     ///
     /// Use to decide whether to draw buttons for example
-    fn can_reset_from_miz() -> bool {
+    fn can_reset_from_miz() -> bool
+    where
+        Self: Sized,
+    {
         false
     }
 
@@ -26,13 +33,21 @@ pub trait Editable {
     ///
     /// Use when you have updated the base mission (say with new loadouts) and you want to
     /// bring the changes into the campaign.
-    fn reset_all_from_miz(_: &mut DCEInstance) -> Result<(), anyhow::Error> {
+    fn reset_all_from_miz(_: &mut DCEInstance) -> Result<(), anyhow::Error>
+    where
+        Self: Sized,
+    {
         Ok(())
     }
 
-    fn delete_by_name(instance: &mut DCEInstance, name: &str) -> Result<(), anyhow::Error>;
+    fn delete_by_name(instance: &mut DCEInstance, name: &str) -> Result<(), anyhow::Error>
+    where
+        Self: Sized;
 
-    fn can_delete() -> bool {
+    fn can_delete() -> bool
+    where
+        Self: Sized,
+    {
         false
     }
 
@@ -42,7 +57,10 @@ pub trait Editable {
     /// Will be used to create an array of buttons in the UI.
     ///
     /// Example: "create intercepts for all capable squadrons"
-    fn actions_all_entities() -> Vec<AllEntityTemplateAction> {
+    fn actions_all_entities() -> Vec<AllEntityTemplateAction>
+    where
+        Self: Sized,
+    {
         // default is no actions defined
         Vec::default()
     }
@@ -57,6 +75,10 @@ pub trait Editable {
         Self: Sized,
     {
         // default is no actions defined
+        Vec::default()
+    }
+
+    fn related(&self, _instance: &DCEInstance) -> Vec<Box<dyn Editable>> {
         Vec::default()
     }
 }

@@ -34,6 +34,16 @@ impl AirBase {
             AirBase::AirStart(a) => a.side.to_owned(),
         }
     }
+
+    pub fn to_editable(&self) -> Option<Box<dyn Editable>> {
+        match self {
+            AirBase::Fixed(a) => Some(Box::new(a.to_owned())),
+            AirBase::Ship(a) => Some(Box::new(a.to_owned())),
+            AirBase::Farp(a) => Some(Box::new(a.to_owned())),
+            AirBase::AirStart(a) => Some(Box::new(a.to_owned())),
+            _ => None,
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]

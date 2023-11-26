@@ -332,24 +332,27 @@ where
     let values = parent_header.get_value_stringvec(&cx.props.item);
 
     cx.render(rsx! {
-        h4{ class: "flex-grow p-1", "{parent_header.display}"}
-        for (i,(sub_header, value)) in sub_headers.iter().zip(values).enumerate() {
-            rsx!(
-                div { class: "flex w-full mt-1 mb-1",
-            label { class: "flex-grow p-1", r#for: "{sub_header.display}", "{sub_header.display}" }
-            input {
-                class: "rounded p-1",
-                autocomplete: "off",
-                r#type: "{fieldtype_to_input(&sub_header.type_)}",
-                name: "{parent_header.display}.{i}",
-                value: "{value}",
-                readonly: "{!sub_header.editable}",
-                disabled: "{!sub_header.editable}",
-                step: "any",
-                checked: "{value == \"true\"}"
+        div {
+            class: "bg-sky-300 rounded p-2",
+            h4{ class: "flex-grow font-medium p-1", "{parent_header.display}"}
+            for (i,(sub_header, value)) in sub_headers.iter().zip(values).enumerate() {
+                rsx!(
+                    div { class: "flex w-full mt-1 mb-1",
+                label { class: "flex-grow p-1", r#for: "{sub_header.display}", "{sub_header.display}" }
+                input {
+                    class: "rounded p-1",
+                    autocomplete: "off",
+                    r#type: "{fieldtype_to_input(&sub_header.type_)}",
+                    name: "{parent_header.display}.{i}",
+                    value: "{value}",
+                    readonly: "{!sub_header.editable}",
+                    disabled: "{!sub_header.editable}",
+                    step: "any",
+                    checked: "{value == \"true\"}"
+                }
             }
-        }
-            )
+                )
+            }
         }
     })
 }

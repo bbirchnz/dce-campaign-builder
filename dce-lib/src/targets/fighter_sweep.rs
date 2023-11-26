@@ -3,7 +3,9 @@ use serde::{Deserialize, Serialize};
 
 use super::TargetFirepower;
 use crate::{
-    editable::{Editable, FieldType, HeaderField, ValidationError, ValidationResult},
+    editable::{
+        Editable, FieldType, HeaderField, NestedEditable, ValidationError, ValidationResult,
+    },
     target_list::TargetList,
     target_list_internal::TargetListInternal,
     DCEInstance, NewFromMission,
@@ -24,10 +26,6 @@ pub struct FighterSweep {
     #[serde(default)]
     pub _side: String,
     #[serde(default)]
-    pub _firepower_min: u32,
-    #[serde(default)]
-    pub _firepower_max: u32,
-    #[serde(default)]
     pub attributes: Vec<String>,
 }
 
@@ -37,6 +35,12 @@ impl Editable for FighterSweep {
             HeaderField::new("text", "Display Text", FieldType::String, true),
             HeaderField::new("_side", "Side", FieldType::String, false),
             HeaderField::new("priority", "Priority", FieldType::Int, true),
+            HeaderField::new(
+                "firepower",
+                "Firepower Required",
+                FieldType::NestedEditable(TargetFirepower::get_header()),
+                true,
+            ),
             HeaderField::new("inactive", "Inactive", FieldType::Bool, true),
             HeaderField::new("attributes", "Loadout Tags", FieldType::VecString, true),
         ]
@@ -54,8 +58,14 @@ impl Editable for FighterSweep {
         self._name.to_string()
     }
 
-    fn validate(&self, _: &DCEInstance) -> ValidationResult {
+    fn validate(&self, instance: &DCEInstance) -> ValidationResult {
         let mut errors = Vec::default();
+
+        if let ValidationResult::Fail(mut firepower_errors) =
+            TargetFirepower::validate(&self.firepower, instance)
+        {
+            errors.append(&mut firepower_errors)
+        }
 
         if self._side != "blue" && self._name == "red" {
             errors.push(ValidationError::new(

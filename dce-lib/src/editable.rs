@@ -1,5 +1,6 @@
 use bevy_reflect::{Reflect, ReflectMut, ReflectRef, Struct};
 
+use itertools::Itertools;
 use log::warn;
 
 use crate::{trigger::Actions, DCEInstance};
@@ -308,7 +309,7 @@ impl HeaderField {
     }
 
     pub fn get_value_string(&self, item: &dyn Struct) -> String {
-        match self.type_ {
+        match &self.type_ {
             FieldType::String => get_string(item, &self.field),
             FieldType::OptionString => {
                 let val = item
@@ -393,9 +394,15 @@ impl HeaderField {
                     });
                 val.join(", ")
             }
-            FieldType::NestedEditable(_) => {
-                let v = item.field(&self.field).unwrap();
-                format!("{:?}", v)
+            FieldType::NestedEditable(sub_headers) => {
+                // return a summary
+                let values = self.get_value_stringvec(item);
+
+                values
+                    .iter()
+                    .zip(sub_headers)
+                    .map(|(value, sub_header)| format!("{}: {}", sub_header.display, value))
+                    .join(", ")
             }
         }
     }

@@ -25,10 +25,6 @@ pub struct AWACS {
     #[serde(default)]
     pub _side: String,
     #[serde(default)]
-    pub _firepower_min: u32,
-    #[serde(default)]
-    pub _firepower_max: u32,
-    #[serde(default)]
     pub attributes: Vec<String>,
 }
 

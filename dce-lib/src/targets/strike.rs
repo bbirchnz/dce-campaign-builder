@@ -2,7 +2,7 @@ use super::TargetFirepower;
 use crate::{
     editable::{
         AllEntityTemplateAction, Editable, EntityTemplateAction, FieldType, HeaderField,
-        ValidationError, ValidationResult,
+        NestedEditable, ValidationError, ValidationResult,
     },
     target_list::TargetList,
     target_list_internal::TargetListInternal,
@@ -30,10 +30,6 @@ pub struct Strike {
     pub _name: String,
     #[serde(default)]
     pub _side: String,
-    #[serde(default)]
-    pub _firepower_min: u32,
-    #[serde(default)]
-    pub _firepower_max: u32,
     #[serde(default)]
     pub attributes: Vec<String>,
     #[serde(default)]
@@ -69,8 +65,12 @@ impl Editable for Strike {
             HeaderField::new("text", "Display Text", FieldType::String, true),
             HeaderField::new("_side", "Side", FieldType::String, false),
             HeaderField::new("priority", "Priority", FieldType::Int, true),
-            HeaderField::new("_firepower_min", "Min Req Firepower", FieldType::Int, true),
-            HeaderField::new("_firepower_max", "Max Req Firepower", FieldType::Int, true),
+            HeaderField::new(
+                "firepower",
+                "Firepower Required",
+                FieldType::NestedEditable(TargetFirepower::get_header()),
+                true,
+            ),
             HeaderField::new("inactive", "Inactive", FieldType::Bool, true),
             HeaderField::new(
                 "class_template",
@@ -104,6 +104,13 @@ impl Editable for Strike {
                 "Side must be blue or red",
             ));
         }
+
+        if let ValidationResult::Fail(mut firepower_errors) =
+            TargetFirepower::validate(&self.firepower, instance)
+        {
+            errors.append(&mut firepower_errors)
+        }
+
         if let Some(vg_name) = self.class_template.clone() {
             match self.class.as_ref() {
                 Some(class) if class.as_str() == "vehicle" => {
@@ -280,8 +287,6 @@ impl Strike {
                     } else {
                         "red".to_string()
                     },
-                    _firepower_min: 2,
-                    _firepower_max: 2,
                     attributes: Vec::default(),
                     picture: Vec::default(),
                 })

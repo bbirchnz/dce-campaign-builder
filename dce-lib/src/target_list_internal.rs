@@ -109,9 +109,7 @@ impl TargetListInternal {
         let mut red = HashMap::default();
 
         self.antiship.iter().try_for_each(|item| {
-            let mut item = item.clone();
-            item.firepower.min = item._firepower_min;
-            item.firepower.max = item._firepower_max;
+            let item = item.clone();
 
             match item._side.as_str() {
                 "blue" => {
@@ -126,9 +124,7 @@ impl TargetListInternal {
         })?;
 
         self.cap.iter().try_for_each(|item| {
-            let mut item = item.clone();
-            item.firepower.min = item._firepower_min;
-            item.firepower.max = item._firepower_max;
+            let item = item.clone();
 
             match item._side.as_str() {
                 "blue" => {
@@ -143,9 +139,7 @@ impl TargetListInternal {
         })?;
 
         self.intercept.iter().try_for_each(|item| {
-            let mut item = item.clone();
-            item.firepower.min = item._firepower_min;
-            item.firepower.max = item._firepower_max;
+            let item = item.clone();
 
             match item._side.as_str() {
                 "blue" => {
@@ -160,9 +154,7 @@ impl TargetListInternal {
         })?;
 
         self.strike.iter().try_for_each(|item| {
-            let mut item = item.clone();
-            item.firepower.min = item._firepower_min;
-            item.firepower.max = item._firepower_max;
+            let item = item.clone();
 
             match item._side.as_str() {
                 "blue" => {
@@ -177,9 +169,7 @@ impl TargetListInternal {
         })?;
 
         self.fighter_sweep.iter().try_for_each(|item| {
-            let mut item = item.clone();
-            item.firepower.min = item._firepower_min;
-            item.firepower.max = item._firepower_max;
+            let item = item.clone();
 
             match item._side.as_str() {
                 "blue" => {

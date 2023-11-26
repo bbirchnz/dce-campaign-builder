@@ -1,4 +1,4 @@
-use bevy_reflect::{Reflect, Struct};
+use bevy_reflect::{Reflect, ReflectMut, ReflectRef, Struct};
 
 use log::warn;
 
@@ -81,6 +81,19 @@ pub trait Editable {
     fn related(&self, _instance: &DCEInstance) -> Vec<Box<dyn Editable>> {
         Vec::default()
     }
+}
+
+/// Behaviours required to support editing of structures that are members
+/// of an Editable object
+pub trait NestedEditable
+where
+    Self: Struct,
+{
+    fn validate(&self, instance: &DCEInstance) -> ValidationResult;
+
+    fn get_header() -> Vec<HeaderField>
+    where
+        Self: Sized;
 }
 
 /// An action that can be applied to the full DCEInstance and perform multiple entity
@@ -187,7 +200,7 @@ impl HeaderField {
     /// Attempt to get a value as a string array. For most types this is a wrapper
     /// around `get_value_string()` but comes into its own when used with `TriggerActions`
     pub fn get_value_stringvec(&self, item: &dyn Struct) -> Vec<String> {
-        match self.type_ {
+        match &self.type_ {
             FieldType::TriggerActions => {
                 let actions = item
                     .field(&self.field)
@@ -213,6 +226,20 @@ impl HeaderField {
                     items
                 }
             }
+            FieldType::NestedEditable(sub_headers) => {
+                let ReflectRef::Struct(sub_item) = item
+                    .field(&self.field)
+                    .unwrap_or_else(|| panic!("Field {} should exist", &self.field))
+                    .reflect_ref()
+                else {
+                    panic!("This must be a Struct type")
+                };
+
+                sub_headers
+                    .iter()
+                    .map(|sub_h| sub_h.get_value_string(sub_item))
+                    .collect::<Vec<_>>()
+            }
             _ => {
                 warn!(
                     "get_value_stringvec called with a {:?} that doesn't need it",
@@ -228,7 +255,7 @@ impl HeaderField {
         item: &mut dyn Struct,
         values: Vec<String>,
     ) -> Result<(), anyhow::Error> {
-        match self.type_ {
+        match &self.type_ {
             FieldType::TriggerActions => {
                 let action = Actions::Many(values);
                 // have to set this to `Actions::One`, then back to proper result.
@@ -256,6 +283,20 @@ impl HeaderField {
                     *field = Vec::default();
                 } else {
                     *field = values;
+                }
+                Ok(())
+            }
+            FieldType::NestedEditable(sub_headers) => {
+                let ReflectMut::Struct(sub_item) = item
+                    .field_mut(&self.field)
+                    .unwrap_or_else(|| panic!("Field {} should exist", &self.field))
+                    .reflect_mut()
+                else {
+                    panic!("This must be a Struct type")
+                };
+
+                for (sub_h, val) in sub_headers.iter().zip(values) {
+                    sub_h.set_value_fromstr(sub_item, &val)?
                 }
                 Ok(())
             }
@@ -352,6 +393,10 @@ impl HeaderField {
                     });
                 val.join(", ")
             }
+            FieldType::NestedEditable(_) => {
+                let v = item.field(&self.field).unwrap();
+                format!("{:?}", v)
+            }
         }
     }
 
@@ -421,6 +466,11 @@ impl HeaderField {
                 apply_value(item, &self.field, &value.to_owned());
             }
             FieldType::DateStr => apply_value(item, &self.field, &value.to_owned()),
+            FieldType::NestedEditable(_) => {
+                return Err(anyhow!(
+                    "Can't set_value_fromstr on NestedEditable, use stringvec form"
+                ))
+            }
         };
         Ok(())
     }
@@ -474,4 +524,5 @@ pub enum FieldType {
     FixedEnum(Vec<String>),
     OptionString,
     VecString,
+    NestedEditable(Vec<HeaderField>),
 }

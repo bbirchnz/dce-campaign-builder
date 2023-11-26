@@ -1,14 +1,14 @@
 use std::collections::HashMap;
 
 use crate::{
-    editable::{Editable, FieldType, HeaderField, ValidationResult},
+    editable::{Editable, FieldType, HeaderField, NestedEditable, ValidationResult},
     loadouts_internal::LoadoutsInternal,
     mission::Payload,
     miz_environment::MizEnvironment,
     serde_utils::LuaFileBased,
     DCEInstance, NewFromMission,
 };
-use anyhow::anyhow;
+use anyhow::{anyhow, Ok};
 use bevy_reflect::{FromReflect, Reflect};
 use serde::{Deserialize, Serialize};
 
@@ -413,6 +413,28 @@ pub struct Support {
     #[serde(default)]
     #[serde(rename = "Escort Jammer")]
     escort_jammer: bool,
+}
+
+impl NestedEditable for Support {
+    fn validate(&self, _: &DCEInstance) -> ValidationResult {
+        ValidationResult::Pass
+    }
+
+    fn get_header() -> Vec<HeaderField>
+    where
+        Self: Sized,
+    {
+        vec![
+            HeaderField::new("escort", "Needs AA Escort", FieldType::Bool, true),
+            HeaderField::new("sead", "Needs SEAD Escort", FieldType::Bool, true),
+            HeaderField::new(
+                "escort_jammer",
+                "Needs Jammer Escort",
+                FieldType::Bool,
+                true,
+            ),
+        ]
+    }
 }
 
 impl LuaFileBased<'_> for Loadouts {}
@@ -1077,6 +1099,12 @@ impl Editable for StrikeLoadout {
                 "expend",
                 "Expend Quantity",
                 FieldType::FixedEnum(vec!["All".into(), "Auto".into()]),
+                true,
+            ),
+            HeaderField::new(
+                "support",
+                "Support Required",
+                FieldType::NestedEditable(Support::get_header()),
                 true,
             ),
             HeaderField::new("attributes", "Loadout Tags", FieldType::VecString, true),

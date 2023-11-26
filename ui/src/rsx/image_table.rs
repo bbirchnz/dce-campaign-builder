@@ -17,8 +17,7 @@ pub fn image_table(cx: Scope<ImageTableProps>) -> Element {
         div { class: "flex ml-2 mr-2 items-center",
             h4 { class: "font-semibold", "Campaign and target images" }
             div { class: "grow" }
-            button {
-                class: "p-1 bg-slate-100 hover:bg-slate-300 rounded border-slate-500 border-2 ml-2 tooltip",
+            button { class: "p-1 bg-slate-100 hover:bg-slate-300 rounded border-slate-500 border-2 ml-2 tooltip",
                 // onclick: move |_| {
                 //     let mut atom_instance = atom_instance.write();
                 //     let mut_instance = atom_instance.as_mut().expect("DCE instance is loaded");
@@ -27,10 +26,7 @@ pub fn image_table(cx: Scope<ImageTableProps>) -> Element {
                 //         Err(_) => {}
                 //     };
                 // },
-                span {
-                    class: "tooltiptext ttright",
-                    "Upload a new image (png)"
-                }
+                span { class: "tooltiptext ttright", "Upload a new image (png)" }
                 "Upload New"
             }
         }
@@ -47,7 +43,7 @@ pub fn image_table(cx: Scope<ImageTableProps>) -> Element {
                     src: "https://imagesprotocol.example/{image.name}",
                     width: 200,
                 }
-            }
+                }
             }
         }
     })

@@ -188,7 +188,7 @@ impl NewFromMission for DBAirbases {
             .flat_map(|(i, side)| i.units.as_slice().iter().zip(repeat(side)))
             .filter_map(|(s, side)| {
                 let parts = s.name.split('_').collect::<Vec<_>>();
-                if parts.len() < 2 || parts[0] != "CV" {
+                if parts.len() < 2 || parts[0].to_lowercase() != "cv" {
                     return None;
                 }
                 Some((
@@ -208,7 +208,7 @@ impl NewFromMission for DBAirbases {
 
         let air_starts = miz.mission.triggers.zones.iter().filter_map(|z| {
             let parts = z.name.split('_').collect::<Vec<_>>();
-            if parts.len() < 3 || parts[1] != "AIRSTART" {
+            if parts.len() < 3 || parts[1].to_lowercase() != "airstart" {
                 return None;
             }
             Some((

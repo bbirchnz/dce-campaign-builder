@@ -5,7 +5,7 @@ use mlua::LuaSerdeExt;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    editable::{Editable, FieldType, HeaderField, ValidationResult},
+    editable::{Editable, FieldType, HeaderField, ValidationError, ValidationResult},
     serde_utils::LuaFileBased,
 };
 
@@ -176,6 +176,20 @@ impl Editable for ConfMod {
     }
 
     fn validate(&self, _: &crate::DCEInstance) -> crate::editable::ValidationResult {
+        let mut errors: Vec<ValidationError> = Vec::default();
+
+        if self.startup_time_player < 60 {
+            errors.push(ValidationError::new(
+                "startup_time_player",
+                "Startup time for player",
+                "Startup time must be greater than 1 minute",
+            ));
+        }
+
+        if !errors.is_empty() {
+            return ValidationResult::Fail(errors);
+        }
+
         ValidationResult::Pass
     }
 
@@ -193,8 +207,8 @@ impl Editable for ConfMod {
         vec![
             HeaderField::new(
                 "startup_time_player",
-                "Startup time for Player",
-                FieldType::IntTime,
+                "Startup time for Player (mins)",
+                FieldType::DurationMin,
                 true,
             ),
             HeaderField::new(

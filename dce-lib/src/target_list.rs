@@ -40,13 +40,14 @@ impl NewFromMission for TargetList {
             if name_splits.len() < 2 {
                 warn!("Expect zone names to be of form <SIDE>_<TYPE>");
             }
+            
+            let targets = match name_splits[0].to_lowercase().as_str() {
+                "blue" => &mut blue_targets,
+                _ => &mut red_targets,
+            };
 
             match name_splits[1].to_lowercase().as_str() {
                 "cap" => {
-                    let targets = match name_splits[0] {
-                        "BLUE" => &mut blue_targets,
-                        _ => &mut red_targets,
-                    };
                     targets.insert(
                         z.name.to_owned(),
                         Target::CAP(CAP {
@@ -67,10 +68,6 @@ impl NewFromMission for TargetList {
                     );
                 }
                 "refueling" => {
-                    let targets = match name_splits[0] {
-                        "BLUE" => &mut blue_targets,
-                        _ => &mut red_targets,
-                    };
                     targets.insert(
                         z.name.to_owned(),
                         Target::Refueling(Refueling {
@@ -91,10 +88,6 @@ impl NewFromMission for TargetList {
                     );
                 }
                 "awacs" => {
-                    let targets = match name_splits[0] {
-                        "BLUE" => &mut blue_targets,
-                        _ => &mut red_targets,
-                    };
                     targets.insert(
                         z.name.to_owned(),
                         Target::AWACS(AWACS {
@@ -115,10 +108,6 @@ impl NewFromMission for TargetList {
                     );
                 }
                 "fightersweep" => {
-                    let targets = match name_splits[0] {
-                        "BLUE" => &mut blue_targets,
-                        _ => &mut red_targets,
-                    };
                     targets.insert(
                         z.name.to_owned(),
                         Target::FighterSweep(
@@ -127,11 +116,6 @@ impl NewFromMission for TargetList {
                     );
                 }
                 "staticstrike" => {
-                    let targets = match name_splits[0] {
-                        "BLUE" => &mut blue_targets,
-                        _ => &mut red_targets,
-                    };
-
                     if name_splits.len() < 4 {
                         panic!("Failed to process {}, should be <SIDE>_STATICSTRIKE_<TGT GROUP NAME>_<TGT NAME>", &z.name);
                     }

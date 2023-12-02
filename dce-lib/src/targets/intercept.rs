@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use super::TargetFirepower;
 use crate::{
     editable::{
-        AllEntityTemplateAction, Editable, FieldType, HeaderField, ValidationError,
+        AllEntityTemplateAction, Editable, FieldType, HeaderField, NestedEditable, ValidationError,
         ValidationResult,
     },
     DCEInstance,
@@ -26,10 +26,6 @@ pub struct Intercept {
     #[serde(default)]
     pub _side: String,
     #[serde(default)]
-    pub _firepower_min: u32,
-    #[serde(default)]
-    pub _firepower_max: u32,
-    #[serde(default)]
     pub attributes: Vec<String>,
 }
 
@@ -39,6 +35,12 @@ impl Editable for Intercept {
             HeaderField::new("text", "Display Text", FieldType::String, true),
             HeaderField::new("_side", "Side", FieldType::String, false),
             HeaderField::new("priority", "Priority", FieldType::Int, true),
+            HeaderField::new(
+                "firepower",
+                "Firepower Required",
+                FieldType::NestedEditable(TargetFirepower::get_header()),
+                true,
+            ),
             HeaderField::new("radius", "Radius (nm)", FieldType::DistanceNM, true),
             HeaderField::new("inactive", "Inactive", FieldType::Bool, true),
             HeaderField::new("attributes", "Loadout Tags", FieldType::VecString, true),
@@ -57,7 +59,7 @@ impl Editable for Intercept {
         self._name.to_string()
     }
 
-    fn validate(&self, _: &DCEInstance) -> ValidationResult {
+    fn validate(&self, instance: &DCEInstance) -> ValidationResult {
         let mut errors = Vec::default();
 
         if self._side != "blue" && self._name == "red" {
@@ -66,6 +68,12 @@ impl Editable for Intercept {
                 "Target Side",
                 "Side must be blue or red",
             ));
+        }
+
+        if let ValidationResult::Fail(mut firepower_errors) =
+            TargetFirepower::validate(&self.firepower, instance)
+        {
+            errors.append(&mut firepower_errors)
         }
 
         if errors.is_empty() {
@@ -99,7 +107,7 @@ impl Editable for Intercept {
 }
 
 impl Intercept {
-    fn generate_intercepts(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
+    pub fn generate_intercepts(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
         let mut new_intercepts: Vec<Intercept> = Vec::default();
         // fixed airbases
         instance
@@ -122,8 +130,6 @@ impl Intercept {
                     firepower: TargetFirepower { min: 2, max: 2 },
                     _name: name,
                     _side: fixed.side.to_owned(),
-                    _firepower_min: 2,
-                    _firepower_max: 2,
                     attributes: Vec::default(),
                 })
             });
@@ -149,8 +155,6 @@ impl Intercept {
                     firepower: TargetFirepower { min: 2, max: 2 },
                     _name: name,
                     _side: ship.side.to_owned(),
-                    _firepower_min: 2,
-                    _firepower_max: 2,
                     attributes: Vec::default(),
                 })
             });

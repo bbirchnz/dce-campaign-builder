@@ -11,6 +11,7 @@ use crate::{
         ValidationResult,
     },
     lua_utils::load_trigger_mocks,
+    miz_environment::MizEnvironment,
     serde_utils::LuaFileBased,
     DCEInstance, NewFromMission,
 };
@@ -104,7 +105,7 @@ assert(type(test()) == 'boolean', "Must return a boolean result")
 }
 
 impl NewFromMission for Triggers {
-    fn new_from_mission(_mission: &crate::mission::Mission) -> Result<Self, anyhow::Error>
+    fn new_from_mission(_miz: &MizEnvironment) -> Result<Self, anyhow::Error>
     where
         Self: Sized,
     {
@@ -251,7 +252,7 @@ impl Editable for Trigger {
     }
 
     fn reset_all_from_miz(instance: &mut crate::DCEInstance) -> Result<(), anyhow::Error> {
-        let new_triggers = triggers_to_flat(&Triggers::new_from_mission(&instance.mission)?);
+        let new_triggers = triggers_to_flat(&Triggers::new_from_mission(&instance.miz_env)?);
 
         instance.triggers = new_triggers;
 
@@ -304,29 +305,15 @@ impl Editable for Trigger {
 
 #[cfg(test)]
 mod tests {
-    use crate::{mission::Mission, serde_utils::LuaFileBased, NewFromMission};
+    use crate::{miz_environment::MizEnvironment, serde_utils::LuaFileBased, NewFromMission};
 
     use super::Triggers;
 
     #[test]
-    fn load_example() {
-        let result = Triggers::from_lua_file("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\War over Tchad 1987-Blue-Mirage-F1EE-3-30 Lorraine\\Init\\camp_triggers_init.lua".into(), "camp_triggers".into());
-
-        let _ = result.unwrap();
-    }
-
-    #[test]
-    fn save_example() {
-        let loaded = Triggers::from_lua_file("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\War over Tchad 1987-Blue-Mirage-F1EE-3-30 Lorraine\\Init\\camp_triggers_init.lua".into(), "camp_triggers".into()).unwrap();
-        loaded
-            .to_lua_file("camp_triggers_sa.lua".into(), "camp".into())
-            .unwrap();
-    }
-
-    #[test]
     fn from_miz() {
-        let mission = Mission::from_miz("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\Falklands v1\\Init\\base_mission.miz".into()).unwrap();
-        let triggers = Triggers::new_from_mission(&mission).unwrap();
+        let miz =
+            MizEnvironment::from_miz("test_resources\\base_mission_falklands.miz".into()).unwrap();
+        let triggers = Triggers::new_from_mission(&miz).unwrap();
 
         triggers
             .to_lua_file("camp_trigger_init_sa.lua".into(), "camp_triggers".into())

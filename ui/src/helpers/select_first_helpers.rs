@@ -53,6 +53,18 @@ pub fn select_first_airstart_airbase(cx: Scope) {
     }
 }
 
+pub fn select_first_farp_airbase(cx: Scope) {
+    let atom_instance = use_atom_ref(cx, INSTANCE);
+    let atom_selected = use_atom_ref(cx, SELECTED);
+    let mut writable = atom_selected.write();
+
+    if let Some(item) = atom_instance.read().as_ref().unwrap().airbases.farp.first() {
+        *writable = Selectable::FARPBase(Some(item.clone()));
+    } else {
+        *writable = Selectable::FARPBase(None);
+    }
+}
+
 pub fn select_first_strike_target(cx: Scope) {
     let atom_instance = use_atom_ref(cx, INSTANCE);
     let atom_selected = use_atom_ref(cx, SELECTED);
@@ -356,5 +368,24 @@ pub fn select_first_trigger(cx: Scope) {
         *writable = Selectable::Trigger(Some(item.clone()));
     } else {
         *writable = Selectable::Trigger(None);
+    }
+}
+
+pub fn select_first_image(cx: Scope) {
+    let atom_instance = use_atom_ref(cx, INSTANCE);
+    let atom_selected = use_atom_ref(cx, SELECTED);
+    let mut writable = atom_selected.write();
+
+    if let Some(item) = atom_instance
+        .read()
+        .as_ref()
+        .unwrap()
+        .bin_data
+        .images
+        .first()
+    {
+        *writable = Selectable::Image(Some(item.clone()));
+    } else {
+        *writable = Selectable::Image(None);
     }
 }

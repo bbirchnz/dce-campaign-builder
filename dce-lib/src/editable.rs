@@ -1,5 +1,6 @@
-use bevy_reflect::{Reflect, Struct};
+use bevy_reflect::{Reflect, ReflectMut, ReflectRef, Struct};
 
+use itertools::Itertools;
 use log::warn;
 
 use crate::{trigger::Actions, DCEInstance};
@@ -12,13 +13,20 @@ pub trait Editable {
 
     fn validate(&self, instance: &DCEInstance) -> ValidationResult;
 
-    fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self;
-    fn get_header() -> Vec<HeaderField>;
+    fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self
+    where
+        Self: Sized;
+    fn get_header() -> Vec<HeaderField>
+    where
+        Self: Sized;
 
     /// Returns bool indicating where this type can be reset to default values.
     ///
     /// Use to decide whether to draw buttons for example
-    fn can_reset_from_miz() -> bool {
+    fn can_reset_from_miz() -> bool
+    where
+        Self: Sized,
+    {
         false
     }
 
@@ -26,13 +34,21 @@ pub trait Editable {
     ///
     /// Use when you have updated the base mission (say with new loadouts) and you want to
     /// bring the changes into the campaign.
-    fn reset_all_from_miz(_: &mut DCEInstance) -> Result<(), anyhow::Error> {
+    fn reset_all_from_miz(_: &mut DCEInstance) -> Result<(), anyhow::Error>
+    where
+        Self: Sized,
+    {
         Ok(())
     }
 
-    fn delete_by_name(instance: &mut DCEInstance, name: &str) -> Result<(), anyhow::Error>;
+    fn delete_by_name(instance: &mut DCEInstance, name: &str) -> Result<(), anyhow::Error>
+    where
+        Self: Sized;
 
-    fn can_delete() -> bool {
+    fn can_delete() -> bool
+    where
+        Self: Sized,
+    {
         false
     }
 
@@ -42,7 +58,10 @@ pub trait Editable {
     /// Will be used to create an array of buttons in the UI.
     ///
     /// Example: "create intercepts for all capable squadrons"
-    fn actions_all_entities() -> Vec<AllEntityTemplateAction> {
+    fn actions_all_entities() -> Vec<AllEntityTemplateAction>
+    where
+        Self: Sized,
+    {
         // default is no actions defined
         Vec::default()
     }
@@ -59,6 +78,23 @@ pub trait Editable {
         // default is no actions defined
         Vec::default()
     }
+
+    fn related(&self, _instance: &DCEInstance) -> Vec<Box<dyn Editable>> {
+        Vec::default()
+    }
+}
+
+/// Behaviours required to support editing of structures that are members
+/// of an Editable object
+pub trait NestedEditable
+where
+    Self: Struct,
+{
+    fn validate(&self, instance: &DCEInstance) -> ValidationResult;
+
+    fn get_header() -> Vec<HeaderField>
+    where
+        Self: Sized;
 }
 
 /// An action that can be applied to the full DCEInstance and perform multiple entity
@@ -165,7 +201,7 @@ impl HeaderField {
     /// Attempt to get a value as a string array. For most types this is a wrapper
     /// around `get_value_string()` but comes into its own when used with `TriggerActions`
     pub fn get_value_stringvec(&self, item: &dyn Struct) -> Vec<String> {
-        match self.type_ {
+        match &self.type_ {
             FieldType::TriggerActions => {
                 let actions = item
                     .field(&self.field)
@@ -191,6 +227,20 @@ impl HeaderField {
                     items
                 }
             }
+            FieldType::NestedEditable(sub_headers) => {
+                let ReflectRef::Struct(sub_item) = item
+                    .field(&self.field)
+                    .unwrap_or_else(|| panic!("Field {} should exist", &self.field))
+                    .reflect_ref()
+                else {
+                    panic!("This must be a Struct type")
+                };
+
+                sub_headers
+                    .iter()
+                    .map(|sub_h| sub_h.get_value_string(sub_item))
+                    .collect::<Vec<_>>()
+            }
             _ => {
                 warn!(
                     "get_value_stringvec called with a {:?} that doesn't need it",
@@ -206,7 +256,7 @@ impl HeaderField {
         item: &mut dyn Struct,
         values: Vec<String>,
     ) -> Result<(), anyhow::Error> {
-        match self.type_ {
+        match &self.type_ {
             FieldType::TriggerActions => {
                 let action = Actions::Many(values);
                 // have to set this to `Actions::One`, then back to proper result.
@@ -237,6 +287,20 @@ impl HeaderField {
                 }
                 Ok(())
             }
+            FieldType::NestedEditable(sub_headers) => {
+                let ReflectMut::Struct(sub_item) = item
+                    .field_mut(&self.field)
+                    .unwrap_or_else(|| panic!("Field {} should exist", &self.field))
+                    .reflect_mut()
+                else {
+                    panic!("This must be a Struct type")
+                };
+
+                for (sub_h, val) in sub_headers.iter().zip(values) {
+                    sub_h.set_value_fromstr(sub_item, &val)?
+                }
+                Ok(())
+            }
             _ => Err(anyhow!(
                 "set_value_from_stringvec called with a {:?} that doesn't need it",
                 self
@@ -245,7 +309,7 @@ impl HeaderField {
     }
 
     pub fn get_value_string(&self, item: &dyn Struct) -> String {
-        match self.type_ {
+        match &self.type_ {
             FieldType::String => get_string(item, &self.field),
             FieldType::OptionString => {
                 let val = item
@@ -319,6 +383,7 @@ impl HeaderField {
                 }
             }
             FieldType::FixedEnum(_) => get_string(item, &self.field),
+            FieldType::DateStr => get_string(item, &self.field),
             FieldType::VecString => {
                 let val = item
                     .field(&self.field)
@@ -328,6 +393,16 @@ impl HeaderField {
                         panic!("Failed to get field {} as Vec<String>", &self.field)
                     });
                 val.join(", ")
+            }
+            FieldType::NestedEditable(sub_headers) => {
+                // return a summary
+                let values = self.get_value_stringvec(item);
+
+                values
+                    .iter()
+                    .zip(sub_headers)
+                    .map(|(value, sub_header)| format!("{}: {}", sub_header.display, value))
+                    .join(", ")
             }
         }
     }
@@ -397,6 +472,12 @@ impl HeaderField {
             FieldType::VecString => {
                 apply_value(item, &self.field, &value.to_owned());
             }
+            FieldType::DateStr => apply_value(item, &self.field, &value.to_owned()),
+            FieldType::NestedEditable(_) => {
+                return Err(anyhow!(
+                    "Can't set_value_fromstr on NestedEditable, use stringvec form"
+                ))
+            }
         };
         Ok(())
     }
@@ -439,6 +520,7 @@ pub enum FieldType {
     Int,
     Enum,
     Debug,
+    DateStr,
     IntTime,
     Bool,
     AltitudeFeet,
@@ -449,4 +531,5 @@ pub enum FieldType {
     FixedEnum(Vec<String>),
     OptionString,
     VecString,
+    NestedEditable(Vec<HeaderField>),
 }

@@ -2,7 +2,9 @@ use bevy_reflect::{FromReflect, Reflect};
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    editable::{Editable, FieldType, HeaderField, ValidationError, ValidationResult},
+    editable::{
+        Editable, FieldType, HeaderField, NestedEditable, ValidationError, ValidationResult,
+    },
     target_list::TargetList,
     target_list_internal::TargetListInternal,
     DCEInstance, NewFromMission,
@@ -26,10 +28,6 @@ pub struct CAP {
     #[serde(default)]
     pub _side: String,
     #[serde(default)]
-    pub _firepower_min: u32,
-    #[serde(default)]
-    pub _firepower_max: u32,
-    #[serde(default)]
     pub attributes: Vec<String>,
 }
 
@@ -39,8 +37,12 @@ impl Editable for CAP {
             HeaderField::new("text", "Display Text", FieldType::String, true),
             HeaderField::new("_side", "Side", FieldType::String, false),
             HeaderField::new("priority", "Priority", FieldType::Int, true),
-            HeaderField::new("_firepower_min", "Min Req Firepower", FieldType::Int, true),
-            HeaderField::new("_firepower_max", "Max Req Firepower", FieldType::Int, true),
+            HeaderField::new(
+                "firepower",
+                "Firepower Required",
+                FieldType::NestedEditable(TargetFirepower::get_header()),
+                true,
+            ),
             HeaderField::new(
                 "axis",
                 "Axis",
@@ -80,7 +82,19 @@ impl Editable for CAP {
                 "Side must be blue or red",
             ));
         }
-        if instance.mission.get_zone_by_name(&self.ref_point).is_err() {
+
+        if let ValidationResult::Fail(mut firepower_errors) =
+            TargetFirepower::validate(&self.firepower, instance)
+        {
+            errors.append(&mut firepower_errors)
+        }
+
+        if instance
+            .miz_env
+            .mission
+            .get_zone_by_name(&self.ref_point)
+            .is_err()
+        {
             errors.push(ValidationError::new(
                 "ref_point",
                 "CAP Reference Zone",
@@ -99,7 +113,7 @@ impl Editable for CAP {
 
     fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
         let new_target_list =
-            TargetListInternal::from_target_list(&TargetList::new_from_mission(&instance.mission)?);
+            TargetListInternal::from_target_list(&TargetList::new_from_mission(&instance.miz_env)?);
 
         instance.target_list.cap = new_target_list.cap;
 

@@ -1,8 +1,11 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 #![cfg_attr(debug_assertions, windows_subsystem = "console")]
+use std::{borrow::Cow, cell::RefCell, sync::mpsc};
+
 use dce_lib::{
-    campaign_header::Header,
-    db_airbases::{AirStartBase, FixedAirBase, ShipBase},
+    bin_data::BinItem,
+    campaign_header::HeaderInternal,
+    db_airbases::{AirStartBase, FarpBase, FixedAirBase, ShipBase},
     editable::Editable,
     loadouts::{
         AARLoadout, AWACSLoadout, AntiShipLoadout, CAPLoadout, EscortLoadout, InterceptLoadout,
@@ -19,10 +22,10 @@ use dce_lib::{
 };
 
 use dioxus::prelude::*;
-use dioxus_desktop::tao::event::ElementState::Pressed;
 use dioxus_desktop::tao::event::ElementState::Released;
 use dioxus_desktop::tao::keyboard::KeyCode::ControlLeft;
 use dioxus_desktop::tao::keyboard::KeyCode::KeyS;
+use dioxus_desktop::{tao::event::ElementState::Pressed, wry::http::StatusCode};
 use dioxus_desktop::{
     tao::{self, event::DeviceEvent},
     use_window,
@@ -38,7 +41,7 @@ use directories::ProjectDirs;
 
 use crate::{
     helpers::select_first_helpers::*,
-    rsx::{edit_form, menu_bar},
+    rsx::{edit_form, image_edit, image_table, menu_bar},
 };
 
 mod helpers;
@@ -48,20 +51,28 @@ mod selectable;
 static INSTANCE: AtomRef<Option<DCEInstance>> = |_| None;
 static SELECTED: AtomRef<Selectable> = |_| Selectable::None;
 static INSTANCE_DIRTY: Atom<bool> = |_| false;
+static IMAGE_LIST_TX: AtomRef<Option<mpsc::Sender<Vec<BinItem>>>> = |_| None;
 
 struct AppProps {
-    rx: async_channel::Receiver<MapPoint>,
+    rx_mappoint: async_channel::Receiver<MapPoint>,
+    tx_vec_binitem: mpsc::Sender<Vec<BinItem>>,
 }
 
 fn main() {
     SimpleLogger::new().init().unwrap();
     // launch the dioxus app in a webview
 
-    let (s, r) = async_channel::unbounded::<MapPoint>();
+    let image_vec: RefCell<Option<Vec<BinItem>>> = None.into();
+
+    let (tx_mappoint, rx_mappoint) = async_channel::unbounded::<MapPoint>();
+    let (tx_vec_binitem, rx_vec_binitem) = mpsc::channel::<Vec<BinItem>>();
 
     dioxus_desktop::launch_with_props(
         app,
-        AppProps { rx: r },
+        AppProps {
+            rx_mappoint,
+            tx_vec_binitem,
+        },
         Config::default()
             .with_custom_protocol("testprotocol".into(), move |req| {
                 // this handle callbacks of clicked objects in leaflet
@@ -70,7 +81,7 @@ fn main() {
                 );
                 if let Ok(map_point) = obj {
                     trace!("Got from WebView/Sending to channel {:?}", map_point);
-                    s.send_blocking(map_point).unwrap();
+                    tx_mappoint.send_blocking(map_point).unwrap();
                 } else {
                     warn!(
                         "Failed to parse {:?} with error {:?}",
@@ -80,6 +91,36 @@ fn main() {
                 }
 
                 Ok(Response::new(vec![].into()))
+            })
+            .with_custom_protocol("imagesprotocol".into(), move |req| {
+                // make sure we've got the latest vec:
+                while let Ok(data) = rx_vec_binitem.try_recv() {
+                    image_vec.borrow_mut().replace(data);
+                }
+
+                // remove leading '/' from path
+                let requested_image = req.uri().path().strip_prefix('/').unwrap();
+
+                // remove any url encoding (spaces etc)
+                let decoded = urlencoding::decode(requested_image).expect("UTF-8");
+
+                // now see if we've got the image requested:
+                if let Some(v) = image_vec.borrow().as_ref() {
+                    if let Some(image) = v.iter().find(|bd| bd.name == decoded) {
+                        let response = Response::builder()
+                            .header("Content-Type", "image/png")
+                            .header("Content-Length", image.data.len().to_string())
+                            .status(StatusCode::OK)
+                            .body(Cow::Owned(image.data.to_vec()));
+
+                        return response.map_err(|e| e.into());
+                    }
+                }
+
+                return Response::builder()
+                    .status(StatusCode::NOT_FOUND)
+                    .body(vec![].into())
+                    .map_err(|e| e.into());
             })
             .with_data_directory(
                 ProjectDirs::from("com", "BB", "DCE Builder")
@@ -124,16 +165,26 @@ fn app(cx: Scope<AppProps>) -> Element {
     w.set_title("DCE");
     w.set_decorations(false);
 
+    // state to allow things to run once only. I'm sure theres a hook for this..
+    let initialised_state = use_state(cx, || false);
+
     let atom_instance = use_atom_ref(cx, INSTANCE);
     let atom_selected = use_atom_ref(cx, SELECTED);
+    let atom_image_list_tx = use_atom_ref(cx, IMAGE_LIST_TX);
+
+    if !initialised_state {
+        let mut write_atom_image_list_tx = atom_image_list_tx.write();
+        write_atom_image_list_tx.replace(cx.props.tx_vec_binitem.to_owned());
+        initialised_state.set(true);
+    }
 
     let instance_loaded = atom_instance.read().is_some();
     let atoms = use_atom_root(cx);
-    let rx = cx.props.rx.to_owned();
 
     use_coroutine(cx, move |_: UnboundedReceiver<i32>| {
         let atom_selected = atom_selected.to_owned();
         let atoms = atoms.to_owned();
+        let rx = cx.props.rx_mappoint.to_owned();
 
         async move {
             while let Ok(item) = rx.recv().await {
@@ -209,7 +260,7 @@ fn main_body(cx: Scope) -> Element {
 
     cx.render(rsx! {
         div {
-            class: "top-8 flex absolute inset-0 bg-slate-50",
+            class: "top-8 bottom-6 flex absolute inset-0 bg-slate-50",
             // catch movement during edit col width drag
             onmousemove: |ev| {
                 if *dragging_state.get() {
@@ -243,6 +294,11 @@ fn main_body(cx: Scope) -> Element {
                         path: "images/airfield_airstart.svg".into(),
                         on_click: |_| select_first_airstart_airbase(cx),
                         tooltip: "Airstart/virtual airbases"
+                    }
+                    icon_button {
+                        path: "images/airfield_farp.svg".into(),
+                        on_click: |_| select_first_farp_airbase(cx),
+                        tooltip: "FARPs"
                     }
                 }
                 popout_menu { onclick: |_| select_first_cap_target(cx), base_icon_url: "images/target_none.svg",
@@ -339,6 +395,11 @@ fn main_body(cx: Scope) -> Element {
                     on_click: |_| select_first_trigger(cx),
                     tooltip: "Campaign actions and triggers"
                 }
+                icon_button {
+                    path: "images/settings_grey.png".into(),
+                    on_click: |_| select_first_image(cx),
+                    tooltip: "Campaign and target images"
+                }
             }
             // edit col
             div { class: "shrink-0 min-h-0 bg-sky-100", style: "{edit_col_width}",
@@ -373,8 +434,11 @@ fn main_body(cx: Scope) -> Element {
                     Selectable::AirstartBase(_) => rsx!{
                         edit_form::<AirStartBase> { headers: AirStartBase::get_header(), title: "Edit Airstart".into(), item: selected_form.clone()}
                     },
+                    Selectable::FARPBase(_) => rsx!{
+                        edit_form::<FarpBase> { headers: FarpBase::get_header(), title: "Edit FARP".into(), item: selected_form.clone()}
+                    },
                     Selectable::CampaignSettings(_) => rsx!{
-                        edit_form::<Header> { headers: Header::get_header(), title: "Campaign Settings".into(), item: selected_form.clone()}
+                        edit_form::<HeaderInternal> { headers: HeaderInternal::get_header(), title: "Campaign Settings".into(), item: selected_form.clone()}
                     },
                     Selectable::LoadoutCAP(_) => rsx!{
                         edit_form::<CAPLoadout> { headers: CAPLoadout::get_header(), title: "Edit CAP Loadout".into(), item: selected_form.clone()}
@@ -406,6 +470,9 @@ fn main_body(cx: Scope) -> Element {
                     Selectable::Trigger(_) => rsx!{
                         edit_form::<Trigger> { headers: Trigger::get_header(), title: "Edit Trigger".into(), item: selected_form.clone()}
                     },
+                    Selectable::Image(_) => rsx! {
+                        image_edit {item: selected_form.clone()}
+                    },
                     Selectable::None | Selectable::TargetIntercept(None) => rsx!{{}}
                 }
             }
@@ -424,64 +491,70 @@ fn main_body(cx: Scope) -> Element {
                 div { class: "{edit_table_height} grow-0 overflow-y-auto",
                     match *selected_table {
                         Selectable::Squadron(_) => rsx!{
-                            rsx::table { data: instance.oob_air.red.iter().chain(instance.oob_air.blue.iter()).cloned().collect::<Vec<Squadron>>() }
+                            rsx::table { title: "Squadrons", data: instance.oob_air.red.iter().chain(instance.oob_air.blue.iter()).cloned().collect::<Vec<Squadron>>() }
                         },
                         Selectable::TargetStrike(_) => rsx! {
-                            rsx::table { data: instance.target_list.strike.to_vec() }
+                            rsx::table { title: "Strike Targets", data: instance.target_list.strike.to_vec() }
                         },
                         Selectable::TargetCAP(_) => rsx! {
-                            rsx::table {  data: instance.target_list.cap.to_vec() }
+                            rsx::table {  title: "Combat Air Patrols", data: instance.target_list.cap.to_vec() }
                         },
                         Selectable::TargetAntiShip(_) => rsx! {
-                            rsx::table { data: instance.target_list.antiship.to_vec() }
+                            rsx::table { title: "Anti-ship Strike Targets", data: instance.target_list.antiship.to_vec() }
                         },
                         Selectable::TargetAWACS(_) => rsx! {
-                            rsx::table { data: instance.target_list.awacs.to_vec() }
+                            rsx::table { title: "AWACS Patrols", data: instance.target_list.awacs.to_vec() }
                         },
                         Selectable::TargetAAR(_) => rsx! {
-                            rsx::table { data: instance.target_list.refuel.to_vec() }
+                            rsx::table { title: "Refueling Zones", data: instance.target_list.refuel.to_vec() }
                         },
                         Selectable::TargetIntercept(_) => rsx! {
-                            rsx::table { data: instance.target_list.intercept.to_vec() }
+                            rsx::table { title: "Intercept Zones", data: instance.target_list.intercept.to_vec() }
                         },
                         Selectable::FixedAirBase(_) => rsx! {
-                            rsx::table { data: instance.airbases.fixed.to_vec() }
+                            rsx::table { title: "Airbases", data: instance.airbases.fixed.to_vec() }
                         },
                         Selectable::ShipAirBase(_) => rsx! {
-                            rsx::table { data: instance.airbases.ship.to_vec() }
+                            rsx::table { title: "Aircraft Carriers", data: instance.airbases.ship.to_vec() }
                         },
                         Selectable::AirstartBase(_) => rsx! {
-                            rsx::table { data: instance.airbases.air_start.to_vec() }
+                            rsx::table { title: "Air-start zones", data: instance.airbases.air_start.to_vec() }
+                        },
+                        Selectable::FARPBase(_) => rsx! {
+                            rsx::table { title: "FARPs", data: instance.airbases.farp.to_vec() }
                         },
                         Selectable::LoadoutCAP(_) => rsx! {
-                            rsx::table { data: instance.loadouts.cap.to_vec() }
+                            rsx::table { title: "CAP Loadout and Profiles", data: instance.loadouts.cap.to_vec() }
                         },
                         Selectable::LoadoutStrike(_) => rsx! {
-                            rsx::table { data: instance.loadouts.strike.to_vec() }
+                            rsx::table { title: "Strike Loadout and Profiles", data: instance.loadouts.strike.to_vec() }
                         },
                         Selectable::LoadoutAntiship(_) => rsx! {
-                            rsx::table { data: instance.loadouts.antiship.to_vec() }
+                            rsx::table { title: "Anti-ship Strike Loadout and Profiles", data: instance.loadouts.antiship.to_vec() }
                         },
                         Selectable::LoadoutAAR(_) => rsx! {
-                            rsx::table { data: instance.loadouts.aar.to_vec() }
+                            rsx::table { title: "Refueling Profiles", data: instance.loadouts.aar.to_vec() }
                         },
                         Selectable::LoadoutAWACS(_) => rsx! {
-                            rsx::table { data: instance.loadouts.awacs.to_vec() }
+                            rsx::table {title: "AWACS Profiles",  data: instance.loadouts.awacs.to_vec() }
                         },
                         Selectable::LoadoutEscort(_) => rsx! {
-                            rsx::table { data: instance.loadouts.escort.to_vec() }
+                            rsx::table { title: "Escort Loadout and Profiles", data: instance.loadouts.escort.to_vec() }
                         },
                         Selectable::LoadoutIntercept(_) => rsx! {
-                            rsx::table { data: instance.loadouts.intercept.to_vec() }
+                            rsx::table { title: "Intercept Loadout and Profiles", data: instance.loadouts.intercept.to_vec() }
                         },
                         Selectable::LoadoutSEAD(_) => rsx! {
-                            rsx::table { data: instance.loadouts.sead.to_vec() }
+                            rsx::table { title: "SEAD Escort Loadout and Profiles", data: instance.loadouts.sead.to_vec() }
                         },
                         Selectable::LoadoutTransport(_) => rsx! {
-                            rsx::table { data: instance.loadouts.transport.to_vec() }
+                            rsx::table { title: "Transport Profiles", data: instance.loadouts.transport.to_vec() }
                         },
                         Selectable::Trigger(_) => rsx! {
-                            rsx::table { data: instance.triggers.to_vec() }
+                            rsx::table { title: "Campaign Triggers and Actions", data: instance.triggers.to_vec() }
+                        },
+                        Selectable::Image(_) => rsx! {
+                            image_table {data: instance.bin_data.images.to_vec()}
                         },
                         Selectable::None | Selectable::CampaignSettings(_) => rsx! {
                             {}
@@ -489,7 +562,10 @@ fn main_body(cx: Scope) -> Element {
                         }
                 }
             }
+            // right edge border
+            div { class: "basis-1 shrink-0 min-h-0 bg-sky-500" }
         }
+        div { class: "bg-sky-500 bottom-0 h-6 absolute w-full flex", "footer" }
     })
 }
 

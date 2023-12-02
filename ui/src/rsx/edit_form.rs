@@ -1,4 +1,4 @@
-use std::{cell::RefMut, collections::HashMap, fmt::Debug};
+use std::{cell::RefMut, fmt::Debug};
 
 use bevy_reflect::Struct;
 
@@ -8,10 +8,10 @@ use dce_lib::{
 };
 use dioxus::prelude::*;
 use fermi::{use_atom_ref, use_atom_state, AtomState, UseAtomRef};
-use itertools::Itertools;
 use log::{trace, warn};
 
 use crate::{
+    helpers::edit_items::apply_to_item,
     selectable::{Selectable, ToSelectable},
     INSTANCE, INSTANCE_DIRTY, SELECTED,
 };
@@ -33,6 +33,8 @@ fn fieldtype_to_input(field: &FieldType) -> String {
         FieldType::TriggerActions => "text".into(),
         FieldType::FixedEnum(_) => "select".into(),
         FieldType::VecString => "text".into(),
+        FieldType::DateStr => "date".into(),
+        FieldType::NestedEditable(_) => "text".into(),
     }
 }
 
@@ -53,6 +55,8 @@ fn fieldtype_editable(field: &FieldType) -> bool {
         FieldType::TriggerActions => true,
         FieldType::FixedEnum(_) => true,
         FieldType::VecString => true,
+        FieldType::DateStr => true,
+        FieldType::NestedEditable(_) => true,
     }
 }
 
@@ -71,7 +75,15 @@ where
     let atom_instance = use_atom_ref(cx, INSTANCE);
     let atom_dirty = use_atom_state(cx, INSTANCE_DIRTY);
 
-    let item_from_props = T::from_selectable(&cx.props.item).unwrap();
+    let selectable_from_props = T::from_selectable(&cx.props.item);
+
+    if selectable_from_props.is_none() {
+        return cx.render(rsx! {
+            "Nothing to edit"
+        });
+    }
+
+    let item_from_props = selectable_from_props.unwrap();
 
     let validation_state = use_state(cx, || ValidationResult::Pass);
     let item_state = use_state(cx, || item_from_props.to_owned());
@@ -181,6 +193,10 @@ where
                             }
                             }
                         }
+                        FieldType::NestedEditable(_) => rsx!{render_nested{
+                            header: h.clone()
+                            item: item_state.get().to_owned()
+                        }},
                         // all other fields are one input per field
                         _ => rsx!{
                             div { class: "flex w-full mt-1 mb-1",
@@ -300,33 +316,45 @@ where
     })
 }
 
-fn apply_to_item<T>(item: &mut RefMut<T>, values: &HashMap<String, String>)
+#[derive(Props)]
+struct NestedProps<T> {
+    header: HeaderField,
+    item: T,
+}
+fn render_nested<T>(cx: Scope<NestedProps<T>>) -> Element
 where
-    T: Struct + Editable,
+    T: Struct,
 {
-    let headers = T::get_header();
-    for h in headers.iter().filter(|h| h.editable) {
-        match h.type_ {
-            FieldType::TriggerActions | FieldType::VecString => {
-                let values = stringvec_for_field(values, &h.display);
+    let parent_header = &cx.props.header;
+    let FieldType::NestedEditable(sub_headers) = &parent_header.type_ else {
+        panic!("Only use this with NestedEditable")
+    };
+    let values = parent_header.get_value_stringvec(&cx.props.item);
 
-                if let Err(e) = h.set_value_from_stringvec(&mut **item, values) {
-                    panic!("Failed to set field: {}. Error: {}", h.field, e);
+    cx.render(rsx! {
+        div {
+            class: "bg-sky-300 rounded p-2",
+            h4{ class: "flex-grow font-medium p-1", "{parent_header.display}"}
+            for (i,(sub_header, value)) in sub_headers.iter().zip(values).enumerate() {
+                rsx!(
+                    div { class: "flex w-full mt-1 mb-1",
+                label { class: "flex-grow p-1", r#for: "{sub_header.display}", "{sub_header.display}" }
+                input {
+                    class: "rounded p-1",
+                    autocomplete: "off",
+                    r#type: "{fieldtype_to_input(&sub_header.type_)}",
+                    name: "{parent_header.display}.{i}",
+                    value: "{value}",
+                    readonly: "{!sub_header.editable}",
+                    disabled: "{!sub_header.editable}",
+                    step: "any",
+                    checked: "{value == \"true\"}"
                 }
             }
-            _ => {
-                let v = values.get(&h.display).unwrap_or_else(|| {
-                    panic!(
-                        "There must be a value for field {:?} in formevent",
-                        &h.field
-                    )
-                });
-                if let Err(e) = h.set_value_fromstr(&mut **item, v) {
-                    panic!("Failed to set field: {} with {}. Error: {}", h.field, v, e);
-                }
+                )
             }
-        };
-    }
+        }
+    })
 }
 
 fn add_action_to_item<T>(item: &mut RefMut<T>, header: &HeaderField)
@@ -358,22 +386,6 @@ where
         .unwrap_or_else(|e| panic!("Failed to add action with error: {e:?}"));
 }
 
-fn stringvec_for_field(values: &HashMap<String, String>, display_name: &str) -> Vec<String> {
-    values
-        .iter()
-        .filter_map(|(k, v)| {
-            let splits = k.split('.').map(|s| s.to_string()).collect::<Vec<String>>();
-
-            if splits.len() == 2 && splits[0] == display_name && splits[1].parse::<usize>().is_ok()
-            {
-                return Some((splits[1].parse::<usize>().unwrap(), v.to_owned()));
-            }
-            None
-        })
-        .sorted()
-        .map(|(_, v)| v)
-        .collect::<Vec<String>>()
-}
 fn validate_and_apply<T>(
     current_item: RefMut<T>,
     atom_instance: &UseAtomRef<Option<DCEInstance>>,

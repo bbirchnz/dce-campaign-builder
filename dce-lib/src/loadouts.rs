@@ -1,13 +1,14 @@
 use std::collections::HashMap;
 
 use crate::{
-    editable::{Editable, FieldType, HeaderField, ValidationResult},
+    editable::{Editable, FieldType, HeaderField, NestedEditable, ValidationResult},
     loadouts_internal::LoadoutsInternal,
     mission::Payload,
+    miz_environment::MizEnvironment,
     serde_utils::LuaFileBased,
     DCEInstance, NewFromMission,
 };
-use anyhow::anyhow;
+use anyhow::{anyhow, Ok};
 use bevy_reflect::{FromReflect, Reflect};
 use serde::{Deserialize, Serialize};
 
@@ -31,8 +32,29 @@ pub struct AirframeLoadout {
     pub sead: Option<HashMap<String, SEADLoadout>>,
     #[serde(rename = "Intercept")]
     pub intercept: Option<HashMap<String, InterceptLoadout>>,
+    // fighter sweep and intercept use the same functions
+    #[serde(rename = "Fighter Sweep")]
+    pub sweep: Option<HashMap<String, SweepLoadout>>,
     #[serde(rename = "Transport")]
     pub transport: Option<HashMap<String, TransportLoadout>>,
+}
+
+/// Match tasks of any case to the proper cased format required by DCE, throws error if
+/// not a valid task
+pub fn str_to_task(original: &str) -> Result<String, anyhow::Error> {
+    match original.to_lowercase().as_str() {
+        "strike" => Ok("Strike".to_owned()),
+        "anti-ship strike" => Ok("Anti-ship Strike".to_owned()),
+        "cap" => Ok("CAP".to_owned()),
+        "awacs" => Ok("AWACS".to_owned()),
+        "refueling" => Ok("Refueling".to_owned()),
+        "sead" => Ok("SEAD".to_owned()),
+        "escort" => Ok("Escort".to_owned()),
+        "intercept" => Ok("Intercept".to_owned()),
+        "fighter sweep" => Ok("Fighter Sweep".to_owned()),
+        "transport" => Ok("Transport".to_owned()),
+        _ => Err(anyhow!("{:?} is not a supported task", original)),
+    }
 }
 
 impl Default for AirframeLoadout {
@@ -46,6 +68,7 @@ impl Default for AirframeLoadout {
             escort: Some(Default::default()),
             sead: Some(Default::default()),
             intercept: Some(Default::default()),
+            sweep: Some(Default::default()),
             transport: Some(Default::default()),
         }
     }
@@ -154,6 +177,38 @@ pub struct CAPLoadout {
     pub stores: Payload,
     #[serde(default)]
     pub sortie_rate: u32,
+    pub _airframe: String,
+    pub _name: String,
+    #[serde(default)]
+    pub attributes: Vec<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
+pub struct SweepLoadout {
+    pub day: bool,
+    pub night: bool,
+    #[serde(rename = "adverseWeather")]
+    pub adverse_weather: bool,
+    pub range: f64,
+    pub capability: u32,
+    pub firepower: u32,
+    #[serde(rename = "vCruise")]
+    pub v_cruise: f64,
+    #[serde(rename = "vAttack")]
+    pub v_attack: f64,
+    #[serde(rename = "hCruise")]
+    pub h_cruise: f64,
+    #[serde(rename = "hAttack")]
+    pub h_attack: f64,
+    #[serde(rename = "tStation")]
+    #[serde(default)]
+    pub t_station: u32,
+    #[serde(rename = "LDSD")]
+    pub ldsd: bool,
+    pub stores: Payload,
+    #[serde(default)]
+    pub sortie_rate: u32,
+    pub standoff: f64,
     pub _airframe: String,
     pub _name: String,
     #[serde(default)]
@@ -298,7 +353,6 @@ pub struct SEADLoadout {
     pub firepower: u32,
     #[serde(rename = "vCruise")]
     pub v_cruise: f64,
-    #[serde(rename = "LDSD")]
     pub stores: Payload,
     #[serde(default)]
     pub sortie_rate: u32,
@@ -361,20 +415,43 @@ pub struct Support {
     escort_jammer: bool,
 }
 
+impl NestedEditable for Support {
+    fn validate(&self, _: &DCEInstance) -> ValidationResult {
+        ValidationResult::Pass
+    }
+
+    fn get_header() -> Vec<HeaderField>
+    where
+        Self: Sized,
+    {
+        vec![
+            HeaderField::new("escort", "AA Escort", FieldType::Bool, true),
+            HeaderField::new("sead", "SEAD Escort", FieldType::Bool, true),
+            HeaderField::new(
+                "escort_jammer",
+                "Jammer Escort",
+                FieldType::Bool,
+                true,
+            ),
+        ]
+    }
+}
+
 impl LuaFileBased<'_> for Loadouts {}
 
 impl NewFromMission for Loadouts {
-    fn new_from_mission(mission: &crate::mission::Mission) -> Result<Self, anyhow::Error>
+    fn new_from_mission(miz: &MizEnvironment) -> Result<Self, anyhow::Error>
     where
         Self: Sized,
     {
         let mut loadout: Loadouts = HashMap::default();
-        let countries = mission
+        let countries = miz
+            .mission
             .coalition
             .blue
             .countries
             .iter()
-            .chain(mission.coalition.red.countries.iter());
+            .chain(miz.mission.coalition.red.countries.iter());
 
         countries
             .clone()
@@ -384,11 +461,12 @@ impl NewFromMission for Loadouts {
             .flat_map(|g| g.units.as_slice())
             .try_for_each(|u| {
                 let name_parts = u.name.split('_').collect::<Vec<_>>();
+                let task = name_parts[1].to_lowercase();
                 let unit_record = loadout
                     .entry(u._type.to_owned())
                     .or_insert(AirframeLoadout::default());
-                match name_parts[1] {
-                    "Strike" => {
+                match task.as_str() {
+                    "strike" => {
                         unit_record.strike.as_mut().unwrap().insert(
                             u.name.to_owned(),
                             StrikeLoadout {
@@ -406,10 +484,10 @@ impl NewFromMission for Loadouts {
                                 range: 500000.,
                                 capability: 1,
                                 firepower: 1,
-                                v_cruise: 225.,
+                                v_cruise: 246.,
                                 v_attack: 277.5,
-                                h_cruise: 7000.,
-                                h_attack: 6706.,
+                                h_cruise: 9090.,
+                                h_attack: 9090.,
                                 standoff: None,
                                 t_station: 0,
                                 ldsd: false,
@@ -423,7 +501,7 @@ impl NewFromMission for Loadouts {
                         );
                         Ok(())
                     }
-                    "CAP" => {
+                    "cap" => {
                         unit_record.cap.as_mut().unwrap().insert(
                             u.name.to_owned(),
                             CAPLoadout {
@@ -433,12 +511,12 @@ impl NewFromMission for Loadouts {
                                 range: 2000000.,
                                 capability: 1,
                                 firepower: 1,
-                                v_cruise: 225.,
+                                v_cruise: 246.,
                                 v_attack: 246.,
-                                h_cruise: 6096.,
-                                h_attack: 6096.,
+                                h_cruise: 9090.,
+                                h_attack: 9090.,
                                 t_station: 2400,
-                                ldsd: false,
+                                ldsd: true,
                                 stores: u.payload.clone(),
                                 sortie_rate: 6,
                                 _airframe: u._type.to_owned(),
@@ -448,7 +526,7 @@ impl NewFromMission for Loadouts {
                         );
                         Ok(())
                     }
-                    "Anti-ship Strike" => {
+                    "anti-ship strike" => {
                         unit_record.anti_ship.as_mut().unwrap().insert(
                             u.name.to_owned(),
                             AntiShipLoadout {
@@ -466,9 +544,9 @@ impl NewFromMission for Loadouts {
                                 range: 500000.,
                                 capability: 1,
                                 firepower: 1,
-                                v_cruise: 225.,
+                                v_cruise: 246.,
                                 v_attack: 277.5,
-                                h_cruise: 7000.,
+                                h_cruise: 9090.,
                                 h_attack: 6706.,
                                 standoff: None,
                                 t_station: 0,
@@ -483,7 +561,7 @@ impl NewFromMission for Loadouts {
                         );
                         Ok(())
                     }
-                    "AWACS" => {
+                    "awacs" => {
                         unit_record.awacs.as_mut().unwrap().insert(
                             u.name.to_owned(),
                             AWACSLoadout {
@@ -495,8 +573,8 @@ impl NewFromMission for Loadouts {
                                 firepower: 1,
                                 v_cruise: 152.778,
                                 v_attack: 138.889,
-                                h_cruise: 7315.2,
-                                h_attack: 7315.2,
+                                h_cruise: 9090.2,
+                                h_attack: 9090.2,
                                 t_station: 14400,
                                 stores: u.payload.clone(),
                                 sortie_rate: 12,
@@ -507,7 +585,7 @@ impl NewFromMission for Loadouts {
                         );
                         Ok(())
                     }
-                    "Refueling" => {
+                    "refueling" => {
                         unit_record.aar.as_mut().unwrap().insert(
                             u.name.to_owned(),
                             AARLoadout {
@@ -531,7 +609,7 @@ impl NewFromMission for Loadouts {
                         );
                         Ok(())
                     }
-                    "Escort" => {
+                    "escort" => {
                         unit_record.escort.as_mut().unwrap().insert(
                             u.name.to_owned(),
                             EscortLoadout {
@@ -541,19 +619,19 @@ impl NewFromMission for Loadouts {
                                 range: 500000.,
                                 capability: 1,
                                 firepower: 1,
-                                v_cruise: 200.,
+                                v_cruise: 246.,
                                 stores: u.payload.clone(),
                                 sortie_rate: 12,
                                 _airframe: u._type.to_owned(),
                                 _name: u.name.to_owned(),
                                 ldsd: true,
-                                standoff: 50000.,
+                                standoff: 100000.,
                                 attributes: Vec::default(),
                             },
                         );
                         Ok(())
                     }
-                    "Intercept" => {
+                    "intercept" => {
                         unit_record.intercept.as_mut().unwrap().insert(
                             u.name.to_owned(),
                             InterceptLoadout {
@@ -573,7 +651,33 @@ impl NewFromMission for Loadouts {
                         );
                         Ok(())
                     }
-                    "SEAD" => {
+                    "fighter sweep" => {
+                        unit_record.sweep.as_mut().unwrap().insert(
+                            u.name.to_owned(),
+                            SweepLoadout {
+                                day: true,
+                                night: true,
+                                adverse_weather: true,
+                                range: 2000000.,
+                                capability: 1,
+                                firepower: 1,
+                                v_cruise: 246.,
+                                v_attack: 246.,
+                                h_cruise: 9096.,
+                                h_attack: 9096.,
+                                t_station: 2400,
+                                ldsd: false,
+                                stores: u.payload.clone(),
+                                sortie_rate: 6,
+                                _airframe: u._type.to_owned(),
+                                _name: u.name.to_owned(),
+                                attributes: Vec::default(),
+                                standoff: 50000.,
+                            },
+                        );
+                        Ok(())
+                    }
+                    "sead" => {
                         unit_record.sead.as_mut().unwrap().insert(
                             u.name.to_owned(),
                             SEADLoadout {
@@ -588,12 +692,12 @@ impl NewFromMission for Loadouts {
                                 _airframe: u._type.to_owned(),
                                 _name: u.name.to_owned(),
                                 attributes: Vec::default(),
-                                v_cruise: 200.,
+                                v_cruise: 246.,
                             },
                         );
                         Ok(())
                     }
-                    "Transport" => {
+                    "transport" => {
                         unit_record.transport.as_mut().unwrap().insert(
                             u.name.to_owned(),
                             TransportLoadout {
@@ -667,9 +771,16 @@ impl Editable for CAPLoadout {
         true
     }
 
+    fn can_delete() -> bool
+    where
+        Self: Sized,
+    {
+        true
+    }
+
     fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
         let new_loadouts =
-            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.mission)?);
+            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.miz_env)?);
 
         instance.loadouts.cap = new_loadouts.cap;
 
@@ -678,6 +789,78 @@ impl Editable for CAPLoadout {
 
     fn delete_by_name(instance: &mut DCEInstance, name: &str) -> Result<(), anyhow::Error> {
         let container = &mut instance.loadouts.cap;
+
+        if let Some(index) = container.iter().position(|i| i._name == name) {
+            container.remove(index);
+            return Ok(());
+        }
+
+        Err(anyhow!("Didn't find {}", name))
+    }
+}
+
+impl Editable for SweepLoadout {
+    fn get_header() -> Vec<HeaderField> {
+        let mut common = common_headers();
+        common.extend(vec![
+            HeaderField::new(
+                "t_station",
+                "Time on station (min)",
+                FieldType::DurationMin,
+                true,
+            ),
+            HeaderField::new("attributes", "Loadout Tags", FieldType::VecString, true),
+            HeaderField::new("standoff", "Engage Range (nm)", FieldType::DistanceNM, true),
+        ]);
+        common
+    }
+
+    fn get_mut_by_name<'a>(instance: &'a mut DCEInstance, name: &str) -> &'a mut Self {
+        instance
+            .loadouts
+            .sweep
+            .iter_mut()
+            .find(|item| item._name == name)
+            .unwrap()
+    }
+
+    fn get_name(&self) -> String {
+        self._name.to_owned()
+    }
+
+    fn validate(&self, _: &DCEInstance) -> ValidationResult {
+        let errors = Vec::default();
+
+        // todo: Probably want to put some limits on speeds/altitudes
+
+        if errors.is_empty() {
+            return ValidationResult::Pass;
+        }
+        ValidationResult::Fail(errors)
+    }
+
+    fn can_reset_from_miz() -> bool {
+        true
+    }
+
+    fn can_delete() -> bool
+    where
+        Self: Sized,
+    {
+        true
+    }
+
+    fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
+        let new_loadouts =
+            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.miz_env)?);
+
+        instance.loadouts.sweep = new_loadouts.sweep;
+
+        Ok(())
+    }
+
+    fn delete_by_name(instance: &mut DCEInstance, name: &str) -> Result<(), anyhow::Error> {
+        let container = &mut instance.loadouts.sweep;
 
         if let Some(index) = container.iter().position(|i| i._name == name) {
             container.remove(index);
@@ -730,9 +913,16 @@ impl Editable for AARLoadout {
         true
     }
 
+    fn can_delete() -> bool
+    where
+        Self: Sized,
+    {
+        true
+    }
+
     fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
         let new_loadouts =
-            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.mission)?);
+            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.miz_env)?);
 
         instance.loadouts.aar = new_loadouts.aar;
 
@@ -790,9 +980,16 @@ impl Editable for TransportLoadout {
         true
     }
 
+    fn can_delete() -> bool
+    where
+        Self: Sized,
+    {
+        true
+    }
+
     fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
         let new_loadouts =
-            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.mission)?);
+            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.miz_env)?);
 
         instance.loadouts.transport = new_loadouts.transport;
 
@@ -854,9 +1051,16 @@ impl Editable for AWACSLoadout {
         true
     }
 
+    fn can_delete() -> bool
+    where
+        Self: Sized,
+    {
+        true
+    }
+
     fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
         let new_loadouts =
-            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.mission)?);
+            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.miz_env)?);
 
         instance.loadouts.awacs = new_loadouts.awacs;
 
@@ -897,6 +1101,12 @@ impl Editable for StrikeLoadout {
                 FieldType::FixedEnum(vec!["All".into(), "Auto".into()]),
                 true,
             ),
+            HeaderField::new(
+                "support",
+                "Support Required",
+                FieldType::NestedEditable(Support::get_header()),
+                true,
+            ),
             HeaderField::new("attributes", "Loadout Tags", FieldType::VecString, true),
         ]);
         common
@@ -928,9 +1138,16 @@ impl Editable for StrikeLoadout {
         true
     }
 
+    fn can_delete() -> bool
+    where
+        Self: Sized,
+    {
+        true
+    }
+
     fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
         let new_loadouts =
-            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.mission)?);
+            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.miz_env)?);
 
         instance.loadouts.strike = new_loadouts.strike;
 
@@ -1001,9 +1218,16 @@ impl Editable for AntiShipLoadout {
         true
     }
 
+    fn can_delete() -> bool
+    where
+        Self: Sized,
+    {
+        true
+    }
+
     fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
         let new_loadouts =
-            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.mission)?);
+            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.miz_env)?);
 
         instance.loadouts.antiship = new_loadouts.antiship;
 
@@ -1064,9 +1288,16 @@ impl Editable for EscortLoadout {
         true
     }
 
+    fn can_delete() -> bool
+    where
+        Self: Sized,
+    {
+        true
+    }
+
     fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
         let new_loadouts =
-            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.mission)?);
+            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.miz_env)?);
 
         instance.loadouts.escort = new_loadouts.escort;
 
@@ -1126,9 +1357,16 @@ impl Editable for SEADLoadout {
         true
     }
 
+    fn can_delete() -> bool
+    where
+        Self: Sized,
+    {
+        true
+    }
+
     fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
         let new_loadouts =
-            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.mission)?);
+            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.miz_env)?);
 
         instance.loadouts.sead = new_loadouts.sead;
 
@@ -1185,11 +1423,20 @@ impl Editable for InterceptLoadout {
     }
 
     fn can_reset_from_miz() -> bool {
-        false
+        true
     }
 
     fn can_delete() -> bool {
-        false
+        true
+    }
+
+    fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
+        let new_loadouts =
+            LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&instance.miz_env)?);
+
+        instance.loadouts.intercept = new_loadouts.intercept;
+
+        Ok(())
     }
 
     fn delete_by_name(instance: &mut DCEInstance, name: &str) -> Result<(), anyhow::Error> {
@@ -1206,14 +1453,14 @@ impl Editable for InterceptLoadout {
 
 #[cfg(test)]
 mod tests {
-    use crate::{mission::Mission, serde_utils::LuaFileBased, NewFromMission};
+    use crate::{miz_environment::MizEnvironment, serde_utils::LuaFileBased, NewFromMission};
 
     use super::Loadouts;
 
     #[test]
     fn from_miz() {
-        let mission = Mission::from_miz("test_resources\\base_mission.miz".into()).unwrap();
-        let loadouts = Loadouts::new_from_mission(&mission).unwrap();
+        let miz = MizEnvironment::from_miz("test_resources\\base_mission.miz".into()).unwrap();
+        let loadouts = Loadouts::new_from_mission(&miz).unwrap();
 
         loadouts
             .to_lua_file("..\\target\\db_loadouts.lua".into(), "db_loadouts".into())

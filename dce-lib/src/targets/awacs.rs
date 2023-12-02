@@ -25,10 +25,6 @@ pub struct AWACS {
     #[serde(default)]
     pub _side: String,
     #[serde(default)]
-    pub _firepower_min: u32,
-    #[serde(default)]
-    pub _firepower_max: u32,
-    #[serde(default)]
     pub attributes: Vec<String>,
 }
 
@@ -77,7 +73,12 @@ impl Editable for AWACS {
                 "Side must be blue or red",
             ));
         }
-        if instance.mission.get_zone_by_name(&self.ref_point).is_err() {
+        if instance
+            .miz_env
+            .mission
+            .get_zone_by_name(&self.ref_point)
+            .is_err()
+        {
             errors.push(ValidationError::new(
                 "ref_point",
                 "AWACS Reference Zone",
@@ -96,7 +97,7 @@ impl Editable for AWACS {
 
     fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
         let new_target_list =
-            TargetListInternal::from_target_list(&TargetList::new_from_mission(&instance.mission)?);
+            TargetListInternal::from_target_list(&TargetList::new_from_mission(&instance.miz_env)?);
 
         instance.target_list.awacs = new_target_list.awacs;
 

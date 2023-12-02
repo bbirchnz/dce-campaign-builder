@@ -5,21 +5,22 @@ use std::{
 };
 
 use bin_data::{BinData, BinItem};
-use campaign_header::Header;
+use campaign_header::{Header, HeaderInternal};
 use cmp_file::CMPFile;
 use conf_mod::ConfMod;
 use db_airbases::DBAirbases;
 use db_airbases_internal::DBAirbasesInternal;
 use loadouts::Loadouts;
 use loadouts_internal::LoadoutsInternal;
-use mission::Mission;
-use mission_warehouses::Warehouses;
+
+use miz_environment::MizEnvironment;
 use oob_air::OobAir;
 use projections::{projection_from_theatre, TransverseMercator};
 use serde::{Deserialize, Serialize};
 use serde_utils::LuaFileBased;
 use target_list::TargetList;
 use target_list_internal::TargetListInternal;
+use targets::{intercept::Intercept, strike::Strike};
 use trigger::{flat_to_triggers, triggers_to_flat, Triggers, TriggersFlat};
 
 pub mod bin_data;
@@ -36,7 +37,10 @@ pub mod loadouts_internal;
 pub mod lua_utils;
 pub mod mappable;
 pub mod mission;
+pub mod mission_dictionary;
 pub mod mission_warehouses;
+pub mod miz_environment;
+pub mod miz_hacks;
 pub mod oob_air;
 pub mod projections;
 pub mod serde_utils;
@@ -49,96 +53,34 @@ pub mod trigger;
 pub struct DCEInstance {
     pub oob_air: OobAir,
     pub airbases: DBAirbasesInternal,
-    pub mission: Mission,
-    pub mission_warehouses: Warehouses,
+    pub miz_env: MizEnvironment,
     pub target_list: TargetListInternal,
     pub triggers: TriggersFlat,
     pub loadouts: LoadoutsInternal,
     pub projection: TransverseMercator,
     pub base_path: String,
-    pub campaign_header: Header,
+    pub campaign_header: HeaderInternal,
     pub conf_mod: ConfMod,
     pub bin_data: BinData,
 }
 
 impl DCEInstance {
-    pub fn new_from_existing_campaign(path: String) -> Result<DCEInstance, anyhow::Error> {
-        let mission = Mission::from_miz(&format!("{}/base_mission.miz", path))?;
-        let mission_warehouses = Warehouses::from_miz(&format!("{}/base_mission.miz", path))?;
-
-        let oob_air = OobAir::from_lua_file(format!("{}/oob_air_init.lua", path), "oob_air")?;
-
-        let airbases = DBAirbasesInternal::from_db_airbases(
-            &DBAirbases::from_lua_file(format!("{}/db_airbases.lua", path), "db_airbases")?,
-            &mission_warehouses,
-        );
-
-        let target_list = TargetListInternal::from_target_list(&TargetList::from_lua_file(
-            format!("{}/targetlist_init.lua", path),
-            "targetlist",
-        )?);
-
-        let triggers = triggers_to_flat(&Triggers::from_lua_file(
-            format!("{}/camp_triggers_init.lua", path),
-            "camp_triggers",
-        )?);
-
-        let conf_mod = ConfMod::from_lua_file(format!("{}/conf_mod.lua", path), "mission_ini")?;
-
-        let loadouts = LoadoutsInternal::from_loadouts(&Loadouts::from_lua_file(
-            format!("{}/db_loadouts.lua", path),
-            "db_loadouts",
-        )?);
-
-        let projection = projection_from_theatre(&mission.theatre)?;
-
-        let header = Header::from_lua_file(format!("{}/camp_init.lua", path), "camp")?;
-
-        let bin_data = BinData {
-            template_miz: BinItem::new_from_file(
-                "base_mission.miz",
-                &format!("{}/base_mission.miz", path),
-            )?,
-            images: Vec::default(),
-            sounds: vec![BinItem::from_stored_resource(
-                "alarme.wav",
-                include_bytes!("../resources/alarme.wav"),
-            )],
-        };
-
-        Ok(DCEInstance {
-            oob_air,
-            airbases,
-            mission,
-            mission_warehouses,
-            triggers,
-            target_list,
-            loadouts,
-            projection,
-            conf_mod,
-            base_path: path,
-            campaign_header: header,
-            bin_data,
-        })
-    }
-
     pub fn new_from_miz(miz_file: &str) -> Result<Self, anyhow::Error> {
         let path = Path::new(&miz_file);
         let base_path = path.parent().unwrap().to_str().unwrap().to_owned();
 
-        let mission = Mission::from_miz(miz_file)?;
-        let mission_warehouses = Warehouses::from_miz(miz_file)?;
+        // apply patches to miz:
+        let miz_file_str = miz_hacks::apply_all_to_file(miz_file)?;
+        // from here on out use the modded miz
+        let miz_file = &miz_file_str;
 
-        let airbases = DBAirbasesInternal::from_db_airbases(
-            &DBAirbases::new_from_mission(&mission)?,
-            &mission_warehouses,
-        );
+        let miz_env = MizEnvironment::from_miz(miz_file)?;
 
-        let mut oob_air = OobAir::new_from_mission(&mission)?;
+        let airbases =
+            DBAirbasesInternal::from_db_airbases(&DBAirbases::new_from_mission(&miz_env)?);
+
+        let mut oob_air = OobAir::new_from_mission(&miz_env)?;
         oob_air.set_player_defaults();
-        // this needs to happen after the conversion to DBAirbasesInternal as thats
-        // where the correct sides are set from the warehouses file
-        oob_air.set_to_closest_base(&mission, &airbases.to_db_airbases())?;
 
         let bin_data = BinData {
             template_miz: BinItem::new_from_file("base_mission.miz", miz_file)?,
@@ -149,22 +91,27 @@ impl DCEInstance {
             )],
         };
 
-        Ok(DCEInstance {
+        let mut dce_instance = DCEInstance {
             target_list: TargetListInternal::from_target_list(&TargetList::new_from_mission(
-                &mission,
+                &miz_env,
             )?),
             oob_air,
-            projection: projection_from_theatre(&mission.theatre)?,
+            projection: projection_from_theatre(&miz_env.mission.theatre)?,
             base_path,
-            campaign_header: Header::new_from_mission(&mission)?,
+            campaign_header: Header::new_from_mission(&miz_env)?.into(),
             airbases,
-            triggers: triggers_to_flat(&Triggers::new_from_mission(&mission)?),
-            loadouts: LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&mission)?),
+            triggers: triggers_to_flat(&Triggers::new_from_mission(&miz_env)?),
+            loadouts: LoadoutsInternal::from_loadouts(&Loadouts::new_from_mission(&miz_env)?),
             conf_mod: ConfMod::new(),
-            mission,
-            mission_warehouses,
+            miz_env,
             bin_data,
-        })
+        };
+
+        // apply intercepts and oca strikes that need the full environment
+        Intercept::generate_intercepts(&mut dce_instance)?;
+        Strike::generate_airbase_strikes(&mut dce_instance)?;
+
+        Ok(dce_instance)
     }
 
     pub fn save_to_json(&self, file_name: &str) -> Result<(), anyhow::Error> {
@@ -179,17 +126,23 @@ impl DCEInstance {
         Ok(instance)
     }
 
-    /// Replace the mission and mission warehouse tags with new content from the miz file
+    /// Replace the miz, mission and mission warehouse tags with new content from the miz file
     ///
     /// Use when you've updated the base mission, but don't want to start from scratch
     ///
     /// Will not replace any DCE content (targets, squadrons etc)
     pub fn replace_miz(&mut self, miz_file: &str) -> Result<(), anyhow::Error> {
-        let mission = Mission::from_miz(miz_file)?;
-        let mission_warehouses = Warehouses::from_miz(miz_file)?;
+        // apply patches to miz:
+        let miz_file_str = miz_hacks::apply_all_to_file(miz_file)?;
+        // from here on out use the modded miz
+        let miz_file = &miz_file_str;
 
-        self.mission = mission;
-        self.mission_warehouses = mission_warehouses;
+        let miz_env = MizEnvironment::from_miz(miz_file)?;
+
+        self.miz_env = miz_env;
+
+        let new_item = BinItem::new_from_file("base_mission.miz", miz_file)?;
+        self.bin_data.template_miz = new_item;
 
         Ok(())
     }
@@ -298,7 +251,8 @@ REM After each change, You must launch the FirsMission.bat for it to be taken in
                 .to_string(),
             "db_airbases",
         )?;
-        self.campaign_header.to_lua_file(
+        let header: Header = self.campaign_header.clone().into();
+        header.to_lua_file(
             init_path
                 .join("camp_init.lua")
                 .to_string_lossy()
@@ -425,7 +379,8 @@ REM After each change, You must launch the FirsMission.bat for it to be taken in
             &options,
         )?;
 
-        self.campaign_header.add_to_zip(
+        let header: Header = self.campaign_header.clone().into();
+        header.add_to_zip(
             "camp",
             &(campaign_folder.to_owned() + "init/camp_init.lua"),
             &mut zip,
@@ -475,47 +430,47 @@ REM After each change, You must launch the FirsMission.bat for it to be taken in
 }
 
 trait NewFromMission {
-    fn new_from_mission(mission: &Mission) -> Result<Self, anyhow::Error>
+    fn new_from_mission(mission: &MizEnvironment) -> Result<Self, anyhow::Error>
     where
         Self: Sized;
 }
 
 #[cfg(test)]
 mod tests {
+    use rstest::rstest;
+
     use super::*;
 
     #[test]
-    fn load_init() {
-        DCEInstance::new_from_existing_campaign("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\War over Tchad 1987-Blue-Mirage-F1EE-3-30 Lorraine\\Init".into()).unwrap();
-    }
-
-    #[test]
-    fn load_from_miz_and_generate() {
-        let mut new_instance = DCEInstance::new_from_miz("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\Falklands v1\\Init\\base_mission.miz".into()).unwrap();
-        new_instance.set_mission_name("Falklands v1".into());
-        new_instance.oob_air.set_player_defaults();
-        new_instance.export_dce_format("test_run\\".into()).unwrap();
-    }
-
-    #[test]
     fn json_serde() {
-        let mut instance = DCEInstance::new_from_miz("C:\\Users\\Ben\\Saved Games\\DCS.openbeta\\Mods\\tech\\DCE\\Missions\\Campaigns\\Falklands v1\\Init\\base_mission.miz".into()).unwrap();
+        let mut instance =
+            DCEInstance::new_from_miz("test_resources\\base_mission_falklands.miz").unwrap();
         instance.set_mission_name("Falklands v1".into());
         instance.save_to_json("test.json").unwrap();
 
         let second_instance = DCEInstance::load_from_json("test.json").unwrap();
 
-        assert_eq!(&instance.mission.theatre, &second_instance.mission.theatre);
+        assert_eq!(
+            &instance.miz_env.mission.theatre,
+            &second_instance.miz_env.mission.theatre
+        );
     }
 
     #[test]
     fn to_zip() {
         let mut new_instance =
-            DCEInstance::new_from_miz("test_resources\\base_mission.miz".into()).unwrap();
+            DCEInstance::new_from_miz("test_resources\\base_mission_falklands.miz").unwrap();
         new_instance.set_mission_name("Falklands v1".into());
         new_instance.oob_air.set_player_defaults();
-        new_instance
-            .export_dce_zip("test_run\\test.zip".into())
-            .unwrap();
+        new_instance.export_dce_zip("test.zip".into()).unwrap();
+    }
+
+    #[rstest]
+    #[case("test_resources\\base_mission_falklands.miz")]
+    #[case("test_resources\\base_mission_sinai_farps.miz")]
+    #[case("test_resources\\base_mission_syria.miz")]
+    #[case("test_resources\\sinai 80s.miz")]
+    fn from_miz(#[case] path: &str) {
+        DCEInstance::new_from_miz(path).unwrap();
     }
 }

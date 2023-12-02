@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::loadouts::{
     AARLoadout, AWACSLoadout, AirframeLoadout, AntiShipLoadout, CAPLoadout, EscortLoadout,
-    InterceptLoadout, Loadouts, SEADLoadout, StrikeLoadout, TransportLoadout,
+    InterceptLoadout, Loadouts, SEADLoadout, StrikeLoadout, TransportLoadout, SweepLoadout,
 };
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
@@ -16,6 +16,7 @@ pub struct LoadoutsInternal {
     pub escort: Vec<EscortLoadout>,
     pub sead: Vec<SEADLoadout>,
     pub intercept: Vec<InterceptLoadout>,
+    pub sweep: Vec<SweepLoadout>,
     pub transport: Vec<TransportLoadout>,
 }
 
@@ -29,6 +30,7 @@ impl LoadoutsInternal {
         let mut escort = Vec::default();
         let mut sead = Vec::default();
         let mut intercept = Vec::default();
+        let mut sweep = Vec::default();
         let mut transport = Vec::default();
 
         loadouts.iter().for_each(|(af, loadout_collection)| {
@@ -88,6 +90,14 @@ impl LoadoutsInternal {
                     intercept.push(v)
                 });
             }
+            if let Some(s) = &loadout_collection.sweep {
+                s.iter().for_each(|(name, v)| {
+                    let mut v = v.to_owned();
+                    v._airframe = af.to_owned();
+                    v._name = name.to_owned();
+                    sweep.push(v)
+                });
+            }
             if let Some(s) = &loadout_collection.sead {
                 s.iter().for_each(|(name, v)| {
                     let mut v = v.to_owned();
@@ -114,6 +124,7 @@ impl LoadoutsInternal {
             aar,
             escort,
             intercept,
+            sweep,
             sead,
             transport,
         }
@@ -205,6 +216,17 @@ impl LoadoutsInternal {
                 .or_insert(AirframeLoadout::default());
             unit_record
                 .intercept
+                .as_mut()
+                .unwrap()
+                .insert(l._name.to_owned(), l.to_owned());
+        });
+
+        self.sweep.iter().for_each(|l| {
+            let unit_record = loadout
+                .entry(l._airframe.to_owned())
+                .or_insert(AirframeLoadout::default());
+            unit_record
+                .sweep
                 .as_mut()
                 .unwrap()
                 .insert(l._name.to_owned(), l.to_owned());

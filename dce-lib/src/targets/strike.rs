@@ -1,7 +1,8 @@
 use super::TargetFirepower;
 use crate::{
     editable::{
-        Editable, EntityTemplateAction, FieldType, HeaderField, ValidationError, ValidationResult,
+        AllEntityTemplateAction, Editable, EntityTemplateAction, FieldType, HeaderField,
+        NestedEditable, ValidationError, ValidationResult,
     },
     target_list::TargetList,
     target_list_internal::TargetListInternal,
@@ -29,10 +30,6 @@ pub struct Strike {
     pub _name: String,
     #[serde(default)]
     pub _side: String,
-    #[serde(default)]
-    pub _firepower_min: u32,
-    #[serde(default)]
-    pub _firepower_max: u32,
     #[serde(default)]
     pub attributes: Vec<String>,
     #[serde(default)]
@@ -68,8 +65,12 @@ impl Editable for Strike {
             HeaderField::new("text", "Display Text", FieldType::String, true),
             HeaderField::new("_side", "Side", FieldType::String, false),
             HeaderField::new("priority", "Priority", FieldType::Int, true),
-            HeaderField::new("_firepower_min", "Min Req Firepower", FieldType::Int, true),
-            HeaderField::new("_firepower_max", "Max Req Firepower", FieldType::Int, true),
+            HeaderField::new(
+                "firepower",
+                "Firepower Required",
+                FieldType::NestedEditable(TargetFirepower::get_header()),
+                true,
+            ),
             HeaderField::new("inactive", "Inactive", FieldType::Bool, true),
             HeaderField::new(
                 "class_template",
@@ -103,10 +104,18 @@ impl Editable for Strike {
                 "Side must be blue or red",
             ));
         }
+
+        if let ValidationResult::Fail(mut firepower_errors) =
+            TargetFirepower::validate(&self.firepower, instance)
+        {
+            errors.append(&mut firepower_errors)
+        }
+
         if let Some(vg_name) = self.class_template.clone() {
             match self.class.as_ref() {
                 Some(class) if class.as_str() == "vehicle" => {
                     if !instance
+                        .miz_env
                         .mission
                         .get_vehicle_groups()
                         .iter()
@@ -121,6 +130,7 @@ impl Editable for Strike {
                 }
                 Some(class) if class.as_str() == "ship" => {
                     if !instance
+                        .miz_env
                         .mission
                         .get_ship_groups()
                         .iter()
@@ -133,13 +143,27 @@ impl Editable for Strike {
                         ));
                     }
                 }
+                Some(class) if class.as_str() == "airbase" => {
+                    if !instance
+                        .airbases
+                        .fixed
+                        .iter()
+                        .any(|f| f.get_name() == vg_name)
+                    {
+                        errors.push(ValidationError::new(
+                            "class_template",
+                            "Target group name",
+                            "Target group must be a fixed airbase name if class is airbase",
+                        ))
+                    }
+                }
                 _ => {
                     // only an error if elements is None
                     if self.elements.is_none() {
                         errors.push(ValidationError::new(
                             "class",
                             "Target Class",
-                            "Target class must be vehicle or ship",
+                            "Target class must be vehicle, ship, or airbase",
                         ));
                     }
                 }
@@ -171,7 +195,7 @@ impl Editable for Strike {
 
     fn reset_all_from_miz(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
         let new_target_list =
-            TargetListInternal::from_target_list(&TargetList::new_from_mission(&instance.mission)?);
+            TargetListInternal::from_target_list(&TargetList::new_from_mission(&instance.miz_env)?);
 
         instance.target_list.strike = new_target_list.strike;
 
@@ -223,5 +247,54 @@ impl Editable for Strike {
         });
 
         vec![hide_action]
+    }
+
+    fn actions_all_entities() -> Vec<crate::editable::AllEntityTemplateAction> {
+        vec![AllEntityTemplateAction::new(
+            "Generate OCA Strikes",
+            "Generates an OCA strike for all airbases with squadrons",
+            Strike::generate_airbase_strikes,
+        )]
+    }
+}
+
+impl Strike {
+    pub fn generate_airbase_strikes(instance: &mut DCEInstance) -> Result<(), anyhow::Error> {
+        let mut new_strikes: Vec<Strike> = Vec::default();
+
+        // for each airbase with a squadron, generate a strike target
+        instance
+            .airbases
+            .fixed
+            .iter()
+            .filter(|fixed| {
+                fixed.side != "neutral"
+                    && instance.oob_air.squadrons_for_airbase(&fixed._name).len() > 0
+            })
+            .for_each(|fixed| {
+                let name = fixed.get_name() + " OCA Strike";
+                new_strikes.push(Strike {
+                    priority: 1,
+                    text: name.to_owned(),
+                    inactive: false,
+                    firepower: TargetFirepower { min: 2, max: 2 },
+                    class: Some("airbase".to_string()),
+                    class_template: Some(fixed.get_name()),
+                    elements: None,
+                    _name: name.to_owned(),
+                    _side: if fixed.side == "red" {
+                        "blue".to_string()
+                    } else {
+                        "red".to_string()
+                    },
+                    attributes: Vec::default(),
+                    picture: Vec::default(),
+                })
+            });
+
+        let strikes = &mut instance.target_list.strike;
+        strikes.append(&mut new_strikes);
+
+        Ok(())
     }
 }

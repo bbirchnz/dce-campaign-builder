@@ -1,6 +1,7 @@
 use dce_lib::{
-    campaign_header::Header,
-    db_airbases::{AirStartBase, FixedAirBase, ShipBase},
+    bin_data::BinItem,
+    campaign_header::HeaderInternal,
+    db_airbases::{AirStartBase, FarpBase, FixedAirBase, ShipBase},
     loadouts::{
         AARLoadout, AWACSLoadout, AntiShipLoadout, CAPLoadout, EscortLoadout, InterceptLoadout,
         SEADLoadout, StrikeLoadout, TransportLoadout,
@@ -26,9 +27,10 @@ pub enum Selectable {
     // has to be option as there might not be any defined
     TargetIntercept(Option<Intercept>),
     FixedAirBase(Option<FixedAirBase>),
+    FARPBase(Option<FarpBase>),
     ShipAirBase(Option<ShipBase>),
     AirstartBase(Option<AirStartBase>),
-    CampaignSettings(Header),
+    CampaignSettings(HeaderInternal),
     LoadoutCAP(Option<CAPLoadout>),
     LoadoutStrike(Option<StrikeLoadout>),
     LoadoutAntiship(Option<AntiShipLoadout>),
@@ -39,6 +41,7 @@ pub enum Selectable {
     LoadoutSEAD(Option<SEADLoadout>),
     LoadoutTransport(Option<TransportLoadout>),
     Trigger(Option<Trigger>),
+    Image(Option<BinItem>),
     None,
 }
 
@@ -135,6 +138,16 @@ impl Selectable {
                     .unwrap()
                     .clone();
                 Selectable::AirstartBase(Some(item))
+            }
+            "FARP" => {
+                let item = instance
+                    .airbases
+                    .farp
+                    .iter()
+                    .find(|item| item._name == map_point.name)
+                    .unwrap()
+                    .clone();
+                Selectable::FARPBase(Some(item))
             }
             _ => Selectable::None,
         }
@@ -306,7 +319,7 @@ impl ToSelectable for ShipBase {
     }
 }
 
-impl ToSelectable for Header {
+impl ToSelectable for HeaderInternal {
     fn to_selectable(&self) -> Selectable {
         Selectable::CampaignSettings(self.clone())
     }
@@ -473,6 +486,38 @@ impl ToSelectable for Trigger {
         Self: Sized,
     {
         if let Selectable::Trigger(Some(trigger)) = sel {
+            return Some(trigger.clone());
+        }
+        None
+    }
+}
+
+impl ToSelectable for FarpBase {
+    fn to_selectable(&self) -> Selectable {
+        Selectable::FARPBase(Some(self.to_owned()))
+    }
+
+    fn from_selectable(sel: &Selectable) -> Option<Self>
+    where
+        Self: Sized,
+    {
+        if let Selectable::FARPBase(Some(trigger)) = sel {
+            return Some(trigger.clone());
+        }
+        None
+    }
+}
+
+impl ToSelectable for BinItem {
+    fn to_selectable(&self) -> Selectable {
+        Selectable::Image(Some(self.to_owned()))
+    }
+
+    fn from_selectable(sel: &Selectable) -> Option<Self>
+    where
+        Self: Sized,
+    {
+        if let Selectable::Image(Some(trigger)) = sel {
             return Some(trigger.clone());
         }
         None

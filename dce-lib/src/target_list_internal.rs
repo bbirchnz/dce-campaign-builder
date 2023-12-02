@@ -109,9 +109,7 @@ impl TargetListInternal {
         let mut red = HashMap::default();
 
         self.antiship.iter().try_for_each(|item| {
-            let mut item = item.clone();
-            item.firepower.min = item._firepower_min;
-            item.firepower.max = item._firepower_max;
+            let item = item.clone();
 
             match item._side.as_str() {
                 "blue" => {
@@ -126,9 +124,7 @@ impl TargetListInternal {
         })?;
 
         self.cap.iter().try_for_each(|item| {
-            let mut item = item.clone();
-            item.firepower.min = item._firepower_min;
-            item.firepower.max = item._firepower_max;
+            let item = item.clone();
 
             match item._side.as_str() {
                 "blue" => {
@@ -143,9 +139,7 @@ impl TargetListInternal {
         })?;
 
         self.intercept.iter().try_for_each(|item| {
-            let mut item = item.clone();
-            item.firepower.min = item._firepower_min;
-            item.firepower.max = item._firepower_max;
+            let item = item.clone();
 
             match item._side.as_str() {
                 "blue" => {
@@ -160,9 +154,7 @@ impl TargetListInternal {
         })?;
 
         self.strike.iter().try_for_each(|item| {
-            let mut item = item.clone();
-            item.firepower.min = item._firepower_min;
-            item.firepower.max = item._firepower_max;
+            let item = item.clone();
 
             match item._side.as_str() {
                 "blue" => {
@@ -177,9 +169,7 @@ impl TargetListInternal {
         })?;
 
         self.fighter_sweep.iter().try_for_each(|item| {
-            let mut item = item.clone();
-            item.firepower.min = item._firepower_min;
-            item.firepower.max = item._firepower_max;
+            let item = item.clone();
 
             match item._side.as_str() {
                 "blue" => {
@@ -230,12 +220,12 @@ impl Mappables for TargetListInternal {
         proj: &Proj,
     ) -> Vec<crate::mappable::MapPoint> {
         let mut map_points = Vec::default();
-        let all_vehicle_groups = instance.mission.get_vehicle_groups();
-        let all_static_groups = instance.mission.get_static_groups();
-        let all_ship_groups = instance.mission.get_ship_groups();
+        let all_vehicle_groups = instance.miz_env.mission.get_vehicle_groups();
+        let all_static_groups = instance.miz_env.mission.get_static_groups();
+        let all_ship_groups = instance.miz_env.mission.get_ship_groups();
 
         self.cap.iter().for_each(|cap| {
-            let zone = instance.mission.get_zone_by_name(&cap.ref_point);
+            let zone = instance.miz_env.mission.get_zone_by_name(&cap.ref_point);
             match zone {
                 Ok(zone) => {
                     let (x2, y2) = offset(zone.x, zone.y, cap.axis, cap.radius);
@@ -265,7 +255,7 @@ impl Mappables for TargetListInternal {
         });
 
         self.refuel.iter().for_each(|refuel| {
-            let zone = instance.mission.get_zone_by_name(&refuel.ref_point);
+            let zone = instance.miz_env.mission.get_zone_by_name(&refuel.ref_point);
             match zone {
                 Ok(zone) => {
                     let (x2, y2) = offset(zone.x, zone.y, refuel.axis, refuel.radius);
@@ -295,7 +285,7 @@ impl Mappables for TargetListInternal {
         });
 
         self.awacs.iter().for_each(|awacs| {
-            let zone = instance.mission.get_zone_by_name(&awacs.ref_point);
+            let zone = instance.miz_env.mission.get_zone_by_name(&awacs.ref_point);
             match zone {
                 Ok(zone) => {
                     let (x2, y2) = offset(zone.x, zone.y, awacs.axis, awacs.radius);

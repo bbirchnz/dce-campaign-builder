@@ -60,6 +60,13 @@ pub const SY: TransverseMercator = TransverseMercator {
     scale_factor: 0.9996,
 };
 
+pub const SI: TransverseMercator = TransverseMercator {
+    central_meridian: 33,
+    false_easting: 169221.9999999585,
+    false_northing: -3325312.9999999693,
+    scale_factor: 0.9996,
+};
+
 pub fn projection_from_theatre(theatre: &str) -> Result<TransverseMercator, anyhow::Error> {
     match theatre {
         "PersianGulf" => Ok(PG),
@@ -69,6 +76,7 @@ pub fn projection_from_theatre(theatre: &str) -> Result<TransverseMercator, anyh
         "Nevada" => Ok(NV),
         "Normandy" => Ok(NORM),
         "Syria" => Ok(SY),
+        "SinaiMap" => Ok(SI),
         _ => Err(anyhow!("TransverseMercator not known for {}", theatre)),
     }
 }

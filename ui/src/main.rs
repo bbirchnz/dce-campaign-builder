@@ -101,9 +101,12 @@ fn main() {
                 // remove leading '/' from path
                 let requested_image = req.uri().path().strip_prefix('/').unwrap();
 
+                // remove any url encoding (spaces etc)
+                let decoded = urlencoding::decode(requested_image).expect("UTF-8");
+
                 // now see if we've got the image requested:
                 if let Some(v) = image_vec.borrow().as_ref() {
-                    if let Some(image) = v.iter().find(|bd| bd.name == requested_image) {
+                    if let Some(image) = v.iter().find(|bd| bd.name == decoded) {
                         let response = Response::builder()
                             .header("Content-Type", "image/png")
                             .header("Content-Length", image.data.len().to_string())

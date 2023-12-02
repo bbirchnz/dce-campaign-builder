@@ -14,7 +14,15 @@ pub struct ImageEditProps {
 }
 
 pub fn image_edit(cx: Scope<ImageEditProps>) -> Element {
-    let item_from_props = BinItem::from_selectable(&cx.props.item).unwrap();
+    let binitem_from_props = BinItem::from_selectable(&cx.props.item);
+
+    if binitem_from_props.is_none() {
+        return cx.render(rsx! {
+            "Nothing to edit"
+        });
+    }
+
+    let item_from_props = binitem_from_props.unwrap();
     let item_state = use_state(cx, || item_from_props.to_owned());
     let orig_name = use_state(cx, || item_state.get().name.to_owned());
 

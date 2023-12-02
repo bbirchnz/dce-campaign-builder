@@ -103,7 +103,7 @@ pub struct VehicleGroupDummy {
 pub struct VehicleGroup {
     pub visible: bool,
     pub uncontrollable: bool,
-    pub task: String,
+    pub task: Option<String>,
     // pub route: Route,
     #[serde(rename = "groupId")]
     pub group_id: u64,

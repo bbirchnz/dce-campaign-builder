@@ -469,7 +469,7 @@ impl Editable for Squadron {
     }
 }
 
-fn convert_loadouts<T>(items: &[&T]) -> Vec<Box<dyn Editable>>
+fn convert_loadouts<T>(_: &[&T]) -> Vec<Box<dyn Editable>>
 where
     T: Editable,
 {

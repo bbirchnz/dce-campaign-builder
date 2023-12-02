@@ -4,7 +4,10 @@ use bevy_reflect::{FromReflect, Reflect};
 use mlua::LuaSerdeExt;
 use serde::{Deserialize, Serialize};
 
-use crate::serde_utils::LuaFileBased;
+use crate::{
+    editable::{Editable, FieldType, HeaderField, ValidationResult},
+    serde_utils::LuaFileBased,
+};
 
 #[derive(Deserialize, Serialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
 pub struct ConfMod {
@@ -164,6 +167,76 @@ impl ConfMod {
                 },
             },
         }
+    }
+}
+
+impl Editable for ConfMod {
+    fn get_name(&self) -> String {
+        "conf_mod".into()
+    }
+
+    fn validate(&self, _: &crate::DCEInstance) -> crate::editable::ValidationResult {
+        ValidationResult::Pass
+    }
+
+    fn get_mut_by_name<'a>(instance: &'a mut crate::DCEInstance, _: &str) -> &'a mut Self
+    where
+        Self: Sized,
+    {
+        &mut instance.conf_mod
+    }
+
+    fn get_header() -> Vec<crate::editable::HeaderField>
+    where
+        Self: Sized,
+    {
+        vec![
+            HeaderField::new(
+                "startup_time_player",
+                "Startup time for Player",
+                FieldType::IntTime,
+                true,
+            ),
+            HeaderField::new(
+                "parking_hotstart",
+                "Start Parking Hot",
+                FieldType::Bool,
+                true,
+            ),
+            HeaderField::new(
+                "only_day_mission",
+                "Only Day Missions?",
+                FieldType::Bool,
+                true,
+            ),
+            HeaderField::new(
+                "hourly_tolerance",
+                "Day mission tolerance time",
+                FieldType::Int,
+                true,
+            ),
+            HeaderField::new(
+                "move_bullseye",
+                "Move Bullseye each mission",
+                FieldType::Bool,
+                true,
+            ),
+            HeaderField::new(
+                "mp_plane_recovery",
+                "MP recovery slots per flight",
+                FieldType::Int,
+                true,
+            ),
+        ]
+    }
+
+    fn delete_by_name(_: &mut crate::DCEInstance, _: &str) -> Result<(), anyhow::Error>
+    where
+        Self: Sized,
+    {
+        Err(anyhow::anyhow!(
+            "Can't delete the configuration modifications!"
+        ))
     }
 }
 

@@ -1,6 +1,7 @@
 use dce_lib::{
     bin_data::BinItem,
     campaign_header::HeaderInternal,
+    conf_mod::ConfMod,
     db_airbases::{AirStartBase, FarpBase, FixedAirBase, ShipBase},
     loadouts::{
         AARLoadout, AWACSLoadout, AntiShipLoadout, CAPLoadout, EscortLoadout, InterceptLoadout,
@@ -31,6 +32,7 @@ pub enum Selectable {
     ShipAirBase(Option<ShipBase>),
     AirstartBase(Option<AirStartBase>),
     CampaignSettings(HeaderInternal),
+    ConfigurationMod(ConfMod),
     LoadoutCAP(Option<CAPLoadout>),
     LoadoutStrike(Option<StrikeLoadout>),
     LoadoutAntiship(Option<AntiShipLoadout>),
@@ -329,6 +331,22 @@ impl ToSelectable for HeaderInternal {
         Self: Sized,
     {
         if let Selectable::CampaignSettings(header) = sel {
+            return Some(header.clone());
+        }
+        None
+    }
+}
+
+impl ToSelectable for ConfMod {
+    fn to_selectable(&self) -> Selectable {
+        Selectable::ConfigurationMod(self.clone())
+    }
+
+    fn from_selectable(sel: &Selectable) -> Option<Self>
+    where
+        Self: Sized,
+    {
+        if let Selectable::ConfigurationMod(header) = sel {
             return Some(header.clone());
         }
         None

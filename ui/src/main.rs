@@ -18,7 +18,7 @@ use dce_lib::{
         refueling::Refueling, strike::Strike,
     },
     trigger::Trigger,
-    DCEInstance,
+    DCEInstance, conf_mod::ConfMod,
 };
 
 use dioxus::prelude::*;
@@ -392,11 +392,16 @@ fn main_body(cx: Scope) -> Element {
                 }
                 icon_button {
                     path: "images/settings_grey.png".into(),
+                    on_click: |_| select_configuration_mod(cx),
+                    tooltip: "Configuration"
+                }
+                icon_button {
+                    path: "images/triggers.svg".into(),
                     on_click: |_| select_first_trigger(cx),
                     tooltip: "Campaign actions and triggers"
                 }
                 icon_button {
-                    path: "images/settings_grey.png".into(),
+                    path: "images/images.svg".into(),
                     on_click: |_| select_first_image(cx),
                     tooltip: "Campaign and target images"
                 }
@@ -439,6 +444,9 @@ fn main_body(cx: Scope) -> Element {
                     },
                     Selectable::CampaignSettings(_) => rsx!{
                         edit_form::<HeaderInternal> { headers: HeaderInternal::get_header(), title: "Campaign Settings".into(), item: selected_form.clone()}
+                    },
+                    Selectable::ConfigurationMod(_) => rsx!{
+                        edit_form::<ConfMod> { headers: ConfMod::get_header(), title: "Configuration".into(), item: selected_form.clone()}
                     },
                     Selectable::LoadoutCAP(_) => rsx!{
                         edit_form::<CAPLoadout> { headers: CAPLoadout::get_header(), title: "Edit CAP Loadout".into(), item: selected_form.clone()}
@@ -556,7 +564,7 @@ fn main_body(cx: Scope) -> Element {
                         Selectable::Image(_) => rsx! {
                             image_table {data: instance.bin_data.images.to_vec()}
                         },
-                        Selectable::None | Selectable::CampaignSettings(_) => rsx! {
+                        Selectable::None | Selectable::CampaignSettings(_) | Selectable::ConfigurationMod(_) => rsx! {
                             {}
                         },
                         }

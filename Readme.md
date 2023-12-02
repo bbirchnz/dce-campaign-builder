@@ -42,8 +42,8 @@ This is built in Rust with [Dioxus](https://dioxuslabs.com/) as the UI library. 
 - [x] Edit home bases
 - [x] Set task priorities
 - [x] Support DCE triggers
-- [ ] Intercepts for base protection
-- [ ] Add extra resources (briefing text and images)
+- [x] Intercepts for base protection
+- [x] Add extra resources (briefing text and images)
 
 and many more.
   

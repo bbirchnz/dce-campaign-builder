@@ -206,13 +206,13 @@ pub fn menu_bar(cx: Scope<MenuBarProps>) -> Element {
 }
 
 #[derive(Props)]
-struct IconButtonProps<'a> {
+pub struct IconButtonProps<'a> {
     onclick: EventHandler<'a, MouseEvent>,
     tooltip: Option<&'a str>,
     children: Element<'a>,
 }
 
-fn icon_button<'a>(cx: Scope<'a, IconButtonProps<'a>>) -> Element<'a> {
+pub fn icon_button<'a>(cx: Scope<'a, IconButtonProps<'a>>) -> Element<'a> {
     cx.render(rsx! {
         div {
             class: "flex items-center font-thin px-4 hover:bg-neutral-300 icon tooltip",

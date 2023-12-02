@@ -1,10 +1,13 @@
+use copypasta::{ClipboardContext, ClipboardProvider};
 use dce_lib::bin_data::BinItem;
 use dioxus::prelude::*;
+
+use crate::{
+    rsx::icon_button, selectable::ToSelectable, IMAGE_LIST_TX, INSTANCE, INSTANCE_DIRTY, SELECTED,
+};
 use fermi::{use_atom_ref, use_atom_state};
 use log::trace;
 use native_dialog::FileDialog;
-
-use crate::{selectable::ToSelectable, IMAGE_LIST_TX, INSTANCE, INSTANCE_DIRTY, SELECTED};
 
 #[derive(PartialEq, Props)]
 pub struct ImageTableProps {
@@ -35,7 +38,16 @@ pub fn image_table(cx: Scope<ImageTableProps>) -> Element {
                                 // add to instance
                                 let mut atom_instance = atom_instance.write();
                                 let mut_instance = atom_instance.as_mut().expect("DCE instance is loaded");
-                                mut_instance.bin_data.images.push(bin_item);
+                                
+                                // check if it exists:
+                                if let Some(existing_item) = mut_instance.bin_data.images.iter_mut().find(|i| i.name.as_str() == file_name) {
+                                    log::trace!("Image already exists with name {}, replacing data", file_name);
+                                    existing_item.data = bin_item.data;
+                                } else {
+                                    log::trace!("Added new image with name {}", file_name);
+                                    mut_instance.bin_data.images.push(bin_item);
+                                }
+                                
                                 // set as dirty
                                 atom_dirty.set(true);
                                 // update bin_images vec:
@@ -57,15 +69,34 @@ pub fn image_table(cx: Scope<ImageTableProps>) -> Element {
         div { class: "grid grid-flow-col auto-cols-max ml-2 mr-2 items-center",
             for image in cx.props.data.iter() {
                 rsx! {
-                img {
-                    class: "mt-1 mb-1 p-1 rounded hover:bg-sky-600",
-                    onclick: move |_| {
-                        let mut selected = atom_selected.write();
-                        trace!("Clicked image {:?}", image.name.to_owned());
-                        *selected = image.to_selectable();
-                    },
-                    src: "https://imagesprotocol.example/{image.name}",
-                    width: 200,
+                div {
+                    class: "mt-1 mb-1 p-1 rounded hover:bg-sky-600", 
+                    img {
+                        class: "",
+                        onclick: move |_| {
+                            let mut selected = atom_selected.write();
+                            trace!("Clicked image {:?}", image.name.to_owned());
+                            *selected = image.to_selectable();
+                        },
+                        src: "https://imagesprotocol.example/{image.name}",
+                        width: 200,
+                    }
+                    div {
+                        class: "flex",
+                        span {
+                            class: "select-text flex-grow",
+                            "{image.name}"
+                        }
+                        icon_button {
+                            onclick: move |_| {
+                                let mut ctx = ClipboardContext::new().unwrap();
+
+                                ctx.set_contents(image.name.to_owned()).expect("Can write to clipboard");
+                            },
+                            tooltip: "Copy filename to clipboard",
+                            "\u{E8C8}"
+                        }
+                    }
                 }
                 }
             }

@@ -84,17 +84,7 @@ impl DCEInstance {
 
         let bin_data = BinData {
             template_miz: BinItem::new_from_file("base_mission.miz", miz_file)?,
-            // images: Vec::default(),
-            images: vec![
-                BinItem::from_stored_resource(
-                    "Frontline.png",
-                    include_bytes!("../resources/Frontline.png"),
-                ),
-                BinItem::from_stored_resource(
-                    "Aozou.png",
-                    include_bytes!("../resources/Aozou.png"),
-                ),
-            ],
+            images: Vec::default(),
             sounds: vec![BinItem::from_stored_resource(
                 "alarme.wav",
                 include_bytes!("../resources/alarme.wav"),

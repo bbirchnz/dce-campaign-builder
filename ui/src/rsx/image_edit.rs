@@ -1,11 +1,11 @@
 use dce_lib::bin_data::BinItem;
 use dioxus::prelude::*;
-use fermi::{use_atom_ref, use_atom_state};
+use fermi::use_atom_ref;
 use log::trace;
 
 use crate::{
     selectable::{Selectable, ToSelectable},
-    INSTANCE, INSTANCE_DIRTY, SELECTED,
+    SELECTED,
 };
 
 #[derive(PartialEq, Props)]
@@ -14,9 +14,6 @@ pub struct ImageEditProps {
 }
 
 pub fn image_edit(cx: Scope<ImageEditProps>) -> Element {
-    let atom_instance = use_atom_ref(cx, INSTANCE);
-    let atom_dirty = use_atom_state(cx, INSTANCE_DIRTY);
-
     let item_from_props = BinItem::from_selectable(&cx.props.item).unwrap();
     let item_state = use_state(cx, || item_from_props.to_owned());
     let orig_name = use_state(cx, || item_state.get().name.to_owned());
@@ -44,7 +41,7 @@ pub fn image_edit(cx: Scope<ImageEditProps>) -> Element {
                 class: "mt-1 mb-1 p-1 rounded",
                 src: "https://imagesprotocol.example/{item_state.name}"
             }
-            h4 { class: "w-full text-center", "{item_state.name}" }
+            h4 { class: "w-full text-center select-text", "{item_state.name}" }
         }
     }
 )

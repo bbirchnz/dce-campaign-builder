@@ -88,6 +88,14 @@ pub fn menu_bar(cx: Scope<MenuBarProps>) -> Element {
         match result {
             Ok(Some(path)) => match DCEInstance::load_from_json(&path.to_string_lossy()) {
                 Ok(new_instance) => {
+                    // update bin_images vec:
+                    let readable = atom_image_tx.read();
+                    readable
+                        .as_ref()
+                        .unwrap()
+                        .send(new_instance.bin_data.images.clone())
+                        .unwrap();
+
                     let mut writable = atom_instance.write();
                     let _ = writable.insert(new_instance);
                 }

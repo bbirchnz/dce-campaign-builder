@@ -287,7 +287,7 @@ impl Strike {
                     } else {
                         "red".to_string()
                     },
-                    attributes: Vec::default(),
+                    attributes: vec!["parked_aircraft".into()],
                     picture: Vec::default(),
                 })
             });

@@ -168,7 +168,7 @@ impl NewFromMission for TargetList {
                     _ => &mut red_targets,
                 };
 
-                if name_splits[0] == "STRIKE" {
+                if name_splits[0].to_lowercase().as_str() == "strike" {
                     targets.insert(
                         name_splits[1].to_owned(),
                         Target::Strike(Strike {
@@ -221,9 +221,9 @@ impl NewFromMission for TargetList {
         .flat_map(|(sgd, side)| sgd.groups.as_slice().iter().zip(repeat(side)))
         .for_each(|(sg, side)| {
             let name_splits = sg.name.split('_').collect::<Vec<_>>();
-            let targets = match side {
+            let targets = match side.to_lowercase().as_str() {
                 // target group with red side = target for blue to attack
-                "BLUE" => &mut red_targets,
+                "blue" => &mut red_targets,
                 _ => &mut blue_targets,
             };
 

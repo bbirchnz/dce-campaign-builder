@@ -618,7 +618,7 @@ fn popout_menu<'a>(cx: Scope<'a, PopoutMenuProps<'a>>) -> Element<'a> {
     cx.render(rsx! {
         div { class: "dropdown relative inline-block",
             div { icon_button { path: cx.props.base_icon_url.into(), on_click: |e| cx.props.onclick.call(e) } }
-            div { class: "dropdown-content rounded-r-lg flex flex-col items-end pr-1 hidden absolute bg-sky-500 w-12 left-10 top-0",
+            div { class: "dropdown-content rounded-r-lg flex flex-col items-end pr-1 absolute bg-sky-500 w-12 left-10 top-0",
                 &cx.props.children
             }
         }

@@ -17,7 +17,7 @@ use dce_lib::{
     DCEInstance,
 };
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Debug)]
 pub enum Selectable {
     Squadron(Option<Squadron>),
     TargetStrike(Option<Strike>),

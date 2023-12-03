@@ -1,3 +1,5 @@
+use std::collections::VecDeque;
+
 use dce_lib::DCEInstance;
 use dioxus::prelude::*;
 use dioxus_desktop::use_window;
@@ -5,7 +7,7 @@ use fermi::{use_atom_ref, use_atom_state};
 use log::{trace, warn};
 use native_dialog::FileDialog;
 
-use crate::{IMAGE_LIST_TX, INSTANCE, INSTANCE_DIRTY};
+use crate::{selectable::Selectable, IMAGE_LIST_TX, INSTANCE, INSTANCE_DIRTY, SELECTED};
 
 #[derive(PartialEq, Props)]
 pub struct MenuBarProps {
@@ -183,7 +185,8 @@ pub fn menu_bar(cx: Scope<MenuBarProps>) -> Element {
                         tooltip: "Generate zip for DCE_Manager",
                         ""
                     }
-            }
+                    navigation_buttons {}
+                }
             }
             div {
                 class: "flex flex-grow items-center justify-center",
@@ -226,6 +229,64 @@ pub fn icon_button<'a>(cx: Scope<'a, IconButtonProps<'a>>) -> Element<'a> {
                 }
             }
             &cx.props.children
+        }
+    })
+}
+
+pub fn navigation_buttons(cx: Scope) -> Element {
+    let back_items: &UseRef<VecDeque<Selectable>> = use_ref(cx, || VecDeque::default());
+    let current_item = use_state(cx, || Selectable::None);
+    let forward_item = use_state(cx, || Selectable::None);
+
+    let atom_selected = use_atom_ref(cx, SELECTED);
+    // if a new selectable
+    if *current_item.get() != *atom_selected.read() {
+        log::trace!("Got a new selected item, pushing");
+        back_items.with_mut(|items| items.push_front(current_item.get().clone()));
+        current_item.set(atom_selected.read().clone());
+
+        // wipe out the forward item:
+        forward_item.set(Selectable::None);
+    }
+    // if greater than 10, pop_back
+    if back_items.read().len() > 10 {
+        back_items.with_mut(|items| {
+            items.pop_back();
+        })
+    }
+
+    cx.render(rsx! {
+        icon_button {
+            onclick: |_| {
+                let mut writable = back_items.write();
+                if let Some(item) = writable.pop_front() {
+                    // record this item as the forward:
+                    forward_item.set(current_item.get().clone());
+                    // and go back one level:
+                    let mut selected = atom_selected.write();
+                    current_item.set(item.clone());
+                    *selected = item;
+                }
+            },
+            tooltip: "DANGER: BROKEN - Navigate Back",
+            "\u{E72B}"
+        }
+        icon_button {
+            onclick: |_| {
+                if forward_item.get() != &Selectable::None {
+                    let item = forward_item.get();
+
+                    back_items.with_mut(|items| items.push_front(current_item.get().clone()));
+                    current_item.set(item.clone());
+                    let mut selected = atom_selected.write();
+                    *selected = item.clone();
+
+                    // wipe out the forward item:
+                    forward_item.set(Selectable::None);
+                }
+            },
+            tooltip: "DANGER: BROKEN - Navigate Forward",
+            "\u{E72A}"
         }
     })
 }

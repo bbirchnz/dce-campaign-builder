@@ -8,7 +8,7 @@ use anyhow::anyhow;
 use chrono::{NaiveTime, Timelike};
 
 /// Common methods for editable entities
-pub trait Editable {
+pub trait Editable where Self: Struct{
     fn get_name(&self) -> String;
 
     fn validate(&self, instance: &DCEInstance) -> ValidationResult;

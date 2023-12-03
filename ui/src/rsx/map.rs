@@ -21,8 +21,6 @@ pub fn map(cx: Scope) -> Element {
     map_points.extend(targets);
     map_points.extend(squadrons);
 
-    log::trace!("{:?}", map_points);
-
     let code = format!(
         "data_{} = {}; draw_map('{}', data_{})",
         &div_id,

@@ -4,7 +4,7 @@ use chrono::Datelike;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    editable::{Editable, FieldType, HeaderField, ValidationError, ValidationResult},
+    editable::{Editable, FieldType, HeaderField, ValidationError, ValidationResult, EntityTemplateAction},
     miz_environment::MizEnvironment,
     serde_utils::LuaFileBased,
     DCEInstance, NewFromMission,
@@ -170,9 +170,9 @@ impl NewFromMission for Header {
             startup: 600,
             units: "imperial".into(),
             weather: Weather {
-                high_prob: 20.,
-                low_prob: 80.,
-                reference_temp: 8.,
+                high_prob: 50.,
+                low_prob: 50.,
+                reference_temp: 18.,
             },
             mag_var: 2.,
             debug: true,
@@ -210,19 +210,19 @@ impl Editable for HeaderInternal {
             HeaderField::new(
                 "weather_high_prob",
                 "Weather - High System %",
-                FieldType::Float(|v| format!("{v:.2}")),
+                FieldType::Float(|v| format!("{v:.0}")),
                 true,
             ),
             HeaderField::new(
                 "weather_low_prob",
                 "Weather - Low System %",
-                FieldType::Float(|v| format!("{v:.2}")),
+                FieldType::Float(|v| format!("{v:.0}")),
                 true,
             ),
             HeaderField::new(
                 "weather_reference_temp",
                 "Weather - Temp C",
-                FieldType::Float(|v| format!("{v:.1}")),
+                FieldType::Float(|v| format!("{v:.0}")),
                 true,
             ),
         ]
@@ -261,6 +261,31 @@ impl Editable for HeaderInternal {
 
     fn delete_by_name(_: &mut DCEInstance, _: &str) -> Result<(), anyhow::Error> {
         Err(anyhow!("Can't delete the campaign settings!"))
+    }
+
+    fn actions_one_entity() -> Vec<crate::editable::EntityTemplateAction<Self>>
+        where
+            Self: Sized, {
+        vec![
+            EntityTemplateAction::new("Good Weather", "High chance of good weather", |header, _| {
+                header.weather_high_prob = 80.;
+                header.weather_low_prob = 20.;
+                header.weather_reference_temp = 28.;
+                Ok(())
+            }),
+            EntityTemplateAction::new("Bad Weather", "High chance of poor weather", |header, _| {
+                header.weather_high_prob = 70.;
+                header.weather_low_prob = 30.;
+                header.weather_reference_temp = 8.;
+                Ok(())
+            }),
+            EntityTemplateAction::new("Neutral Weather", "50/50 chance of good weather", |header, _| {
+                header.weather_high_prob = 50.;
+                header.weather_low_prob = 50.;
+                header.weather_reference_temp = 18.;
+                Ok(())
+            }),
+        ]
     }
 }
 

@@ -6,7 +6,7 @@ use std::{collections::HashMap, iter::repeat};
 use crate::{
     db_airbases_internal::DBAirbasesInternal,
     dcs_airbase_export::dcs_airbases_for_theatre,
-    dcs_beacon_export::{dcs_beacons_for_theatre, tacan_for_airport},
+    dcs_beacon_export::{dcs_beacons_for_theatre, tacan_for_airport, ils_for_airport},
     editable::{Editable, FieldType, HeaderField, ValidationError, ValidationResult},
     miz_environment::MizEnvironment,
     serde_utils::LuaFileBased,
@@ -173,7 +173,7 @@ impl NewFromMission for DBAirbases {
                         vor: None,
                         ndb: None,
                         tacan: tacan_for_airport(&dcs_beacons, &dcs_ab.airport),
-                        ils: None,
+                        ils: ils_for_airport(&dcs_beacons, &dcs_ab.airport),
                         limited_park_number: dcs_ab.stands.len() as u16,
                         _name: dcs_ab.frequencies.name.to_owned(),
                         inactive: false,
@@ -301,6 +301,7 @@ impl Editable for FixedAirBase {
             ),
             HeaderField::new("atc_frequency", "Frequency", FieldType::String, false),
             HeaderField::new("tacan", "TACAN", FieldType::OptionString, false),
+            HeaderField::new("ils", "ILS", FieldType::OptionString, false),
             HeaderField::new("inactive", "Inactive", FieldType::Bool, true),
         ]
     }

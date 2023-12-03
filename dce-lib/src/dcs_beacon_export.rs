@@ -2,6 +2,7 @@
 use std::collections::HashMap;
 
 use anyhow::anyhow;
+use itertools::Itertools;
 use serde::{Deserialize, Serialize};
 
 use crate::{dcs_airbase_export::Airport, serde_utils::LuaFileBased};
@@ -56,6 +57,42 @@ pub fn tacan_for_airport(beacons: &Beacons, airport: &Airport) -> Option<String>
         .next()
     {
         return Some(format!("{}X", beacon.channel.unwrap()));
+    }
+
+    None
+}
+
+pub fn ils_for_airport(beacons: &Beacons, airport: &Airport) -> Option<String> {
+    let airport_beacons = airport
+        .beacons
+        .iter()
+        .filter(|b| b.runway_side.is_some())
+        .collect::<Vec<_>>();
+
+    let beacons_ils = beacons
+        .iter()
+        .filter(|(_, b)| airport_beacons.iter().any(|ap_bcn| &b.id == &ap_bcn.id))
+        .collect::<Vec<_>>();
+
+    if !beacons_ils.is_empty() {
+        let ils_str = beacons_ils
+            .iter()
+            .unique_by(|(_, b)| b.frequency)
+            .map(|(_, b)| {
+                let direction = if b.direction > 180. {
+                    b.direction - 180.
+                } else {
+                    b.direction + 180.
+                } / 10.;
+                return format!(
+                    "{:.0}: {:.2}",
+                    direction,
+                    b.frequency.expect("has a frequency") as f64 / 1000000.,
+                );
+            })
+            .join(", ");
+
+        return Some(ils_str);
     }
 
     None

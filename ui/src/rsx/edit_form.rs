@@ -74,6 +74,7 @@ where
     trace!("render edit form");
     let atom_instance = use_atom_ref(cx, INSTANCE);
     let atom_dirty = use_atom_state(cx, INSTANCE_DIRTY);
+    let atom_selected = use_atom_ref(cx, SELECTED);
 
     let selectable_from_props = T::from_selectable(&cx.props.item);
 
@@ -122,6 +123,10 @@ where
         .collect::<Vec<_>>();
 
     let entity_actions = T::actions_one_entity();
+
+    let related_items = item_state
+        .get()
+        .related(&atom_instance.read().as_ref().expect("An instance exists"));
 
     cx.render(rsx!{
         div { class: "p-2 m-2 rounded bg-sky-200",
@@ -239,6 +244,25 @@ where
                                 }
                                 "{a.name}"
                             }
+                        }
+                    }
+                }
+            }
+            if !related_items.is_empty() {
+                rsx! {
+                    h4 {class: "font-semibold", "Related Items"},
+                    for r in related_items {
+                        rsx! {
+                            span {
+                                class: "hover:bg-slate-200",
+                                onclick: move |_| {
+                                // make a selectable from name and type
+                                let atom_instance = atom_instance.read();
+                                let instance = atom_instance.as_ref().expect("DCE instance is loaded");
+                                let selectable = Selectable::from_type_name(&r.type_name(), &r.get_name(), &instance);
+                                let mut selected = atom_selected.write();
+                                *selected = selectable;
+                            },"{r.get_name()}"}
                         }
                     }
                 }

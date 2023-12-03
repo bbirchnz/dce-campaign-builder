@@ -48,111 +48,115 @@ pub enum Selectable {
 }
 
 impl Selectable {
-    pub fn from_map(map_point: &MapPoint, instance: &DCEInstance) -> Selectable {
-        match map_point.class.as_str() {
-            "TargetCAP" => {
+    pub fn from_type_name(type_name: &str, item_name: &str, instance: &DCEInstance) -> Selectable {
+        match type_name {
+            "dce_lib::targets::cap::CAP" => {
                 let cap = instance
                     .target_list
                     .cap
                     .iter()
-                    .find(|c| c._name == map_point.name)
+                    .find(|c| c._name == item_name)
                     .unwrap()
                     .clone();
                 Selectable::TargetCAP(Some(cap))
             }
-            "TargetStrike" => {
+            "dce_lib::targets::strike::Strike" => {
                 let item = instance
                     .target_list
                     .strike
                     .iter()
-                    .find(|c| c._name == map_point.name)
+                    .find(|c| c._name == item_name)
                     .unwrap()
                     .clone();
                 Selectable::TargetStrike(Some(item))
             }
-            "TargetAntiShipStrike" => {
+            "dce_lib::targets::anti_ship::AntiShipStrike" => {
                 let item = instance
                     .target_list
                     .antiship
                     .iter()
-                    .find(|c| c._name == map_point.name)
+                    .find(|c| c._name == item_name)
                     .unwrap()
                     .clone();
                 Selectable::TargetAntiShip(Some(item))
             }
-            "TargetRefuel" => {
+            "dce_lib::targets::refueling::Refueling" => {
                 let item = instance
                     .target_list
                     .refuel
                     .iter()
-                    .find(|c| c._name == map_point.name)
+                    .find(|c| c._name == item_name)
                     .unwrap()
                     .clone();
                 Selectable::TargetAAR(Some(item))
             }
-            "TargetAWACS" => {
+            "dce_lib::targets::awacs::AWACS" => {
                 let item = instance
                     .target_list
                     .awacs
                     .iter()
-                    .find(|c| c._name == map_point.name)
+                    .find(|c| c._name == item_name)
                     .unwrap()
                     .clone();
                 Selectable::TargetAWACS(Some(item))
             }
-            "Squadron" => {
+            "dce_lib::oob_air::OobAir" => {
                 let item = instance
                     .oob_air
                     .blue
                     .iter()
                     .chain(instance.oob_air.red.iter())
-                    .find(|c| c.name == map_point.name)
+                    .find(|c| c.name == item_name)
                     .unwrap()
                     .clone();
                 Selectable::Squadron(Some(item))
             }
-            "FixedAirBase" => {
+            "dce_lib::db_airbases::FixedAirBase" => {
                 let item = instance
                     .airbases
                     .fixed
                     .iter()
-                    .find(|item| item._name == map_point.name)
+                    .find(|item| item._name == item_name)
                     .unwrap()
                     .clone();
                 Selectable::FixedAirBase(Some(item))
             }
-            "ShipAirBase" => {
+            "dce_lib::db_airbases::ShipBase" => {
                 let item = instance
                     .airbases
                     .ship
                     .iter()
-                    .find(|item| item._name == map_point.name)
+                    .find(|item| item._name == item_name)
                     .unwrap()
                     .clone();
                 Selectable::ShipAirBase(Some(item))
             }
-            "Airstart" => {
+            "dce_lib::db_airbases::AirStartBase" => {
                 let item = instance
                     .airbases
                     .air_start
                     .iter()
-                    .find(|item| item._name == map_point.name)
+                    .find(|item| item._name == item_name)
                     .unwrap()
                     .clone();
                 Selectable::AirstartBase(Some(item))
             }
-            "FARP" => {
+            "dce_lib::db_airbases::FarpBase" => {
                 let item = instance
                     .airbases
                     .farp
                     .iter()
-                    .find(|item| item._name == map_point.name)
+                    .find(|item| item._name == item_name)
                     .unwrap()
                     .clone();
                 Selectable::FARPBase(Some(item))
             }
             _ => Selectable::None,
         }
+    }
+
+    pub fn from_map(map_point: &MapPoint, instance: &DCEInstance) -> Selectable {
+        Selectable::from_type_name(map_point.class.as_str(), &map_point.name, instance)
     }
 }
 

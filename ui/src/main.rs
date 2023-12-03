@@ -5,6 +5,7 @@ use std::{borrow::Cow, cell::RefCell, sync::mpsc};
 use dce_lib::{
     bin_data::BinItem,
     campaign_header::HeaderInternal,
+    conf_mod::ConfMod,
     db_airbases::{AirStartBase, FarpBase, FixedAirBase, ShipBase},
     editable::Editable,
     loadouts::{
@@ -18,7 +19,7 @@ use dce_lib::{
         refueling::Refueling, strike::Strike,
     },
     trigger::Trigger,
-    DCEInstance, conf_mod::ConfMod,
+    DCEInstance,
 };
 
 use dioxus::prelude::*;

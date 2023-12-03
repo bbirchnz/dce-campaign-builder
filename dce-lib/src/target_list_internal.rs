@@ -237,7 +237,7 @@ impl Mappables for TargetListInternal {
                             zone.y,
                             &cap._name,
                             &cap._side,
-                            "TargetCAP",
+                            cap.type_name(),
                             proj,
                         )
                         .add_extras(HashMap::from([
@@ -267,7 +267,7 @@ impl Mappables for TargetListInternal {
                             zone.y,
                             &refuel._name,
                             &refuel._side,
-                            "TargetRefuel",
+                            refuel.type_name(),
                             proj,
                         )
                         .add_extras(HashMap::from([
@@ -297,7 +297,7 @@ impl Mappables for TargetListInternal {
                             zone.y,
                             &awacs._name,
                             &awacs._side,
-                            "TargetAWACS",
+                            awacs.type_name(),
                             proj,
                         )
                         .add_extras(HashMap::from([
@@ -327,7 +327,7 @@ impl Mappables for TargetListInternal {
                         groups[0].y,
                         &strike.text,
                         &strike._side,
-                        "TargetStrike",
+                        strike.type_name(),
                         proj,
                     ));
                 }
@@ -344,7 +344,7 @@ impl Mappables for TargetListInternal {
                             sg.y,
                             &strike.text,
                             &strike._side,
-                            "TargetStrike",
+                            strike.type_name(),
                             proj,
                         ))
                     }
@@ -359,7 +359,7 @@ impl Mappables for TargetListInternal {
                             fixed.y,
                             &strike.text,
                             &strike._side,
-                            "TargetStrike",
+                            strike.type_name(),
                             proj,
                         ))
                     }
@@ -380,7 +380,7 @@ impl Mappables for TargetListInternal {
                         groups[0].y,
                         &antiship.text,
                         &antiship._side,
-                        "TargetAntiShipStrike",
+                        self.type_name(),
                         proj,
                     ));
                 }

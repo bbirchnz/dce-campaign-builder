@@ -427,12 +427,7 @@ impl NestedEditable for Support {
         vec![
             HeaderField::new("escort", "AA Escort", FieldType::Bool, true),
             HeaderField::new("sead", "SEAD Escort", FieldType::Bool, true),
-            HeaderField::new(
-                "escort_jammer",
-                "Jammer Escort",
-                FieldType::Bool,
-                true,
-            ),
+            HeaderField::new("escort_jammer", "Jammer Escort", FieldType::Bool, true),
         ]
     }
 }

@@ -309,7 +309,7 @@ impl Mappables for OobAir {
                         let mut map = map.clone();
                         map.name = squad.name.to_owned();
                         map.side = side.to_owned();
-                        map.class = "Squadron".into();
+                        map.class = self.type_name().to_owned();
                         Some(map)
                     }
                     None => {
@@ -435,7 +435,7 @@ impl Editable for Squadron {
 
         let ab = abs
             .iter()
-            .find(|(name, _)| name.as_str() == self.get_name())
+            .find(|(name, _)| name.as_str() == self.base)
             .as_ref()
             .unwrap()
             .1
@@ -469,11 +469,19 @@ impl Editable for Squadron {
     }
 }
 
-fn convert_loadouts<T>(_: &[&T]) -> Vec<Box<dyn Editable>>
+fn convert_loadouts<T>(items: &[&T]) -> Vec<Box<dyn Editable>>
 where
-    T: Editable,
+    T: Editable + Clone + 'static,
 {
-    todo!()
+    let mut result: Vec<Box<dyn Editable>> = Vec::default();
+    for item in items {
+        let new_item = Box::new((**item).clone());
+
+        result.push(new_item);
+    }
+
+    result
+    // items.iter().map(|item| Box::new(*item.clone())).collect::<Vec<Box<dyn Editable>>>()
 }
 
 #[cfg(test)]

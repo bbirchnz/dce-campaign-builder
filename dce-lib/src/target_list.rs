@@ -40,7 +40,7 @@ impl NewFromMission for TargetList {
             if name_splits.len() < 2 {
                 warn!("Expect zone names to be of form <SIDE>_<TYPE>");
             }
-            
+
             let targets = match name_splits[0].to_lowercase().as_str() {
                 "blue" => &mut blue_targets,
                 _ => &mut red_targets,

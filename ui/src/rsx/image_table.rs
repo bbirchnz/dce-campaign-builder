@@ -38,7 +38,7 @@ pub fn image_table(cx: Scope<ImageTableProps>) -> Element {
                                 // add to instance
                                 let mut atom_instance = atom_instance.write();
                                 let mut_instance = atom_instance.as_mut().expect("DCE instance is loaded");
-                                
+
                                 // check if it exists:
                                 if let Some(existing_item) = mut_instance.bin_data.images.iter_mut().find(|i| i.name.as_str() == file_name) {
                                     log::trace!("Image already exists with name {}, replacing data", file_name);
@@ -47,7 +47,7 @@ pub fn image_table(cx: Scope<ImageTableProps>) -> Element {
                                     log::trace!("Added new image with name {}", file_name);
                                     mut_instance.bin_data.images.push(bin_item);
                                 }
-                                
+
                                 // set as dirty
                                 atom_dirty.set(true);
                                 // update bin_images vec:

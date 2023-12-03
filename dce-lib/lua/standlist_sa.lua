@@ -319,13 +319,29 @@ airports =
             ["airdromeNumber"] = 1,
             ["frequencyList"] = 
             {
-                [1] = 38850000,
-                [2] = 118100000,
-                [3] = 250450000,
-                [4] = 3975000,
+                [1] = 
+                {
+                    [1] = 38850000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 118100000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 250450000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 3975000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = -91,
-            ["height"] = 20.557445102713,
+            ["height"] = 20.557443195362,
             ["coalitionName"] = "neutrals",
         }, -- end of ["frequencies"]
         ["airport"] = 
@@ -350,7 +366,7 @@ airports =
             }, -- end of ["names"]
             ["default_camera_position"] = 
             {
-                ["bearing"] = 293.015111,
+                ["bearing"] = 113.015115,
                 ["pnt"] = 
                 {
                     [1] = 89345.890625,
@@ -366,7 +382,7 @@ airports =
             }, -- end of ["reference_point_geo"]
             ["default_camera_position_geo"] = 
             {
-                ["bearing"] = 293.015111,
+                ["bearing"] = 113.015115,
                 ["pnt"] = 
                 {
                     ["lon"] = -57.762024,
@@ -1183,10 +1199,26 @@ airports =
             ["airdromeNumber"] = 2,
             ["frequencyList"] = 
             {
-                [1] = 39200000,
-                [2] = 133350000,
-                [3] = 250800000,
-                [4] = 4150000,
+                [1] = 
+                {
+                    [1] = 39200000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 133350000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 250800000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 4150000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = 104,
             ["height"] = 74.137243021446,
@@ -1623,10 +1655,26 @@ airports =
             ["airdromeNumber"] = 3,
             ["frequencyList"] = 
             {
-                [1] = 39250000,
-                [2] = 134350000,
-                [3] = 250850000,
-                [4] = 4175000,
+                [1] = 
+                {
+                    [1] = 39250000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 134350000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 250850000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 4175000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = -72,
             ["height"] = 19.226524506046,
@@ -2198,10 +2246,26 @@ airports =
             ["airdromeNumber"] = 5,
             ["frequencyList"] = 
             {
-                [1] = 39300000,
-                [2] = 119100000,
-                [3] = 250900000,
-                [4] = 4200000,
+                [1] = 
+                {
+                    [1] = 39300000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 119100000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 250900000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 4200000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = -104,
             ["height"] = 15.454832273054,
@@ -2631,10 +2695,26 @@ airports =
             ["airdromeNumber"] = 6,
             ["frequencyList"] = 
             {
-                [1] = 39350000,
-                [2] = 118300000,
-                [3] = 250950000,
-                [4] = 4225000,
+                [1] = 
+                {
+                    [1] = 39350000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 118300000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 250950000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 4225000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = 79,
             ["height"] = 18.521790906416,
@@ -2985,10 +3065,26 @@ airports =
             ["airdromeNumber"] = 7,
             ["frequencyList"] = 
             {
-                [1] = 39400000,
-                [2] = 118100000,
-                [3] = 251000000,
-                [4] = 4250000,
+                [1] = 
+                {
+                    [1] = 39400000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 118100000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 251000000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 4250000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = 77,
             ["height"] = 18.499268911238,
@@ -3285,10 +3381,26 @@ airports =
             ["airdromeNumber"] = 8,
             ["frequencyList"] = 
             {
-                [1] = 39450000,
-                [2] = 118500000,
-                [3] = 251050000,
-                [4] = 4275000,
+                [1] = 
+                {
+                    [1] = 39450000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 118500000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 251050000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 4275000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = 170,
             ["height"] = 12.843915431793,
@@ -4277,10 +4389,26 @@ airports =
             ["airdromeNumber"] = 9,
             ["frequencyList"] = 
             {
-                [1] = 39500000,
-                [2] = 118700000,
-                [3] = 251100000,
-                [4] = 4300000,
+                [1] = 
+                {
+                    [1] = 39500000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 118700000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 251100000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 4300000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = -52,
             ["height"] = 38.222396925972,
@@ -4470,10 +4598,26 @@ airports =
             ["airdromeNumber"] = 10,
             ["frequencyList"] = 
             {
-                [1] = 38400000,
-                [2] = 118000000,
-                [3] = 250000000,
-                [4] = 3750000,
+                [1] = 
+                {
+                    [1] = 38400000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 118000000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 250000000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 3750000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = -100,
             ["height"] = 158.375158375,
@@ -4753,10 +4897,26 @@ airports =
             ["airdromeNumber"] = 11,
             ["frequencyList"] = 
             {
-                [1] = 38450000,
-                [2] = 118050000,
-                [3] = 250050000,
-                [4] = 3775000,
+                [1] = 
+                {
+                    [1] = 38450000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 118050000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 250050000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 3775000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = -109,
             ["height"] = 44.000044,
@@ -4988,13 +5148,29 @@ airports =
             ["airdromeNumber"] = 12,
             ["frequencyList"] = 
             {
-                [1] = 38500000,
-                [2] = 118500000,
-                [3] = 250100000,
-                [4] = 3800000,
+                [1] = 
+                {
+                    [1] = 38500000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 118500000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 250100000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 3800000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = 82,
-            ["height"] = 19.75704833674,
+            ["height"] = 20.00874040667,
             ["coalitionName"] = "neutrals",
         }, -- end of ["frequencies"]
         ["airport"] = 
@@ -5107,9 +5283,9 @@ airports =
                 {
                     ["SHELTER"] = "0",
                     ["FOR_HELICOPTERS"] = "1",
-                    ["LENGTH"] = "40.000000",
-                    ["HEIGHT"] = "12",
-                    ["WIDTH"] = "40.000000",
+                    ["LENGTH"] = "41.000000",
+                    ["HEIGHT"] = "18",
+                    ["WIDTH"] = "41.000000",
                     ["FOR_AIRPLANES"] = "1",
                 }, -- end of ["params"]
             }, -- end of [1]
@@ -5124,9 +5300,9 @@ airports =
                 {
                     ["SHELTER"] = "0",
                     ["FOR_HELICOPTERS"] = "1",
-                    ["LENGTH"] = "21.000000",
-                    ["HEIGHT"] = "8",
-                    ["WIDTH"] = "15.000000",
+                    ["LENGTH"] = "26.000000",
+                    ["HEIGHT"] = "11",
+                    ["WIDTH"] = "22.000000",
                     ["FOR_AIRPLANES"] = "1",
                 }, -- end of ["params"]
             }, -- end of [2]
@@ -5143,7 +5319,7 @@ airports =
                     ["FOR_HELICOPTERS"] = "1",
                     ["LENGTH"] = "26.000000",
                     ["HEIGHT"] = "11",
-                    ["WIDTH"] = "22.000000",
+                    ["WIDTH"] = "24.000000",
                     ["FOR_AIRPLANES"] = "1",
                 }, -- end of ["params"]
             }, -- end of [3]
@@ -5197,10 +5373,26 @@ airports =
             ["airdromeNumber"] = 13,
             ["frequencyList"] = 
             {
-                [1] = 38550000,
-                [2] = 128100000,
-                [3] = 250150000,
-                [4] = 3825000,
+                [1] = 
+                {
+                    [1] = 38550000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 128100000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 250150000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 3825000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = -73,
             ["height"] = 66.000066,
@@ -5309,9 +5501,9 @@ airports =
                 {
                     ["SHELTER"] = "0",
                     ["FOR_HELICOPTERS"] = "1",
-                    ["LENGTH"] = "40.000000",
-                    ["HEIGHT"] = "12",
-                    ["WIDTH"] = "40.000000",
+                    ["LENGTH"] = "41.000000",
+                    ["HEIGHT"] = "18",
+                    ["WIDTH"] = "41.000000",
                     ["FOR_AIRPLANES"] = "1",
                 }, -- end of ["params"]
             }, -- end of [1]
@@ -5326,9 +5518,9 @@ airports =
                 {
                     ["SHELTER"] = "0",
                     ["FOR_HELICOPTERS"] = "1",
-                    ["LENGTH"] = "40.000000",
-                    ["HEIGHT"] = "12",
-                    ["WIDTH"] = "40.000000",
+                    ["LENGTH"] = "41.000000",
+                    ["HEIGHT"] = "18",
+                    ["WIDTH"] = "41.000000",
                     ["FOR_AIRPLANES"] = "1",
                 }, -- end of ["params"]
             }, -- end of [2]
@@ -5411,9 +5603,9 @@ airports =
                 {
                     ["SHELTER"] = "0",
                     ["FOR_HELICOPTERS"] = "1",
-                    ["LENGTH"] = "40.000000",
-                    ["HEIGHT"] = "12",
-                    ["WIDTH"] = "40.000000",
+                    ["LENGTH"] = "41.000000",
+                    ["HEIGHT"] = "18",
+                    ["WIDTH"] = "41.000000",
                     ["FOR_AIRPLANES"] = "1",
                 }, -- end of ["params"]
             }, -- end of [7]
@@ -5428,9 +5620,9 @@ airports =
                 {
                     ["SHELTER"] = "0",
                     ["FOR_HELICOPTERS"] = "1",
-                    ["LENGTH"] = "26.000000",
-                    ["HEIGHT"] = "11",
-                    ["WIDTH"] = "24.000000",
+                    ["LENGTH"] = "41.000000",
+                    ["HEIGHT"] = "18",
+                    ["WIDTH"] = "41.000000",
                     ["FOR_AIRPLANES"] = "1",
                 }, -- end of ["params"]
             }, -- end of [8]
@@ -5475,34 +5667,14 @@ airports =
             {
                 [1] = 
                 {
-                    ["y"] = -922132.375,
-                    ["x"] = 136035.890625,
+                    ["y"] = -922132.5402832,
+                    ["x"] = 136043.13806152,
                 }, -- end of [1]
                 [2] = 
                 {
-                    ["y"] = -922134.875,
-                    ["x"] = 136043.6875,
+                    ["y"] = -922108.56915283,
+                    ["x"] = 136021.1817627,
                 }, -- end of [2]
-                [3] = 
-                {
-                    ["y"] = -922129.9375,
-                    ["x"] = 136027.390625,
-                }, -- end of [3]
-                [4] = 
-                {
-                    ["y"] = -922116.3125,
-                    ["x"] = 136040.875,
-                }, -- end of [4]
-                [5] = 
-                {
-                    ["y"] = -922118.75,
-                    ["x"] = 136048.6875,
-                }, -- end of [5]
-                [6] = 
-                {
-                    ["y"] = -922113.875,
-                    ["x"] = 136032.375,
-                }, -- end of [6]
             }, -- end of ["fueldepots"]
             ["roadnet"] = "./Mods/terrains/Falklands/AirfieldsTaxiways/ElCalafate.rn4",
             ["class"] = "2",
@@ -5513,10 +5685,26 @@ airports =
             ["airdromeNumber"] = 14,
             ["frequencyList"] = 
             {
-                [1] = 38600000,
-                [2] = 119950000,
-                [3] = 250200000,
-                [4] = 3850000,
+                [1] = 
+                {
+                    [1] = 38600000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 119950000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 250200000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 3850000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = -107,
             ["height"] = 201.39349668138,
@@ -5532,11 +5720,7 @@ airports =
             ["fueldepots"] = 
             {
                 [1] = "externalId:240000",
-                [2] = "externalId:240001",
-                [3] = "externalId:240002",
-                [4] = "externalId:240003",
-                [5] = "externalId:240004",
-                [6] = "externalId:240005",
+                [2] = "externalId:240002",
             }, -- end of ["fueldepots"]
             ["code"] = "SAWC",
             ["roadnet"] = "./Mods/terrains/Falklands/AirfieldsTaxiways/ElCalafate.rn4",
@@ -5579,7 +5763,7 @@ airports =
             ["id"] = "ElCalafate",
             ["towers"] = 
             {
-                [1] = "externalId:240006",
+                [1] = "externalId:240001",
             }, -- end of ["towers"]
             ["roadnet5"] = "./Mods/terrains/Falklands/AirfieldsTaxiways/ElCalafate.rn5",
             ["abandoned"] = false,
@@ -5855,27 +6039,43 @@ airports =
                     ["x"] = 209692.65136719,
                 }, -- end of [4]
             }, -- end of ["warehouses"]
-            ["y"] = -680890.63022,
-            ["x"] = 210341.099005,
+            ["y"] = -680891.53125,
+            ["x"] = 210340.710938,
             ["name"] = "Puerto Santa Cruz",
             ["airdromeNumber"] = 15,
             ["frequencyList"] = 
             {
-                [1] = 38650000,
-                [2] = 118600000,
-                [3] = 250250000,
-                [4] = 3875000,
+                [1] = 
+                {
+                    [1] = 38650000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 118600000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 250250000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 3875000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
-            ["angle"] = -111,
-            ["height"] = 111.0001033706,
+            ["angle"] = 69,
+            ["height"] = 111.000111,
             ["coalitionName"] = "neutrals",
         }, -- end of ["frequencies"]
         ["airport"] = 
         {
             ["reference_point"] = 
             {
-                ["y"] = -680890.63022,
-                ["x"] = 210341.099005,
+                ["y"] = -680891.53125,
+                ["x"] = 210340.710938,
             }, -- end of ["reference_point"]
             ["fueldepots"] = 
             {
@@ -5905,8 +6105,8 @@ airports =
             ["display_name"] = "Puerto Santa Cruz",
             ["reference_point_geo"] = 
             {
-                ["lon"] = -68.579072,
-                ["lat"] = -50.017028,
+                ["lon"] = -68.579085,
+                ["lat"] = -50.01703,
             }, -- end of ["reference_point_geo"]
             ["default_camera_position_geo"] = 
             {
@@ -5942,7 +6142,7 @@ airports =
             }, -- end of ["warehouses"]
             ["runwayName"] = 
             {
-                [1] = "7",
+                [1] = "07",
                 [0] = "07",
             }, -- end of ["runwayName"]
             ["beacons"] = 
@@ -5953,9 +6153,9 @@ airports =
                 [0] = 
                 {
                     ["start"] = "07",
-                    ["id"] = -1,
-                    ["name"] = "07-7",
-                    ["end"] = "7",
+                    ["id"] = 1,
+                    ["name"] = "07-07",
+                    ["end"] = "07",
                 }, -- end of [0]
             }, -- end of ["runways"]
         }, -- end of ["airport"]
@@ -6160,10 +6360,26 @@ airports =
             ["airdromeNumber"] = 16,
             ["frequencyList"] = 
             {
-                [1] = 38700000,
-                [2] = 122100000,
-                [3] = 250300000,
-                [4] = 3900000,
+                [1] = 
+                {
+                    [1] = 38700000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 122100000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 250300000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 3900000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = -100,
             ["height"] = 21.277221976053,
@@ -6411,10 +6627,26 @@ airports =
             ["airdromeNumber"] = 17,
             ["frequencyList"] = 
             {
-                [1] = 38750000,
-                [2] = 118150000,
-                [3] = 250350000,
-                [4] = 3925000,
+                [1] = 
+                {
+                    [1] = 38750000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 118150000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 250350000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 3925000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = 77,
             ["height"] = 108.30120235627,
@@ -6685,10 +6917,26 @@ airports =
             ["airdromeNumber"] = 18,
             ["frequencyList"] = 
             {
-                [1] = 38800000,
-                [2] = 126700000,
-                [3] = 250400000,
-                [4] = 3950000,
+                [1] = 
+                {
+                    [1] = 38800000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 126700000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 250400000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 3950000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = 99,
             ["height"] = 28.72089587785,
@@ -6798,28 +7046,28 @@ airports =
         {
             [1] = 
             {
-                ["y"] = -741467.125,
-                ["x"] = -209446.421875,
-                ["name"] = "B08",
+                ["y"] = -740958.875,
+                ["x"] = -209534.28125,
+                ["name"] = "C01",
                 ["flag"] = 64,
-                ["crossroad_index"] = 4,
+                ["crossroad_index"] = 1,
                 ["params"] = 
                 {
                     ["SHELTER"] = "0",
                     ["FOR_HELICOPTERS"] = "1",
-                    ["LENGTH"] = "26.000000",
-                    ["HEIGHT"] = "11",
-                    ["WIDTH"] = "24.000000",
+                    ["LENGTH"] = "60.000000",
+                    ["HEIGHT"] = "18",
+                    ["WIDTH"] = "52.000000",
                     ["FOR_AIRPLANES"] = "1",
                 }, -- end of ["params"]
             }, -- end of [1]
             [2] = 
             {
-                ["y"] = -741497.625,
-                ["x"] = -209448.53125,
-                ["name"] = "B07",
+                ["y"] = -741610.1875,
+                ["x"] = -209456.078125,
+                ["name"] = "B03",
                 ["flag"] = 64,
-                ["crossroad_index"] = 5,
+                ["crossroad_index"] = 2,
                 ["params"] = 
                 {
                     ["SHELTER"] = "0",
@@ -6832,11 +7080,11 @@ airports =
             }, -- end of [2]
             [3] = 
             {
-                ["y"] = -741526.875,
-                ["x"] = -209450.734375,
-                ["name"] = "B06",
+                ["y"] = -741583.25,
+                ["x"] = -209454.390625,
+                ["name"] = "B04",
                 ["flag"] = 64,
-                ["crossroad_index"] = 6,
+                ["crossroad_index"] = 3,
                 ["params"] = 
                 {
                     ["SHELTER"] = "0",
@@ -6849,11 +7097,11 @@ airports =
             }, -- end of [3]
             [4] = 
             {
-                ["y"] = -741555.375,
-                ["x"] = -209452.609375,
-                ["name"] = "B05",
+                ["y"] = -741665.70166268,
+                ["x"] = -209458.43538644,
+                ["name"] = "B01",
                 ["flag"] = 64,
-                ["crossroad_index"] = 7,
+                ["crossroad_index"] = 4,
                 ["params"] = 
                 {
                     ["SHELTER"] = "0",
@@ -6866,28 +7114,28 @@ airports =
             }, -- end of [4]
             [5] = 
             {
-                ["y"] = -741583.25,
-                ["x"] = -209454.390625,
-                ["name"] = "B04",
+                ["y"] = -740973.25,
+                ["x"] = -209839.90625,
+                ["name"] = "Stand01",
                 ["flag"] = 64,
-                ["crossroad_index"] = 8,
+                ["crossroad_index"] = 5,
                 ["params"] = 
                 {
                     ["SHELTER"] = "0",
                     ["FOR_HELICOPTERS"] = "1",
-                    ["LENGTH"] = "26.000000",
-                    ["HEIGHT"] = "11",
-                    ["WIDTH"] = "24.000000",
-                    ["FOR_AIRPLANES"] = "1",
+                    ["LENGTH"] = "30.000000",
+                    ["HEIGHT"] = "10",
+                    ["WIDTH"] = "23.000000",
+                    ["FOR_AIRPLANES"] = "0",
                 }, -- end of ["params"]
             }, -- end of [5]
             [6] = 
             {
-                ["y"] = -741610.1875,
-                ["x"] = -209456.078125,
-                ["name"] = "B03",
+                ["y"] = -741555.375,
+                ["x"] = -209452.609375,
+                ["name"] = "B05",
                 ["flag"] = 64,
-                ["crossroad_index"] = 9,
+                ["crossroad_index"] = 8,
                 ["params"] = 
                 {
                     ["SHELTER"] = "0",
@@ -6900,11 +7148,11 @@ airports =
             }, -- end of [6]
             [7] = 
             {
-                ["y"] = -741637.25,
-                ["x"] = -209457.640625,
-                ["name"] = "B02",
+                ["y"] = -741467.125,
+                ["x"] = -209446.421875,
+                ["name"] = "B08",
                 ["flag"] = 64,
-                ["crossroad_index"] = 10,
+                ["crossroad_index"] = 9,
                 ["params"] = 
                 {
                     ["SHELTER"] = "0",
@@ -6917,62 +7165,28 @@ airports =
             }, -- end of [7]
             [8] = 
             {
-                ["y"] = -741664.3125,
-                ["x"] = -209458.34375,
-                ["name"] = "B01",
+                ["y"] = -741759.5625,
+                ["x"] = -209417.5625,
+                ["name"] = "A01",
                 ["flag"] = 64,
-                ["crossroad_index"] = 11,
+                ["crossroad_index"] = 10,
                 ["params"] = 
                 {
                     ["SHELTER"] = "0",
                     ["FOR_HELICOPTERS"] = "1",
-                    ["LENGTH"] = "26.000000",
-                    ["HEIGHT"] = "11",
-                    ["WIDTH"] = "24.000000",
+                    ["LENGTH"] = "60.000000",
+                    ["HEIGHT"] = "18",
+                    ["WIDTH"] = "52.000000",
                     ["FOR_AIRPLANES"] = "1",
                 }, -- end of ["params"]
             }, -- end of [8]
             [9] = 
             {
-                ["y"] = -741759.5625,
-                ["x"] = -209417.5625,
-                ["name"] = "A01",
+                ["y"] = -740945.9375,
+                ["x"] = -209873.234375,
+                ["name"] = "Stand02",
                 ["flag"] = 64,
-                ["crossroad_index"] = 12,
-                ["params"] = 
-                {
-                    ["SHELTER"] = "0",
-                    ["FOR_HELICOPTERS"] = "1",
-                    ["LENGTH"] = "60.000000",
-                    ["HEIGHT"] = "18",
-                    ["WIDTH"] = "52.000000",
-                    ["FOR_AIRPLANES"] = "1",
-                }, -- end of ["params"]
-            }, -- end of [9]
-            [10] = 
-            {
-                ["y"] = -740958.875,
-                ["x"] = -209534.28125,
-                ["name"] = "C01",
-                ["flag"] = 64,
-                ["crossroad_index"] = 13,
-                ["params"] = 
-                {
-                    ["SHELTER"] = "0",
-                    ["FOR_HELICOPTERS"] = "1",
-                    ["LENGTH"] = "60.000000",
-                    ["HEIGHT"] = "18",
-                    ["WIDTH"] = "52.000000",
-                    ["FOR_AIRPLANES"] = "1",
-                }, -- end of ["params"]
-            }, -- end of [10]
-            [11] = 
-            {
-                ["y"] = -741017,
-                ["x"] = -209877.359375,
-                ["name"] = "Stand01",
-                ["flag"] = 64,
-                ["crossroad_index"] = 14,
+                ["crossroad_index"] = 11,
                 ["params"] = 
                 {
                     ["SHELTER"] = "0",
@@ -6982,14 +7196,48 @@ airports =
                     ["WIDTH"] = "34.000000",
                     ["FOR_AIRPLANES"] = "0",
                 }, -- end of ["params"]
+            }, -- end of [9]
+            [10] = 
+            {
+                ["y"] = -740997.625,
+                ["x"] = -209834.109375,
+                ["name"] = "Stand03",
+                ["flag"] = 64,
+                ["crossroad_index"] = 12,
+                ["params"] = 
+                {
+                    ["SHELTER"] = "0",
+                    ["FOR_HELICOPTERS"] = "1",
+                    ["LENGTH"] = "30.000000",
+                    ["HEIGHT"] = "10",
+                    ["WIDTH"] = "23.000000",
+                    ["FOR_AIRPLANES"] = "0",
+                }, -- end of ["params"]
+            }, -- end of [10]
+            [11] = 
+            {
+                ["y"] = -741526.875,
+                ["x"] = -209450.734375,
+                ["name"] = "B06",
+                ["flag"] = 64,
+                ["crossroad_index"] = 13,
+                ["params"] = 
+                {
+                    ["SHELTER"] = "0",
+                    ["FOR_HELICOPTERS"] = "1",
+                    ["LENGTH"] = "26.000000",
+                    ["HEIGHT"] = "11",
+                    ["WIDTH"] = "24.000000",
+                    ["FOR_AIRPLANES"] = "1",
+                }, -- end of ["params"]
             }, -- end of [11]
             [12] = 
             {
-                ["y"] = -740945.9375,
-                ["x"] = -209873.234375,
-                ["name"] = "Stand02",
+                ["y"] = -741017,
+                ["x"] = -209877.359375,
+                ["name"] = "Stand04",
                 ["flag"] = 64,
-                ["crossroad_index"] = 15,
+                ["crossroad_index"] = 14,
                 ["params"] = 
                 {
                     ["SHELTER"] = "0",
@@ -7002,36 +7250,36 @@ airports =
             }, -- end of [12]
             [13] = 
             {
-                ["y"] = -740973.25,
-                ["x"] = -209839.90625,
-                ["name"] = "Stand03",
+                ["y"] = -741637.25,
+                ["x"] = -209457.640625,
+                ["name"] = "B02",
                 ["flag"] = 64,
-                ["crossroad_index"] = 16,
+                ["crossroad_index"] = 15,
                 ["params"] = 
                 {
                     ["SHELTER"] = "0",
                     ["FOR_HELICOPTERS"] = "1",
-                    ["LENGTH"] = "30.000000",
-                    ["HEIGHT"] = "10",
-                    ["WIDTH"] = "23.000000",
-                    ["FOR_AIRPLANES"] = "0",
+                    ["LENGTH"] = "26.000000",
+                    ["HEIGHT"] = "11",
+                    ["WIDTH"] = "24.000000",
+                    ["FOR_AIRPLANES"] = "1",
                 }, -- end of ["params"]
             }, -- end of [13]
             [14] = 
             {
-                ["y"] = -740997.625,
-                ["x"] = -209834.109375,
-                ["name"] = "Stand04",
+                ["y"] = -741497.625,
+                ["x"] = -209448.53125,
+                ["name"] = "B07",
                 ["flag"] = 64,
                 ["crossroad_index"] = 17,
                 ["params"] = 
                 {
                     ["SHELTER"] = "0",
                     ["FOR_HELICOPTERS"] = "1",
-                    ["LENGTH"] = "30.000000",
-                    ["HEIGHT"] = "10",
-                    ["WIDTH"] = "23.000000",
-                    ["FOR_AIRPLANES"] = "0",
+                    ["LENGTH"] = "26.000000",
+                    ["HEIGHT"] = "11",
+                    ["WIDTH"] = "24.000000",
+                    ["FOR_AIRPLANES"] = "1",
                 }, -- end of ["params"]
             }, -- end of [14]
         }, -- end of ["standlist"]
@@ -7076,23 +7324,23 @@ airports =
                     ["x"] = -209744.03320312,
                 }, -- end of [4]
             }, -- end of ["warehouses"]
-            ["y"] = -741327.375,
-            ["x"] = -209880.039062,
+            ["y"] = -741523.0625,
+            ["x"] = -209214.25,
             ["name"] = "Almirante Schroeders",
             ["airdromeNumber"] = 19,
             ["frequencyList"] = 
             {
             }, -- end of ["frequencyList"]
-            ["angle"] = -139,
-            ["height"] = 49.00008333231,
+            ["angle"] = 127,
+            ["height"] = 49.000049,
             ["coalitionName"] = "neutrals",
         }, -- end of ["frequencies"]
         ["airport"] = 
         {
             ["reference_point"] = 
             {
-                ["y"] = -741327.375,
-                ["x"] = -209880.039062,
+                ["y"] = -741523.0625,
+                ["x"] = -209214.25,
             }, -- end of ["reference_point"]
             ["fueldepots"] = 
             {
@@ -7104,17 +7352,17 @@ airports =
             {
                 [1] = 
                 {
-                    ["start"] = "12",
-                    ["id"] = 1,
-                    ["name"] = "12-30",
-                    ["end"] = "30",
-                }, -- end of [1]
-                [0] = 
-                {
                     ["start"] = "22",
                     ["id"] = 2,
                     ["name"] = "22-04",
                     ["end"] = "04",
+                }, -- end of [1]
+                [0] = 
+                {
+                    ["start"] = "12",
+                    ["id"] = 1,
+                    ["name"] = "12-30",
+                    ["end"] = "30",
                 }, -- end of [0]
             }, -- end of ["runways"]
             ["projectors"] = 
@@ -7137,8 +7385,8 @@ airports =
             ["display_name"] = "Almirante Schroeders",
             ["reference_point_geo"] = 
             {
-                ["lon"] = -70.475218,
-                ["lat"] = -53.613079,
+                ["lon"] = -70.476206,
+                ["lat"] = -53.60693,
             }, -- end of ["reference_point_geo"]
             ["default_camera_position_geo"] = 
             {
@@ -7164,10 +7412,10 @@ airports =
             }, -- end of ["warehouses"]
             ["runwayName"] = 
             {
-                [1] = "04",
-                [2] = "12",
-                [3] = "30",
-                [0] = "22",
+                [1] = "30",
+                [2] = "22",
+                [3] = "04",
+                [0] = "12",
             }, -- end of ["runwayName"]
             ["beacons"] = 
             {
@@ -7181,8 +7429,8 @@ airports =
         {
             [1] = 
             {
-                ["y"] = -903898.22736552,
-                ["x"] = -12224.449176698,
+                ["y"] = -903905.44177845,
+                ["x"] = -12224.193915032,
                 ["name"] = "A01",
                 ["flag"] = 64,
                 ["crossroad_index"] = 2,
@@ -7190,16 +7438,16 @@ airports =
                 {
                     ["SHELTER"] = "0",
                     ["FOR_HELICOPTERS"] = "1",
-                    ["LENGTH"] = "26.000000",
-                    ["HEIGHT"] = "11",
-                    ["WIDTH"] = "24.000000",
+                    ["LENGTH"] = "41.000000",
+                    ["HEIGHT"] = "18",
+                    ["WIDTH"] = "41.000000",
                     ["FOR_AIRPLANES"] = "1",
                 }, -- end of ["params"]
             }, -- end of [1]
             [2] = 
             {
-                ["y"] = -903917.3125,
-                ["x"] = -12264.87109375,
+                ["y"] = -903917.22514503,
+                ["x"] = -12269.675616921,
                 ["name"] = "A02",
                 ["flag"] = 64,
                 ["crossroad_index"] = 3,
@@ -7237,29 +7485,19 @@ airports =
             {
                 [1] = 
                 {
-                    ["y"] = -903719.23266602,
-                    ["x"] = -12065.882080078,
+                    ["y"] = -903679.2824707,
+                    ["x"] = -12049.453125,
                 }, -- end of [1]
                 [2] = 
                 {
-                    ["y"] = -903717.84301758,
-                    ["x"] = -12043.364379883,
+                    ["y"] = -903653.65942383,
+                    ["x"] = -12124.25390625,
                 }, -- end of [2]
                 [3] = 
                 {
-                    ["y"] = -903722.45666504,
-                    ["x"] = -12026.78137207,
+                    ["y"] = -903685.89819336,
+                    ["x"] = -12080.267578125,
                 }, -- end of [3]
-                [4] = 
-                {
-                    ["y"] = -903704.81866455,
-                    ["x"] = -12093.844116211,
-                }, -- end of [4]
-                [5] = 
-                {
-                    ["y"] = -903699.73065186,
-                    ["x"] = -12113.302856445,
-                }, -- end of [5]
             }, -- end of ["fueldepots"]
             ["roadnet"] = "./Mods/terrains/Falklands/AirfieldsTaxiways/RioTurbio.rn4",
             ["class"] = "3",
@@ -7288,10 +7526,26 @@ airports =
             ["airdromeNumber"] = 20,
             ["frequencyList"] = 
             {
-                [1] = 38900000,
-                [2] = 118100000,
-                [3] = 250500000,
-                [4] = 4000000,
+                [1] = 
+                {
+                    [1] = 38900000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 118100000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 250500000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 4000000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = -121,
             ["height"] = 273.000273,
@@ -7309,8 +7563,6 @@ airports =
                 [1] = "externalId:300004",
                 [2] = "externalId:300005",
                 [3] = "externalId:300006",
-                [4] = "externalId:300007",
-                [5] = "externalId:300008",
             }, -- end of ["fueldepots"]
             ["code"] = "SAWT",
             ["roadnet"] = "./Mods/terrains/Falklands/AirfieldsTaxiways/RioTurbio.rn4",
@@ -7457,10 +7709,26 @@ airports =
             ["airdromeNumber"] = 21,
             ["frequencyList"] = 
             {
-                [1] = 38950000,
-                [2] = 118200000,
-                [3] = 250550000,
-                [4] = 4025000,
+                [1] = 
+                {
+                    [1] = 38950000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 118200000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 250550000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 4025000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = 84,
             ["height"] = 22.723428561419,
@@ -7543,34 +7811,117 @@ airports =
     }, -- end of [21]
     [22] = 
     {
+        ["standlist"] = 
+        {
+            [1] = 
+            {
+                ["y"] = -1088453.625,
+                ["x"] = 389126.125,
+                ["name"] = "04",
+                ["flag"] = 64,
+                ["crossroad_index"] = 2,
+                ["params"] = 
+                {
+                    ["SHELTER"] = "0",
+                    ["FOR_HELICOPTERS"] = "1",
+                    ["LENGTH"] = "21.000000",
+                    ["HEIGHT"] = "8",
+                    ["WIDTH"] = "15.000000",
+                    ["FOR_AIRPLANES"] = "1",
+                }, -- end of ["params"]
+            }, -- end of [1]
+            [2] = 
+            {
+                ["y"] = -1088476,
+                ["x"] = 389127,
+                ["name"] = "03",
+                ["flag"] = 64,
+                ["crossroad_index"] = 3,
+                ["params"] = 
+                {
+                    ["SHELTER"] = "0",
+                    ["FOR_HELICOPTERS"] = "1",
+                    ["LENGTH"] = "21.000000",
+                    ["HEIGHT"] = "8",
+                    ["WIDTH"] = "15.000000",
+                    ["FOR_AIRPLANES"] = "1",
+                }, -- end of ["params"]
+            }, -- end of [2]
+            [3] = 
+            {
+                ["y"] = -1088498.375,
+                ["x"] = 389128.03125,
+                ["name"] = "02",
+                ["flag"] = 64,
+                ["crossroad_index"] = 4,
+                ["params"] = 
+                {
+                    ["SHELTER"] = "0",
+                    ["FOR_HELICOPTERS"] = "1",
+                    ["LENGTH"] = "21.000000",
+                    ["HEIGHT"] = "8",
+                    ["WIDTH"] = "15.000000",
+                    ["FOR_AIRPLANES"] = "1",
+                }, -- end of ["params"]
+            }, -- end of [3]
+            [4] = 
+            {
+                ["y"] = -1088519.125,
+                ["x"] = 389105.625,
+                ["name"] = "01",
+                ["flag"] = 64,
+                ["crossroad_index"] = 5,
+                ["params"] = 
+                {
+                    ["SHELTER"] = "0",
+                    ["FOR_HELICOPTERS"] = "1",
+                    ["LENGTH"] = "21.000000",
+                    ["HEIGHT"] = "8",
+                    ["WIDTH"] = "15.000000",
+                    ["FOR_AIRPLANES"] = "1",
+                }, -- end of ["params"]
+            }, -- end of [4]
+        }, -- end of ["standlist"]
         ["frequencies"] = 
         {
-            ["id"] = -21,
+            ["roadnet"] = "./Mods/terrains/Falklands/AirfieldsTaxiways/CaletaTortelAirport.rn4",
             ["class"] = "4",
-            ["y"] = -1088712.75,
-            ["x"] = 388908,
-            ["name"] = "CaletaTortel",
+            ["id"] = -21,
+            ["y"] = -1088761.6875,
+            ["x"] = 388906,
+            ["name"] = "Caleta Tortel Airport",
             ["airdromeNumber"] = 22,
             ["frequencyList"] = 
             {
             }, -- end of ["frequencyList"]
-            ["angle"] = 0,
-            ["height"] = 1.0000009403953,
+            ["angle"] = -137,
+            ["height"] = 1.000001,
             ["coalitionName"] = "neutrals",
         }, -- end of ["frequencies"]
         ["airport"] = 
         {
             ["reference_point"] = 
             {
-                ["y"] = -1088712.75,
-                ["x"] = 388908,
+                ["y"] = -1088761.6875,
+                ["x"] = 388906,
             }, -- end of ["reference_point"]
-            ["abandoned"] = false,
-            ["id"] = "CaletaTortel",
-            ["class"] = "4",
+            ["code"] = "SCCR",
+            ["runways"] = 
+            {
+                [0] = 
+                {
+                    ["start"] = "04",
+                    ["id"] = 1,
+                    ["name"] = "04-22",
+                    ["end"] = "22",
+                }, -- end of [0]
+            }, -- end of ["runways"]
+            ["projectors"] = 
+            {
+            }, -- end of ["projectors"]
             ["names"] = 
             {
-                ["en"] = "CaletaTortel",
+                ["en"] = "Caleta Tortel Airport",
             }, -- end of ["names"]
             ["default_camera_position"] = 
             {
@@ -7582,8 +7933,12 @@ airports =
                     [3] = -1088712.75,
                 }, -- end of ["pnt"]
             }, -- end of ["default_camera_position"]
-            ["display_name"] = "CaletaTortel",
-            ["code"] = "SCCR",
+            ["display_name"] = "Caleta Tortel Airport",
+            ["reference_point_geo"] = 
+            {
+                ["lon"] = -73.531945,
+                ["lat"] = -47.786967,
+            }, -- end of ["reference_point_geo"]
             ["default_camera_position_geo"] = 
             {
                 ["bearing"] = 0,
@@ -7594,13 +7949,20 @@ airports =
                     ["height"] = -1.84375,
                 }, -- end of ["pnt"]
             }, -- end of ["default_camera_position_geo"]
-            ["projectors"] = 
+            ["civilian"] = true,
+            ["runwayName"] = 
             {
-            }, -- end of ["projectors"]
+                [1] = "22",
+                [0] = "04",
+            }, -- end of ["runwayName"]
+            ["roadnet5"] = "./Mods/terrains/Falklands/AirfieldsTaxiways/CaletaTortelAirport.rn5",
+            ["abandoned"] = false,
+            ["id"] = "CaletaTortelAirport",
+            ["roadnet"] = "./Mods/terrains/Falklands/AirfieldsTaxiways/CaletaTortelAirport.rn4",
             ["beacons"] = 
             {
             }, -- end of ["beacons"]
-            ["civilian"] = true,
+            ["class"] = "4",
         }, -- end of ["airport"]
     }, -- end of [22]
     [23] = 
@@ -7789,10 +8151,26 @@ airports =
             ["airdromeNumber"] = 23,
             ["frequencyList"] = 
             {
-                [1] = 39000000,
-                [2] = 128500000,
-                [3] = 250600000,
-                [4] = 4050000,
+                [1] = 
+                {
+                    [1] = 39000000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 128500000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 250600000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 4050000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = 77,
             ["height"] = 32.000032,
@@ -8000,10 +8378,26 @@ airports =
             ["airdromeNumber"] = 24,
             ["frequencyList"] = 
             {
-                [1] = 39050000,
-                [2] = 126000000,
-                [3] = 250650000,
-                [4] = 4075000,
+                [1] = 
+                {
+                    [1] = 39050000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 126000000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 250650000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 4075000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = 139,
             ["height"] = 18.30206793889,
@@ -8395,10 +8789,26 @@ airports =
             ["airdromeNumber"] = 26,
             ["frequencyList"] = 
             {
-                [1] = 39100000,
-                [2] = 118100000,
-                [3] = 250700000,
-                [4] = 4100000,
+                [1] = 
+                {
+                    [1] = 39100000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 118100000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 250700000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 4100000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = -86,
             ["height"] = 356.01036577563,
@@ -8570,23 +8980,23 @@ airports =
             {
                 [1] = 
                 {
-                    ["y"] = -1001283.4543457,
-                    ["x"] = 329191.41870117,
+                    ["y"] = -1001268.5219727,
+                    ["x"] = 329198.88232422,
                 }, -- end of [1]
                 [2] = 
                 {
-                    ["y"] = -1001255.3571777,
-                    ["x"] = 329196.16503906,
+                    ["y"] = -1001244.8643799,
+                    ["x"] = 329211.34301758,
                 }, -- end of [2]
                 [3] = 
                 {
-                    ["y"] = -1001236.7272949,
-                    ["x"] = 329205.43273926,
+                    ["y"] = -1001217.380127,
+                    ["x"] = 329225.38110352,
                 }, -- end of [3]
                 [4] = 
                 {
-                    ["y"] = -1001218.475708,
-                    ["x"] = 329215.46447754,
+                    ["y"] = -1001467.0058594,
+                    ["x"] = 329073.59655762,
                 }, -- end of [4]
             }, -- end of ["fueldepots"]
             ["roadnet"] = "./Mods/terrains/Falklands/AirfieldsTaxiways/OHiggins.rn4",
@@ -8611,10 +9021,26 @@ airports =
             ["airdromeNumber"] = 27,
             ["frequencyList"] = 
             {
-                [1] = 39150000,
-                [2] = 118250000,
-                [3] = 250750000,
-                [4] = 4125000,
+                [1] = 
+                {
+                    [1] = 39150000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 118250000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 250750000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 4125000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = -22,
             ["height"] = 270.80199809665,
@@ -8742,7 +9168,7 @@ airports =
             {
             }, -- end of ["frequencyList"]
             ["angle"] = 152,
-            ["height"] = 1.259956546935,
+            ["height"] = 1.259957142982,
             ["coalitionName"] = "neutrals",
         }, -- end of ["frequencies"]
         ["airport"] = 
@@ -8822,3 +9248,717 @@ airports =
         }, -- end of ["airport"]
     }, -- end of [29]
 } -- end of airports
+beacons = 
+{
+    [1] = 
+    {
+        ["direction"] = 73.854863,
+        ["beaconId"] = "airfield14_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:24371200",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "ELCALACAFE",
+        ["position"] = 
+        {
+            [1] = 136527.359375,
+            [2] = 199.844286,
+            [3] = -921495.0625,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = -72.03895,
+            ["latitude"] = -50.280529,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "EC",
+        ["type"] = 16896,
+        ["frequency"] = 108900000,
+    }, -- end of [1]
+    [2] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield14_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:16367656",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 2924,
+        ["display_name"] = "ELCALAFATE",
+        ["position"] = 
+        {
+            [1] = 135880.75,
+            [2] = 198.048568,
+            [3] = -924036.875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = -72.075212,
+            ["latitude"] = -50.281576,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "ec",
+        ["direction"] = 72.999995,
+        ["frequency"] = 108900000,
+    }, -- end of [2]
+    [3] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "airfield14_2",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = -72.04517,
+            ["latitude"] = -50.278446,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:9420893",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "ECA",
+        ["channel"] = 94,
+        ["callsign"] = "ECA",
+        ["position"] = 
+        {
+            [1] = 136666.3125,
+            [2] = 196.892989,
+            [3] = -921982.75,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 114700000,
+    }, -- end of [3]
+    [4] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield2_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:14402584",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 2967,
+        ["display_name"] = "MTPLEASANT",
+        ["position"] = 
+        {
+            [1] = 73666.453125,
+            [2] = 74.138075,
+            [3] = 45783.363281,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = -58.477728,
+            ["latitude"] = -51.817299,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "imp",
+        ["direction"] = 104.099978,
+        ["frequency"] = 111900000,
+    }, -- end of [4]
+    [5] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "airfield2_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:4262026",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "MP",
+        ["position"] = 
+        {
+            [1] = 72305.148438,
+            [2] = 74.137983,
+            [3] = 45747.414062,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = -58.47865,
+            ["latitude"] = -51.829528,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "MP",
+        ["type"] = 4104,
+        ["frequency"] = 380000,
+    }, -- end of [5]
+    [6] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "airfield2_2",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = -58.456949,
+            ["latitude"] = -51.824087,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:14402577",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "MPA",
+        ["channel"] = 59,
+        ["callsign"] = "MPA",
+        ["position"] = 
+        {
+            [1] = 72940.390625,
+            [2] = 74.137174,
+            [3] = 47230.632812,
+        }, -- end of ["position"]
+        ["type"] = 4,
+        ["frequency"] = 112200000,
+    }, -- end of [6]
+    [7] = 
+    {
+        ["direction"] = 17.188745,
+        ["beaconId"] = "airfield2_3",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = -58.422928,
+            ["latitude"] = -51.826531,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:8306816",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "MTP",
+        ["channel"] = 94,
+        ["callsign"] = "MTP",
+        ["position"] = 
+        {
+            [1] = 72714.851562,
+            [2] = 63.822162,
+            [3] = 49580.492188,
+        }, -- end of ["position"]
+        ["type"] = 1,
+        ["frequency"] = 114700000,
+    }, -- end of [7]
+    [8] = 
+    {
+        ["direction"] = 106.217857,
+        ["beaconId"] = "airfield2_4",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:22029318",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "MTPLEASANT",
+        ["position"] = 
+        {
+            [1] = 72931.070312,
+            [2] = 74.138075,
+            [3] = 48172.796875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = -58.443285,
+            ["latitude"] = -51.824339,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IMP",
+        ["type"] = 16896,
+        ["frequency"] = 111900000,
+    }, -- end of [8]
+    [9] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "airfield1_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:64937984",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "stanleyairport",
+        ["position"] = 
+        {
+            [1] = 89159.585938,
+            [2] = 20.55706,
+            [3] = 94201.484375,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = -57.773001,
+            ["latitude"] = -51.684736,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "SA",
+        ["type"] = 4104,
+        ["frequency"] = 305000,
+    }, -- end of [9]
+    [10] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "airfield1_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:8667682",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "DFO",
+        ["position"] = 
+        {
+            [1] = 89159.497356,
+            [2] = 20.557058,
+            [3] = 94167.834159,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = -57.773487,
+            ["latitude"] = -51.684733,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "DFO",
+        ["type"] = 1,
+        ["frequency"] = 113300000,
+    }, -- end of [10]
+    [11] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "airfield13_0",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = -72.422021,
+            ["latitude"] = -51.738041,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:7195005",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "PUERTO NATALES",
+        ["channel"] = 106,
+        ["callsign"] = "PNT",
+        ["position"] = 
+        {
+            [1] = -29898.896534,
+            [2] = 101.472666,
+            [3] = -914126.195727,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 115900000,
+    }, -- end of [11]
+    [12] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "airfield12_0",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = -67.621059,
+            ["latitude"] = -54.929549,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:5432189",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Puerto Williams",
+        ["channel"] = 96,
+        ["callsign"] = "PWL",
+        ["position"] = 
+        {
+            [1] = -323309.40132,
+            [2] = 16.467202,
+            [3] = -531621.976824,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 114900000,
+    }, -- end of [12]
+    [13] = 
+    {
+        ["direction"] = 76.747471,
+        ["beaconId"] = "airfield9_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:18751712",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "ptarenas",
+        ["position"] = 
+        {
+            [1] = -146880.036713,
+            [2] = 37.207671,
+            [3] = -778463.993454,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = -70.837778,
+            ["latitude"] = -52.9996,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "inas",
+        ["type"] = 16896,
+        ["frequency"] = 109900000,
+    }, -- end of [13]
+    [14] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield9_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:11772180",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 3396,
+        ["display_name"] = "",
+        ["position"] = 
+        {
+            [1] = -147614.546875,
+            [2] = 41.658905,
+            [3] = -781243.4375,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = -70.880082,
+            ["latitude"] = -53.001231,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "INAS",
+        ["direction"] = 77.637503,
+        ["frequency"] = 109900000,
+    }, -- end of [14]
+    [15] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "airfield9_2",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:6507386",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "NAS",
+        ["position"] = 
+        {
+            [1] = -147603.078125,
+            [2] = 38.113205,
+            [3] = -779535.1875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = -70.855336,
+            ["latitude"] = -53.00407,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "NAS",
+        ["type"] = 3,
+        ["frequency"] = 114100000,
+    }, -- end of [15]
+    [16] = 
+    {
+        ["direction"] = -162.875779,
+        ["beaconId"] = "airfield9_3",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:11772166",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "NAS",
+        ["position"] = 
+        {
+            [1] = -149244.9375,
+            [2] = 31.673541,
+            [3] = -780144.75,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = -70.868839,
+            ["latitude"] = -53.017351,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "NAS",
+        ["type"] = 8,
+        ["frequency"] = 270000,
+    }, -- end of [16]
+    [17] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "airfield5_0",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = -69.330441,
+            ["latitude"] = -51.610861,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:7626752",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "GAL",
+        ["channel"] = 114,
+        ["callsign"] = "GAL",
+        ["position"] = 
+        {
+            [1] = 25281.628906,
+            [2] = 15.454749,
+            [3] = -704622.125,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 116700000,
+    }, -- end of [17]
+    [18] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield5_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:13107991",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 3835,
+        ["display_name"] = "RIOGALLEGOS",
+        ["position"] = 
+        {
+            [1] = 25207.816406,
+            [2] = 15.454749,
+            [3] = -705419.25,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = -69.341866,
+            ["latitude"] = -51.610309,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "gl",
+        ["direction"] = 75.799991,
+        ["frequency"] = 110300000,
+    }, -- end of [18]
+    [19] = 
+    {
+        ["direction"] = 75.799998,
+        ["beaconId"] = "airfield5_2",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:20465088",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "RIOGALLEGOS",
+        ["position"] = 
+        {
+            [1] = 25920.679688,
+            [2] = 15.45475,
+            [3] = -701994.5625,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = -69.291827,
+            ["latitude"] = -51.609196,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "gl",
+        ["type"] = 16896,
+        ["frequency"] = 110300000,
+    }, -- end of [19]
+    [20] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield6_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:11272545",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 2450,
+        ["display_name"] = "RIOGRANDE",
+        ["position"] = 
+        {
+            [1] = -197423.84375,
+            [2] = 18.521791,
+            [3] = -560901.375,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = -67.771597,
+            ["latitude"] = -53.778151,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "gr",
+        ["direction"] = 78.809318,
+        ["frequency"] = 109500000,
+    }, -- end of [20]
+    [21] = 
+    {
+        ["direction"] = -12.944603,
+        ["beaconId"] = "airfield6_1",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = -67.745751,
+            ["latitude"] = -53.775134,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:6139303",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "GRA",
+        ["channel"] = 120,
+        ["callsign"] = "GRA",
+        ["position"] = 
+        {
+            [1] = -196830.34375,
+            [2] = 18.521791,
+            [3] = -559258.625,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 117300000,
+    }, -- end of [21]
+    [22] = 
+    {
+        ["direction"] = 80.311714,
+        ["beaconId"] = "airfield6_2",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:18154827",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "RIOGRANDE",
+        ["position"] = 
+        {
+            [1] = -197128.037595,
+            [2] = 18.521791,
+            [3] = -558753.278777,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = -67.738896,
+            ["latitude"] = -53.778446,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "gr",
+        ["type"] = 16896,
+        ["frequency"] = 109500000,
+    }, -- end of [22]
+    [23] = 
+    {
+        ["direction"] = -59.842259,
+        ["beaconId"] = "airfield6_3",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:2810755",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "riograndendb",
+        ["position"] = 
+        {
+            [1] = -197913.953125,
+            [2] = 9.708141,
+            [3] = -557863.5625,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = -67.727422,
+            ["latitude"] = -53.786588,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "P",
+        ["type"] = 4104,
+        ["frequency"] = 265000,
+    }, -- end of [23]
+    [24] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "airfield6_4",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = -67.747975,
+            ["latitude"] = -53.779056,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:11274350",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "riogrande",
+        ["channel"] = 31,
+        ["callsign"] = "gra",
+        ["position"] = 
+        {
+            [1] = -197286.59375,
+            [2] = 18.521793,
+            [3] = -559337.9375,
+        }, -- end of ["position"]
+        ["type"] = 4,
+        ["frequency"] = 1000000,
+    }, -- end of [24]
+    [25] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "airfield20_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:3686421",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "BIO",
+        ["position"] = 
+        {
+            [1] = -12635.218321,
+            [2] = 275.999849,
+            [3] = -903425.963493,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = -72.221032,
+            ["latitude"] = -51.608282,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "BIO",
+        ["type"] = 4104,
+        ["frequency"] = 205000000,
+    }, -- end of [25]
+    [26] = 
+    {
+        ["direction"] = -13.581222,
+        ["beaconId"] = "airfield11_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:10029909",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "San Julian",
+        ["position"] = 
+        {
+            [1] = 297049.809571,
+            [2] = 44.000044,
+            [3] = -637612.540034,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = -67.812946,
+            ["latitude"] = -49.309587,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "",
+        ["type"] = 3,
+        ["frequency"] = 117700000,
+    }, -- end of [26]
+    [27] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield7_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:10437858",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 2724,
+        ["display_name"] = "RIOGRANDE",
+        ["position"] = 
+        {
+            [1] = -320923.90625,
+            [2] = 18.499269,
+            [3] = -577591.8125,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = -68.318784,
+            ["latitude"] = -54.844195,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "us",
+        ["direction"] = 76.89946,
+        ["frequency"] = 111300000,
+    }, -- end of [27]
+    [28] = 
+    {
+        ["direction"] = 76.394382,
+        ["beaconId"] = "airfield7_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:17399908",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Ushuaia",
+        ["position"] = 
+        {
+            [1] = -320262.59375,
+            [2] = 23.035338,
+            [3] = -575219.625,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = -68.280912,
+            ["latitude"] = -54.841782,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "us",
+        ["type"] = 16896,
+        ["frequency"] = 111300000,
+    }, -- end of [28]
+    [29] = 
+    {
+        ["direction"] = 1.061029,
+        ["beaconId"] = "airfield7_2",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = -68.282349,
+            ["latitude"] = -54.83908,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:5383476",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "USU",
+        ["channel"] = 84,
+        ["callsign"] = "USU",
+        ["position"] = 
+        {
+            [1] = -319978.8125,
+            [2] = 27.620942,
+            [3] = -575360,
+        }, -- end of ["position"]
+        ["type"] = 1,
+        ["frequency"] = 113700000,
+    }, -- end of [29]
+} -- end of beacons

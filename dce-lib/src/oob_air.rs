@@ -279,7 +279,11 @@ fn side_to_squadrons(countries: &[Country], base: String) -> Result<Vec<Squadron
                     }
                     _ => {}
                 }
-
+                // and for anything with saturation in it as these are special overpowered units:
+                if unit.name.contains(" saturation ") | unit.name.ends_with(" saturation") {
+                    squadron.number = 2;
+                    squadron.reserve = 1;
+                }
                 squadron.tasks.insert(task.to_owned(), true);
 
                 // and task coef:

@@ -271,6 +271,15 @@ fn side_to_squadrons(countries: &[Country], base: String) -> Result<Vec<Squadron
                 // check casing and convert as needed
                 let task = str_to_task(task.as_str())?;
 
+                // set default quantities for certain tasks - we don't need 12 AWACS!
+                match task.to_lowercase().as_str() {
+                    "awacs" | "refueling" | "transport" => {
+                        squadron.number = 4;
+                        squadron.reserve = 2;
+                    }
+                    _ => {}
+                }
+
                 squadron.tasks.insert(task.to_owned(), true);
 
                 // and task coef:

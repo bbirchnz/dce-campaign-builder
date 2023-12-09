@@ -25,7 +25,7 @@ jobs:
         with:
           vcpkgArguments: "proj:x64-windows"
           vcpkgDirectory: "${{ github.workspace }}/vcpkg"
-          vcpkgGitCommitId: "0ccb3d11406922bef1dcc29002f68f633a321f19"
+          vcpkgGitCommitId: "000d1bda1ffa95a73e0b40334fa4103d6f4d3d48"
 
       - name: Choco install pkgconfiglite
         uses: crazy-max/ghaction-chocolatey@v2

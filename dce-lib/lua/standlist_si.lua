@@ -44106,3 +44106,3707 @@ airports =
         }, -- end of ["airport"]
     }, -- end of [30]
 } -- end of airports
+beacons = 
+{
+    [1] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_0",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 35.957901,
+            ["latitude"] = 35.228298,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:20799488",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Banias",
+        ["channel"] = 0,
+        ["callsign"] = "BAN",
+        ["position"] = 
+        {
+            [1] = 577058.375,
+            [2] = 0,
+            [3] = 438423.875,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 304000,
+    }, -- end of [1]
+    [2] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_1",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 35.850201,
+            ["latitude"] = 31.709299,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:19570910",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "QueenAlia",
+        ["channel"] = 0,
+        ["callsign"] = "MDB",
+        ["position"] = 
+        {
+            [1] = 186434.5,
+            [2] = 769.080847,
+            [3] = 439334.84375,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 399000,
+    }, -- end of [2]
+    [3] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_2",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 36.1581,
+            ["latitude"] = 31.7409,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:137871360",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "QueenAlia",
+        ["channel"] = 99,
+        ["callsign"] = "QAA",
+        ["position"] = 
+        {
+            [1] = 190744.734375,
+            [2] = 825.452058,
+            [3] = 468425.375,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 115200000,
+    }, -- end of [3]
+    [4] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_3",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 36.468601,
+            ["latitude"] = 33.364899,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:158507008",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Damascus",
+        ["channel"] = 107,
+        ["callsign"] = "DAM",
+        ["position"] = 
+        {
+            [1] = 371804.84375,
+            [2] = 618.016792,
+            [3] = 491982.375,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 116000000,
+    }, -- end of [4]
+    [5] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_4",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 35.4813,
+            ["latitude"] = 33.902302,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:20758528",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Beirut",
+        ["channel"] = 0,
+        ["callsign"] = "BOD",
+        ["position"] = 
+        {
+            [1] = 428782.5625,
+            [2] = 3.988918,
+            [3] = 398654,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 351000,
+    }, -- end of [5]
+    [6] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_5",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 31.032499,
+            ["latitude"] = 27.031201,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:21053444",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Asyut",
+        ["channel"] = 124,
+        ["callsign"] = "AST",
+        ["position"] = 
+        {
+            [1] = -333898.625,
+            [2] = 247.853245,
+            [3] = -25952.71875,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 117700000,
+    }, -- end of [6]
+    [7] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_6",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 35.119,
+            ["latitude"] = 29.9023,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:16916561",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Aqaba",
+        ["channel"] = 0,
+        ["callsign"] = "AQC",
+        ["position"] = 
+        {
+            [1] = -15466.90625,
+            [2] = 82.112547,
+            [3] = 373818.125,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 326000,
+    }, -- end of [7]
+    [8] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_7",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 36.233299,
+            ["latitude"] = 33.483299,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:20725760",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Mezze",
+        ["channel"] = 0,
+        ["callsign"] = "MEZ",
+        ["position"] = 
+        {
+            [1] = 384234.53125,
+            [2] = 714.461225,
+            [3] = 469668.75,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 358000,
+    }, -- end of [8]
+    [9] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_8",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 37.2337,
+            ["latitude"] = 34.227199,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:20766720",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Kariatain",
+        ["channel"] = 0,
+        ["callsign"] = "KTN",
+        ["position"] = 
+        {
+            [1] = 470149.625,
+            [2] = 757.725489,
+            [3] = 559282.3125,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 373000,
+    }, -- end of [9]
+    [10] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_9",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 35.950699,
+            ["latitude"] = 35.399399,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:158900224",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "BasselAlAssad",
+        ["channel"] = 95,
+        ["callsign"] = "LTK",
+        ["position"] = 
+        {
+            [1] = 596022.625,
+            [2] = 0,
+            [3] = 437202.5625,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 114800000,
+    }, -- end of [10]
+    [11] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_10",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.797401,
+            ["latitude"] = 29.606701,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:50451101",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Taba",
+        ["channel"] = 92,
+        ["callsign"] = "TBA",
+        ["position"] = 
+        {
+            [1] = -48758.046875,
+            [2] = 714.527631,
+            [3] = 343271.40625,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 114500000,
+    }, -- end of [11]
+    [12] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_11",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.671101,
+            ["latitude"] = 29.0322,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:15376392",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Nuweibaa",
+        ["channel"] = 0,
+        ["callsign"] = "NWB",
+        ["position"] = 
+        {
+            [1] = -112608.046875,
+            [2] = 19.929889,
+            [3] = 331948.90625,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 288000,
+    }, -- end of [12]
+    [13] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_12",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 35.2164,
+            ["latitude"] = 31.8634,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:19696864",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Jerusalem",
+        ["channel"] = 0,
+        ["callsign"] = "IRM",
+        ["position"] = 
+        {
+            [1] = 202123.34375,
+            [2] = 710.448708,
+            [3] = 378905.9375,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 336000,
+    }, -- end of [13]
+    [14] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_13",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 31.3594,
+            ["latitude"] = 30.073999,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:16516964",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Almaza",
+        ["channel"] = 0,
+        ["callsign"] = "A",
+        ["position"] = 
+        {
+            [1] = 2806.796875,
+            [2] = 87.918125,
+            [3] = 11096.59375,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 490000,
+    }, -- end of [14]
+    [15] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_14",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 36.066002,
+            ["latitude"] = 32.004101,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:141713543",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Amman",
+        ["channel"] = 110,
+        ["callsign"] = "AMN",
+        ["position"] = 
+        {
+            [1] = 219686.890625,
+            [2] = 676.037358,
+            [3] = 458870.40625,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 116300000,
+    }, -- end of [15]
+    [16] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_15",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.875198,
+            ["latitude"] = 32.0131,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:392060984",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "BenGurion",
+        ["channel"] = 82,
+        ["callsign"] = "BGN",
+        ["position"] = 
+        {
+            [1] = 218111.453125,
+            [2] = 30.12503,
+            [3] = 346333.28125,
+        }, -- end of ["position"]
+        ["type"] = 5,
+        ["frequency"] = 113500000,
+    }, -- end of [16]
+    [17] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_16",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 31.3573,
+            ["latitude"] = 30.092199,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:173338314",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Almaza",
+        ["channel"] = 110,
+        ["callsign"] = "MXR",
+        ["position"] = 
+        {
+            [1] = 4826.84375,
+            [2] = 63.258047,
+            [3] = 10923.15625,
+        }, -- end of ["position"]
+        ["type"] = 4,
+        ["frequency"] = 116300000,
+    }, -- end of [17]
+    [18] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_17",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.933102,
+            ["latitude"] = 29.9422,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:16908465",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Ovda",
+        ["channel"] = 0,
+        ["callsign"] = "OVD",
+        ["position"] = 
+        {
+            [1] = -11361.070312,
+            [2] = 428.218629,
+            [3] = 355791.03125,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 353000,
+    }, -- end of [18]
+    [19] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_18",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 35.063599,
+            ["latitude"] = 32.815601,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:20464823",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Haifa",
+        ["channel"] = 0,
+        ["callsign"] = "HFA",
+        ["position"] = 
+        {
+            [1] = 307417.71875,
+            [2] = 2.000002,
+            [3] = 362412.15625,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 323000,
+    }, -- end of [19]
+    [20] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_19",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 35.007,
+            ["latitude"] = 29.5802,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:15803564",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Aqaba",
+        ["channel"] = 0,
+        ["callsign"] = "AQ",
+        ["position"] = 
+        {
+            [1] = -51362.1875,
+            [2] = 41.979683,
+            [3] = 363622.5625,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 404000,
+    }, -- end of [20]
+    [21] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_20",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 29.952499,
+            ["latitude"] = 31.194901,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:18613354",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Alexandria",
+        ["channel"] = 0,
+        ["callsign"] = "AXD",
+        ["position"] = 
+        {
+            [1] = 129891.6875,
+            [2] = 2.000002,
+            [3] = -121181.40625,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 403000,
+    }, -- end of [21]
+    [22] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_21",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 31.122499,
+            ["latitude"] = 31.5289,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:133620742",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Baltim",
+        ["channel"] = 116,
+        ["callsign"] = "BLT",
+        ["position"] = 
+        {
+            [1] = 164434.359375,
+            [2] = 2.000002,
+            [3] = -9033.265625,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 116900000,
+    }, -- end of [22]
+    [23] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_22",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 38.734699,
+            ["latitude"] = 31.6933,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:137887744",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Turaif",
+        ["channel"] = 108,
+        ["callsign"] = "TRF",
+        ["position"] = 
+        {
+            [1] = 195457.421875,
+            [2] = 855.167725,
+            [3] = 713099.5625,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 116100000,
+    }, -- end of [23]
+    [24] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_23",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 36.488098,
+            ["latitude"] = 26.1793,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:209985536",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Wejh",
+        ["channel"] = 86,
+        ["callsign"] = "WEJ",
+        ["position"] = 
+        {
+            [1] = -425086.1875,
+            [2] = 18.434657,
+            [3] = 517903.5625,
+        }, -- end of ["position"]
+        ["type"] = 5,
+        ["frequency"] = 113900000,
+    }, -- end of [24]
+    [25] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_24",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 35.390499,
+            ["latitude"] = 31.330601,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:369516602",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Metzada",
+        ["channel"] = 97,
+        ["callsign"] = "MZD",
+        ["position"] = 
+        {
+            [1] = 143396.84375,
+            [2] = 2.000002,
+            [3] = 396672.96875,
+        }, -- end of ["position"]
+        ["type"] = 5,
+        ["frequency"] = 115000000,
+    }, -- end of [25]
+    [26] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_25",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 35.556702,
+            ["latitude"] = 32.9669,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:20611198",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "RoshPina",
+        ["channel"] = 0,
+        ["callsign"] = "RPN",
+        ["position"] = 
+        {
+            [1] = 325206.8125,
+            [2] = 311.626899,
+            [3] = 408180.15625,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 243000,
+    }, -- end of [26]
+    [27] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_26",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 33.796398,
+            ["latitude"] = 27.177799,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:23003136",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Hurghada",
+        ["channel"] = 112,
+        ["callsign"] = "HGD",
+        ["position"] = 
+        {
+            [1] = -318934.15625,
+            [2] = 7.245562,
+            [3] = 248113.625,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 116500000,
+    }, -- end of [27]
+    [28] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_27",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 35.699699,
+            ["latitude"] = 34.299,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:158777344",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Chekka",
+        ["channel"] = 109,
+        ["callsign"] = "CAK",
+        ["position"] = 
+        {
+            [1] = 473296.40625,
+            [2] = 201.495837,
+            [3] = 417690.28125,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 116200000,
+    }, -- end of [28]
+    [29] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_28",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 36.094601,
+            ["latitude"] = 31.730499,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:19587072",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "QueenAlia",
+        ["channel"] = 0,
+        ["callsign"] = "QA",
+        ["position"] = 
+        {
+            [1] = 189418.234375,
+            [2] = 831.594704,
+            [3] = 462439.5,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 410000,
+    }, -- end of [29]
+    [30] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_29",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 30.830299,
+            ["latitude"] = 29.811199,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:16039941",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "October",
+        ["channel"] = 0,
+        ["callsign"] = "OCT",
+        ["position"] = 
+        {
+            [1] = -25473.65625,
+            [2] = 223.693141,
+            [3] = -40461.125,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 340000,
+    }, -- end of [30]
+    [31] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_30",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 32.237801,
+            ["latitude"] = 31.278799,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:122651775",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "PortSaid",
+        ["channel"] = 74,
+        ["callsign"] = "PSD",
+        ["position"] = 
+        {
+            [1] = 135438.109375,
+            [2] = 2.000002,
+            [3] = 96669.390625,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 112700000,
+    }, -- end of [31]
+    [32] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_31",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 29.95071,
+            ["latitude"] = 31.18767,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:114983925",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Alexandria",
+        ["channel"] = 106,
+        ["callsign"] = "NOZ",
+        ["position"] = 
+        {
+            [1] = 129094.5,
+            [2] = 2.000002,
+            [3] = -121374.125,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 115900000,
+    }, -- end of [32]
+    [33] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_32",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 40.187401,
+            ["latitude"] = 35.2892,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:20815872",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "DeirZzor",
+        ["channel"] = 0,
+        ["callsign"] = "DRZ",
+        ["position"] = 
+        {
+            [1] = 603577.1875,
+            [2] = 0,
+            [3] = 823341.0625,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 295000,
+    }, -- end of [33]
+    [34] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_33",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 40.153801,
+            ["latitude"] = 35.291901,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:158908416",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "DeirZzor",
+        ["channel"] = 117,
+        ["callsign"] = "DRZ",
+        ["position"] = 
+        {
+            [1] = 603654.875,
+            [2] = 0,
+            [3] = 820256.125,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 117000000,
+    }, -- end of [34]
+    [35] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_34",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 31.385,
+            ["latitude"] = 30.166901,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:16533987",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Cairo",
+        ["channel"] = 0,
+        ["callsign"] = "ALI",
+        ["position"] = 
+        {
+            [1] = 13068.09375,
+            [2] = 11.474359,
+            [3] = 13710.046875,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 310000,
+    }, -- end of [35]
+    [36] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_35",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 38.7981,
+            ["latitude"] = 30.122801,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:61276160",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Al-Shigar",
+        ["channel"] = 70,
+        ["callsign"] = "ASH",
+        ["position"] = 
+        {
+            [1] = 21305.039062,
+            [2] = 545.973568,
+            [3] = 728221.9375,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 112300000,
+    }, -- end of [36]
+    [37] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_36",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 31.2754,
+            ["latitude"] = 30.042101,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:16459947",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Cairo",
+        ["channel"] = 0,
+        ["callsign"] = "MKT",
+        ["position"] = 
+        {
+            [1] = -609.453125,
+            [2] = 42.228993,
+            [3] = 2945.96875,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 317000,
+    }, -- end of [37]
+    [38] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_37",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.565601,
+            ["latitude"] = 25.5828,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:20848640",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "MarsaAlam",
+        ["channel"] = 102,
+        ["callsign"] = "MAK",
+        ["position"] = 
+        {
+            [1] = -494902.3125,
+            [2] = 70.635225,
+            [3] = 326465.375,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 115500000,
+    }, -- end of [38]
+    [39] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_38",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.748299,
+            ["latitude"] = 29.606701,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:15974400",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Taba",
+        ["channel"] = 0,
+        ["callsign"] = "TBA",
+        ["position"] = 
+        {
+            [1] = -48830.765625,
+            [2] = 712.577068,
+            [3] = 338515.84375,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 316000,
+    }, -- end of [39]
+    [40] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_39",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 35.161098,
+            ["latitude"] = 30.5583,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:75579392",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Zofar",
+        ["channel"] = 103,
+        ["callsign"] = "ZFR",
+        ["position"] = 
+        {
+            [1] = 57327.203125,
+            [2] = 26.534061,
+            [3] = 376502.28125,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 115600000,
+    }, -- end of [40]
+    [41] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_40",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.967999,
+            ["latitude"] = 32.332001,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:399655122",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Natania",
+        ["channel"] = 71,
+        ["callsign"] = "NAT",
+        ["position"] = 
+        {
+            [1] = 253625.1875,
+            [2] = 14.836994,
+            [3] = 354452.75,
+        }, -- end of ["position"]
+        ["type"] = 5,
+        ["frequency"] = 112400000,
+    }, -- end of [41]
+    [42] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_41",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 37.264198,
+            ["latitude"] = 34.213299,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:158785536",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Kariatain",
+        ["channel"] = 124,
+        ["callsign"] = "KTN",
+        ["position"] = 
+        {
+            [1] = 468724.21875,
+            [2] = 745.288526,
+            [3] = 562158.8125,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 117700000,
+    }, -- end of [42]
+    [43] = 
+    {
+        ["direction"] = 7.63943,
+        ["beaconId"] = "world_42",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.826917,
+            ["latitude"] = 32.178999,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:19958583",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Herzlia",
+        ["channel"] = 0,
+        ["callsign"] = "HRZ",
+        ["position"] = 
+        {
+            [1] = 236426.40625,
+            [2] = 14.001209,
+            [3] = 341460.75,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 273000,
+    }, -- end of [43]
+    [44] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_43",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 37.286598,
+            ["latitude"] = 31.4126,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:377208832",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Guriat",
+        ["channel"] = 94,
+        ["callsign"] = "GRY",
+        ["position"] = 
+        {
+            [1] = 157973.40625,
+            [2] = 509.756003,
+            [3] = 576848.9375,
+        }, -- end of ["position"]
+        ["type"] = 5,
+        ["frequency"] = 114700000,
+    }, -- end of [44]
+    [45] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_44",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.271301,
+            ["latitude"] = 31.2456,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:123260827",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Gaza",
+        ["channel"] = 80,
+        ["callsign"] = "GZA",
+        ["position"] = 
+        {
+            [1] = 132204.796875,
+            [2] = 81.670957,
+            [3] = 290280.59375,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 113350000,
+    }, -- end of [45]
+    [46] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_45",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 31.388399,
+            ["latitude"] = 30.0923,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:55190549",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Cairo",
+        ["channel"] = 99,
+        ["callsign"] = "CVO",
+        ["position"] = 
+        {
+            [1] = 4795.359375,
+            [2] = 112.079137,
+            [3] = 13920.609375,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 115200000,
+    }, -- end of [46]
+    [47] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_46",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 36.083,
+            ["latitude"] = 34.598999,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:20774912",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "ReneMouawad",
+        ["channel"] = 0,
+        ["callsign"] = "RA",
+        ["position"] = 
+        {
+            [1] = 507584,
+            [2] = 37.952667,
+            [3] = 451965.25,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 450000,
+    }, -- end of [47]
+    [48] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_47",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 36.065601,
+            ["latitude"] = 32.004799,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:19931136",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Amman",
+        ["channel"] = 0,
+        ["callsign"] = "JYO",
+        ["position"] = 
+        {
+            [1] = 219763.25,
+            [2] = 675.566044,
+            [3] = 458830.34375,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 391000,
+    }, -- end of [48]
+    [49] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_48",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 35.221401,
+            ["latitude"] = 30.2265,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:17178624",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Aqaba",
+        ["channel"] = 0,
+        ["callsign"] = "AQA",
+        ["position"] = 
+        {
+            [1] = 20657.78125,
+            [2] = 246.742831,
+            [3] = 383009.40625,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 418000,
+    }, -- end of [49]
+    [50] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_49",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 31.424183,
+            ["latitude"] = 30.151953,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:57681928",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Cairo",
+        ["channel"] = 72,
+        ["callsign"] = "CAI",
+        ["position"] = 
+        {
+            [1] = 11358.630327,
+            [2] = 62.158837,
+            [3] = 17460.639839,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 112500000,
+    }, -- end of [50]
+    [51] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_50",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 35.942299,
+            ["latitude"] = 35.480301,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:20807680",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "BasselAlAssad",
+        ["channel"] = 0,
+        ["callsign"] = "LTK",
+        ["position"] = 
+        {
+            [1] = 604976.1875,
+            [2] = 0,
+            [3] = 436171.9375,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 414000,
+    }, -- end of [51]
+    [52] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_51",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.4133,
+            ["latitude"] = 27.9981,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:29385686",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "SharmElSheikh",
+        ["channel"] = 89,
+        ["callsign"] = "SHM",
+        ["position"] = 
+        {
+            [1] = -227516.375,
+            [2] = 26.080135,
+            [3] = 308191.5625,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 114200000,
+    }, -- end of [52]
+    [53] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_52",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 36.026901,
+            ["latitude"] = 31.7353,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:19579683",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "QueenAlia(Locator)",
+        ["channel"] = 0,
+        ["callsign"] = "QL",
+        ["position"] = 
+        {
+            [1] = 189770.203125,
+            [2] = 703.099946,
+            [3] = 456007.34375,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 307000,
+    }, -- end of [53]
+    [54] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_53",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 35.484699,
+            ["latitude"] = 33.805599,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:158662706",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Khaldeh",
+        ["channel"] = 73,
+        ["callsign"] = "KAD",
+        ["position"] = 
+        {
+            [1] = 418064.375,
+            [2] = 11.956067,
+            [3] = 399227.65625,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 112600000,
+    }, -- end of [54]
+    [55] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_54",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 28.4669,
+            ["latitude"] = 31.0114,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:105242624",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "ElDaba",
+        ["channel"] = 104,
+        ["callsign"] = "DBA",
+        ["position"] = 
+        {
+            [1] = 114387.1875,
+            [2] = 25.703471,
+            [3] = -263697.03125,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 115700000,
+    }, -- end of [55]
+    [56] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_55",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 29.7125,
+            ["latitude"] = 30.8983,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:17965056",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "InnerBeacon",
+        ["channel"] = 0,
+        ["callsign"] = "D",
+        ["position"] = 
+        {
+            [1] = 97651.03125,
+            [2] = 20.982508,
+            [3] = -145037.375,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 273000,
+    }, -- end of [56]
+    [57] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_56",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 30.911699,
+            ["latitude"] = 30.1155,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:173262031",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "CairoWest",
+        ["channel"] = 114,
+        ["callsign"] = "BLA",
+        ["position"] = 
+        {
+            [1] = 8111.007812,
+            [2] = 134.031384,
+            [3] = -31978.40625,
+        }, -- end of ["position"]
+        ["type"] = 4,
+        ["frequency"] = 116700000,
+    }, -- end of [57]
+    [58] = 
+    {
+        ["direction"] = 44.308748,
+        ["beaconId"] = "world_57",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.284206,
+            ["latitude"] = 31.292116,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:19013884",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Gaza",
+        ["channel"] = 0,
+        ["callsign"] = "RFH",
+        ["position"] = 
+        {
+            [1] = 137374.96875,
+            [2] = 46.933816,
+            [3] = 291449.5,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 380000,
+    }, -- end of [58]
+    [59] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_58",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 38.298302,
+            ["latitude"] = 34.552898,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:20791296",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Palmyra",
+        ["channel"] = 0,
+        ["callsign"] = "PAL",
+        ["position"] = 
+        {
+            [1] = 510925.375,
+            [2] = 401.758458,
+            [3] = 655564.625,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 337000,
+    }, -- end of [59]
+    [60] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_59",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 30.590799,
+            ["latitude"] = 25.4484,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:20832256",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "ElKharga",
+        ["channel"] = 85,
+        ["callsign"] = "KHG",
+        ["position"] = 
+        {
+            [1] = -508523.5,
+            [2] = 32.795111,
+            [3] = -73045.34375,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 113800000,
+    }, -- end of [60]
+    [61] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_60",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 39.269199,
+            ["latitude"] = 26.4342,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:20955136",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Halaifa",
+        ["channel"] = 114,
+        ["callsign"] = "HLF",
+        ["position"] = 
+        {
+            [1] = -386260.34375,
+            [2] = 1161.798281,
+            [3] = 795063.0625,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 116700000,
+    }, -- end of [61]
+    [62] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_61",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 35.008201,
+            ["latitude"] = 29.5835,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:49407696",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Aqaba",
+        ["channel"] = 78,
+        ["callsign"] = "AQB",
+        ["position"] = 
+        {
+            [1] = -50994.453125,
+            [2] = 42.177326,
+            [3] = 363732.625,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 113100000,
+    }, -- end of [62]
+    [63] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_62",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 35.483002,
+            ["latitude"] = 33.848999,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:20742144",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Beirut",
+        ["channel"] = 0,
+        ["callsign"] = "BAB",
+        ["position"] = 
+        {
+            [1] = 422874.25,
+            [2] = 0,
+            [3] = 398954.28125,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 312000,
+    }, -- end of [63]
+    [64] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_63",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 26.0056,
+            ["latitude"] = 31.5756,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:136814592",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "SidiBarrani",
+        ["channel"] = 109,
+        ["callsign"] = "BRN",
+        ["position"] = 
+        {
+            [1] = 189383.984375,
+            [2] = 28.923586,
+            [3] = -495210.6875,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 116200000,
+    }, -- end of [64]
+    [65] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_64",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 32.7686,
+            ["latitude"] = 25.749399,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:20865073",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Luxor",
+        ["channel"] = 91,
+        ["callsign"] = "LXR",
+        ["position"] = 
+        {
+            [1] = -477360.8125,
+            [2] = 92.319535,
+            [3] = 146015.125,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 114400000,
+    }, -- end of [65]
+    [66] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_65",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 32.737598,
+            ["latitude"] = 25.7379,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:13926400",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Luxor",
+        ["channel"] = 0,
+        ["callsign"] = "LO",
+        ["position"] = 
+        {
+            [1] = -478628.4375,
+            [2] = 81.673589,
+            [3] = 142903.40625,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 364000,
+    }, -- end of [66]
+    [67] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_66",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 36.606998,
+            ["latitude"] = 28.3673,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:232669184",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Tabuk",
+        ["channel"] = 104,
+        ["callsign"] = "TBK",
+        ["position"] = 
+        {
+            [1] = -182129.5625,
+            [2] = 767.551732,
+            [3] = 522790.375,
+        }, -- end of ["position"]
+        ["type"] = 5,
+        ["frequency"] = 115700000,
+    }, -- end of [67]
+    [68] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_67",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 38.654099,
+            ["latitude"] = 33.482399,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:158597120",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Tanf",
+        ["channel"] = 87,
+        ["callsign"] = "TAN",
+        ["position"] = 
+        {
+            [1] = 393790.78125,
+            [2] = 709.193092,
+            [3] = 694847.1875,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 114000000,
+    }, -- end of [68]
+    [69] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_68",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 36.0471,
+            ["latitude"] = 31.2498,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:19128320",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Qatraneh",
+        ["channel"] = 0,
+        ["callsign"] = "JYT",
+        ["position"] = 
+        {
+            [1] = 135979.0625,
+            [2] = 771.697793,
+            [3] = 459419.21875,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 302000,
+    }, -- end of [69]
+    [70] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_69",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 29.731701,
+            ["latitude"] = 30.876699,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:17965057",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "BorgElArab",
+        ["channel"] = 0,
+        ["callsign"] = "DJ",
+        ["position"] = 
+        {
+            [1] = 95201.304688,
+            [2] = 15.367046,
+            [3] = -143271.15625,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 563000,
+    }, -- end of [70]
+    [71] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_70",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 36.4282,
+            ["latitude"] = 33.3353,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:20717568",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Abyad",
+        ["channel"] = 0,
+        ["callsign"] = "ABD",
+        ["position"] = 
+        {
+            [1] = 368396.40625,
+            [2] = 635.726466,
+            [3] = 488329.28125,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 264000,
+    }, -- end of [71]
+    [72] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_71",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 36.601699,
+            ["latitude"] = 33.487499,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:20733952",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Otaebe",
+        ["channel"] = 0,
+        ["callsign"] = "DAL",
+        ["position"] = 
+        {
+            [1] = 385828.9375,
+            [2] = 602.654655,
+            [3] = 503902.125,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 342000,
+    }, -- end of [72]
+    [73] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_72",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.721298,
+            ["latitude"] = 31.2862,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:365609111",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Beer-Sheba",
+        ["channel"] = 90,
+        ["callsign"] = "BSA",
+        ["position"] = 
+        {
+            [1] = 137286.078125,
+            [2] = 183.929459,
+            [3] = 333066.1875,
+        }, -- end of ["position"]
+        ["type"] = 5,
+        ["frequency"] = 114300000,
+    }, -- end of [73]
+    [74] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_73",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 29.0014,
+            ["latitude"] = 25.4207,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:13910016",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Dakhla",
+        ["channel"] = 0,
+        ["callsign"] = "MB",
+        ["position"] = 
+        {
+            [1] = -507747.625,
+            [2] = 169.566286,
+            [3] = -233098.4375,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 387000,
+    }, -- end of [74]
+    [75] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_74",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.975601,
+            ["latitude"] = 29.607799,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:50474131",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Eilot",
+        ["channel"] = 57,
+        ["callsign"] = "LOT",
+        ["position"] = 
+        {
+            [1] = -48355.4375,
+            [2] = 44.973354,
+            [3] = 360528.5,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 112000000,
+    }, -- end of [75]
+    [76] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_75",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.380298,
+            ["latitude"] = 27.97,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:14434335",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "SharmElSheikh",
+        ["channel"] = 0,
+        ["callsign"] = "SKH",
+        ["position"] = 
+        {
+            [1] = -230666.875,
+            [2] = 42.461506,
+            [3] = 304981.40625,
+        }, -- end of ["position"]
+        ["type"] = 8,
+        ["frequency"] = 335000,
+    }, -- end of [76]
+    [77] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_76",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 35.572701,
+            ["latitude"] = 32.982601,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:157802513",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "RoshPina",
+        ["channel"] = 100,
+        ["callsign"] = "ROP",
+        ["position"] = 
+        {
+            [1] = 326984.625,
+            [2] = 248.105183,
+            [3] = 409633.28125,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 115300000,
+    }, -- end of [77]
+    [78] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_77",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.947201,
+            ["latitude"] = 29.9667,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:53497886",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Ovda",
+        ["channel"] = 88,
+        ["callsign"] = "OVD",
+        ["position"] = 
+        {
+            [1] = -8622.5,
+            [2] = 406.628336,
+            [3] = 357105.9375,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 114100000,
+    }, -- end of [78]
+    [79] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_78",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 36.059502,
+            ["latitude"] = 31.2484,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:124605283",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Qatraneh",
+        ["channel"] = 76,
+        ["callsign"] = "QTR",
+        ["position"] = 
+        {
+            [1] = 135856.484375,
+            [2] = 792.925109,
+            [3] = 460605.125,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 112900000,
+    }, -- end of [79]
+    [80] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "world_79",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 30.393101,
+            ["latitude"] = 29.397499,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:44948782",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Fayoum",
+        ["channel"] = 120,
+        ["callsign"] = "FYM",
+        ["position"] = 
+        {
+            [1] = -70460.328125,
+            [2] = 2.000002,
+            [3] = -83757.8125,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 117300000,
+    }, -- end of [80]
+    [81] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield2_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:179774528",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 3468,
+        ["display_name"] = "",
+        ["position"] = 
+        {
+            [1] = 57009.949219,
+            [2] = 5.713853,
+            [3] = 80710.171875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 32.076979,
+            ["latitude"] = 30.570105,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "WAYR",
+        ["direction"] = 90.550004,
+        ["frequency"] = 119700000,
+    }, -- end of [81]
+    [82] = 
+    {
+        ["direction"] = 90.400013,
+        ["beaconId"] = "airfield2_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:303628823",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "",
+        ["position"] = 
+        {
+            [1] = 57045.507812,
+            [2] = 5.719986,
+            [3] = 83490.5625,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 32.105968,
+            ["latitude"] = 30.570628,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "WAYR",
+        ["type"] = 16896,
+        ["frequency"] = 119700000,
+    }, -- end of [82]
+    [83] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "airfield2_2",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 32.094295,
+            ["latitude"] = 30.572853,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:179783888",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "AbuSuwayr",
+        ["channel"] = 29,
+        ["callsign"] = "ZYT",
+        ["position"] = 
+        {
+            [1] = 57301.039062,
+            [2] = 5.60687,
+            [3] = 82373.148438,
+        }, -- end of ["position"]
+        ["type"] = 4,
+        ["frequency"] = 109200000,
+    }, -- end of [83]
+    [84] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield4_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:180400892",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 3590,
+        ["display_name"] = "Ismailiyah",
+        ["position"] = 
+        {
+            [1] = 61305.1875,
+            [2] = 5.321367,
+            [3] = 94338.507812,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 32.218776,
+            ["latitude"] = 30.609791,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "ISA",
+        ["direction"] = 129.1,
+        ["frequency"] = 110300000,
+    }, -- end of [84]
+    [85] = 
+    {
+        ["direction"] = 129.021592,
+        ["beaconId"] = "airfield4_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:304882357",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Ismailiyah",
+        ["position"] = 
+        {
+            [1] = 59239.734375,
+            [2] = 3.500004,
+            [3] = 96710.859375,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 32.243668,
+            ["latitude"] = 30.5913,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "ISA",
+        ["type"] = 16896,
+        ["frequency"] = 110300000,
+    }, -- end of [85]
+    [86] = 
+    {
+        ["direction"] = 165.011851,
+        ["beaconId"] = "airfield14_0",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 31.438529,
+            ["latitude"] = 30.960312,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:187532431",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "AlMansurah",
+        ["channel"] = 53,
+        ["callsign"] = "MRN",
+        ["position"] = 
+        {
+            [1] = 100936.195312,
+            [2] = 2.000002,
+            [3] = 20084.087891,
+        }, -- end of ["position"]
+        ["type"] = 4,
+        ["frequency"] = 111600000,
+    }, -- end of [86]
+    [87] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield3_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:184321517",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 3336,
+        ["display_name"] = "AsSalihiyah",
+        ["position"] = 
+        {
+            [1] = 83677.539062,
+            [2] = 2.853315,
+            [3] = 78174.476562,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 32.048182,
+            ["latitude"] = 30.810521,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "SAI",
+        ["direction"] = -162.000995,
+        ["frequency"] = 110700000,
+    }, -- end of [87]
+    [88] = 
+    {
+        ["direction"] = -162.125838,
+        ["beaconId"] = "airfield3_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:319676681",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "AsSalihiyah",
+        ["position"] = 
+        {
+            [1] = 80886.671875,
+            [2] = 2.53621,
+            [3] = 77214.84375,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 32.038401,
+            ["latitude"] = 30.785267,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "SAI",
+        ["type"] = 16896,
+        ["frequency"] = 110700000,
+    }, -- end of [88]
+    [89] = 
+    {
+        ["direction"] = -162.550251,
+        ["beaconId"] = "airfield3_2",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 32.04675,
+            ["latitude"] = 30.797911,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:184321516",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "AsSalihiyah",
+        ["channel"] = 26,
+        ["callsign"] = "ASL",
+        ["position"] = 
+        {
+            [1] = 82281.25,
+            [2] = 2.000002,
+            [3] = 78025.625,
+        }, -- end of ["position"]
+        ["type"] = 4,
+        ["frequency"] = 111200000,
+    }, -- end of [89]
+    [90] = 
+    {
+        ["direction"] = 170.032655,
+        ["beaconId"] = "airfield15_0",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 31.666649,
+            ["latitude"] = 30.595341,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:180292110",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "AzZaqaziq",
+        ["channel"] = 94,
+        ["callsign"] = "AMB",
+        ["position"] = 
+        {
+            [1] = 60201.03125,
+            [2] = 2.000002,
+            [3] = 41392.277344,
+        }, -- end of ["position"]
+        ["type"] = 4,
+        ["frequency"] = 114700000,
+    }, -- end of [90]
+    [91] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield24_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:202395265",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 3719,
+        ["display_name"] = "BenGurion",
+        ["position"] = 
+        {
+            [1] = 218790.5,
+            [2] = 30.12503,
+            [3] = 348646.46875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.899805,
+            ["latitude"] = 32.018858,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "BC",
+        ["direction"] = -101.020998,
+        ["frequency"] = 110900000,
+    }, -- end of [91]
+    [92] = 
+    {
+        ["direction"] = -97.275507,
+        ["beaconId"] = "airfield24_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:392052954",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "BenGurion",
+        ["position"] = 
+        {
+            [1] = 218025.859375,
+            [2] = 30.12503,
+            [3] = 345315.78125,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.864415,
+            ["latitude"] = 32.012487,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "BC",
+        ["type"] = 16896,
+        ["frequency"] = 110900000,
+    }, -- end of [92]
+    [93] = 
+    {
+        ["direction"] = -53.985356,
+        ["beaconId"] = "airfield24_2",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:392052955",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "BenGurion",
+        ["position"] = 
+        {
+            [1] = 217902.453125,
+            [2] = 30.125032,
+            [3] = 345928.28125,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.870874,
+            ["latitude"] = 32.011278,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "BG",
+        ["type"] = 16896,
+        ["frequency"] = 110300000,
+    }, -- end of [93]
+    [94] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield24_3",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:202149803",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 3068,
+        ["display_name"] = "BenGurion",
+        ["position"] = 
+        {
+            [1] = 215991.421875,
+            [2] = 30.12503,
+            [3] = 347258.96875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.884604,
+            ["latitude"] = 31.993838,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "BN",
+        ["direction"] = 27.515991,
+        ["frequency"] = 109700000,
+    }, -- end of [94]
+    [95] = 
+    {
+        ["direction"] = 31.576347,
+        ["beaconId"] = "airfield24_4",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:392069275",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "BenGurion",
+        ["position"] = 
+        {
+            [1] = 218490.90625,
+            [2] = 30.12503,
+            [3] = 348468.40625,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.897864,
+            ["latitude"] = 32.016185,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "BN",
+        ["type"] = 16896,
+        ["frequency"] = 109700000,
+    }, -- end of [95]
+    [96] = 
+    {
+        ["direction"] = 76.394382,
+        ["beaconId"] = "airfield24_5",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:392060985",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "BenGurion",
+        ["position"] = 
+        {
+            [1] = 218693.375,
+            [2] = 30.12503,
+            [3] = 347648.59375,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.889226,
+            ["latitude"] = 32.01814,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "BA",
+        ["type"] = 16896,
+        ["frequency"] = 108700000,
+    }, -- end of [96]
+    [97] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield24_6",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:202389525",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 3637,
+        ["display_name"] = "BenGurion",
+        ["position"] = 
+        {
+            [1] = 217916.203125,
+            [2] = 30.12503,
+            [3] = 344256.1875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.853181,
+            ["latitude"] = 32.011662,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "BA",
+        ["direction"] = 78.86202,
+        ["frequency"] = 108700000,
+    }, -- end of [97]
+    [98] = 
+    {
+        ["direction"] = 119.684503,
+        ["beaconId"] = "airfield24_7",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:391643681",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "BenGurion",
+        ["position"] = 
+        {
+            [1] = 216953.03125,
+            [2] = 30.12503,
+            [3] = 347944.25,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.892032,
+            ["latitude"] = 32.002401,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "BD",
+        ["type"] = 16896,
+        ["frequency"] = 111900000,
+    }, -- end of [98]
+    [99] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield24_8",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:202157616",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 3344,
+        ["display_name"] = "BenGurion",
+        ["position"] = 
+        {
+            [1] = 216527.609375,
+            [2] = 30.125032,
+            [3] = 348423.6875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.897026,
+            ["latitude"] = 31.998489,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "BG",
+        ["direction"] = -59.587602,
+        ["frequency"] = 110300000,
+    }, -- end of [99]
+    [100] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield24_9",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:202389526",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 3418,
+        ["display_name"] = "BenGurion",
+        ["position"] = 
+        {
+            [1] = 218419.921875,
+            [2] = 30.125028,
+            [3] = 345204.59375,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.86331,
+            ["latitude"] = 32.016057,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "BD",
+        ["direction"] = 120.762389,
+        ["frequency"] = 111900000,
+    }, -- end of [100]
+    [101] = 
+    {
+        ["direction"] = 171.051255,
+        ["beaconId"] = "airfield16_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:291676247",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "BilbeisAirBase",
+        ["position"] = 
+        {
+            [1] = 37312.084649,
+            [2] = 28.000028,
+            [3] = 35713.70956,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 31.61037,
+            ["latitude"] = 30.388233,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "BA",
+        ["type"] = 16896,
+        ["frequency"] = 108600000,
+    }, -- end of [101]
+    [102] = 
+    {
+        ["direction"] = -89.999996,
+        ["beaconId"] = "airfield16_1",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 31.607212,
+            ["latitude"] = 30.402485,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:177178026",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "BilbeisAirBase",
+        ["channel"] = 86,
+        ["callsign"] = "ARF",
+        ["position"] = 
+        {
+            [1] = 38895.394531,
+            [2] = 28.000028,
+            [3] = 35429.769531,
+        }, -- end of ["position"]
+        ["type"] = 4,
+        ["frequency"] = 113900000,
+    }, -- end of [102]
+    [103] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield16_2",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:177178027",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 3056,
+        ["display_name"] = "BilbeisAirBase",
+        ["position"] = 
+        {
+            [1] = 40014.640625,
+            [2] = 28.000028,
+            [3] = 35150.449219,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 31.604162,
+            ["latitude"] = 30.412551,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "BA",
+        ["direction"] = 169.690654,
+        ["frequency"] = 108600000,
+    }, -- end of [103]
+    [104] = 
+    {
+        ["direction"] = 145.671351,
+        ["beaconId"] = "airfield5_0",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 33.153027,
+            ["latitude"] = 30.418486,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:67325250",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Melez",
+        ["channel"] = 38,
+        ["callsign"] = "MLZ",
+        ["position"] = 
+        {
+            [1] = 39855.390662,
+            [2] = 305.809113,
+            [3] = 183918.76186,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 110100000,
+    }, -- end of [104]
+    [105] = 
+    {
+        ["direction"] = -129.361147,
+        ["beaconId"] = "airfield17_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:275529916",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "CairoInternationalAirport",
+        ["position"] = 
+        {
+            [1] = 7954.691406,
+            [2] = 96.17484,
+            [3] = 13467.893555,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 31.383239,
+            ["latitude"] = 30.120743,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IZFL",
+        ["type"] = 16896,
+        ["frequency"] = 110900000,
+    }, -- end of [105]
+    [106] = 
+    {
+        ["direction"] = -133.435503,
+        ["beaconId"] = "airfield17_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:275538280",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "CairoInternationalAirport",
+        ["position"] = 
+        {
+            [1] = 6377.17627,
+            [2] = 101.853793,
+            [3] = 15620.944336,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 31.405809,
+            ["latitude"] = 30.106785,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IZFCs",
+        ["type"] = 16896,
+        ["frequency"] = 109900000,
+    }, -- end of [106]
+    [107] = 
+    {
+        ["direction"] = -129.361147,
+        ["beaconId"] = "airfield17_2",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:274882560",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "CairoInternationalAirport",
+        ["position"] = 
+        {
+            [1] = 5652.468262,
+            [2] = 120.000105,
+            [3] = 17165.927734,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 31.421943,
+            ["latitude"] = 30.100441,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IZFR",
+        ["type"] = 16896,
+        ["frequency"] = 108900000,
+    }, -- end of [107]
+    [108] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield17_3",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:173352514",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 4205,
+        ["display_name"] = "CairoInternationalAirport",
+        ["position"] = 
+        {
+            [1] = 7955.566895,
+            [2] = 120.000105,
+            [3] = 20055.699219,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 31.4516,
+            ["latitude"] = 30.121575,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IZFR",
+        ["direction"] = -129.949717,
+        ["frequency"] = 108900000,
+    }, -- end of [108]
+    [109] = 
+    {
+        ["direction"] = 52.894624,
+        ["beaconId"] = "airfield17_4",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:275554369",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "CairoInternationalAirport",
+        ["position"] = 
+        {
+            [1] = 7667.816895,
+            [2] = 120.000105,
+            [3] = 19569.511719,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 31.446595,
+            ["latitude"] = 30.118919,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "ITTL",
+        ["type"] = 16896,
+        ["frequency"] = 108700000,
+    }, -- end of [109]
+    [110] = 
+    {
+        ["direction"] = 50.348138,
+        ["beaconId"] = "airfield17_5",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:275546113",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "CairoInternationalAirport",
+        ["position"] = 
+        {
+            [1] = 7871.182617,
+            [2] = 101.853495,
+            [3] = 17406.501953,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 31.424121,
+            ["latitude"] = 30.120486,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "ITTC",
+        ["type"] = 16896,
+        ["frequency"] = 109500000,
+    }, -- end of [110]
+    [111] = 
+    {
+        ["direction"] = 50.857452,
+        ["beaconId"] = "airfield17_6",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:276381941",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "CairoInternationalAirport",
+        ["position"] = 
+        {
+            [1] = 9396.399414,
+            [2] = 97.390448,
+            [3] = 15225.855469,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 31.401271,
+            ["latitude"] = 30.133972,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "ITTR",
+        ["type"] = 16896,
+        ["frequency"] = 110300000,
+    }, -- end of [111]
+    [112] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield17_7",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:173352515",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 4143,
+        ["display_name"] = "CairoInternationalAirportd",
+        ["position"] = 
+        {
+            [1] = 5240.95166,
+            [2] = 120.000105,
+            [3] = 16820.757812,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 31.418421,
+            ["latitude"] = 30.096686,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "ITTL",
+        ["direction"] = 49.958134,
+        ["frequency"] = 108700000,
+    }, -- end of [112]
+    [113] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield17_8",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:173346257",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 4179,
+        ["display_name"] = "CairoInternationalAirport",
+        ["position"] = 
+        {
+            [1] = 5524.577637,
+            [2] = 102.26514,
+            [3] = 14787.505859,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 31.397286,
+            ["latitude"] = 30.098989,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "ITTC",
+        ["direction"] = 49.978132,
+        ["frequency"] = 109500000,
+    }, -- end of [113]
+    [114] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield17_9",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:173706036",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 4162,
+        ["display_name"] = "CairoInternationalAirport",
+        ["position"] = 
+        {
+            [1] = 8231.616211,
+            [2] = 102.90768,
+            [3] = 18013.888672,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 31.430373,
+            ["latitude"] = 30.123813,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IZFC",
+        ["direction"] = -129.971152,
+        ["frequency"] = 109900000,
+    }, -- end of [114]
+    [115] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield17_10",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:173700805",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 3500,
+        ["display_name"] = "CairoInternationalAirport",
+        ["position"] = 
+        {
+            [1] = 10053.983398,
+            [2] = 94.43571,
+            [3] = 15814.348633,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 31.407283,
+            ["latitude"] = 30.139978,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IZFL",
+        ["direction"] = -130.159732,
+        ["frequency"] = 110900000,
+    }, -- end of [115]
+    [116] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield17_11",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:173346258",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 3478,
+        ["display_name"] = "CairoInternationalAirport",
+        ["position"] = 
+        {
+            [1] = 7766.522949,
+            [2] = 93.732638,
+            [3] = 13089.422852,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 31.379339,
+            ["latitude"] = 30.118997,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "ITTR",
+        ["direction"] = 50.237462,
+        ["frequency"] = 110300000,
+    }, -- end of [116]
+    [117] = 
+    {
+        ["direction"] = -11.119626,
+        ["beaconId"] = "airfield18_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:173262030",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "",
+        ["position"] = 
+        {
+            [1] = 7322.266113,
+            [2] = 134.031384,
+            [3] = -31674.994141,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 30.914996,
+            ["latitude"] = 30.108437,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "SPX",
+        ["type"] = 5,
+        ["frequency"] = 0,
+    }, -- end of [117]
+    [118] = 
+    {
+        ["type"] = 16896,
+        ["beaconId"] = "airfield18_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:274694144",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 3412,
+        ["display_name"] = "CairoWest",
+        ["position"] = 
+        {
+            [1] = 5895.727539,
+            [2] = 134.031384,
+            [3] = -33082.070312,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 30.900673,
+            ["latitude"] = 30.095339,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IPSX",
+        ["direction"] = 167.202034,
+        ["frequency"] = 111500000,
+    }, -- end of [118]
+    [119] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield18_2",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:173609151",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 4049,
+        ["display_name"] = "CairoWest",
+        ["position"] = 
+        {
+            [1] = 9435.099609,
+            [2] = 134.031384,
+            [3] = -34027.714844,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 30.890187,
+            ["latitude"] = 30.127101,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IPSX",
+        ["direction"] = 166.77762,
+        ["frequency"] = 111500000,
+    }, -- end of [119]
+    [120] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "airfield29_0",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 33.831902,
+            ["latitude"] = 31.073,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:109586394",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "ElArish",
+        ["channel"] = 83,
+        ["callsign"] = "ARH",
+        ["position"] = 
+        {
+            [1] = 112676.578125,
+            [2] = 70.776072,
+            [3] = 248581.125,
+        }, -- end of ["position"]
+        ["type"] = 3,
+        ["frequency"] = 113600000,
+    }, -- end of [120]
+    [121] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield6_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:176195895",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 3362,
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 32.2481,
+            ["latitude"] = 30.329176,
+        }, -- end of ["positionGeo"]
+        ["display_name"] = "Faid",
+        ["channel"] = 0,
+        ["callsign"] = "FAID",
+        ["position"] = 
+        {
+            [1] = 30188.128906,
+            [2] = 16.564409,
+            [3] = 96942.515625,
+        }, -- end of ["position"]
+        ["direction"] = 90.713054,
+        ["frequency"] = 110150000,
+    }, -- end of [121]
+    [122] = 
+    {
+        ["direction"] = 88.702355,
+        ["beaconId"] = "airfield6_1",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 32.280301,
+            ["latitude"] = 30.330112,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:287088709",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Faid",
+        ["channel"] = 0,
+        ["callsign"] = "FAD",
+        ["position"] = 
+        {
+            [1] = 30271.769531,
+            [2] = 8.488257,
+            [3] = 100038.703125,
+        }, -- end of ["position"]
+        ["type"] = 16896,
+        ["frequency"] = 110150000,
+    }, -- end of [122]
+    [123] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "airfield6_2",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 32.275583,
+            ["latitude"] = 30.330463,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:176203766",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Faid",
+        ["channel"] = 125,
+        ["callsign"] = "GIO",
+        ["position"] = 
+        {
+            [1] = 30313.549436,
+            [2] = 8.488258,
+            [3] = 99585.39564,
+        }, -- end of ["position"]
+        ["type"] = 4,
+        ["frequency"] = 117800000,
+    }, -- end of [123]
+    [124] = 
+    {
+        ["direction"] = 104.50326,
+        ["beaconId"] = "airfield7_0",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.67987,
+            ["latitude"] = 31.234946,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:361406851",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Hatzerim",
+        ["channel"] = 96,
+        ["callsign"] = "BRA",
+        ["position"] = 
+        {
+            [1] = 131543.724991,
+            [2] = 208.862773,
+            [3] = 329208.708252,
+        }, -- end of ["position"]
+        ["type"] = 5,
+        ["frequency"] = 114900000,
+    }, -- end of [124]
+    [125] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield7_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:194646888",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 3804,
+        ["display_name"] = "Hatzerim",
+        ["position"] = 
+        {
+            [1] = 131308.652802,
+            [2] = 205.216361,
+            [3] = 325872.889771,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.644819,
+            ["latitude"] = 31.233279,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "BRA",
+        ["direction"] = 104.310055,
+        ["frequency"] = 111300000,
+    }, -- end of [125]
+    [126] = 
+    {
+        ["direction"] = 104.830044,
+        ["beaconId"] = "airfield7_2",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:359940329",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Hatzerim",
+        ["position"] = 
+        {
+            [1] = 130460.614075,
+            [2] = 205.281745,
+            [3] = 328919.193237,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.676659,
+            ["latitude"] = 31.225217,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "BRA",
+        ["type"] = 16896,
+        ["frequency"] = 111300000,
+    }, -- end of [126]
+    [127] = 
+    {
+        ["direction"] = -30.133325,
+        ["beaconId"] = "airfield20_1",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.723613,
+            ["latitude"] = 31.761851,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:385131004",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Hatzor",
+        ["channel"] = 106,
+        ["callsign"] = "HZR",
+        ["position"] = 
+        {
+            [1] = 190018.891707,
+            [2] = 30.605158,
+            [3] = 332456.915702,
+        }, -- end of ["position"]
+        ["type"] = 5,
+        ["frequency"] = 115900000,
+    }, -- end of [127]
+    [128] = 
+    {
+        ["direction"] = -126.475118,
+        ["beaconId"] = "airfield20_2",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:385122466",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Hatzor",
+        ["position"] = 
+        {
+            [1] = 189323.670349,
+            [2] = 30.605158,
+            [3] = 331763.985596,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.716183,
+            ["latitude"] = 31.755681,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "HZR",
+        ["type"] = 16896,
+        ["frequency"] = 108500000,
+    }, -- end of [128]
+    [129] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield20_3",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:200487582",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 2809,
+        ["display_name"] = "Hatzor",
+        ["position"] = 
+        {
+            [1] = 190736.09729,
+            [2] = 30.605158,
+            [3] = 333797.079285,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.737879,
+            ["latitude"] = 31.768127,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "HZR",
+        ["direction"] = -126.050718,
+        ["frequency"] = 108500000,
+    }, -- end of [129]
+    [130] = 
+    {
+        ["direction"] = 48.383121,
+        ["beaconId"] = "airfield19_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:287891587",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "InshasAirbase",
+        ["position"] = 
+        {
+            [1] = 31953.408203,
+            [2] = 47.104215,
+            [3] = 20497.945312,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 31.452803,
+            ["latitude"] = 30.338113,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "ISH",
+        ["type"] = 16896,
+        ["frequency"] = 116900000,
+    }, -- end of [130]
+    [131] = 
+    {
+        ["direction"] = 46.345922,
+        ["beaconId"] = "airfield19_1",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 31.441466,
+            ["latitude"] = 30.328822,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:176082477",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "InshasAirbase",
+        ["channel"] = 98,
+        ["callsign"] = "IHA",
+        ["position"] = 
+        {
+            [1] = 30938.613281,
+            [2] = 47.104215,
+            [3] = 19393.951172,
+        }, -- end of ["position"]
+        ["type"] = 4,
+        ["frequency"] = 115100000,
+    }, -- end of [131]
+    [132] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield19_2",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:176082478",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 2704,
+        ["display_name"] = "InshasAirbase",
+        ["position"] = 
+        {
+            [1] = 30602.738281,
+            [2] = 47.104211,
+            [3] = 18873.806641,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 31.436106,
+            ["latitude"] = 30.325728,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "ISH",
+        ["direction"] = 47.643119,
+        ["frequency"] = 116900000,
+    }, -- end of [132]
+    [133] = 
+    {
+        ["direction"] = 135.387804,
+        ["beaconId"] = "airfield11_0",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 32.492645,
+            ["latitude"] = 30.247003,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:175187655",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Kibrit",
+        ["channel"] = 55,
+        ["callsign"] = "KBR",
+        ["position"] = 
+        {
+            [1] = 20951.71875,
+            [2] = 2.92212,
+            [3] = 120410.09375,
+        }, -- end of ["position"]
+        ["type"] = 4,
+        ["frequency"] = 113700000,
+    }, -- end of [133]
+    [134] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield8_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:1870831638",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 3228,
+        ["display_name"] = "Nevatim",
+        ["position"] = 
+        {
+            [1] = 128942.507812,
+            [2] = 391.65597,
+            [3] = 358760.09375,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.989523,
+            ["latitude"] = 31.207063,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "NEV",
+        ["direction"] = 75.809991,
+        ["frequency"] = 108300000,
+    }, -- end of [134]
+    [135] = 
+    {
+        ["direction"] = 79.789697,
+        ["beaconId"] = "airfield8_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:360095835",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Nevatim",
+        ["position"] = 
+        {
+            [1] = 129667.023438,
+            [2] = 395.29251,
+            [3] = 361237.46875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 35.015653,
+            ["latitude"] = 31.213191,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "NEV",
+        ["type"] = 16896,
+        ["frequency"] = 108300000,
+    }, -- end of [135]
+    [136] = 
+    {
+        ["direction"] = 73.847896,
+        ["beaconId"] = "airfield8_2",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:358555718",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Nevatim",
+        ["position"] = 
+        {
+            [1] = 127661.982727,
+            [2] = 397.698152,
+            [3] = 363356.268433,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 35.037495,
+            ["latitude"] = 31.194761,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "NGV",
+        ["type"] = 16896,
+        ["frequency"] = 111500000,
+    }, -- end of [136]
+    [137] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield8_3",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:193177000",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 4521,
+        ["display_name"] = "Nevatim",
+        ["position"] = 
+        {
+            [1] = 126551.60199,
+            [2] = 399.024386,
+            [3] = 359443.738281,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.996243,
+            ["latitude"] = 31.185392,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "NGV",
+        ["direction"] = 75.941499,
+        ["frequency"] = 111500000,
+    }, -- end of [137]
+    [138] = 
+    {
+        ["direction"] = 21.814831,
+        ["beaconId"] = "airfield10_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:270336012",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Ovda",
+        ["position"] = 
+        {
+            [1] = -10533.907104,
+            [2] = 426.064666,
+            [3] = 356161.43396,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.937082,
+            ["latitude"] = 29.949604,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "VA",
+        ["type"] = 16896,
+        ["frequency"] = 109700000,
+    }, -- end of [138]
+    [139] = 
+    {
+        ["direction"] = 19.19622,
+        ["beaconId"] = "airfield10_1",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.940683,
+            ["latitude"] = 29.943896,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:172183189",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Ovda",
+        ["channel"] = 63,
+        ["callsign"] = "OVD",
+        ["position"] = 
+        {
+            [1] = -11160.712891,
+            [2] = 428.303529,
+            [3] = 356519.71875,
+        }, -- end of ["position"]
+        ["type"] = 4,
+        ["frequency"] = 133600000,
+    }, -- end of [139]
+    [140] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield10_2",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:171771656",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 3079,
+        ["display_name"] = "Ovda",
+        ["position"] = 
+        {
+            [1] = -13013.156738,
+            [2] = 439.057721,
+            [3] = 355319.4823,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.927931,
+            ["latitude"] = 29.92737,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "VA",
+        ["direction"] = 20.888003,
+        ["frequency"] = 109700000,
+    }, -- end of [140]
+    [141] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield9_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:183657740",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 3284,
+        ["display_name"] = "Ramon",
+        ["position"] = 
+        {
+            [1] = 80132.542206,
+            [2] = 621.130382,
+            [3] = 327098.549927,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.649716,
+            ["latitude"] = 30.771533,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "RMN",
+        ["direction"] = 66.08249,
+        ["frequency"] = 110700000,
+    }, -- end of [141]
+    [142] = 
+    {
+        ["direction"] = 66.208465,
+        ["beaconId"] = "airfield9_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:319954977",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Ramon",
+        ["position"] = 
+        {
+            [1] = 81031.4198,
+            [2] = 619.023812,
+            [3] = 329446.21582,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.674379,
+            ["latitude"] = 30.779326,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "RMN",
+        ["type"] = 16896,
+        ["frequency"] = 110700000,
+    }, -- end of [142]
+    [143] = 
+    {
+        ["direction"] = -79.789683,
+        ["beaconId"] = "airfield9_2",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.686751,
+            ["latitude"] = 30.786723,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:319963161",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Ramon",
+        ["channel"] = 105,
+        ["callsign"] = "RMN",
+        ["position"] = 
+        {
+            [1] = 81869.076294,
+            [2] = 615.225408,
+            [3] = 330617.923706,
+        }, -- end of ["position"]
+        ["type"] = 5,
+        ["frequency"] = 115800000,
+    }, -- end of [143]
+    [144] = 
+    {
+        ["direction"] = 1.697657,
+        ["beaconId"] = "airfield23_0",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.816453,
+            ["latitude"] = 31.834715,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:201094613",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "TelNof",
+        ["channel"] = 87,
+        ["callsign"] = "AKR",
+        ["position"] = 
+        {
+            [1] = 198239.912254,
+            [2] = 43.283582,
+            [3] = 341115.624817,
+        }, -- end of ["position"]
+        ["type"] = 4,
+        ["frequency"] = 113700000,
+    }, -- end of [144]
+    [145] = 
+    {
+        ["direction"] = -175.719799,
+        ["beaconId"] = "airfield23_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:387162342",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "TelNof",
+        ["position"] = 
+        {
+            [1] = 197621.131592,
+            [2] = 43.283582,
+            [3] = 341277.875259,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.818057,
+            ["latitude"] = 31.829111,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "AKR",
+        ["type"] = 16640,
+        ["frequency"] = 109700000,
+    }, -- end of [145]
+    [146] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield23_2",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:201094614",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 2590,
+        ["display_name"] = "TelNof",
+        ["position"] = 
+        {
+            [1] = 199640.334717,
+            [2] = 43.283582,
+            [3] = 341280.276611,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.81844,
+            ["latitude"] = 31.847319,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "AKR",
+        ["direction"] = -178.582331,
+        ["frequency"] = 109100000,
+    }, -- end of [146]
+    [147] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield13_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:173433682",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 4151,
+        ["display_name"] = "WadiAlJandali",
+        ["position"] = 
+        {
+            [1] = 4117.239258,
+            [2] = 222.615518,
+            [3] = 57349.34375,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 31.839049,
+            ["latitude"] = 30.090937,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "ICTM",
+        ["direction"] = -164.194593,
+        ["frequency"] = 109700000,
+    }, -- end of [147]
+    [148] = 
+    {
+        ["direction"] = -162.550251,
+        ["beaconId"] = "airfield13_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:273612806",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "WadiAlJandali",
+        ["position"] = 
+        {
+            [1] = 641.673645,
+            [2] = 228.101455,
+            [3] = 56477.332031,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 31.83037,
+            ["latitude"] = 30.059498,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IKTM",
+        ["type"] = 16896,
+        ["frequency"] = 109700000,
+    }, -- end of [148]
+    [149] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "airfield13_2",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 31.840126,
+            ["latitude"] = 30.051401,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:173006202",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "WadialJandali",
+        ["channel"] = 96,
+        ["callsign"] = "WAJ",
+        ["position"] = 
+        {
+            [1] = -265.164642,
+            [2] = 226.481351,
+            [3] = 57408.707031,
+        }, -- end of ["position"]
+        ["type"] = 4,
+        ["frequency"] = 114900000,
+    }, -- end of [149]
+} -- end of beacons

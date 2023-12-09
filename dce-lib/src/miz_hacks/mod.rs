@@ -30,7 +30,17 @@ pub fn apply_all_to_file(path: &str) -> Result<String, anyhow::Error> {
 
     // new filename:
     let p = Path::new(path);
-    let new_file_name = p.file_stem().unwrap().to_string_lossy().to_string() + "_mod.miz";
+    let new_file_name = p
+        .parent()
+        .expect("should have a directory")
+        .to_str()
+        .expect("a valid string path")
+        .to_owned()
+        + "\\"
+        + &p.file_stem().unwrap().to_string_lossy()
+        + "_mod.miz";
+    log::trace!("Writing modified file to {}", &new_file_name);
+
     // save out to new file:
     let mut new_file = File::create(&new_file_name)?;
     new_file.write_all(&new_content)?;

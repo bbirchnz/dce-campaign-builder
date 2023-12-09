@@ -1961,10 +1961,26 @@ airports =
             ["airdromeNumber"] = 12,
             ["frequencyList"] = 
             {
-                [1] = 38400000,
-                [2] = 121000000,
-                [3] = 250000000,
-                [4] = 3750000,
+                [1] = 
+                {
+                    [1] = 38400000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 121000000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 250000000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 3750000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = -139,
             ["height"] = 43.000043,
@@ -3573,10 +3589,26 @@ airports =
             ["airdromeNumber"] = 13,
             ["frequencyList"] = 
             {
-                [1] = 38600000,
-                [2] = 122000000,
-                [3] = 251000000,
-                [4] = 3800000,
+                [1] = 
+                {
+                    [1] = 38600000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 122000000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 251000000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 3800000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = 87,
             ["height"] = 30.010030238882,
@@ -4937,10 +4969,26 @@ airports =
             ["airdromeNumber"] = 14,
             ["frequencyList"] = 
             {
-                [1] = 38800000,
-                [2] = 123000000,
-                [3] = 252000000,
-                [4] = 3850000,
+                [1] = 
+                {
+                    [1] = 38800000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 123000000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 252000000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 3850000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = -138,
             ["height"] = 40.010042146233,
@@ -6519,10 +6567,26 @@ airports =
             ["airdromeNumber"] = 15,
             ["frequencyList"] = 
             {
-                [1] = 39000000,
-                [2] = 124000000,
-                [3] = 253000000,
-                [4] = 3900000,
+                [1] = 
+                {
+                    [1] = 39000000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 124000000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 253000000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 3900000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = 40,
             ["height"] = 20.010304434113,
@@ -8164,10 +8228,26 @@ airports =
             ["airdromeNumber"] = 16,
             ["frequencyList"] = 
             {
-                [1] = 39200000,
-                [2] = 125000000,
-                [3] = 254000000,
-                [4] = 3950000,
+                [1] = 
+                {
+                    [1] = 39200000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 125000000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 254000000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 3950000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = 39,
             ["height"] = 180.01020503444,
@@ -9009,10 +9089,26 @@ airports =
             ["airdromeNumber"] = 17,
             ["frequencyList"] = 
             {
-                [1] = 39400000,
-                [2] = 126000000,
-                [3] = 255000000,
-                [4] = 4000000,
+                [1] = 
+                {
+                    [1] = 39400000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 126000000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 255000000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 4000000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = 40,
             ["height"] = 22.009923056654,
@@ -10754,10 +10850,26 @@ airports =
             ["airdromeNumber"] = 18,
             ["frequencyList"] = 
             {
-                [1] = 39600000,
-                [2] = 127000000,
-                [3] = 256000000,
-                [4] = 4050000,
+                [1] = 
+                {
+                    [1] = 39600000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 127000000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 256000000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 4050000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = 62,
             ["height"] = 30.010034053583,
@@ -11710,10 +11822,26 @@ airports =
             ["airdromeNumber"] = 19,
             ["frequencyList"] = 
             {
-                [1] = 39800000,
-                [2] = 128000000,
-                [3] = 257000000,
-                [4] = 4100000,
+                [1] = 
+                {
+                    [1] = 39800000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 128000000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 257000000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 4100000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = -133,
             ["height"] = 34.010036146233,
@@ -12350,10 +12478,26 @@ airports =
             ["airdromeNumber"] = 20,
             ["frequencyList"] = 
             {
-                [1] = 40000000,
-                [2] = 129000000,
-                [3] = 258000000,
-                [4] = 4150000,
+                [1] = 
+                {
+                    [1] = 40000000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 129000000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 258000000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 4150000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = -64,
             ["height"] = 13.208436822926,
@@ -13400,10 +13544,26 @@ airports =
             ["airdromeNumber"] = 21,
             ["frequencyList"] = 
             {
-                [1] = 40200000,
-                [2] = 130000000,
-                [3] = 259000000,
-                [4] = 4200000,
+                [1] = 
+                {
+                    [1] = 40200000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 130000000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 259000000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 4200000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = 151,
             ["height"] = 21.010030775635,
@@ -13833,10 +13993,26 @@ airports =
             ["airdromeNumber"] = 22,
             ["frequencyList"] = 
             {
-                [1] = 40400000,
-                [2] = 131000000,
-                [3] = 260000000,
-                [4] = 4250000,
+                [1] = 
+                {
+                    [1] = 40400000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 131000000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 260000000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 4250000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = -54,
             ["height"] = 10.044037372519,
@@ -15528,10 +15704,26 @@ airports =
             ["airdromeNumber"] = 23,
             ["frequencyList"] = 
             {
-                [1] = 40600000,
-                [2] = 132000000,
-                [3] = 261000000,
-                [4] = 4300000,
+                [1] = 
+                {
+                    [1] = 40600000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 132000000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 261000000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 4300000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = -85,
             ["height"] = 13.239942439148,
@@ -16887,10 +17079,26 @@ airports =
             ["airdromeNumber"] = 24,
             ["frequencyList"] = 
             {
-                [1] = 40800000,
-                [2] = 133000000,
-                [3] = 262000000,
-                [4] = 4350000,
+                [1] = 
+                {
+                    [1] = 40800000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 133000000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 262000000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 4350000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = -110,
             ["height"] = 18.010018238882,
@@ -18506,10 +18714,26 @@ airports =
             ["airdromeNumber"] = 25,
             ["frequencyList"] = 
             {
-                [1] = 41000000,
-                [2] = 134000000,
-                [3] = 263000000,
-                [4] = 4400000,
+                [1] = 
+                {
+                    [1] = 41000000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 134000000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 263000000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 4400000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = -106,
             ["height"] = 45.010047146233,
@@ -19592,10 +19816,26 @@ airports =
             ["airdromeNumber"] = 26,
             ["frequencyList"] = 
             {
-                [1] = 41200000,
-                [2] = 135000000,
-                [3] = 264000000,
-                [4] = 4450000,
+                [1] = 
+                {
+                    [1] = 41200000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 135000000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 264000000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 4450000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = -65,
             ["height"] = 320.01032977563,
@@ -20487,10 +20727,26 @@ airports =
             ["airdromeNumber"] = 27,
             ["frequencyList"] = 
             {
-                [1] = 41400000,
-                [2] = 136000000,
-                [3] = 265000000,
-                [4] = 4500000,
+                [1] = 
+                {
+                    [1] = 41400000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 136000000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 265000000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 4500000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = 55,
             ["height"] = 430.01043977563,
@@ -21496,10 +21752,26 @@ airports =
             ["airdromeNumber"] = 28,
             ["frequencyList"] = 
             {
-                [1] = 41600000,
-                [2] = 137000000,
-                [3] = 266000000,
-                [4] = 4550000,
+                [1] = 
+                {
+                    [1] = 41600000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 137000000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 266000000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 4550000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = -97,
             ["height"] = 154.61285602872,
@@ -23018,10 +23290,26 @@ airports =
             ["airdromeNumber"] = 29,
             ["frequencyList"] = 
             {
-                [1] = 41800000,
-                [2] = 138000000,
-                [3] = 267000000,
-                [4] = 4600000,
+                [1] = 
+                {
+                    [1] = 41800000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 138000000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 267000000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 4600000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = 128,
             ["height"] = 479.69481563184,
@@ -23624,10 +23912,26 @@ airports =
             ["airdromeNumber"] = 30,
             ["frequencyList"] = 
             {
-                [1] = 42000000,
-                [2] = 139000000,
-                [3] = 268000000,
-                [4] = 4650000,
+                [1] = 
+                {
+                    [1] = 42000000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 139000000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 268000000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 4650000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = -48,
             ["height"] = 452.14370165497,
@@ -25753,10 +26057,26 @@ airports =
             ["airdromeNumber"] = 31,
             ["frequencyList"] = 
             {
-                [1] = 42200000,
-                [2] = 140000000,
-                [3] = 269000000,
-                [4] = 4700000,
+                [1] = 
+                {
+                    [1] = 42200000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 140000000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 269000000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 4700000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = 135,
             ["height"] = 464.5004645,
@@ -26406,10 +26726,26 @@ airports =
             ["airdromeNumber"] = 32,
             ["frequencyList"] = 
             {
-                [1] = 42400000,
-                [2] = 141000000,
-                [3] = 270000000,
-                [4] = 4750000,
+                [1] = 
+                {
+                    [1] = 42400000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 141000000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 270000000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 4750000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = 94,
             ["height"] = 524.82553703204,
@@ -26556,3 +26892,3999 @@ airports =
         }, -- end of ["airport"]
     }, -- end of [32]
 } -- end of airports
+beacons = 
+{
+    [1] = 
+    {
+        ["direction"] = 41.500201,
+        ["beaconId"] = "airfield12_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:297566208",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Anapa-Vityazevo",
+        ["position"] = 
+        {
+            [1] = -1321.801758,
+            [2] = 12.352437,
+            [3] = 246748.5,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 37.396435,
+            ["latitude"] = 45.039907,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "AP",
+        ["type"] = 16408,
+        ["frequency"] = 443000,
+    }, -- end of [1]
+    [2] = 
+    {
+        ["direction"] = 41.500201,
+        ["beaconId"] = "airfield12_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:297533440",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Anapa-Vityazevo",
+        ["position"] = 
+        {
+            [1] = -3343.976562,
+            [2] = 40.271662,
+            [3] = 244959.421875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 37.372401,
+            ["latitude"] = 45.022628,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "P",
+        ["type"] = 16424,
+        ["frequency"] = 215000,
+    }, -- end of [2]
+    [3] = 
+    {
+        ["direction"] = -138.499789,
+        ["beaconId"] = "airfield12_2",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:294289416",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Anapa-Vityazevo",
+        ["position"] = 
+        {
+            [1] = -9500.015625,
+            [2] = 24.885315,
+            [3] = 239511.625,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 37.299308,
+            ["latitude"] = 44.969992,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "AN",
+        ["type"] = 16408,
+        ["frequency"] = 443000,
+    }, -- end of [3]
+    [4] = 
+    {
+        ["direction"] = -138.499789,
+        ["beaconId"] = "airfield12_3",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:295796736",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Anapa-Vityazevo",
+        ["position"] = 
+        {
+            [1] = -7477.841797,
+            [2] = 36.126909,
+            [3] = 241300.703125,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 37.323297,
+            ["latitude"] = 44.987288,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "N",
+        ["type"] = 16424,
+        ["frequency"] = 215000,
+    }, -- end of [4]
+    [5] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield22_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:168264314",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 2519,
+        ["display_name"] = "Batumi",
+        ["position"] = 
+        {
+            [1] = -356584.8125,
+            [2] = 10.03014,
+            [3] = 618472.4375,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 41.612203,
+            ["latitude"] = 41.601731,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "ILU",
+        ["direction"] = -54.415131,
+        ["frequency"] = 110300000,
+    }, -- end of [5]
+    [6] = 
+    {
+        ["type"] = 16896,
+        ["beaconId"] = "airfield22_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:318178495",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 120,
+        ["display_name"] = "Batumi",
+        ["position"] = 
+        {
+            [1] = -355396.8125,
+            [2] = 10.044037,
+            [3] = 616600.5,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 41.591406,
+            ["latitude"] = 41.613985,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "ILU",
+        ["direction"] = -54.415131,
+        ["frequency"] = 110300000,
+    }, -- end of [6]
+    [7] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "airfield22_2",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 41.600419,
+            ["latitude"] = 41.610899,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:168789207",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Batumi",
+        ["channel"] = 16,
+        ["callsign"] = "BTM",
+        ["position"] = 
+        {
+            [1] = -355664.40625,
+            [2] = 10.044037,
+            [3] = 617386.8125,
+        }, -- end of ["position"]
+        ["type"] = 4,
+        ["frequency"] = 977000000,
+    }, -- end of [7]
+    [8] = 
+    {
+        ["direction"] = -60.999996,
+        ["beaconId"] = "airfield22_3",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:168297584",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Batumi",
+        ["position"] = 
+        {
+            [1] = -356480.125,
+            [2] = 10.113043,
+            [3] = 618549.1875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 41.613238,
+            ["latitude"] = 41.602594,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "LU",
+        ["type"] = 4104,
+        ["frequency"] = 430000,
+    }, -- end of [8]
+    [9] = 
+    {
+        ["direction"] = -86.499961,
+        ["beaconId"] = "airfield32_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:239009797",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Beslan",
+        ["position"] = 
+        {
+            [1] = -148253.15625,
+            [2] = 542.239983,
+            [3] = 838154.1875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 44.539874,
+            ["latitude"] = 43.2155,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "CX",
+        ["type"] = 16408,
+        ["frequency"] = 1050000,
+    }, -- end of [9]
+    [10] = 
+    {
+        ["direction"] = -86.499961,
+        ["beaconId"] = "airfield32_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:239042561",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Beslan",
+        ["position"] = 
+        {
+            [1] = -148418,
+            [2] = 524.825537,
+            [3] = 840849.1875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 44.5721,
+            ["latitude"] = 43.210717,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "C",
+        ["type"] = 16424,
+        ["frequency"] = 250000,
+    }, -- end of [10]
+    [11] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield32_2",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:239075386",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 3219,
+        ["display_name"] = "Beslan",
+        ["position"] = 
+        {
+            [1] = -148692.109375,
+            [2] = 529.274577,
+            [3] = 845322.875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 44.62558,
+            ["latitude"] = 43.202754,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "ICH",
+        ["direction"] = -86.499961,
+        ["frequency"] = 110500000,
+    }, -- end of [11]
+    [12] = 
+    {
+        ["type"] = 16896,
+        ["beaconId"] = "airfield32_3",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:463044617",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 120,
+        ["display_name"] = "Beslan",
+        ["position"] = 
+        {
+            [1] = -148636.890625,
+            [2] = 524.825537,
+            [3] = 842454,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 44.591083,
+            ["latitude"] = 43.2068,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "ICH",
+        ["direction"] = -86.499961,
+        ["frequency"] = 110500000,
+    }, -- end of [12]
+    [13] = 
+    {
+        ["direction"] = -139.999984,
+        ["beaconId"] = "airfield17_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:279347201",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Gelendzhik",
+        ["position"] = 
+        {
+            [1] = -50752.625,
+            [2] = 22.009923,
+            [3] = 298204.46875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 38.008795,
+            ["latitude"] = 44.569658,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "GN",
+        ["type"] = 4104,
+        ["frequency"] = 1000000,
+    }, -- end of [13]
+    [14] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "airfield17_1",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 38.012222,
+            ["latitude"] = 44.572498,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:118493293",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Gelendzhik",
+        ["channel"] = 90,
+        ["callsign"] = "GN",
+        ["position"] = 
+        {
+            [1] = -50420.347656,
+            [2] = 22.009923,
+            [3] = 298457.125,
+        }, -- end of ["position"]
+        ["type"] = 1,
+        ["frequency"] = 114300000,
+    }, -- end of [14]
+    [15] = 
+    {
+        ["direction"] = 151.003298,
+        ["beaconId"] = "airfield21_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:222035969",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Gudauta",
+        ["position"] = 
+        {
+            [1] = -198344.5625,
+            [2] = 10.015866,
+            [3] = 517357,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 40.578961,
+            ["latitude"] = 43.099003,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "XC",
+        ["type"] = 4136,
+        ["frequency"] = 395000,
+    }, -- end of [15]
+    [16] = 
+    {
+        ["direction"] = -109.999979,
+        ["beaconId"] = "airfield24_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:175734784",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Kobuleti",
+        ["position"] = 
+        {
+            [1] = -319739.03125,
+            [2] = 10.928995,
+            [3] = 630753.5625,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 41.802928,
+            ["latitude"] = 41.918616,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "KT",
+        ["type"] = 16408,
+        ["frequency"] = 870000,
+    }, -- end of [16]
+    [17] = 
+    {
+        ["direction"] = -109.999979,
+        ["beaconId"] = "airfield24_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:176783360",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Kobuleti",
+        ["position"] = 
+        {
+            [1] = -318815.5625,
+            [2] = 18.272494,
+            [3] = 633290.6875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 41.834303,
+            ["latitude"] = 41.924494,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "T",
+        ["type"] = 16424,
+        ["frequency"] = 490000,
+    }, -- end of [17]
+    [18] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield24_2",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:176817051",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 2550,
+        ["display_name"] = "Kobuleti",
+        ["position"] = 
+        {
+            [1] = -317495.75,
+            [2] = 18.017043,
+            [3] = 636918.25,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 41.879171,
+            ["latitude"] = 41.932878,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IKB",
+        ["direction"] = -109.999979,
+        ["frequency"] = 111500000,
+    }, -- end of [18]
+    [19] = 
+    {
+        ["type"] = 16896,
+        ["beaconId"] = "airfield24_3",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:334430212",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 120,
+        ["display_name"] = "Kobuleti",
+        ["position"] = 
+        {
+            [1] = -318329.625,
+            [2] = 18.010018,
+            [3] = 634820.8125,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 41.85314,
+            ["latitude"] = 41.927403,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IKB",
+        ["direction"] = -109.999979,
+        ["frequency"] = 111500000,
+    }, -- end of [19]
+    [20] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "airfield24_4",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 41.86197,
+            ["latitude"] = 41.93077,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:176817052",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Kobuleti",
+        ["channel"] = 67,
+        ["callsign"] = "KBL",
+        ["position"] = 
+        {
+            [1] = -317879,
+            [2] = 18.010018,
+            [3] = 635514.8125,
+        }, -- end of ["position"]
+        ["type"] = 4,
+        ["frequency"] = 1154000000,
+    }, -- end of [20]
+    [21] = 
+    {
+        ["direction"] = 87.003387,
+        ["beaconId"] = "airfield13_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:302022656",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Krasnodar-Center",
+        ["position"] = 
+        {
+            [1] = 11980.96875,
+            [2] = 31.707849,
+            [3] = 373613.71875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 39.012047,
+            ["latitude"] = 45.085828,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "OC",
+        ["type"] = 16408,
+        ["frequency"] = 625000,
+    }, -- end of [21]
+    [22] = 
+    {
+        ["direction"] = 87.003387,
+        ["beaconId"] = "airfield13_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:301989903",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Krasnodar-Center",
+        ["position"] = 
+        {
+            [1] = 11804.427734,
+            [2] = 29.328925,
+            [3] = 370241.34375,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 38.969263,
+            ["latitude"] = 45.086491,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "O",
+        ["type"] = 16424,
+        ["frequency"] = 303000,
+    }, -- end of [22]
+    [23] = 
+    {
+        ["direction"] = -92.996632,
+        ["beaconId"] = "airfield13_2",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:301924352",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Krasnodar-Center",
+        ["position"] = 
+        {
+            [1] = 11410.707031,
+            [2] = 25.57611,
+            [3] = 362701.09375,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 38.873594,
+            ["latitude"] = 45.087925,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "MB",
+        ["type"] = 16408,
+        ["frequency"] = 625000,
+    }, -- end of [23]
+    [24] = 
+    {
+        ["direction"] = -92.996632,
+        ["beaconId"] = "airfield13_3",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:301957137",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Krasnodar-Center",
+        ["position"] = 
+        {
+            [1] = 11567.539062,
+            [2] = 25.479861,
+            [3] = 365697,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 38.911608,
+            ["latitude"] = 45.087368,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "M",
+        ["type"] = 16424,
+        ["frequency"] = 303000,
+    }, -- end of [24]
+    [25] = 
+    {
+        ["type"] = 33024,
+        ["beaconId"] = "airfield13_4",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:678822652",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 3410,
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 38.967638,
+            ["latitude"] = 45.08652,
+        }, -- end of ["positionGeo"]
+        ["display_name"] = "Krasnodar-Center",
+        ["channel"] = 38,
+        ["callsign"] = "MB",
+        ["position"] = 
+        {
+            [1] = 11798.22168,
+            [2] = 29.298262,
+            [3] = 370113.1875,
+        }, -- end of ["position"]
+        ["direction"] = -92.996632,
+        ["frequency"] = 838000000,
+    }, -- end of [25]
+    [26] = 
+    {
+        ["direction"] = -92.996632,
+        ["beaconId"] = "airfield13_5",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 38.928677,
+            ["latitude"] = 45.085808,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:678822653",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Krasnodar-Center",
+        ["channel"] = 38,
+        ["callsign"] = "MB",
+        ["position"] = 
+        {
+            [1] = 11492.823242,
+            [2] = 30.010032,
+            [3] = 367052.96875,
+        }, -- end of ["position"]
+        ["type"] = 33280,
+        ["frequency"] = 838000000,
+    }, -- end of [26]
+    [27] = 
+    {
+        ["direction"] = -92.996652,
+        ["beaconId"] = "airfield13_6",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 38.927839,
+            ["latitude"] = 45.083171,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:678823326",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Krasnodar-Center",
+        ["channel"] = 40,
+        ["callsign"] = "MB",
+        ["position"] = 
+        {
+            [1] = 11195.09375,
+            [2] = 30.866661,
+            [3] = 367008.5625,
+        }, -- end of ["position"]
+        ["type"] = 128,
+        ["frequency"] = 840000000,
+    }, -- end of [27]
+    [28] = 
+    {
+        ["direction"] = -132.994767,
+        ["beaconId"] = "airfield19_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:298647552",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Krasnodar-Pashkovsky",
+        ["position"] = 
+        {
+            [1] = 3919.23291,
+            [2] = 29.862306,
+            [3] = 383806.1875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 39.133081,
+            ["latitude"] = 45.006796,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "KR",
+        ["type"] = 16408,
+        ["frequency"] = 493000,
+    }, -- end of [28]
+    [29] = 
+    {
+        ["direction"] = -132.994767,
+        ["beaconId"] = "airfield19_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:300482577",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Krasnodar-Pashkovsky",
+        ["position"] = 
+        {
+            [1] = 5760.449219,
+            [2] = 29.579169,
+            [3] = 385781,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 39.159769,
+            ["latitude"] = 45.021929,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "K",
+        ["type"] = 16424,
+        ["frequency"] = 240000,
+    }, -- end of [29]
+    [30] = 
+    {
+        ["direction"] = 47.005224,
+        ["beaconId"] = "airfield19_2",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:302153728",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Krasnodar-Pashkovsky",
+        ["position"] = 
+        {
+            [1] = 11497.123047,
+            [2] = 34.370228,
+            [3] = 391935.4375,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 39.243028,
+            ["latitude"] = 45.069032,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "LD",
+        ["type"] = 16408,
+        ["frequency"] = 493000,
+    }, -- end of [30]
+    [31] = 
+    {
+        ["direction"] = 47.005224,
+        ["beaconId"] = "airfield19_3",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:302153729",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Krasnodar-Pashkovsky",
+        ["position"] = 
+        {
+            [1] = 9655.907227,
+            [2] = 31.752404,
+            [3] = 389960.625,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 39.216297,
+            ["latitude"] = 45.053921,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "L",
+        ["type"] = 16424,
+        ["frequency"] = 240000,
+    }, -- end of [31]
+    [32] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "airfield19_4",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 39.163887,
+            ["latitude"] = 45.020832,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:137563394",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Krasnodar-Pashkovsky",
+        ["channel"] = 105,
+        ["callsign"] = "KN",
+        ["position"] = 
+        {
+            [1] = 5663.36377,
+            [2] = 30.493774,
+            [3] = 386114.75,
+        }, -- end of ["position"]
+        ["type"] = 1,
+        ["frequency"] = 115800000,
+    }, -- end of [32]
+    [33] = 
+    {
+        ["direction"] = 39.519802,
+        ["beaconId"] = "airfield15_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:297959424",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Krymsk",
+        ["position"] = 
+        {
+            [1] = -2232.675781,
+            [2] = 5.000005,
+            [3] = 297972.09375,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 38.043726,
+            ["latitude"] = 45.004894,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "KW",
+        ["type"] = 16408,
+        ["frequency"] = 408000,
+    }, -- end of [33]
+    [34] = 
+    {
+        ["direction"] = 39.519802,
+        ["beaconId"] = "airfield15_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:296189953",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Krymsk",
+        ["position"] = 
+        {
+            [1] = -4801.45459,
+            [2] = 7.267079,
+            [3] = 295853.0625,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 38.014927,
+            ["latitude"] = 44.983041,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "K",
+        ["type"] = 16424,
+        ["frequency"] = 803000,
+    }, -- end of [34]
+    [35] = 
+    {
+        ["direction"] = -140.480217,
+        ["beaconId"] = "airfield15_2",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:294584349",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Krymsk",
+        ["position"] = 
+        {
+            [1] = -10679.844727,
+            [2] = 72.04253,
+            [3] = 291002.59375,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 37.949089,
+            ["latitude"] = 44.933004,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "OX",
+        ["type"] = 16408,
+        ["frequency"] = 408000,
+    }, -- end of [35]
+    [36] = 
+    {
+        ["direction"] = -140.480217,
+        ["beaconId"] = "airfield15_3",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:294584350",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Krymsk",
+        ["position"] = 
+        {
+            [1] = -8481.339844,
+            [2] = 32.852633,
+            [3] = 292816.1875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 37.973692,
+            ["latitude"] = 44.951723,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "O",
+        ["type"] = 16424,
+        ["frequency"] = 803000,
+    }, -- end of [36]
+    [37] = 
+    {
+        ["direction"] = -141.000009,
+        ["beaconId"] = "airfield15_4",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:678822658",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Krymsk",
+        ["position"] = 
+        {
+            [1] = -7411.83252,
+            [2] = 20.010304,
+            [3] = 293592,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 37.984323,
+            ["latitude"] = 44.960886,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "OX",
+        ["type"] = 33280,
+        ["frequency"] = 826000000,
+    }, -- end of [37]
+    [38] = 
+    {
+        ["direction"] = 38.99997,
+        ["beaconId"] = "airfield15_5",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:678822659",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Krymsk",
+        ["position"] = 
+        {
+            [1] = -5648.416504,
+            [2] = 20.010304,
+            [3] = 295048.15625,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 38.004094,
+            ["latitude"] = 44.975894,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "KW",
+        ["type"] = 33280,
+        ["frequency"] = 826000000,
+    }, -- end of [38]
+    [39] = 
+    {
+        ["type"] = 33024,
+        ["beaconId"] = "airfield15_6",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:678822660",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 3649,
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 37.974655,
+            ["latitude"] = 44.952449,
+        }, -- end of ["positionGeo"]
+        ["display_name"] = "Krymsk",
+        ["channel"] = 26,
+        ["callsign"] = "KW",
+        ["position"] = 
+        {
+            [1] = -8396.038086,
+            [2] = 31.785951,
+            [3] = 292887.1875,
+        }, -- end of ["position"]
+        ["direction"] = 39.519802,
+        ["frequency"] = 826000000,
+    }, -- end of [39]
+    [40] = 
+    {
+        ["type"] = 33024,
+        ["beaconId"] = "airfield15_7",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:678822661",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 3589,
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 38.01474,
+            ["latitude"] = 44.982907,
+        }, -- end of ["positionGeo"]
+        ["display_name"] = "Krymsk",
+        ["channel"] = 26,
+        ["callsign"] = "OX",
+        ["position"] = 
+        {
+            [1] = -4817.330078,
+            [2] = 7.263302,
+            [3] = 295839.3125,
+        }, -- end of ["position"]
+        ["direction"] = -140.480217,
+        ["frequency"] = 826000000,
+    }, -- end of [40]
+    [41] = 
+    {
+        ["direction"] = -140.480229,
+        ["beaconId"] = "airfield15_8",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 37.996805,
+            ["latitude"] = 44.966653,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:678823327",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Krymsk",
+        ["channel"] = 28,
+        ["callsign"] = "KW",
+        ["position"] = 
+        {
+            [1] = -6710.505371,
+            [2] = 20.866651,
+            [3] = 294536.875,
+        }, -- end of ["position"]
+        ["type"] = 128,
+        ["frequency"] = 828000000,
+    }, -- end of [41]
+    [42] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield25_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:190317080",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 2650,
+        ["display_name"] = "Kutaisi",
+        ["position"] = 
+        {
+            [1] = -284502.84375,
+            [2] = 46.542794,
+            [3] = 685199.5,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 42.49782,
+            ["latitude"] = 42.179695,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IKS",
+        ["direction"] = -105.999085,
+        ["frequency"] = 109750000,
+    }, -- end of [42]
+    [43] = 
+    {
+        ["type"] = 16896,
+        ["beaconId"] = "airfield25_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:366183174",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 120,
+        ["display_name"] = "Kutaisi",
+        ["position"] = 
+        {
+            [1] = -285264.53125,
+            [2] = 45.010047,
+            [3] = 682978.4375,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 42.470274,
+            ["latitude"] = 42.175142,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IKS",
+        ["direction"] = -105.999085,
+        ["frequency"] = 109750000,
+    }, -- end of [43]
+    [44] = 
+    {
+        ["direction"] = 74.000018,
+        ["beaconId"] = "airfield25_2",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:190283794",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Kutaisi",
+        ["position"] = 
+        {
+            [1] = -285504.6875,
+            [2] = 44.662974,
+            [3] = 681690.0625,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 42.454567,
+            ["latitude"] = 42.174289,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "TI",
+        ["type"] = 4136,
+        ["frequency"] = 477000,
+    }, -- end of [44]
+    [45] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "airfield25_3",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 42.479213,
+            ["latitude"] = 42.178443,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:190284135",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Kutaisi",
+        ["channel"] = 44,
+        ["callsign"] = "KTS",
+        ["position"] = 
+        {
+            [1] = -284814.6875,
+            [2] = 45.299522,
+            [3] = 683676.5,
+        }, -- end of ["position"]
+        ["type"] = 4,
+        ["frequency"] = 1005000000,
+    }, -- end of [45]
+    [46] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "airfield25_4",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 42.455276,
+            ["latitude"] = 42.174389,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:68354896",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Kutaisi",
+        ["channel"] = 83,
+        ["callsign"] = "KT",
+        ["position"] = 
+        {
+            [1] = -285487.03125,
+            [2] = 44.387457,
+            [3] = 681747.5,
+        }, -- end of ["position"]
+        ["type"] = 1,
+        ["frequency"] = 113600000,
+    }, -- end of [46]
+    [47] = 
+    {
+        ["direction"] = -52.001372,
+        ["beaconId"] = "airfield29_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:179175432",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Tbilisi-Lochini",
+        ["position"] = 
+        {
+            [1] = -312185.40625,
+            [2] = 567.552264,
+            [3] = 892170.1875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 44.909623,
+            ["latitude"] = 41.703274,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "BP",
+        ["type"] = 16408,
+        ["frequency"] = 342000,
+    }, -- end of [47]
+    [48] = 
+    {
+        ["direction"] = -52.001372,
+        ["beaconId"] = "airfield29_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:179208195",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Tbilisi-Lochini",
+        ["position"] = 
+        {
+            [1] = -313847.625,
+            [2] = 516.680448,
+            [3] = 894297.875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 44.931895,
+            ["latitude"] = 41.685992,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "B",
+        ["type"] = 16424,
+        ["frequency"] = 923000,
+    }, -- end of [48]
+    [49] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield29_2",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:177734088",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 3117,
+        ["display_name"] = "Tbilisi-Lochini",
+        ["position"] = 
+        {
+            [1] = -316544.0625,
+            [2] = 479.302481,
+            [3] = 897748.5,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 44.967988,
+            ["latitude"] = 41.657953,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IVP",
+        ["direction"] = -52.001372,
+        ["frequency"] = 110300000,
+    }, -- end of [49]
+    [50] = 
+    {
+        ["type"] = 16896,
+        ["beaconId"] = "airfield29_3",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:338232167",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 120,
+        ["display_name"] = "Tbilisi-Lochini",
+        ["position"] = 
+        {
+            [1] = -314937,
+            [2] = 479.218985,
+            [3] = 895496.5625,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 44.944184,
+            ["latitude"] = 41.674907,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IVP",
+        ["direction"] = -52.001372,
+        ["frequency"] = 110300000,
+    }, -- end of [50]
+    [51] = 
+    {
+        ["direction"] = 127.998645,
+        ["beaconId"] = "airfield29_4",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:177733636",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Tbilisi-Lochini",
+        ["position"] = 
+        {
+            [1] = -318920.96875,
+            [2] = 459.637972,
+            [3] = 900790.1875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 44.999778,
+            ["latitude"] = 41.633231,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "NA",
+        ["type"] = 16408,
+        ["frequency"] = 211000,
+    }, -- end of [51]
+    [52] = 
+    {
+        ["direction"] = 127.998645,
+        ["beaconId"] = "airfield29_5",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:177733637",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Tbilisi-Lochini",
+        ["position"] = 
+        {
+            [1] = -317258.75,
+            [2] = 474.729601,
+            [3] = 898662.5,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 44.977543,
+            ["latitude"] = 41.650521,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "N",
+        ["type"] = 16424,
+        ["frequency"] = 435000,
+    }, -- end of [52]
+    [53] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield29_6",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:179209366",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 3117,
+        ["display_name"] = "Tbilisi-Lochini",
+        ["position"] = 
+        {
+            [1] = -314562.3125,
+            [2] = 482.002923,
+            [3] = 895211.875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 44.941458,
+            ["latitude"] = 41.678562,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "INA",
+        ["direction"] = 127.998645,
+        ["frequency"] = 108900000,
+    }, -- end of [53]
+    [54] = 
+    {
+        ["type"] = 16896,
+        ["beaconId"] = "airfield29_7",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:336987264",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 120,
+        ["display_name"] = "Tbilisi-Lochini",
+        ["position"] = 
+        {
+            [1] = -316169.375,
+            [2] = 479.694816,
+            [3] = 897463.8125,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 44.965264,
+            ["latitude"] = 41.661608,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "INA",
+        ["direction"] = 127.998645,
+        ["frequency"] = 108900000,
+    }, -- end of [54]
+    [55] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "airfield29_8",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 44.946945,
+            ["latitude"] = 41.670555,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:60394699",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Tbilisi-Lochini",
+        ["channel"] = 84,
+        ["callsign"] = "TB",
+        ["position"] = 
+        {
+            [1] = -315388.90625,
+            [2] = 477.110096,
+            [3] = 895795.0625,
+        }, -- end of ["position"]
+        ["type"] = 1,
+        ["frequency"] = 113700000,
+    }, -- end of [55]
+    [56] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "airfield29_9",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 44.930298,
+            ["latitude"] = 41.670577,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:177702139",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Tbilisi-Lochini",
+        ["channel"] = 25,
+        ["callsign"] = "GTB",
+        ["position"] = 
+        {
+            [1] = -315581.71875,
+            [2] = 484.049312,
+            [3] = 894405.6875,
+        }, -- end of ["position"]
+        ["type"] = 4,
+        ["frequency"] = 986000000,
+    }, -- end of [56]
+    [57] = 
+    {
+        ["direction"] = 38.999724,
+        ["beaconId"] = "airfield16_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:290848768",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Maykop-Khanskaya",
+        ["position"] = 
+        {
+            [1] = -22082.919922,
+            [2] = 213.198242,
+            [3] = 461575.46875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 40.084181,
+            ["latitude"] = 44.717443,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "RK",
+        ["type"] = 16408,
+        ["frequency"] = 289000,
+    }, -- end of [57]
+    [58] = 
+    {
+        ["direction"] = 38.999724,
+        ["beaconId"] = "airfield16_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:290848769",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Maykop-Khanskaya",
+        ["position"] = 
+        {
+            [1] = -24414.369141,
+            [2] = 175.805962,
+            [3] = 459687.53125,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 40.057981,
+            ["latitude"] = 44.698086,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "R",
+        ["type"] = 16424,
+        ["frequency"] = 591000,
+    }, -- end of [58]
+    [59] = 
+    {
+        ["direction"] = -141.000295,
+        ["beaconId"] = "airfield16_2",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:287735808",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Maykop-Khanskaya",
+        ["position"] = 
+        {
+            [1] = -30802.216797,
+            [2] = 173.935217,
+            [3] = 454513.53125,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 39.986269,
+            ["latitude"] = 44.645015,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "DG",
+        ["type"] = 16408,
+        ["frequency"] = 289000,
+    }, -- end of [59]
+    [60] = 
+    {
+        ["direction"] = -141.000295,
+        ["beaconId"] = "airfield16_3",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:289177600",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Maykop-Khanskaya",
+        ["position"] = 
+        {
+            [1] = -28470.767578,
+            [2] = 174.66561,
+            [3] = 456401.46875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 40.012421,
+            ["latitude"] = 44.664391,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "D",
+        ["type"] = 16424,
+        ["frequency"] = 591000,
+    }, -- end of [60]
+    [61] = 
+    {
+        ["type"] = 33024,
+        ["beaconId"] = "airfield16_4",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:678822668",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 4179,
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 40.057712,
+            ["latitude"] = 44.697894,
+        }, -- end of ["positionGeo"]
+        ["display_name"] = "Maykop-Khanskaya",
+        ["channel"] = 36,
+        ["callsign"] = "DG",
+        ["position"] = 
+        {
+            [1] = -24437.523438,
+            [2] = 175.942833,
+            [3] = 459668.125,
+        }, -- end of ["position"]
+        ["direction"] = -141.000295,
+        ["frequency"] = 836000000,
+    }, -- end of [61]
+    [62] = 
+    {
+        ["direction"] = -141.000295,
+        ["beaconId"] = "airfield16_5",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 40.024984,
+            ["latitude"] = 44.67207,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:678822669",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Maykop-Khanskaya",
+        ["channel"] = 36,
+        ["callsign"] = "DG",
+        ["position"] = 
+        {
+            [1] = -27531.527344,
+            [2] = 180.01019,
+            [3] = 457323.53125,
+        }, -- end of ["position"]
+        ["type"] = 33280,
+        ["frequency"] = 836000000,
+    }, -- end of [62]
+    [63] = 
+    {
+        ["direction"] = -141.000307,
+        ["beaconId"] = "airfield16_6",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 40.035455,
+            ["latitude"] = 44.679754,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:678823328",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Maykop-Khanskaya",
+        ["channel"] = 34,
+        ["callsign"] = "DG",
+        ["position"] = 
+        {
+            [1] = -26605.978516,
+            [2] = 180.866789,
+            [3] = 458079.46875,
+        }, -- end of ["position"]
+        ["type"] = 128,
+        ["frequency"] = 834000000,
+    }, -- end of [63]
+    [64] = 
+    {
+        ["direction"] = 115.300122,
+        ["beaconId"] = "airfield26_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:279019523",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "MineralnyeVody",
+        ["position"] = 
+        {
+            [1] = -53842.230469,
+            [2] = 303.327421,
+            [3] = 711195.0625,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 43.14453,
+            ["latitude"] = 44.198946,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "NR",
+        ["type"] = 16408,
+        ["frequency"] = 583000,
+    }, -- end of [64]
+    [65] = 
+    {
+        ["direction"] = 115.300122,
+        ["beaconId"] = "airfield26_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:280494088",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "MineralnyeVody",
+        ["position"] = 
+        {
+            [1] = -52688.359375,
+            [2] = 316.610912,
+            [3] = 708754.0625,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 43.116226,
+            ["latitude"] = 44.211867,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "N",
+        ["type"] = 16424,
+        ["frequency"] = 283000,
+    }, -- end of [65]
+    [66] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield26_2",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:280428818",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 4216,
+        ["display_name"] = "MineralnyeVody",
+        ["position"] = 
+        {
+            [1] = -50326.4375,
+            [2] = 313.023903,
+            [3] = 703758.5625,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 43.058263,
+            ["latitude"] = 44.238297,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IMW",
+        ["direction"] = 115.300122,
+        ["frequency"] = 109300000,
+    }, -- end of [66]
+    [67] = 
+    {
+        ["type"] = 16896,
+        ["beaconId"] = "airfield26_3",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:543687655",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 120,
+        ["display_name"] = "MineralnyeVody",
+        ["position"] = 
+        {
+            [1] = -51889.148438,
+            [2] = 319.947341,
+            [3] = 707345.3125,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 43.10009,
+            ["latitude"] = 44.220503,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IMW",
+        ["direction"] = 115.300122,
+        ["frequency"] = 109300000,
+    }, -- end of [67]
+    [68] = 
+    {
+        ["direction"] = -64.699902,
+        ["beaconId"] = "airfield26_4",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:281804800",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "MineralnyeVody",
+        ["position"] = 
+        {
+            [1] = -48676.292969,
+            [2] = 310.76325,
+            [3] = 700268.875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 43.017738,
+            ["latitude"] = 44.256747,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "MD",
+        ["type"] = 16408,
+        ["frequency"] = 583000,
+    }, -- end of [68]
+    [69] = 
+    {
+        ["direction"] = -64.699902,
+        ["beaconId"] = "airfield26_5",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:280428544",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "MineralnyeVody",
+        ["position"] = 
+        {
+            [1] = -49830.164062,
+            [2] = 307.123507,
+            [3] = 702709.875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 43.046088,
+            ["latitude"] = 44.243846,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "D",
+        ["type"] = 16424,
+        ["frequency"] = 283000,
+    }, -- end of [69]
+    [70] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield26_6",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:280462551",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 4216,
+        ["display_name"] = "MineralnyeVody",
+        ["position"] = 
+        {
+            [1] = -52192.085938,
+            [2] = 315.340281,
+            [3] = 707705.4375,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 43.104064,
+            ["latitude"] = 44.217421,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IMD",
+        ["direction"] = -64.699902,
+        ["frequency"] = 111700000,
+    }, -- end of [70]
+    [71] = 
+    {
+        ["type"] = 16896,
+        ["beaconId"] = "airfield26_7",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:545948401",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 120,
+        ["display_name"] = "MineralnyeVody",
+        ["position"] = 
+        {
+            [1] = -50629.375,
+            [2] = 320.01033,
+            [3] = 704118.625,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 43.06224,
+            ["latitude"] = 44.235217,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IMD",
+        ["direction"] = -64.699902,
+        ["frequency"] = 111700000,
+    }, -- end of [71]
+    [72] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "airfield26_8",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 43.054165,
+            ["latitude"] = 44.239445,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:119868151",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "MineralnyeVody",
+        ["channel"] = 118,
+        ["callsign"] = "MN",
+        ["position"] = 
+        {
+            [1] = -50239.421875,
+            [2] = 314.087991,
+            [3] = 703415.5,
+        }, -- end of ["position"]
+        ["type"] = 1,
+        ["frequency"] = 117100000,
+    }, -- end of [72]
+    [73] = 
+    {
+        ["direction"] = -97.236068,
+        ["beaconId"] = "airfield28_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:266043392",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Mozdok",
+        ["position"] = 
+        {
+            [1] = -84144.421875,
+            [2] = 148.005153,
+            [3] = 829029.375,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 44.538494,
+            ["latitude"] = 43.79238,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "DO",
+        ["type"] = 16408,
+        ["frequency"] = 525000,
+    }, -- end of [73]
+    [74] = 
+    {
+        ["direction"] = -97.236068,
+        ["beaconId"] = "airfield28_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:266043393",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Mozdok",
+        ["position"] = 
+        {
+            [1] = -83892.507812,
+            [2] = 146.142297,
+            [3] = 831013.4375,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 44.563089,
+            ["latitude"] = 43.792126,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "D",
+        ["type"] = 16424,
+        ["frequency"] = 1065000,
+    }, -- end of [74]
+    [75] = 
+    {
+        ["direction"] = 82.763916,
+        ["beaconId"] = "airfield28_2",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:266141696",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Mozdok",
+        ["position"] = 
+        {
+            [1] = -82791.179688,
+            [2] = 139.140398,
+            [3] = 839695.25,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 44.670692,
+            ["latitude"] = 43.790945,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "RM",
+        ["type"] = 16408,
+        ["frequency"] = 525000,
+    }, -- end of [75]
+    [76] = 
+    {
+        ["direction"] = 82.763916,
+        ["beaconId"] = "airfield28_3",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:266108928",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Mozdok",
+        ["position"] = 
+        {
+            [1] = -83147.640625,
+            [2] = 140.692066,
+            [3] = 836887.8125,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 44.635898,
+            ["latitude"] = 43.791336,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "R",
+        ["type"] = 16424,
+        ["frequency"] = 1065000,
+    }, -- end of [76]
+    [77] = 
+    {
+        ["type"] = 33024,
+        ["beaconId"] = "airfield28_4",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:678822674",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 4418,
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 44.632072,
+            ["latitude"] = 43.791382,
+        }, -- end of ["positionGeo"]
+        ["display_name"] = "Mozdok",
+        ["channel"] = 22,
+        ["callsign"] = "MZ",
+        ["position"] = 
+        {
+            [1] = -83186.351562,
+            [2] = 140.971363,
+            [3] = 836579,
+        }, -- end of ["position"]
+        ["direction"] = -97.236068,
+        ["frequency"] = 822000000,
+    }, -- end of [77]
+    [78] = 
+    {
+        ["direction"] = -97.236068,
+        ["beaconId"] = "airfield28_5",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 44.586565,
+            ["latitude"] = 43.791251,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:678822675",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Mozdok",
+        ["channel"] = 22,
+        ["callsign"] = "MZ",
+        ["position"] = 
+        {
+            [1] = -83721.84375,
+            [2] = 154.758974,
+            [3] = 832917.3125,
+        }, -- end of ["position"]
+        ["type"] = 33280,
+        ["frequency"] = 822000000,
+    }, -- end of [78]
+    [79] = 
+    {
+        ["type"] = 33024,
+        ["beaconId"] = "airfield28_6",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:678822676",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 4179,
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 44.572203,
+            ["latitude"] = 43.792027,
+        }, -- end of ["positionGeo"]
+        ["display_name"] = "Mozdok",
+        ["channel"] = 22,
+        ["callsign"] = "MK",
+        ["position"] = 
+        {
+            [1] = -83799.640625,
+            [2] = 145.067482,
+            [3] = 831748.8125,
+        }, -- end of ["position"]
+        ["direction"] = 82.763916,
+        ["frequency"] = 822000000,
+    }, -- end of [79]
+    [80] = 
+    {
+        ["direction"] = 82.763916,
+        ["beaconId"] = "airfield28_7",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 44.618731,
+            ["latitude"] = 43.790905,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:678822677",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Mozdok",
+        ["channel"] = 22,
+        ["callsign"] = "MK",
+        ["position"] = 
+        {
+            [1] = -83392.328125,
+            [2] = 154.627688,
+            [3] = 835512.4375,
+        }, -- end of ["position"]
+        ["type"] = 33280,
+        ["frequency"] = 822000000,
+    }, -- end of [80]
+    [81] = 
+    {
+        ["direction"] = 82.763916,
+        ["beaconId"] = "airfield28_8",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 44.602658,
+            ["latitude"] = 43.790367,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:678823329",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Mozdok",
+        ["channel"] = 20,
+        ["callsign"] = "MZ",
+        ["position"] = 
+        {
+            [1] = -83636.195312,
+            [2] = 154.866778,
+            [3] = 834226.9375,
+        }, -- end of ["position"]
+        ["type"] = 128,
+        ["frequency"] = 820000000,
+    }, -- end of [81]
+    [82] = 
+    {
+        ["direction"] = 55.506625,
+        ["beaconId"] = "airfield27_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:249692160",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Nalchik",
+        ["position"] = 
+        {
+            [1] = -122005.132812,
+            [2] = 376.161387,
+            [3] = 764682.375,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 43.692885,
+            ["latitude"] = 43.535011,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "NL",
+        ["type"] = 16408,
+        ["frequency"] = 718000,
+    }, -- end of [82]
+    [83] = 
+    {
+        ["direction"] = 55.506625,
+        ["beaconId"] = "airfield27_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:248250368",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Nalchik",
+        ["position"] = 
+        {
+            [1] = -123534.171875,
+            [2] = 417.185293,
+            [3] = 762457.0625,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 43.663409,
+            ["latitude"] = 43.524039,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "N",
+        ["type"] = 16424,
+        ["frequency"] = 350000,
+    }, -- end of [83]
+    [84] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield27_2",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:248219077",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 2453,
+        ["display_name"] = "Nalchik",
+        ["position"] = 
+        {
+            [1] = -125664.609375,
+            [2] = 430.35773,
+            [3] = 759355.6875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 43.622345,
+            ["latitude"] = 43.508738,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "INL",
+        ["direction"] = 55.506625,
+        ["frequency"] = 110500000,
+    }, -- end of [84]
+    [85] = 
+    {
+        ["type"] = 16896,
+        ["beaconId"] = "airfield27_3",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:477298783",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 120,
+        ["display_name"] = "Nalchik",
+        ["position"] = 
+        {
+            [1] = -124349.5625,
+            [2] = 430.010409,
+            [3] = 761057.625,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 43.645107,
+            ["latitude"] = 43.518429,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "INL",
+        ["direction"] = 55.506625,
+        ["frequency"] = 110500000,
+    }, -- end of [85]
+    [86] = 
+    {
+        ["direction"] = -85.299767,
+        ["beaconId"] = "airfield23_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:192118790",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Senaki-Kolkhi",
+        ["position"] = 
+        {
+            [1] = -281354.25,
+            [2] = 11.487805,
+            [3] = 642080,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 41.986317,
+            ["latitude"] = 42.249592,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "BI",
+        ["type"] = 16408,
+        ["frequency"] = 335000,
+    }, -- end of [86]
+    [87] = 
+    {
+        ["direction"] = -85.299767,
+        ["beaconId"] = "airfield23_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:192151554",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Senaki-Kolkhi",
+        ["position"] = 
+        {
+            [1] = -281575.5,
+            [2] = 23.342671,
+            [3] = 644770.9375,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 42.018251,
+            ["latitude"] = 42.245075,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "B",
+        ["type"] = 16424,
+        ["frequency"] = 688000,
+    }, -- end of [87]
+    [88] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield23_2",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:192185428",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 2530,
+        ["display_name"] = "Senaki-Kolkhi",
+        ["position"] = 
+        {
+            [1] = -281888.875,
+            [2] = 13.025524,
+            [3] = 648576.3125,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 42.0634,
+            ["latitude"] = 42.238667,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "ITS",
+        ["direction"] = -85.299767,
+        ["frequency"] = 108900000,
+    }, -- end of [88]
+    [89] = 
+    {
+        ["type"] = 16896,
+        ["beaconId"] = "airfield23_3",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:371654695",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 120,
+        ["display_name"] = "Senaki-Kolkhi",
+        ["position"] = 
+        {
+            [1] = -281827.96875,
+            [2] = 12.790726,
+            [3] = 646370.875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 42.03708,
+            ["latitude"] = 42.241309,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "ITS",
+        ["direction"] = -85.299767,
+        ["frequency"] = 108900000,
+    }, -- end of [89]
+    [90] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "airfield23_4",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 42.04702,
+            ["latitude"] = 42.242087,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:192185429",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Senaki-Kolkhi",
+        ["channel"] = 31,
+        ["callsign"] = "TSK",
+        ["position"] = 
+        {
+            [1] = -281653.6875,
+            [2] = 13.239942,
+            [3] = 647182.625,
+        }, -- end of ["position"]
+        ["type"] = 4,
+        ["frequency"] = 992000000,
+    }, -- end of [90]
+    [91] = 
+    {
+        ["direction"] = -117.994619,
+        ["beaconId"] = "airfield18_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:233209873",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Sochi-Adler",
+        ["position"] = 
+        {
+            [1] = -165720.53125,
+            [2] = 5.664159,
+            [3] = 459873.46875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 39.911051,
+            ["latitude"] = 43.435164,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "CO",
+        ["type"] = 4136,
+        ["frequency"] = 761000,
+    }, -- end of [91]
+    [92] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield18_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:234455894",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 3265,
+        ["display_name"] = "Sochi-Adler",
+        ["position"] = 
+        {
+            [1] = -163681.03125,
+            [2] = 23.207581,
+            [3] = 463753.71875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 39.960744,
+            ["latitude"] = 43.450492,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "ISO",
+        ["direction"] = -117.994619,
+        ["frequency"] = 111100000,
+    }, -- end of [92]
+    [93] = 
+    {
+        ["type"] = 16896,
+        ["beaconId"] = "airfield18_2",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:453083228",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 120,
+        ["display_name"] = "Sochi-Adler",
+        ["position"] = 
+        {
+            [1] = -165170.921875,
+            [2] = 30.010034,
+            [3] = 461206.65625,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 39.927967,
+            ["latitude"] = 43.439082,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "ISO",
+        ["direction"] = -117.994619,
+        ["frequency"] = 111100000,
+    }, -- end of [93]
+    [94] = 
+    {
+        ["direction"] = 116.485379,
+        ["beaconId"] = "airfield20_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:214499332",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Sukhumi-Babushara",
+        ["position"] = 
+        {
+            [1] = -223173.765625,
+            [2] = 25.161868,
+            [3] = 569571.375,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 41.184697,
+            ["latitude"] = 42.833582,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "AV",
+        ["type"] = 16408,
+        ["frequency"] = 489000,
+    }, -- end of [94]
+    [95] = 
+    {
+        ["direction"] = 116.485379,
+        ["beaconId"] = "airfield20_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:214466560",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Sukhumi-Babushara",
+        ["position"] = 
+        {
+            [1] = -221969.65625,
+            [2] = 16.383441,
+            [3] = 567154.75,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 41.156849,
+            ["latitude"] = 42.846418,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "A",
+        ["type"] = 16424,
+        ["frequency"] = 995000,
+    }, -- end of [95]
+    [96] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield31_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:176587291",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 2635,
+        ["display_name"] = "Vaziani",
+        ["position"] = 
+        {
+            [1] = -320054.40625,
+            [2] = 464.386573,
+            [3] = 904121.9375,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 45.037014,
+            ["latitude"] = 41.619095,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IVZ",
+        ["direction"] = -44.514716,
+        ["frequency"] = 108750000,
+    }, -- end of [96]
+    [97] = 
+    {
+        ["type"] = 16896,
+        ["beaconId"] = "airfield31_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:335544330",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 120,
+        ["display_name"] = "Vaziani",
+        ["position"] = 
+        {
+            [1] = -318477.9375,
+            [2] = 464.59983,
+            [3] = 902403.625,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 45.019459,
+            ["latitude"] = 41.635125,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IVZ",
+        ["direction"] = -44.514716,
+        ["frequency"] = 108750000,
+    }, -- end of [97]
+    [98] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield31_2",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:177766741",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 2727,
+        ["display_name"] = "Vaziani",
+        ["position"] = 
+        {
+            [1] = -318069.34375,
+            [2] = 464.97541,
+            [3] = 902170.1875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 45.017397,
+            ["latitude"] = 41.639015,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IVI",
+        ["direction"] = 135.485284,
+        ["frequency"] = 108750000,
+    }, -- end of [98]
+    [99] = 
+    {
+        ["type"] = 16896,
+        ["beaconId"] = "airfield31_3",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:334299157",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 120,
+        ["display_name"] = "Vaziani",
+        ["position"] = 
+        {
+            [1] = -319645.90625,
+            [2] = 464.500495,
+            [3] = 903888.25,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 45.03495,
+            ["latitude"] = 41.622985,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IVI",
+        ["direction"] = 135.485284,
+        ["frequency"] = 108750000,
+    }, -- end of [99]
+    [100] = 
+    {
+        ["direction"] = 0,
+        ["beaconId"] = "airfield31_4",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 45.02734,
+            ["latitude"] = 41.630707,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:177766742",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Vaziani",
+        ["channel"] = 22,
+        ["callsign"] = "VAS",
+        ["position"] = 
+        {
+            [1] = -318876.5,
+            [2] = 464.500465,
+            [3] = 903131.125,
+        }, -- end of ["position"]
+        ["type"] = 4,
+        ["frequency"] = 983000000,
+    }, -- end of [100]
+    [101] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:310738945",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Ust-Labinks",
+        ["position"] = 
+        {
+            [1] = 31587.583984,
+            [2] = 80.409993,
+            [3] = 422850.9375,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 39.65415,
+            ["latitude"] = 45.226576,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "NZ",
+        ["type"] = 8,
+        ["frequency"] = 330000,
+    }, -- end of [101]
+    [102] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:314507264",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Chervonoglinskoye",
+        ["position"] = 
+        {
+            [1] = 96729.375,
+            [2] = 5.000005,
+            [3] = -379810.53125,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 29.383333,
+            ["latitude"] = 45.949908,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "AR",
+        ["type"] = 8,
+        ["frequency"] = 440000,
+    }, -- end of [102]
+    [103] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_2",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:313360384",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Dmitrovka",
+        ["position"] = 
+        {
+            [1] = 41259.871094,
+            [2] = 31.694215,
+            [3] = 61344.707031,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 35.058601,
+            ["latitude"] = 45.489353,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "DM",
+        ["type"] = 8,
+        ["frequency"] = 690000,
+    }, -- end of [103]
+    [104] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_3",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:260046848",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Agoy",
+        ["position"] = 
+        {
+            [1] = -93707.710938,
+            [2] = 138.342134,
+            [3] = 383231.0625,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 39.034429,
+            ["latitude"] = 44.133242,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "AG",
+        ["type"] = 8,
+        ["frequency"] = 381000,
+    }, -- end of [104]
+    [105] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_4",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:287866880",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Maykop",
+        ["position"] = 
+        {
+            [1] = -32141.814453,
+            [2] = 243.75766,
+            [3] = 467470.5625,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 40.146927,
+            ["latitude"] = 44.622965,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "MA",
+        ["type"] = 8,
+        ["frequency"] = 682000,
+    }, -- end of [105]
+    [106] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_5",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:314834944",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Herson",
+        ["position"] = 
+        {
+            [1] = 170119.265625,
+            [2] = 2.524128,
+            [3] = -137766.03125,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 32.499994,
+            ["latitude"] = 46.666575,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "HS",
+        ["type"] = 8,
+        ["frequency"] = 1065000,
+    }, -- end of [106]
+    [107] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_6",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:290291712",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Smolenkaya",
+        ["position"] = 
+        {
+            [1] = -22412.445312,
+            [2] = 78.688853,
+            [3] = 359018.03125,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 38.796373,
+            ["latitude"] = 44.787409,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "SM",
+        ["type"] = 8,
+        ["frequency"] = 662000,
+    }, -- end of [107]
+    [108] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_7",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:263553024",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Kislovodsk",
+        ["position"] = 
+        {
+            [1] = -87247.726562,
+            [2] = 803.118113,
+            [3] = 675046.6875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 42.649979,
+            ["latitude"] = 43.941577,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "KW",
+        ["type"] = 8,
+        ["frequency"] = 995000,
+    }, -- end of [108]
+    [109] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_8",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:315424768",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Taganrog",
+        ["position"] = 
+        {
+            [1] = 251346.78125,
+            [2] = 5.000005,
+            [3] = 341832.1875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 38.833317,
+            ["latitude"] = 47.249909,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "TC",
+        ["type"] = 8,
+        ["frequency"] = 470000,
+    }, -- end of [109]
+    [110] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_9",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:294223872",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Feodosiya",
+        ["position"] = 
+        {
+            [1] = -10721.782227,
+            [2] = 0.302752,
+            [3] = 91145.75,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 35.419712,
+            ["latitude"] = 45.014353,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IL",
+        ["type"] = 8,
+        ["frequency"] = 300500,
+    }, -- end of [110]
+    [111] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_10",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:315490304",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Shyriaeve",
+        ["position"] = 
+        {
+            [1] = 255448.65625,
+            [2] = 5.000005,
+            [3] = -304739.375,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 30.279998,
+            ["latitude"] = 47.403241,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "SH",
+        ["type"] = 8,
+        ["frequency"] = 389000,
+    }, -- end of [111]
+    [112] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_11",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:314736640",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Odessa",
+        ["position"] = 
+        {
+            [1] = 132623.734375,
+            [2] = 2.000002,
+            [3] = -279618.625,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 30.661109,
+            ["latitude"] = 46.306297,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "OD",
+        ["type"] = 8,
+        ["frequency"] = 348000,
+    }, -- end of [112]
+    [113] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_12",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:315195392",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Yalta",
+        ["position"] = 
+        {
+            [1] = 202840.78125,
+            [2] = 0,
+            [3] = 230918.171875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 37.33693,
+            ["latitude"] = 46.879909,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "BS",
+        ["type"] = 8,
+        ["frequency"] = 300500,
+    }, -- end of [113]
+    [114] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_13",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:313327616",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Stavropol",
+        ["position"] = 
+        {
+            [1] = 39516.828125,
+            [2] = 352.025499,
+            [3] = 622585,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 42.181646,
+            ["latitude"] = 45.121577,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "KT",
+        ["type"] = 8,
+        ["frequency"] = 730000,
+    }, -- end of [114]
+    [115] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_14",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:314966016",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Yegorlykskaya",
+        ["position"] = 
+        {
+            [1] = 189361.796875,
+            [2] = 101.853572,
+            [3] = 487761.8125,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 40.666647,
+            ["latitude"] = 46.583243,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "ER",
+        ["type"] = 8,
+        ["frequency"] = 435000,
+    }, -- end of [115]
+    [116] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_15",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:314703872",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Komisarivka",
+        ["position"] = 
+        {
+            [1] = 127528.007812,
+            [2] = 2.000002,
+            [3] = 55884.429688,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 35.016657,
+            ["latitude"] = 46.266575,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "KM",
+        ["type"] = 8,
+        ["frequency"] = 950000,
+    }, -- end of [116]
+    [117] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_16",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:314605568",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Skadovsk",
+        ["position"] = 
+        {
+            [1] = 110740.085938,
+            [2] = 3.859469,
+            [3] = -105954.679688,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 32.91666,
+            ["latitude"] = 46.133242,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "SK",
+        ["type"] = 8,
+        ["frequency"] = 680000,
+    }, -- end of [117]
+    [118] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_17",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:207355904",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Gali",
+        ["position"] = 
+        {
+            [1] = -244178.796875,
+            [2] = 132.854198,
+            [3] = 621256.25,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 41.783315,
+            ["latitude"] = 42.59991,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "DA",
+        ["type"] = 8,
+        ["frequency"] = 525000,
+    }, -- end of [118]
+    [119] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_18",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:187531264",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Mukhrani",
+        ["position"] = 
+        {
+            [1] = -292419.78125,
+            [2] = 522.836949,
+            [3] = 860239.0625,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 44.565533,
+            ["latitude"] = 41.916577,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "DF",
+        ["type"] = 8,
+        ["frequency"] = 520000,
+    }, -- end of [119]
+    [120] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_19",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:313196544",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Ladozhskaya",
+        ["position"] = 
+        {
+            [1] = 39622.871094,
+            [2] = 62.237596,
+            [3] = 442914.4375,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 39.916649,
+            ["latitude"] = 45.283243,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "RF",
+        ["type"] = 8,
+        ["frequency"] = 324000,
+    }, -- end of [120]
+    [121] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_20",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:279150592",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Teplorechensky",
+        ["position"] = 
+        {
+            [1] = -54782.4375,
+            [2] = 253.499033,
+            [3] = 742905.8125,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 43.533311,
+            ["latitude"] = 44.15491,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "FM",
+        ["type"] = 8,
+        ["frequency"] = 1182000,
+    }, -- end of [121]
+    [122] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_21",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:253067264",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Kalaus",
+        ["position"] = 
+        {
+            [1] = -112412.046875,
+            [2] = 347.660656,
+            [3] = 889038.25,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 45.216642,
+            ["latitude"] = 43.466578,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "BJ",
+        ["type"] = 8,
+        ["frequency"] = 735000,
+    }, -- end of [122]
+    [123] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_22",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:315129856",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Nikolaev-Kulbakino",
+        ["position"] = 
+        {
+            [1] = 200023.625,
+            [2] = 2.973928,
+            [3] = -168025.390625,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 32.099995,
+            ["latitude"] = 46.933241,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "NK",
+        ["type"] = 8,
+        ["frequency"] = 1030000,
+    }, -- end of [123]
+    [124] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_23",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:315326464",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Manychsky",
+        ["position"] = 
+        {
+            [1] = 238988.84375,
+            [2] = 93.700884,
+            [3] = 459902.875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 40.366647,
+            ["latitude"] = 47.049909,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "MN",
+        ["type"] = 8,
+        ["frequency"] = 705000,
+    }, -- end of [124]
+    [125] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_24",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:309624832",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Kerch",
+        ["position"] = 
+        {
+            [1] = 31183.582031,
+            [2] = 35.950666,
+            [3] = 166738.03125,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 36.399988,
+            ["latitude"] = 45.366575,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "KC",
+        ["type"] = 8,
+        ["frequency"] = 1050000,
+    }, -- end of [125]
+    [126] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_25",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:315359232",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "TaganrogYuzhny",
+        ["position"] = 
+        {
+            [1] = 245887.234375,
+            [2] = 5.000005,
+            [3] = 343510.5625,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 38.849984,
+            ["latitude"] = 47.199909,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "TY",
+        ["type"] = 8,
+        ["frequency"] = 720000,
+    }, -- end of [126]
+    [127] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_26",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:193101824",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Ali",
+        ["position"] = 
+        {
+            [1] = -282495.46875,
+            [2] = 723.020682,
+            [3] = 781223.5,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 43.644701,
+            ["latitude"] = 42.096021,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "AL",
+        ["type"] = 8,
+        ["frequency"] = 353000,
+    }, -- end of [127]
+    [128] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_27",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:315162624",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Elista",
+        ["position"] = 
+        {
+            [1] = 200185.21875,
+            [2] = 88.166821,
+            [3] = 771829.25,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 44.333308,
+            ["latitude"] = 46.373244,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "SA",
+        ["type"] = 8,
+        ["frequency"] = 311000,
+    }, -- end of [128]
+    [129] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_28",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:298811392",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Ryazanskaya",
+        ["position"] = 
+        {
+            [1] = 2140.25708,
+            [2] = 45.922802,
+            [3] = 418337.25,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 39.56665,
+            ["latitude"] = 44.966576,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "XT",
+        ["type"] = 8,
+        ["frequency"] = 312000,
+    }, -- end of [129]
+    [130] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_29",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:314933248",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Kakhovka",
+        ["position"] = 
+        {
+            [1] = 185859.78125,
+            [2] = 3.237596,
+            [3] = -61623.34375,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 33.496659,
+            ["latitude"] = 46.808241,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "KH",
+        ["type"] = 8,
+        ["frequency"] = 485000,
+    }, -- end of [130]
+    [131] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_30",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:315392000",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Vesely",
+        ["position"] = 
+        {
+            [1] = 248966.796875,
+            [2] = 7.052212,
+            [3] = 485735.125,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 40.716647,
+            ["latitude"] = 47.116576,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "WS",
+        ["type"] = 8,
+        ["frequency"] = 641000,
+    }, -- end of [131]
+    [132] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_31",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:314802176",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Odessa",
+        ["position"] = 
+        {
+            [1] = 153563.03125,
+            [2] = 2.412611,
+            [3] = -274177.90625,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 30.723886,
+            ["latitude"] = 46.496019,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "WR",
+        ["type"] = 8,
+        ["frequency"] = 309500,
+    }, -- end of [132]
+    [133] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_32",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:304840704",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Armavir",
+        ["position"] = 
+        {
+            [1] = 13270.845703,
+            [2] = 232.423328,
+            [3] = 540570.375,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 41.116648,
+            ["latitude"] = 44.966576,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "VM",
+        ["type"] = 8,
+        ["frequency"] = 740000,
+    }, -- end of [133]
+    [134] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_33",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:251559936",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Grozny",
+        ["position"] = 
+        {
+            [1] = -115728.125,
+            [2] = 6.828314,
+            [3] = 929610.25,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 45.699975,
+            ["latitude"] = 43.383244,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "WK",
+        ["type"] = 8,
+        ["frequency"] = 830000,
+    }, -- end of [134]
+    [135] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_34",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:315064320",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Tiraspol",
+        ["position"] = 
+        {
+            [1] = 197836.03125,
+            [2] = 5.000005,
+            [3] = -358637.03125,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 29.599999,
+            ["latitude"] = 46.866575,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "TH",
+        ["type"] = 8,
+        ["frequency"] = 515000,
+    }, -- end of [135]
+    [136] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_35",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:282230784",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Simferopol",
+        ["position"] = 
+        {
+            [1] = -42789.855469,
+            [2] = 44.657801,
+            [3] = -54661.699219,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 33.566659,
+            ["latitude"] = 44.749908,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "KC",
+        ["type"] = 8,
+        ["frequency"] = 580000,
+    }, -- end of [136]
+    [137] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_36",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:294191104",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Sultanskoye",
+        ["position"] = 
+        {
+            [1] = -14871.457031,
+            [2] = 377.109447,
+            [3] = 667798.1875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 42.666645,
+            ["latitude"] = 44.591577,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "SN",
+        ["type"] = 8,
+        ["frequency"] = 866000,
+    }, -- end of [137]
+    [138] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_37",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:315097088",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Buyalyk",
+        ["position"] = 
+        {
+            [1] = 198494.375,
+            [2] = 5.000005,
+            [3] = -274699.25,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 30.699997,
+            ["latitude"] = 46.899908,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "DW",
+        ["type"] = 8,
+        ["frequency"] = 625000,
+    }, -- end of [138]
+    [139] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_38",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:255688704",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Sarmakovo",
+        ["position"] = 
+        {
+            [1] = -104016.257812,
+            [2] = 1117.211933,
+            [3] = 715148.0625,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 43.116645,
+            ["latitude"] = 43.74991,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "SR",
+        ["type"] = 8,
+        ["frequency"] = 907000,
+    }, -- end of [139]
+    [140] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_39",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:314769408",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Tendrovskiy",
+        ["position"] = 
+        {
+            [1] = 132383.515625,
+            [2] = 1.000001,
+            [3] = -213243.359375,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 31.522774,
+            ["latitude"] = 46.318519,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "TD",
+        ["type"] = 8,
+        ["frequency"] = 309500,
+    }, -- end of [140]
+    [141] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_40",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:315457536",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Sukhoy",
+        ["position"] = 
+        {
+            [1] = 252081.109375,
+            [2] = 13.852774,
+            [3] = 533942.125,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 41.349979,
+            ["latitude"] = 47.09991,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "SH",
+        ["type"] = 8,
+        ["frequency"] = 862000,
+    }, -- end of [141]
+    [142] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_41",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:268369920",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Dzhubga",
+        ["position"] = 
+        {
+            [1] = -74816.820312,
+            [2] = 63.20854,
+            [3] = 355136.0625,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 38.701374,
+            ["latitude"] = 44.320464,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "DV",
+        ["type"] = 8,
+        ["frequency"] = 420000,
+    }, -- end of [142]
+    [143] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_42",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:314638336",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Genichesk",
+        ["position"] = 
+        {
+            [1] = 117802.703125,
+            [2] = 1.887341,
+            [3] = 40644.195312,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.816102,
+            ["latitude"] = 46.182408,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "GE",
+        ["type"] = 8,
+        ["frequency"] = 300500,
+    }, -- end of [143]
+    [144] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_43",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:314671104",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Primorsko-Akhtarsk",
+        ["position"] = 
+        {
+            [1] = 114807.015625,
+            [2] = 8.405183,
+            [3] = 305325.96875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 38.233318,
+            ["latitude"] = 46.049909,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "GW",
+        ["type"] = 8,
+        ["frequency"] = 920000,
+    }, -- end of [144]
+    [145] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_44",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:315260928",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Yasnaya",
+        ["position"] = 
+        {
+            [1] = 222679.15625,
+            [2] = 98.023337,
+            [3] = 484495.90625,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 40.666647,
+            ["latitude"] = 46.883243,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "QG",
+        ["type"] = 8,
+        ["frequency"] = 435000,
+    }, -- end of [145]
+    [146] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_45",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:279314432",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Alushta",
+        ["position"] = 
+        {
+            [1] = -50326.164062,
+            [2] = 5.000005,
+            [3] = 11313.958008,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.398325,
+            ["latitude"] = 44.674908,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "AL",
+        ["type"] = 8,
+        ["frequency"] = 384000,
+    }, -- end of [146]
+    [147] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_46",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:308215808",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Dobrushyn",
+        ["position"] = 
+        {
+            [1] = 26887.388672,
+            [2] = 50.001286,
+            [3] = -71200.710938,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 33.36166,
+            ["latitude"] = 45.377964,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "DO",
+        ["type"] = 8,
+        ["frequency"] = 1175000,
+    }, -- end of [147]
+    [148] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_47",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:314540032",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Bolshevik",
+        ["position"] = 
+        {
+            [1] = 95501.28125,
+            [2] = 65.056957,
+            [3] = 462884.59375,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 40.233315,
+            ["latitude"] = 45.766576,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "ND",
+        ["type"] = 8,
+        ["frequency"] = 507000,
+    }, -- end of [148]
+    [149] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_48",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:267223040",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Peredovay",
+        ["position"] = 
+        {
+            [1] = -78315.664062,
+            [2] = 631.934653,
+            [3] = 578030.8125,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 41.466648,
+            ["latitude"] = 44.116576,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "PR",
+        ["type"] = 8,
+        ["frequency"] = 1210000,
+    }, -- end of [149]
+    [150] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_49",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:314900480",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Parutine",
+        ["position"] = 
+        {
+            [1] = 173728.484375,
+            [2] = 2.022021,
+            [3] = -183237.75,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 31.904995,
+            ["latitude"] = 46.694908,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "PA",
+        ["type"] = 8,
+        ["frequency"] = 905000,
+    }, -- end of [150]
+    [151] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_50",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:191266816",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Gori",
+        ["position"] = 
+        {
+            [1] = -286124.3125,
+            [2] = 604.993647,
+            [3] = 822770.125,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 44.1322,
+            ["latitude"] = 42.016577,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "OE",
+        ["type"] = 8,
+        ["frequency"] = 462000,
+    }, -- end of [151]
+    [152] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_51",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:314179584",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Liubymivka",
+        ["position"] = 
+        {
+            [1] = 56011.175781,
+            [2] = 50.001397,
+            [3] = 48464.128906,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.898324,
+            ["latitude"] = 45.624908,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "LY",
+        ["type"] = 8,
+        ["frequency"] = 670000,
+    }, -- end of [152]
+    [153] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_52",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:315293696",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Mariupol",
+        ["position"] = 
+        {
+            [1] = 225914.703125,
+            [2] = 2.405937,
+            [3] = 238245.421875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 37.449986,
+            ["latitude"] = 47.083242,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "MA",
+        ["type"] = 8,
+        ["frequency"] = 770000,
+    }, -- end of [153]
+    [154] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_53",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:312279040",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Akhilleon",
+        ["position"] = 
+        {
+            [1] = 40930.476562,
+            [2] = 77.22712,
+            [3] = 201825.6875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 36.853043,
+            ["latitude"] = 45.439909,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "AH",
+        ["type"] = 8,
+        ["frequency"] = 300500,
+    }, -- end of [154]
+    [155] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_54",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:315228160",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Nikolaev-Matveyevka",
+        ["position"] = 
+        {
+            [1] = 217274.171875,
+            [2] = 3.520703,
+            [3] = -177463.6875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 31.973051,
+            ["latitude"] = 47.087408,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "NK",
+        ["type"] = 8,
+        ["frequency"] = 1030000,
+    }, -- end of [155]
+    [156] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_55",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:314998784",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Melitopol",
+        ["position"] = 
+        {
+            [1] = 194790.4375,
+            [2] = 2.729047,
+            [3] = 75772.835938,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 35.299989,
+            ["latitude"] = 46.866575,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "NE",
+        ["type"] = 8,
+        ["frequency"] = 740000,
+    }, -- end of [156]
+    [157] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_56",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:285179904",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "TchervonoLissya",
+        ["position"] = 
+        {
+            [1] = -32929.128906,
+            [2] = 419.738579,
+            [3] = -713.123108,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 34.249992,
+            ["latitude"] = 44.833242,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "LE",
+        ["type"] = 8,
+        ["frequency"] = 395000,
+    }, -- end of [157]
+    [158] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_57",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:314572800",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Tikhoretsk",
+        ["position"] = 
+        {
+            [1] = 101857.085938,
+            [2] = 60.508731,
+            [3] = 450564,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 40.083315,
+            ["latitude"] = 45.833243,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "UH",
+        ["type"] = 8,
+        ["frequency"] = 528000,
+    }, -- end of [158]
+    [159] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_58",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:315523072",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Rostov-Na-Donu",
+        ["position"] = 
+        {
+            [1] = 254315.078125,
+            [2] = 64.840397,
+            [3] = 412917.5,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 39.769982,
+            ["latitude"] = 47.224909,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "RE",
+        ["type"] = 8,
+        ["frequency"] = 320000,
+    }, -- end of [159]
+    [160] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_59",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:250183683",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Lazarevskoye",
+        ["position"] = 
+        {
+            [1] = -115885.585938,
+            [2] = 55.1332,
+            [3] = 409331.03125,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 39.337484,
+            ["latitude"] = 43.917131,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "LA",
+        ["type"] = 8,
+        ["frequency"] = 307000,
+    }, -- end of [160]
+    [161] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_60",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:315031552",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Berdyansk",
+        ["position"] = 
+        {
+            [1] = 193557.578125,
+            [2] = 2.010851,
+            [3] = 187810.609375,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 36.766654,
+            ["latitude"] = 46.816575,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "BD",
+        ["type"] = 8,
+        ["frequency"] = 342000,
+    }, -- end of [161]
+    [162] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_61",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:314376192",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Kropotkin",
+        ["position"] = 
+        {
+            [1] = 62738.71875,
+            [2] = 125.442501,
+            [3] = 492136.125,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 40.566648,
+            ["latitude"] = 45.449909,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "KP",
+        ["type"] = 8,
+        ["frequency"] = 214000,
+    }, -- end of [162]
+    [163] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_62",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:314867712",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Lymans-Ke",
+        ["position"] = 
+        {
+            [1] = 174369.8125,
+            [2] = 5.000005,
+            [3] = -329002.8125,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 29.999999,
+            ["latitude"] = 46.666575,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "LA",
+        ["type"] = 8,
+        ["frequency"] = 750000,
+    }, -- end of [163]
+    [164] = 
+    {
+        ["direction"] = -179.999978,
+        ["beaconId"] = "world_63",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:315555840",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Krasny",
+        ["position"] = 
+        {
+            [1] = 255528.015625,
+            [2] = 5.000005,
+            [3] = 457062.96875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 40.349981,
+            ["latitude"] = 47.199909,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "KS",
+        ["type"] = 8,
+        ["frequency"] = 1025000,
+    }, -- end of [164]
+} -- end of beacons

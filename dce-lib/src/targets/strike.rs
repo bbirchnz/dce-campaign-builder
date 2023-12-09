@@ -78,7 +78,19 @@ impl Editable for Strike {
                 FieldType::OptionString,
                 false,
             ),
-            HeaderField::new("picture", "Briefing Images", FieldType::VecString, true),
+            HeaderField::new(
+                "picture",
+                "Briefing Images",
+                FieldType::VecStringOptions(|instance| {
+                    instance
+                        .bin_data
+                        .images
+                        .iter()
+                        .map(|i| i.name.to_owned())
+                        .collect::<Vec<_>>()
+                }),
+                true,
+            ),
             HeaderField::new("attributes", "Loadout Tags", FieldType::VecString, true),
         ]
     }
@@ -287,7 +299,7 @@ impl Strike {
                     } else {
                         "red".to_string()
                     },
-                    attributes: Vec::default(),
+                    attributes: vec!["parked_aircraft".into()],
                     picture: Vec::default(),
                 })
             });

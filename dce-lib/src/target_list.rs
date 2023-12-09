@@ -41,12 +41,13 @@ impl NewFromMission for TargetList {
                 warn!("Expect zone names to be of form <SIDE>_<TYPE>");
             }
 
+            let targets = match name_splits[0].to_lowercase().as_str() {
+                "blue" => &mut blue_targets,
+                _ => &mut red_targets,
+            };
+
             match name_splits[1].to_lowercase().as_str() {
                 "cap" => {
-                    let targets = match name_splits[0] {
-                        "BLUE" => &mut blue_targets,
-                        _ => &mut red_targets,
-                    };
                     targets.insert(
                         z.name.to_owned(),
                         Target::CAP(CAP {
@@ -67,10 +68,6 @@ impl NewFromMission for TargetList {
                     );
                 }
                 "refueling" => {
-                    let targets = match name_splits[0] {
-                        "BLUE" => &mut blue_targets,
-                        _ => &mut red_targets,
-                    };
                     targets.insert(
                         z.name.to_owned(),
                         Target::Refueling(Refueling {
@@ -91,10 +88,6 @@ impl NewFromMission for TargetList {
                     );
                 }
                 "awacs" => {
-                    let targets = match name_splits[0] {
-                        "BLUE" => &mut blue_targets,
-                        _ => &mut red_targets,
-                    };
                     targets.insert(
                         z.name.to_owned(),
                         Target::AWACS(AWACS {
@@ -115,10 +108,6 @@ impl NewFromMission for TargetList {
                     );
                 }
                 "fightersweep" => {
-                    let targets = match name_splits[0] {
-                        "BLUE" => &mut blue_targets,
-                        _ => &mut red_targets,
-                    };
                     targets.insert(
                         z.name.to_owned(),
                         Target::FighterSweep(
@@ -127,11 +116,6 @@ impl NewFromMission for TargetList {
                     );
                 }
                 "staticstrike" => {
-                    let targets = match name_splits[0] {
-                        "BLUE" => &mut blue_targets,
-                        _ => &mut red_targets,
-                    };
-
                     if name_splits.len() < 4 {
                         panic!("Failed to process {}, should be <SIDE>_STATICSTRIKE_<TGT GROUP NAME>_<TGT NAME>", &z.name);
                     }
@@ -184,7 +168,7 @@ impl NewFromMission for TargetList {
                     _ => &mut red_targets,
                 };
 
-                if name_splits[0] == "STRIKE" {
+                if name_splits[0].to_lowercase().as_str() == "strike" {
                     targets.insert(
                         name_splits[1].to_owned(),
                         Target::Strike(Strike {
@@ -237,9 +221,9 @@ impl NewFromMission for TargetList {
         .flat_map(|(sgd, side)| sgd.groups.as_slice().iter().zip(repeat(side)))
         .for_each(|(sg, side)| {
             let name_splits = sg.name.split('_').collect::<Vec<_>>();
-            let targets = match side {
+            let targets = match side.to_lowercase().as_str() {
                 // target group with red side = target for blue to attack
-                "BLUE" => &mut red_targets,
+                "blue" => &mut red_targets,
                 _ => &mut blue_targets,
             };
 

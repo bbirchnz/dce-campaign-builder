@@ -4,7 +4,10 @@ use bevy_reflect::{FromReflect, Reflect};
 use mlua::LuaSerdeExt;
 use serde::{Deserialize, Serialize};
 
-use crate::serde_utils::LuaFileBased;
+use crate::{
+    editable::{Editable, FieldType, HeaderField, ValidationError, ValidationResult},
+    serde_utils::LuaFileBased,
+};
 
 #[derive(Deserialize, Serialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
 pub struct ConfMod {
@@ -122,9 +125,9 @@ impl ConfMod {
             failure_prob_max: 10,
             failure_number_max: 5,
             keep_usn_deck_crew: false,
-            only_day_mission: true,
+            only_day_mission: false,
             hourly_tolerance: 2,
-            move_bullseye: true,
+            move_bullseye: false,
             trigger_start: true,
             cvn_clean_deck: false,
             cvn_time_between_plane: 45,
@@ -164,6 +167,90 @@ impl ConfMod {
                 },
             },
         }
+    }
+}
+
+impl Editable for ConfMod {
+    fn get_name(&self) -> String {
+        "conf_mod".into()
+    }
+
+    fn validate(&self, _: &crate::DCEInstance) -> crate::editable::ValidationResult {
+        let mut errors: Vec<ValidationError> = Vec::default();
+
+        if self.startup_time_player < 60 {
+            errors.push(ValidationError::new(
+                "startup_time_player",
+                "Startup time for player",
+                "Startup time must be greater than 1 minute",
+            ));
+        }
+
+        if !errors.is_empty() {
+            return ValidationResult::Fail(errors);
+        }
+
+        ValidationResult::Pass
+    }
+
+    fn get_mut_by_name<'a>(instance: &'a mut crate::DCEInstance, _: &str) -> &'a mut Self
+    where
+        Self: Sized,
+    {
+        &mut instance.conf_mod
+    }
+
+    fn get_header() -> Vec<crate::editable::HeaderField>
+    where
+        Self: Sized,
+    {
+        vec![
+            HeaderField::new(
+                "startup_time_player",
+                "Startup time for Player (mins)",
+                FieldType::DurationMin,
+                true,
+            ),
+            HeaderField::new(
+                "parking_hotstart",
+                "Start Parking Hot",
+                FieldType::Bool,
+                true,
+            ),
+            HeaderField::new(
+                "only_day_mission",
+                "Only Day Missions?",
+                FieldType::Bool,
+                true,
+            ),
+            HeaderField::new(
+                "hourly_tolerance",
+                "Day mission tolerance time",
+                FieldType::Int,
+                true,
+            ),
+            HeaderField::new(
+                "move_bullseye",
+                "Move Bullseye each mission",
+                FieldType::Bool,
+                true,
+            ),
+            HeaderField::new(
+                "mp_plane_recovery",
+                "MP recovery slots per flight",
+                FieldType::Int,
+                true,
+            ),
+        ]
+    }
+
+    fn delete_by_name(_: &mut crate::DCEInstance, _: &str) -> Result<(), anyhow::Error>
+    where
+        Self: Sized,
+    {
+        Err(anyhow::anyhow!(
+            "Can't delete the configuration modifications!"
+        ))
     }
 }
 

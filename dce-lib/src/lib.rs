@@ -31,6 +31,7 @@ pub mod db_airbases;
 pub mod db_airbases_internal;
 pub mod dce_utils;
 pub mod dcs_airbase_export;
+pub mod dcs_beacon_export;
 pub mod editable;
 pub mod loadouts;
 pub mod loadouts_internal;

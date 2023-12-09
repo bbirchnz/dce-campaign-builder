@@ -368,6 +368,26 @@
                 Source='$(var.CargoTargetBinDir)\..\..\ui\images\plane.svg'
                 KeyPath='yes' />
             </Component>
+            
+            <!-- images SVG -->
+            <Component Id='svg_images' Guid='3c35d424-01c0-4d97-b1cd-236becbf030a'>
+              <File
+                Id='svg_images_file'
+                Name='images.svg'
+                DiskId='1'
+                Source='$(var.CargoTargetBinDir)\..\..\ui\images\images.svg'
+                KeyPath='yes' />
+            </Component>
+            
+            <!-- triggers SVG -->
+            <Component Id='svg_triggers' Guid='e52be193-c8ef-447d-ba30-44930547206c'>
+              <File
+                Id='svg_triggers_file'
+                Name='triggers.svg'
+                DiskId='1'
+                Source='$(var.CargoTargetBinDir)\..\..\ui\images\triggers.svg'
+                KeyPath='yes' />
+            </Component>
 
             <Component Id='settings_grey' Guid='d92c44c5-035a-48eb-9fc7-d0e129837f9e'>
               <File
@@ -463,6 +483,8 @@
       <ComponentRef Id='svg_target_strike' />
       <ComponentRef Id='svg_target_intercept' />
       <ComponentRef Id='svg_plane' />
+      <ComponentRef Id='svg_images' />
+      <ComponentRef Id='svg_triggers' />
       <ComponentRef Id='settings_grey' />
       <ComponentRef Id='layers' />
       <ComponentRef Id='layers2x' />

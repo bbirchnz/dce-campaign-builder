@@ -15,16 +15,16 @@ pub fn map(cx: Scope) -> Element {
 
     let instance = atom.as_ref().unwrap();
     let proj = proj_from_map(&instance.projection).unwrap();
-    let mut airbases = instance.airbases.to_mappables(instance, &proj);
+    let mut map_points = instance.airbases.to_mappables(instance, &proj);
     let targets = instance.target_list.to_mappables(instance, &proj);
     let squadrons = instance.oob_air.to_mappables(instance, &proj);
-    airbases.extend(targets);
-    airbases.extend(squadrons);
+    map_points.extend(targets);
+    map_points.extend(squadrons);
 
     let code = format!(
         "data_{} = {}; draw_map('{}', data_{})",
         &div_id,
-        serde_json::to_string(&airbases).unwrap(),
+        serde_json::to_string(&map_points).unwrap(),
         &div_id,
         &div_id
     );

@@ -195,10 +195,26 @@ airports =
             ["airdromeNumber"] = 1,
             ["frequencyList"] = 
             {
-                [1] = 38400000,
-                [2] = 123600000,
-                [3] = 250000000,
-                [4] = 3750000,
+                [1] = 
+                {
+                    [1] = 38400000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 123600000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 250000000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 3750000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = 92,
             ["height"] = 173.38017826282,
@@ -648,10 +664,26 @@ airports =
             ["airdromeNumber"] = 2,
             ["frequencyList"] = 
             {
-                [1] = 256900000,
-                [2] = 125700000,
-                [3] = 38450000,
-                [4] = 3775000,
+                [1] = 
+                {
+                    [1] = 256900000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 125700000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 38450000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 3775000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = 68,
             ["height"] = 64.975322848793,
@@ -852,10 +884,26 @@ airports =
             ["airdromeNumber"] = 3,
             ["frequencyList"] = 
             {
-                [1] = 38500000,
-                [2] = 123650000,
-                [3] = 250050000,
-                [4] = 3800000,
+                [1] = 
+                {
+                    [1] = 38500000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 123650000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 250050000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 3800000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = 79,
             ["height"] = 79.203875590515,
@@ -1389,10 +1437,26 @@ airports =
             ["airdromeNumber"] = 4,
             ["frequencyList"] = 
             {
-                [1] = 340200000,
-                [2] = 118100000,
-                [3] = 38550000,
-                [4] = 3825000,
+                [1] = 
+                {
+                    [1] = 340200000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 118100000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 38550000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 3825000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = 65,
             ["height"] = 77.792085238297,
@@ -5041,10 +5105,26 @@ airports =
             ["airdromeNumber"] = 6,
             ["frequencyList"] = 
             {
-                [1] = 38600000,
-                [2] = 126200000,
-                [3] = 250100000,
-                [4] = 3850000,
+                [1] = 
+                {
+                    [1] = 38600000,
+                    [2] = 0,
+                }, -- end of [1]
+                [2] = 
+                {
+                    [1] = 126200000,
+                    [2] = 0,
+                }, -- end of [2]
+                [3] = 
+                {
+                    [1] = 250100000,
+                    [2] = 0,
+                }, -- end of [3]
+                [4] = 
+                {
+                    [1] = 3850000,
+                    [2] = 0,
+                }, -- end of [4]
             }, -- end of ["frequencyList"]
             ["angle"] = 66,
             ["height"] = 166.18537736685,
@@ -5524,3 +5604,471 @@ airports =
         }, -- end of ["airport"]
     }, -- end of [8]
 } -- end of airports
+beacons = 
+{
+    [1] = 
+    {
+        ["direction"] = -25.46479,
+        ["beaconId"] = "world_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:15564954",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "MTMACAJNA",
+        ["position"] = 
+        {
+            [1] = -3436.749756,
+            [2] = 192.952586,
+            [3] = -6602.758789,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 144.736872,
+            ["latitude"] = 13.453405,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "AJA",
+        ["type"] = 8,
+        ["frequency"] = 385000,
+    }, -- end of [1]
+    [2] = 
+    {
+        ["direction"] = 24.95549,
+        ["beaconId"] = "world_1",
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 144.733321,
+            ["latitude"] = 13.454531,
+        }, -- end of ["positionGeo"]
+        ["sceneObjects"] = 
+        {
+            [1] = "t:61476409",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "Nimitz",
+        ["channel"] = 105,
+        ["callsign"] = "UNZ",
+        ["position"] = 
+        {
+            [1] = -3308.61377,
+            [2] = 194.660687,
+            [3] = -6986.220215,
+        }, -- end of ["position"]
+        ["type"] = 5,
+        ["frequency"] = 115800000,
+    }, -- end of [2]
+    [3] = 
+    {
+        ["direction"] = 52.966778,
+        ["beaconId"] = "world_2",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:36307053",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "SAIPAN",
+        ["position"] = 
+        {
+            [1] = 179201.03753,
+            [2] = 34.008945,
+            [3] = 99842.086026,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 145.710437,
+            ["latitude"] = 15.111283,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "SN",
+        ["type"] = 8,
+        ["frequency"] = 312000,
+    }, -- end of [3]
+    [4] = 
+    {
+        ["direction"] = 86.750069,
+        ["beaconId"] = "airfield6_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:52468368",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "ANDERSEN",
+        ["channel"] = 54,
+        ["callsign"] = "UAM",
+        ["position"] = 
+        {
+            [1] = 11615.371094,
+            [2] = 184.237672,
+            [3] = 16240.750977,
+        }, -- end of ["position"]
+        ["type"] = 4,
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 144.9466,
+            ["latitude"] = 13.591233,
+        }, -- end of ["positionGeo"]
+    }, -- end of [4]
+    [5] = 
+    {
+        ["direction"] = 66.208465,
+        ["beaconId"] = "airfield6_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:63275331",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "",
+        ["position"] = 
+        {
+            [1] = 11230.984375,
+            [2] = 180.44087,
+            [3] = 15875.927734,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 144.943259,
+            ["latitude"] = 13.587732,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IPMY",
+        ["type"] = 16896,
+        ["frequency"] = 110150000,
+    }, -- end of [5]
+    [6] = 
+    {
+        ["direction"] = -113.500825,
+        ["beaconId"] = "airfield6_2",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:63014066",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "",
+        ["position"] = 
+        {
+            [1] = 10130.34375,
+            [2] = 163.402965,
+            [3] = 13251.070313,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 144.919098,
+            ["latitude"] = 13.577585,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IUAM",
+        ["type"] = 16896,
+        ["frequency"] = 110100000,
+    }, -- end of [6]
+    [7] = 
+    {
+        ["direction"] = 66.208465,
+        ["beaconId"] = "airfield6_3",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:63275332",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "",
+        ["position"] = 
+        {
+            [1] = 11521.810547,
+            [2] = 179.350185,
+            [3] = 15579.264648,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 144.940496,
+            ["latitude"] = 13.590338,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IYIG",
+        ["type"] = 16896,
+        ["frequency"] = 109350000,
+    }, -- end of [7]
+    [8] = 
+    {
+        ["direction"] = -114.010146,
+        ["beaconId"] = "airfield6_4",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:63243099",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "",
+        ["position"] = 
+        {
+            [1] = 10474.082031,
+            [2] = 162.781687,
+            [3] = 13216.631836,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 144.918753,
+            ["latitude"] = 13.580689,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IAND",
+        ["type"] = 16896,
+        ["frequency"] = 109300000,
+    }, -- end of [8]
+    [9] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield6_5",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:209125376",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 4109,
+        ["display_name"] = "",
+        ["position"] = 
+        {
+            [1] = 11405.985352,
+            [2] = 183.124176,
+            [3] = 16448.888672,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 144.948539,
+            ["latitude"] = 13.589357,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IUAM",
+        ["direction"] = -113.620825,
+        ["frequency"] = 110100000,
+    }, -- end of [9]
+    [10] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield6_6",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:209125377",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 3872,
+        ["display_name"] = "",
+        ["position"] = 
+        {
+            [1] = 11862.963303,
+            [2] = 191.000298,
+            [3] = 16134.421092,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 144.945598,
+            ["latitude"] = 13.593463,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IAND",
+        ["direction"] = -113.630831,
+        ["frequency"] = 109300000,
+    }, -- end of [10]
+    [11] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield6_7",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:209125378",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 3987,
+        ["display_name"] = "",
+        ["position"] = 
+        {
+            [1] = 10254.586245,
+            [2] = 163.673534,
+            [3] = 12456.810317,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 144.911752,
+            ["latitude"] = 13.578646,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IYIG",
+        ["direction"] = 66.348484,
+        ["frequency"] = 109350000,
+    }, -- end of [11]
+    [12] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield6_8",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:209125379",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 4138,
+        ["display_name"] = "",
+        ["position"] = 
+        {
+            [1] = 9716.791016,
+            [2] = 171.495045,
+            [3] = 12586.375977,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 144.912991,
+            ["latitude"] = 13.573797,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IPMY",
+        ["direction"] = 66.373456,
+        ["frequency"] = 110150000,
+    }, -- end of [12]
+    [13] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield4_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:209158144",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 4105,
+        ["display_name"] = "",
+        ["position"] = 
+        {
+            [1] = 872.144714,
+            [2] = 94.243914,
+            [3] = 1873.931763,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 144.814772,
+            ["latitude"] = 13.493032,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IGUM",
+        ["direction"] = -114.591552,
+        ["frequency"] = 110300000,
+    }, -- end of [13]
+    [14] = 
+    {
+        ["direction"] = -114.082259,
+        ["beaconId"] = "airfield4_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:61866199",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "",
+        ["position"] = 
+        {
+            [1] = -366.423035,
+            [2] = 77.792078,
+            [3] = -1274.609497,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 144.785804,
+            ["latitude"] = 13.481585,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "PGUM",
+        ["type"] = 16896,
+        ["frequency"] = 110300000,
+    }, -- end of [14]
+    [15] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield4_2",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:209158145",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 3501,
+        ["display_name"] = "",
+        ["position"] = 
+        {
+            [1] = 549.03418,
+            [2] = 79.179538,
+            [3] = 1685.082764,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 144.813055,
+            ["latitude"] = 13.490097,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IAWD",
+        ["direction"] = -114.591552,
+        ["frequency"] = 110900000,
+    }, -- end of [15]
+    [16] = 
+    {
+        ["direction"] = -114.591552,
+        ["beaconId"] = "airfield4_3",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:61866008",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "",
+        ["position"] = 
+        {
+            [1] = -631.026611,
+            [2] = 77.792078,
+            [3] = -1149.327148,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 144.786982,
+            ["latitude"] = 13.479205,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "PGUM",
+        ["type"] = 16896,
+        ["frequency"] = 110900000,
+    }, -- end of [16]
+    [17] = 
+    {
+        ["direction"] = 93.71043,
+        ["beaconId"] = "airfield1_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:1441814",
+        }, -- end of ["sceneObjects"]
+        ["display_name"] = "ROTA",
+        ["position"] = 
+        {
+            [1] = 75584.387208,
+            [2] = 173.311117,
+            [3] = 48455.189908,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 145.239866,
+            ["latitude"] = 14.171648,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "GRO",
+        ["type"] = 8,
+        ["frequency"] = 332000,
+    }, -- end of [17]
+    [18] = 
+    {
+        ["type"] = 16640,
+        ["beaconId"] = "airfield2_0",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:209190913",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 3013,
+        ["display_name"] = "",
+        ["position"] = 
+        {
+            [1] = 180642.546875,
+            [2] = 64.185947,
+            [3] = 103385.359375,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 145.743327,
+            ["latitude"] = 15.124498,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "IGSN",
+        ["direction"] = -111.80319,
+        ["frequency"] = 109900000,
+    }, -- end of [18]
+    [19] = 
+    {
+        ["type"] = 16896,
+        ["beaconId"] = "airfield2_1",
+        ["sceneObjects"] = 
+        {
+            [1] = "t:209190912",
+        }, -- end of ["sceneObjects"]
+        ["chartOffsetX"] = 3013,
+        ["display_name"] = "",
+        ["position"] = 
+        {
+            [1] = 179748.296875,
+            [2] = 65.000065,
+            [3] = 100905.421875,
+        }, -- end of ["position"]
+        ["positionGeo"] = 
+        {
+            ["longitude"] = 145.7203,
+            ["latitude"] = 15.116286,
+        }, -- end of ["positionGeo"]
+        ["callsign"] = "PGSN",
+        ["direction"] = -113.840375,
+        ["frequency"] = 109900000,
+    }, -- end of [19]
+} -- end of beacons

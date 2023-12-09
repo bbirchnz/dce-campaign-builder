@@ -6,6 +6,7 @@ use std::{collections::HashMap, iter::repeat};
 use crate::{
     db_airbases_internal::DBAirbasesInternal,
     dcs_airbase_export::dcs_airbases_for_theatre,
+    dcs_beacon_export::{dcs_beacons_for_theatre, tacan_for_airport, ils_for_airport},
     editable::{Editable, FieldType, HeaderField, ValidationError, ValidationResult},
     miz_environment::MizEnvironment,
     serde_utils::LuaFileBased,
@@ -148,6 +149,7 @@ impl NewFromMission for DBAirbases {
         Self: Sized,
     {
         let dcs_airbases = dcs_airbases_for_theatre(&miz.mission.theatre)?;
+        let dcs_beacons = dcs_beacons_for_theatre(&miz.mission.theatre)?;
 
         let mut fixed = dcs_airbases
             .values()
@@ -170,8 +172,8 @@ impl NewFromMission for DBAirbases {
                         divert: false,
                         vor: None,
                         ndb: None,
-                        tacan: None,
-                        ils: None,
+                        tacan: tacan_for_airport(&dcs_beacons, &dcs_ab.airport),
+                        ils: ils_for_airport(&dcs_beacons, &dcs_ab.airport),
                         limited_park_number: dcs_ab.stands.len() as u16,
                         _name: dcs_ab.frequencies.name.to_owned(),
                         inactive: false,
@@ -188,7 +190,7 @@ impl NewFromMission for DBAirbases {
             .flat_map(|(i, side)| i.units.as_slice().iter().zip(repeat(side)))
             .filter_map(|(s, side)| {
                 let parts = s.name.split('_').collect::<Vec<_>>();
-                if parts.len() < 2 || parts[0] != "CV" {
+                if parts.len() < 2 || parts[0].to_lowercase() != "cv" {
                     return None;
                 }
                 Some((
@@ -208,7 +210,7 @@ impl NewFromMission for DBAirbases {
 
         let air_starts = miz.mission.triggers.zones.iter().filter_map(|z| {
             let parts = z.name.split('_').collect::<Vec<_>>();
-            if parts.len() < 3 || parts[1] != "AIRSTART" {
+            if parts.len() < 3 || parts[1].to_lowercase() != "airstart" {
                 return None;
             }
             Some((
@@ -298,6 +300,8 @@ impl Editable for FixedAirBase {
                 true,
             ),
             HeaderField::new("atc_frequency", "Frequency", FieldType::String, false),
+            HeaderField::new("tacan", "TACAN", FieldType::OptionString, false),
+            HeaderField::new("ils", "ILS", FieldType::OptionString, false),
             HeaderField::new("inactive", "Inactive", FieldType::Bool, true),
         ]
     }

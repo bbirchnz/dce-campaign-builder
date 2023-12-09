@@ -271,6 +271,19 @@ fn side_to_squadrons(countries: &[Country], base: String) -> Result<Vec<Squadron
                 // check casing and convert as needed
                 let task = str_to_task(task.as_str())?;
 
+                // set default quantities for certain tasks - we don't need 12 AWACS!
+                match task.to_lowercase().as_str() {
+                    "awacs" | "refueling" | "transport" => {
+                        squadron.number = 4;
+                        squadron.reserve = 2;
+                    }
+                    _ => {}
+                }
+                // and for anything with saturation in it as these are special overpowered units:
+                if unit.name.contains(" saturation ") | unit.name.ends_with(" saturation") {
+                    squadron.number = 2;
+                    squadron.reserve = 1;
+                }
                 squadron.tasks.insert(task.to_owned(), true);
 
                 // and task coef:
@@ -309,7 +322,7 @@ impl Mappables for OobAir {
                         let mut map = map.clone();
                         map.name = squad.name.to_owned();
                         map.side = side.to_owned();
-                        map.class = "Squadron".into();
+                        map.class = self.type_name().to_owned();
                         Some(map)
                     }
                     None => {
@@ -435,7 +448,7 @@ impl Editable for Squadron {
 
         let ab = abs
             .iter()
-            .find(|(name, _)| name.as_str() == self.get_name())
+            .find(|(name, _)| name.as_str() == self.base)
             .as_ref()
             .unwrap()
             .1
@@ -469,11 +482,19 @@ impl Editable for Squadron {
     }
 }
 
-fn convert_loadouts<T>(_: &[&T]) -> Vec<Box<dyn Editable>>
+fn convert_loadouts<T>(items: &[&T]) -> Vec<Box<dyn Editable>>
 where
-    T: Editable,
+    T: Editable + Clone + 'static,
 {
-    todo!()
+    let mut result: Vec<Box<dyn Editable>> = Vec::default();
+    for item in items {
+        let new_item = Box::new((**item).clone());
+
+        result.push(new_item);
+    }
+
+    result
+    // items.iter().map(|item| Box::new(*item.clone())).collect::<Vec<Box<dyn Editable>>>()
 }
 
 #[cfg(test)]

@@ -11,7 +11,10 @@ where
     let headers = T::get_header();
     for h in headers.iter().filter(|h| h.editable) {
         match h.type_ {
-            FieldType::TriggerActions | FieldType::VecString | FieldType::NestedEditable(_) => {
+            FieldType::TriggerActions
+            | FieldType::VecString
+            | FieldType::VecStringOptions(_)
+            | FieldType::NestedEditable(_) => {
                 let values = stringvec_for_field(values, &h.display);
 
                 if let Err(e) = h.set_value_from_stringvec(&mut **item, values) {

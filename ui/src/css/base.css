@@ -54,6 +54,8 @@ body {
 
 .tooltip:hover .tooltiptext {
     visibility: visible;
+    transition-delay: 100ms;
+    transition-property: visibility;
 }
 
 .svg_blue {
@@ -82,8 +84,14 @@ body {
 
 .dropdown-content {
     z-index: 9999;
+    transition-delay: 500ms;
+    transition-property: visibility;
+    visibility: hidden;
 }
 
 .dropdown:hover .dropdown-content {
     display: flex;
+    visibility: visible;
+    transition-delay: 100ms;
+    transition-property: visibility;
 }

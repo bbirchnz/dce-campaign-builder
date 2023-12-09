@@ -5,6 +5,7 @@ use std::{borrow::Cow, cell::RefCell, sync::mpsc};
 use dce_lib::{
     bin_data::BinItem,
     campaign_header::HeaderInternal,
+    conf_mod::ConfMod,
     db_airbases::{AirStartBase, FarpBase, FixedAirBase, ShipBase},
     editable::Editable,
     loadouts::{
@@ -33,9 +34,15 @@ use dioxus_desktop::{
     Config,
 };
 use fermi::{use_atom_ref, use_atom_root, use_init_atom_root, Atom, AtomRef};
-use log::{trace, warn};
+use log::{trace, warn, LevelFilter};
+use log4rs::{
+    append::{
+        console::{ConsoleAppender, Target},
+        file::FileAppender,
+    },
+    config::{Appender, Root},
+};
 use selectable::Selectable;
-use simple_logger::SimpleLogger;
 
 use directories::ProjectDirs;
 
@@ -59,9 +66,13 @@ struct AppProps {
 }
 
 fn main() {
-    SimpleLogger::new().init().unwrap();
-    // launch the dioxus app in a webview
+    // get project data directory:
+    let project_dir = ProjectDirs::from("com", "BB", "DCE Builder").unwrap();
+    let data_dir = project_dir.data_dir();
 
+    configure_logging(data_dir);
+
+    // launch the dioxus app in a webview
     let image_vec: RefCell<Option<Vec<BinItem>>> = None.into();
 
     let (tx_mappoint, rx_mappoint) = async_channel::unbounded::<MapPoint>();
@@ -122,12 +133,39 @@ fn main() {
                     .body(vec![].into())
                     .map_err(|e| e.into());
             })
-            .with_data_directory(
-                ProjectDirs::from("com", "BB", "DCE Builder")
-                    .unwrap()
-                    .data_dir(),
-            ),
+            .with_data_directory(data_dir),
     )
+}
+
+fn configure_logging(data_dir: &std::path::Path) {
+    // configure logging
+    let file_path = data_dir
+        .as_os_str()
+        .to_str()
+        .expect("valid path string")
+        .to_owned()
+        + "/dce_builder.log";
+
+    // Build a stderr logger.
+    let stderr = ConsoleAppender::builder().target(Target::Stderr).build();
+
+    // Logging to log file.
+    let logfile = FileAppender::builder().build(file_path).unwrap();
+
+    // Log Trace level output to file where trace is the default level
+    // and the programmatically specified level to stderr.
+    let config = log4rs::Config::builder()
+        .appender(Appender::builder().build("logfile", Box::new(logfile)))
+        .appender(Appender::builder().build("stderr", Box::new(stderr)))
+        .build(
+            Root::builder()
+                .appender("logfile")
+                .appender("stderr")
+                .build(LevelFilter::Trace),
+        )
+        .unwrap();
+
+    log4rs::init_config(config).expect("Logger must initialise correctly");
 }
 
 fn app(cx: Scope<AppProps>) -> Element {
@@ -392,11 +430,16 @@ fn main_body(cx: Scope) -> Element {
                 }
                 icon_button {
                     path: "images/settings_grey.png".into(),
+                    on_click: |_| select_configuration_mod(cx),
+                    tooltip: "Configuration"
+                }
+                icon_button {
+                    path: "images/triggers.svg".into(),
                     on_click: |_| select_first_trigger(cx),
                     tooltip: "Campaign actions and triggers"
                 }
                 icon_button {
-                    path: "images/settings_grey.png".into(),
+                    path: "images/images.svg".into(),
                     on_click: |_| select_first_image(cx),
                     tooltip: "Campaign and target images"
                 }
@@ -439,6 +482,9 @@ fn main_body(cx: Scope) -> Element {
                     },
                     Selectable::CampaignSettings(_) => rsx!{
                         edit_form::<HeaderInternal> { headers: HeaderInternal::get_header(), title: "Campaign Settings".into(), item: selected_form.clone()}
+                    },
+                    Selectable::ConfigurationMod(_) => rsx!{
+                        edit_form::<ConfMod> { headers: ConfMod::get_header(), title: "Configuration".into(), item: selected_form.clone()}
                     },
                     Selectable::LoadoutCAP(_) => rsx!{
                         edit_form::<CAPLoadout> { headers: CAPLoadout::get_header(), title: "Edit CAP Loadout".into(), item: selected_form.clone()}
@@ -556,7 +602,7 @@ fn main_body(cx: Scope) -> Element {
                         Selectable::Image(_) => rsx! {
                             image_table {data: instance.bin_data.images.to_vec()}
                         },
-                        Selectable::None | Selectable::CampaignSettings(_) => rsx! {
+                        Selectable::None | Selectable::CampaignSettings(_) | Selectable::ConfigurationMod(_) => rsx! {
                             {}
                         },
                         }
@@ -609,7 +655,7 @@ fn popout_menu<'a>(cx: Scope<'a, PopoutMenuProps<'a>>) -> Element<'a> {
     cx.render(rsx! {
         div { class: "dropdown relative inline-block",
             div { icon_button { path: cx.props.base_icon_url.into(), on_click: |e| cx.props.onclick.call(e) } }
-            div { class: "dropdown-content rounded-r-lg flex flex-col items-end pr-1 hidden absolute bg-sky-500 w-12 left-10 top-0",
+            div { class: "dropdown-content rounded-r-lg flex flex-col items-end pr-1 absolute bg-sky-500 w-12 left-10 top-0",
                 &cx.props.children
             }
         }

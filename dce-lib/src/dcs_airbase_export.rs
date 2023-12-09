@@ -93,6 +93,19 @@ pub struct Airport {
     pub code: String,
     pub display_name: String,
     pub reference_point: Point,
+    pub beacons: Vec<Beacons>,
+}
+
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+pub struct Beacons {
+    #[serde(rename = "beaconId")]
+    pub id: String,
+    #[serde(rename = "runwayId")]
+    pub runway_id: Option<u32>,
+    #[serde(rename = "runwaySide")]
+    pub runway_side: Option<String>,
+    #[serde(rename = "runwayName")]
+    pub runway_name: Option<String>,
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]

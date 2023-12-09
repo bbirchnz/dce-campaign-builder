@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use crate::{
     editable::{Editable, FieldType, HeaderField, NestedEditable, ValidationResult},
     loadouts_internal::LoadoutsInternal,
-    mission::Payload,
+    mission::{Payload, PlaneUnit},
     miz_environment::MizEnvironment,
     serde_utils::LuaFileBased,
     DCEInstance, NewFromMission,
@@ -97,6 +97,10 @@ pub struct StrikeLoadout {
     #[serde(rename = "hAttack")]
     pub h_attack: f64,
     pub standoff: Option<f64>,
+    pub ingress: Option<f64>,
+    pub egress: Option<f64>,
+    #[serde(rename = "MaxAttackOffset")]
+    pub max_attack_offset: Option<f64>,
     #[serde(rename = "tStation")]
     #[serde(default)]
     pub t_station: u32,
@@ -111,6 +115,96 @@ pub struct StrikeLoadout {
     pub _name: String,
     #[serde(default)]
     pub attributes: Vec<String>,
+}
+
+impl StrikeLoadout {
+    pub fn from_unit(unit: &PlaneUnit) -> StrikeLoadout {
+        let mut loadout = StrikeLoadout {
+            minscore: 0.3,
+            support: Support {
+                escort: true,
+                sead: true,
+                escort_jammer: false,
+            },
+            weapon_type: "Bombs".into(),
+            expend: "All".into(),
+            day: true,
+            night: true,
+            adverse_weather: true,
+            range: 500000.,
+            capability: 1,
+            firepower: 1,
+            v_cruise: 246.,
+            v_attack: 277.5,
+            h_cruise: 9090.,
+            h_attack: 9090.,
+            standoff: None,
+            ingress: None,
+            egress: None,
+            max_attack_offset: None,
+            t_station: 0,
+            ldsd: true,
+            stores: unit.payload.clone(),
+            self_escort: false,
+            sortie_rate: 6,
+            _airframe: unit._type.to_owned(),
+            _name: unit.name.to_owned(),
+            attributes: Vec::default(),
+        };
+
+        // apply overrides based on rules in loadout_rules.md
+        if unit.name.contains(" day ") | unit.name.ends_with(" day") {
+            loadout.night = false;
+            loadout.adverse_weather = false;
+        }
+
+        if unit.name.contains(" lgb ") | unit.name.ends_with(" lgb") {
+            loadout.adverse_weather = false;
+            loadout.weapon_type = "Guided bombs".into();
+            loadout.capability = 2;
+            loadout.expend = "Auto".into();
+            loadout.standoff = Some(15001.);
+            loadout.egress = Some(10000.);
+            loadout.attributes.push("precise".into());
+        }
+
+        if unit.name.contains(" cbu ") | unit.name.ends_with(" cbu") {
+            loadout.attributes.push("soft".into());
+            loadout.attributes.push("parked_aircraft".into());
+        }
+
+        if unit.name.contains(" jdam ") | unit.name.ends_with(" jdam") {
+            loadout.weapon_type = "Guided bombs".into();
+            loadout.capability = 2;
+            loadout.standoff = Some(9000.);
+            loadout.expend = "Auto".into();
+            loadout.attributes.push("precise".into());
+            loadout.sortie_rate = 3;
+        }
+
+        if unit.name.contains(" rockets ") | unit.name.ends_with(" rockets") {
+            loadout.adverse_weather = false;
+            loadout.weapon_type = "Rockets".into();
+            loadout.attributes.push("soft".into());
+            loadout.attributes.push("parked_aircraft".into());
+        }
+
+        if unit.name.contains(" saturation ") | unit.name.ends_with(" saturation") {
+            loadout.capability = 10;
+            loadout.firepower = 4;
+            loadout.sortie_rate = 1;
+            loadout.range = 1000000.;
+            loadout.weapon_type = "ASM".into();
+            loadout.standoff = Some(150000.);
+            loadout.ingress = Some(50000.);
+            loadout.egress = Some(50000.);
+            loadout.max_attack_offset = Some(60.);
+            loadout.support.sead = false;
+            loadout.attributes.push("saturation".into());
+        }
+
+        loadout
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
@@ -427,12 +521,7 @@ impl NestedEditable for Support {
         vec![
             HeaderField::new("escort", "AA Escort", FieldType::Bool, true),
             HeaderField::new("sead", "SEAD Escort", FieldType::Bool, true),
-            HeaderField::new(
-                "escort_jammer",
-                "Jammer Escort",
-                FieldType::Bool,
-                true,
-            ),
+            HeaderField::new("escort_jammer", "Jammer Escort", FieldType::Bool, true),
         ]
     }
 }
@@ -467,38 +556,11 @@ impl NewFromMission for Loadouts {
                     .or_insert(AirframeLoadout::default());
                 match task.as_str() {
                     "strike" => {
-                        unit_record.strike.as_mut().unwrap().insert(
-                            u.name.to_owned(),
-                            StrikeLoadout {
-                                minscore: 0.3,
-                                support: Support {
-                                    escort: true,
-                                    sead: true,
-                                    escort_jammer: false,
-                                },
-                                weapon_type: "Bombs".into(),
-                                expend: "All".into(),
-                                day: true,
-                                night: true,
-                                adverse_weather: true,
-                                range: 500000.,
-                                capability: 1,
-                                firepower: 1,
-                                v_cruise: 246.,
-                                v_attack: 277.5,
-                                h_cruise: 9090.,
-                                h_attack: 9090.,
-                                standoff: None,
-                                t_station: 0,
-                                ldsd: false,
-                                stores: u.payload.clone(),
-                                self_escort: false,
-                                sortie_rate: 6,
-                                _airframe: u._type.to_owned(),
-                                _name: u.name.to_owned(),
-                                attributes: Vec::default(),
-                            },
-                        );
+                        unit_record
+                            .strike
+                            .as_mut()
+                            .unwrap()
+                            .insert(u.name.to_owned(), StrikeLoadout::from_unit(u));
                         Ok(())
                     }
                     "cap" => {
@@ -666,7 +728,7 @@ impl NewFromMission for Loadouts {
                                 h_cruise: 9096.,
                                 h_attack: 9096.,
                                 t_station: 2400,
-                                ldsd: false,
+                                ldsd: true,
                                 stores: u.payload.clone(),
                                 sortie_rate: 6,
                                 _airframe: u._type.to_owned(),

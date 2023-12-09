@@ -1,6 +1,8 @@
 use super::TargetFirepower;
 use crate::{
-    editable::{Editable, FieldType, HeaderField, ValidationError, ValidationResult, NestedEditable},
+    editable::{
+        Editable, FieldType, HeaderField, NestedEditable, ValidationError, ValidationResult,
+    },
     target_list::TargetList,
     target_list_internal::TargetListInternal,
     DCEInstance, NewFromMission,

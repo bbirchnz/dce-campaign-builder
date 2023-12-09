@@ -17,9 +17,7 @@ pub fn image_edit(cx: Scope<ImageEditProps>) -> Element {
     let binitem_from_props = BinItem::from_selectable(&cx.props.item);
 
     if binitem_from_props.is_none() {
-        return cx.render(rsx! {
-            "Nothing to edit"
-        });
+        return cx.render(rsx! {"Nothing to edit"});
     }
 
     let item_from_props = binitem_from_props.unwrap();

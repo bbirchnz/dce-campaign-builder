@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::loadouts::{
     AARLoadout, AWACSLoadout, AirframeLoadout, AntiShipLoadout, CAPLoadout, EscortLoadout,
-    InterceptLoadout, Loadouts, SEADLoadout, StrikeLoadout, TransportLoadout, SweepLoadout,
+    InterceptLoadout, Loadouts, SEADLoadout, StrikeLoadout, SweepLoadout, TransportLoadout,
 };
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]

@@ -209,6 +209,16 @@ pub fn select_campaign_settings(cx: Scope) {
     *writable = Selectable::CampaignSettings(item);
 }
 
+pub fn select_configuration_mod(cx: Scope) {
+    let atom_instance = use_atom_ref(cx, INSTANCE);
+    let atom_selected = use_atom_ref(cx, SELECTED);
+
+    let item = atom_instance.read().as_ref().unwrap().conf_mod.clone();
+
+    let mut writable = atom_selected.write();
+    *writable = Selectable::ConfigurationMod(item);
+}
+
 pub fn select_first_cap_loadout(cx: Scope) {
     let atom_instance = use_atom_ref(cx, INSTANCE);
     let atom_selected = use_atom_ref(cx, SELECTED);

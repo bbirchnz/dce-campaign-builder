@@ -120,7 +120,7 @@ impl Mappables for DBAirbasesInternal {
                 item.y,
                 &item._name,
                 &item.side,
-                "FixedAirBase",
+                item.type_name(),
                 proj,
             ));
         });
@@ -137,7 +137,7 @@ impl Mappables for DBAirbasesInternal {
                     unit.y,
                     &item._name,
                     &item.side,
-                    "ShipAirBase",
+                    item.type_name(),
                     proj,
                 ));
             }
@@ -149,7 +149,7 @@ impl Mappables for DBAirbasesInternal {
                 item.y,
                 &item._name,
                 &item.side,
-                "FARP",
+                item.type_name(),
                 proj,
             ));
         });
@@ -160,7 +160,7 @@ impl Mappables for DBAirbasesInternal {
                 item.y,
                 &item._name,
                 &item.side,
-                "Airstart",
+                item.type_name(),
                 proj,
             ));
         });

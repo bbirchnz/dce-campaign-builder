@@ -1,4 +1,4 @@
-use std::fs;
+use std::{fs, fmt::Debug};
 
 use serde::{Deserialize, Serialize};
 
@@ -14,6 +14,12 @@ pub struct BinItem {
     pub name: String,
     #[serde(with = "base64")]
     pub data: Vec<u8>,
+}
+
+impl Debug for BinItem {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("BinItem").field("name", &self.name).field("data", &self.data.len()).finish()
+    }
 }
 
 impl BinItem {

@@ -149,7 +149,7 @@ function draw_map(div_id, markers) {
   map.__squadron_group.clearLayers();
 
   markers.forEach((m) => {
-    if (m.class == "FixedAirBase" && m.side != "neutral") {
+    if (m.class == "dce_lib::db_airbases::FixedAirBase" && m.side != "neutral") {
       L.marker([m.lat, m.lon], {
         icon:
           m.side.toLowerCase() == "blue"
@@ -166,7 +166,7 @@ function draw_map(div_id, markers) {
         });
     }
 
-    if (m.class == "Airstart") {
+    if (m.class == "dce_lib::db_airbases::AirStartBase") {
       L.marker([m.lat, m.lon], {
         icon:
           m.side.toLowerCase() == "blue"
@@ -183,7 +183,7 @@ function draw_map(div_id, markers) {
         });
     }
 
-    if (m.class == "FARP") {
+    if (m.class == "dce_lib::db_airbases::FarpBase") {
       L.marker([m.lat, m.lon], {
         icon:
           m.side.toLowerCase() == "blue"
@@ -200,7 +200,7 @@ function draw_map(div_id, markers) {
         });
     }
 
-    if (m.class == "Squadron") {
+    if (m.class == "dce_lib::oob_air::OobAir") {
       L.marker([m.lat, m.lon], {
         icon:
           m.side.toLowerCase() == "blue"
@@ -216,7 +216,7 @@ function draw_map(div_id, markers) {
           });
         });
     }
-    if (m.class == "TargetStrike") {
+    if (m.class == "dce_lib::targets::strike::Strike") {
       L.marker([m.lat, m.lon], {
         icon:
           m.side.toLowerCase() == "blue"
@@ -232,7 +232,7 @@ function draw_map(div_id, markers) {
           });
         });
     }
-    if (m.class == "TargetAntiShipStrike") {
+    if (m.class == "dce_lib::targets::anti_ship::AntiShipStrike") {
       L.marker([m.lat, m.lon], {
         icon:
           m.side.toLowerCase() == "blue"
@@ -249,7 +249,7 @@ function draw_map(div_id, markers) {
         });
     }
 
-    if (m.class == "ShipAirBase") {
+    if (m.class == "dce_lib::db_airbases::ShipBase") {
       L.marker([m.lat, m.lon], {
         icon:
           m.side.toLowerCase() == "blue"
@@ -266,7 +266,7 @@ function draw_map(div_id, markers) {
         });
     }
 
-    if (m.class == "TargetCAP") {
+    if (m.class == "dce_lib::targets::cap::CAP") {
       L.corridor(
         [
           [m.lat, m.lon],
@@ -294,7 +294,7 @@ function draw_map(div_id, markers) {
         { color: m.side == "blue" ? "#0066dd44" : "#dd330044" }
       ).addTo(map.__target_group);
     }
-    if (m.class == "TargetRefuel") {
+    if (m.class == "dce_lib::targets::refueling::Refueling") {
       L.polyline(
         [
           [m.lat, m.lon],
@@ -312,7 +312,7 @@ function draw_map(div_id, markers) {
         });
     }
 
-    if (m.class == "TargetAWACS") {
+    if (m.class == "dce_lib::targets::awacs::AWACS") {
       L.polyline(
         [
           [m.lat, m.lon],

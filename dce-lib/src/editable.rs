@@ -8,7 +8,10 @@ use anyhow::anyhow;
 use chrono::{NaiveTime, Timelike};
 
 /// Common methods for editable entities
-pub trait Editable where Self: Struct{
+pub trait Editable
+where
+    Self: Struct,
+{
     fn get_name(&self) -> String;
 
     fn validate(&self, instance: &DCEInstance) -> ValidationResult;
@@ -213,7 +216,7 @@ impl HeaderField {
                     Actions::Many(actions) => actions.to_owned(),
                 }
             }
-            FieldType::VecString => {
+            FieldType::VecString | FieldType::VecStringOptions(_) => {
                 // returns the vec string, or a vec with an empty string (so we get one edit box, this is removed on save)
                 let items = item
                     .field(&self.field)
@@ -271,7 +274,7 @@ impl HeaderField {
                     .apply(&action);
                 Ok(())
             }
-            FieldType::VecString => {
+            FieldType::VecString | FieldType::VecStringOptions(_) => {
                 let field = item
                     .field_mut(&self.field)
                     .ok_or(anyhow!("Couldn't get field {}", &self.field))?
@@ -384,7 +387,7 @@ impl HeaderField {
             }
             FieldType::FixedEnum(_) => get_string(item, &self.field),
             FieldType::DateStr => get_string(item, &self.field),
-            FieldType::VecString => {
+            FieldType::VecString | FieldType::VecStringOptions(_) => {
                 let val = item
                     .field(&self.field)
                     .unwrap_or_else(|| panic!("Field {} should exist", &self.field))
@@ -469,7 +472,7 @@ impl HeaderField {
                 apply_value(item, &self.field, &value.to_owned());
             }
             FieldType::FixedEnum(_) => apply_value(item, &self.field, &value.to_owned()),
-            FieldType::VecString => {
+            FieldType::VecString | FieldType::VecStringOptions(_) => {
                 apply_value(item, &self.field, &value.to_owned());
             }
             FieldType::DateStr => apply_value(item, &self.field, &value.to_owned()),
@@ -531,5 +534,6 @@ pub enum FieldType {
     FixedEnum(Vec<String>),
     OptionString,
     VecString,
+    VecStringOptions(fn(&DCEInstance) -> Vec<String>),
     NestedEditable(Vec<HeaderField>),
 }

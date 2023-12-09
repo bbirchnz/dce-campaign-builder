@@ -97,6 +97,10 @@ pub struct StrikeLoadout {
     #[serde(rename = "hAttack")]
     pub h_attack: f64,
     pub standoff: Option<f64>,
+    pub ingress: Option<f64>,
+    pub egress: Option<f64>,
+    #[serde(rename = "MaxAttackOffset")]
+    pub max_attack_offset: Option<f64>,
     #[serde(rename = "tStation")]
     #[serde(default)]
     pub t_station: u32,
@@ -135,6 +139,9 @@ impl StrikeLoadout {
             h_cruise: 9090.,
             h_attack: 9090.,
             standoff: None,
+            ingress: None,
+            egress: None,
+            max_attack_offset: None,
             t_station: 0,
             ldsd: true,
             stores: unit.payload.clone(),
@@ -155,7 +162,10 @@ impl StrikeLoadout {
             loadout.adverse_weather = false;
             loadout.weapon_type = "Guided bombs".into();
             loadout.capability = 2;
-            loadout.attributes.push("precise".into())
+            loadout.expend = "Auto".into();
+            loadout.standoff = Some(15001.);
+            loadout.egress = Some(10000.);
+            loadout.attributes.push("precise".into());
         }
 
         if unit.name.contains(" cbu ") | unit.name.ends_with(" cbu") {
@@ -166,6 +176,8 @@ impl StrikeLoadout {
         if unit.name.contains(" jdam ") | unit.name.ends_with(" jdam") {
             loadout.weapon_type = "Guided bombs".into();
             loadout.capability = 2;
+            loadout.standoff = Some(9000.);
+            loadout.expend = "Auto".into();
             loadout.attributes.push("precise".into());
             loadout.sortie_rate = 3;
         }
@@ -179,9 +191,16 @@ impl StrikeLoadout {
 
         if unit.name.contains(" saturation ") | unit.name.ends_with(" saturation") {
             loadout.capability = 10;
-            loadout.firepower = 10;
+            loadout.firepower = 4;
             loadout.sortie_rate = 1;
-            loadout.attributes.push("saturation".into())
+            loadout.range = 1000000.;
+            loadout.weapon_type = "ASM".into();
+            loadout.standoff = Some(150000.);
+            loadout.ingress = Some(50000.);
+            loadout.egress = Some(50000.);
+            loadout.max_attack_offset = Some(60.);
+            loadout.support.sead = false;
+            loadout.attributes.push("saturation".into());
         }
 
         loadout

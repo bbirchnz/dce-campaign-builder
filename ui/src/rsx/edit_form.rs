@@ -33,6 +33,7 @@ fn fieldtype_to_input(field: &FieldType) -> String {
         FieldType::TriggerActions => "text".into(),
         FieldType::FixedEnum(_) => "select".into(),
         FieldType::VecString => "text".into(),
+        FieldType::VecStringOptions(_) => "select".into(),
         FieldType::DateStr => "date".into(),
         FieldType::NestedEditable(_) => "text".into(),
     }
@@ -55,6 +56,7 @@ fn fieldtype_editable(field: &FieldType) -> bool {
         FieldType::TriggerActions => true,
         FieldType::FixedEnum(_) => true,
         FieldType::VecString => true,
+        FieldType::VecStringOptions(_) => true,
         FieldType::DateStr => true,
         FieldType::NestedEditable(_) => true,
     }
@@ -148,6 +150,38 @@ where
                         FieldType::TriggerActions | FieldType::VecString => rsx!{
                             render_triggeractions {
                                 header: h.clone(),
+                                item: item_state.get().to_owned(),
+                                onclick_delete: move |(h_local, i)|{
+                                    let mut mut_item = item_state.make_mut();
+                                    delete_action_from_item(&mut mut_item, h_local, i);
+                                    validate_and_apply(
+                                        mut_item,
+                                        atom_instance,
+                                        use_atom_ref(cx, SELECTED),
+                                        atom_dirty,
+                                        orig_name,
+                                        validation_state,
+                                    );
+                             },
+                                onclick_addnew: move |h_local| {
+                                    let mut mut_item = item_state.make_mut();
+
+                                    add_action_to_item(&mut mut_item, h_local);
+                                    validate_and_apply(
+                                        mut_item,
+                                        atom_instance,
+                                        use_atom_ref(cx, SELECTED),
+                                        atom_dirty,
+                                        orig_name,
+                                        validation_state,
+                                    );
+                                }
+                            }
+                        },
+                        FieldType::VecStringOptions(options_func) => rsx!{
+                            render_imagepickers {
+                                header: h.clone(),
+                                options_func: *options_func,
                                 item: item_state.get().to_owned(),
                                 onclick_delete: move |(h_local, i)|{
                                     let mut mut_item = item_state.make_mut();
@@ -320,6 +354,70 @@ where
                         r#type: "{fieldtype_to_input(&h.type_)}",
                         name: "{h.display}.{i}",
                         value: "{action}"
+                    }
+                    div {
+                        class: "flex items-center font-thin rounded px-1 hover:bg-sky-300 hover:text-black icon",
+                        onclick: move |_| cx.props.onclick_delete.call((h, i)),
+                        "\u{E74D}"
+                    }
+                }
+            }
+        }
+        div { class: "flex",
+            div { class: "flex-grow" }
+            div {
+                class: "flex items-center font-thin rounded px-1 hover:bg-sky-300 hover:text-black icon",
+                onclick: move |_| cx.props.onclick_addnew.call(h),
+                ""
+            }
+        }
+    })
+}
+
+#[derive(Props)]
+struct ImagePickerProps<'a, T> {
+    header: HeaderField,
+    item: T,
+    /// Delete button: (Headerfield, index)
+    onclick_delete: EventHandler<'a, (&'a HeaderField, usize)>,
+    /// Add new row button: ()
+    onclick_addnew: EventHandler<'a, &'a HeaderField>,
+    options_func: fn(&DCEInstance) -> Vec<String>,
+}
+fn render_imagepickers<'a, T>(cx: Scope<'a, ImagePickerProps<'a, T>>) -> Element<'a>
+where
+    T: Struct,
+{
+    let atom_instance = use_atom_ref(cx, INSTANCE).read();
+    let instance = atom_instance.as_ref().expect("an instance");
+
+    let h = &cx.props.header;
+
+    cx.render(rsx!{
+        label { class: "p-1 w-full", "{h.display}" }
+        for (i , action) in h.get_value_stringvec(&cx.props.item).iter().enumerate() {
+            rsx! {
+                div {
+                    class: "flex w-full mt-1 mb-1",
+                    label { class: "p-1", r#for: "{h.display}.{i}", "{i}" }
+                    select {
+                        class: "rounded p-1 flex-grow",
+                        autocomplete: "off",
+                        name: "{h.display}.{i}",
+                        value: "{action}",
+                        disabled: "{!h.editable}",
+                        option {
+                            value: "",
+                            ""
+                        }
+                        for v in (cx.props.options_func)(instance).clone() {
+                            rsx!{
+                                option {
+                                    value: "{v}",
+                                    "{v}"
+                                }
+                            }
+                        }
                     }
                     div {
                         class: "flex items-center font-thin rounded px-1 hover:bg-sky-300 hover:text-black icon",

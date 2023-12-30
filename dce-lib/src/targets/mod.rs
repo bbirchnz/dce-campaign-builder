@@ -10,6 +10,8 @@ pub mod fighter_sweep;
 pub mod intercept;
 pub mod refueling;
 pub mod strike;
+pub mod runway_attack;
+
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
 pub struct TargetFirepower {
     pub min: u32,

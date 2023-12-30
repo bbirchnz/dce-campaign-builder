@@ -20,7 +20,7 @@ use serde::{Deserialize, Serialize};
 use serde_utils::LuaFileBased;
 use target_list::TargetList;
 use target_list_internal::TargetListInternal;
-use targets::{intercept::Intercept, strike::Strike};
+use targets::{intercept::Intercept, runway_attack::RunwayAttack, strike::Strike};
 use trigger::{flat_to_triggers, triggers_to_flat, Triggers, TriggersFlat};
 
 pub mod bin_data;
@@ -111,6 +111,7 @@ impl DCEInstance {
         // apply intercepts and oca strikes that need the full environment
         Intercept::generate_intercepts(&mut dce_instance)?;
         Strike::generate_airbase_strikes(&mut dce_instance)?;
+        RunwayAttack::generate_runway_strikes(&mut dce_instance)?;
 
         Ok(dce_instance)
     }

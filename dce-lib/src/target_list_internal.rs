@@ -11,7 +11,7 @@ use crate::{
         fighter_sweep::FighterSweep,
         intercept::Intercept,
         refueling::Refueling,
-        strike::{Strike, StrikeElement},
+        strike::{Strike, StrikeElement}, runway_attack::RunwayAttack,
     },
 };
 use anyhow::anyhow;
@@ -31,6 +31,7 @@ pub struct TargetListInternal {
     pub intercept: Vec<Intercept>,
     pub fighter_sweep: Vec<FighterSweep>,
     pub awacs: Vec<AWACS>,
+    pub runway_attack: Vec<RunwayAttack>,
 }
 
 impl TargetListInternal {
@@ -42,6 +43,7 @@ impl TargetListInternal {
         let mut intercept = Vec::default();
         let mut fighter_sweep = Vec::default();
         let mut awacs = Vec::default();
+        let mut runway_attack = Vec::default();
 
         tlist
             .blue
@@ -91,6 +93,12 @@ impl TargetListInternal {
                     i._side = side.to_owned();
                     awacs.push(i);
                 }
+                target_list::Target::RunwayAttack(i) => {
+                    let mut i = i.clone();
+                    i._name = name.to_owned();
+                    i._side = side.to_owned();
+                    runway_attack.push(i);
+                }
             });
 
         TargetListInternal {
@@ -101,6 +109,7 @@ impl TargetListInternal {
             intercept,
             fighter_sweep,
             awacs,
+            runway_attack
         }
     }
 
@@ -203,6 +212,19 @@ impl TargetListInternal {
                 }
                 "red" => {
                     let _ = red.insert(item._name.to_owned(), Target::AWACS(item.clone()));
+                }
+                _ => return Err(anyhow!("Got side == {}", item._side)),
+            }
+            Ok(())
+        })?;
+        
+        self.runway_attack.iter().try_for_each(|item| {
+            match item._side.as_str() {
+                "blue" => {
+                    let _ = blue.insert(item._name.to_owned(), Target::RunwayAttack(item.clone()));
+                }
+                "red" => {
+                    let _ = red.insert(item._name.to_owned(), Target::RunwayAttack(item.clone()));
                 }
                 _ => return Err(anyhow!("Got side == {}", item._side)),
             }

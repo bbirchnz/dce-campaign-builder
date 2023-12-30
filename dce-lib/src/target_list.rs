@@ -12,7 +12,7 @@ use crate::{
         intercept::Intercept,
         refueling::Refueling,
         strike::{Strike, StrikeElement, StrikeFixedCoordTarget, StrikeNamedStaticTarget},
-        TargetFirepower,
+        TargetFirepower, runway_attack::RunwayAttack,
     },
     NewFromMission,
 };
@@ -282,6 +282,8 @@ pub enum Target {
     #[serde(rename = "Anti-ship Strike")]
     AntiShipStrike(AntiShipStrike),
     AWACS(AWACS),
+    #[serde(rename = "Runway Attack")]
+    RunwayAttack(RunwayAttack),
 }
 
 #[cfg(test)]

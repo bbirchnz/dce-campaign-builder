@@ -1,4 +1,4 @@
-use std::{fs, fmt::Debug};
+use std::{fmt::Debug, fs};
 
 use serde::{Deserialize, Serialize};
 
@@ -18,7 +18,10 @@ pub struct BinItem {
 
 impl Debug for BinItem {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("BinItem").field("name", &self.name).field("data", &self.data.len()).finish()
+        f.debug_struct("BinItem")
+            .field("name", &self.name)
+            .field("data", &self.data.len())
+            .finish()
     }
 }
 

@@ -97,7 +97,7 @@ pub fn image_table(cx: Scope<ImageTableProps>) -> Element {
                         icon_button {
                             onclick: move |_| {
                                 let mut ctx = ClipboardContext::new().unwrap();
-                
+
                                 ctx.set_contents(image.name.to_owned()).expect("Can write to clipboard");
                             },
                             tooltip: "Copy filename to clipboard",

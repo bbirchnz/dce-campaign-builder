@@ -243,6 +243,29 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [14]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = 0.016111321258923,
+                ["edge1y"] = 105392.5546875,
+                ["edge2x"] = 41049.421875,
+                ["edge2name"] = "18",
+                ["edge1name"] = "36",
+                ["edge2y"] = 105399.3984375,
+                ["edge1x"] = 40624.6796875,
+            }, -- end of [1]
+            [2] = 
+            {
+                ["course"] = -1.5552961322059,
+                ["edge1y"] = 105849.4140625,
+                ["edge2x"] = 40531.546875,
+                ["edge2name"] = "09",
+                ["edge1name"] = "27",
+                ["edge2y"] = 105452.2734375,
+                ["edge1x"] = 40525.390625,
+            }, -- end of [2]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["fueldepots"] = 
@@ -1292,6 +1315,29 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [48]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = -1.1833908874959,
+                ["edge1y"] = 83871.375,
+                ["edge2x"] = 58113.28515625,
+                ["edge2name"] = "11",
+                ["edge1name"] = "29",
+                ["edge2y"] = 81258.3125,
+                ["edge1x"] = 57047.08984375,
+            }, -- end of [1]
+            [2] = 
+            {
+                ["course"] = -1.5596415023192,
+                ["edge1y"] = 83931.5625,
+                ["edge2x"] = 57005.75,
+                ["edge2name"] = "09",
+                ["edge1name"] = "27",
+                ["edge2y"] = 81068.5703125,
+                ["edge1x"] = 56973.8125,
+            }, -- end of [2]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["fueldepots"] = 
@@ -2996,6 +3042,29 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [71]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = 0.31419506576497,
+                ["edge1y"] = 77183.59375,
+                ["edge2x"] = 83319.609375,
+                ["edge2name"] = "20R",
+                ["edge1name"] = "02L",
+                ["edge2y"] = 78057.9296875,
+                ["edge1x"] = 80629.0078125,
+            }, -- end of [1]
+            [2] = 
+            {
+                ["course"] = 0.3140719944966,
+                ["edge1y"] = 77868.671875,
+                ["edge2x"] = 83145.8046875,
+                ["edge2name"] = "20L",
+                ["edge1name"] = "02R",
+                ["edge2y"] = 78692.984375,
+                ["edge1x"] = 80608.078125,
+            }, -- end of [2]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["fueldepots"] = 
@@ -3557,6 +3626,19 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [14]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = -0.88854398857904,
+                ["edge1y"] = 97017.96875,
+                ["edge2x"] = 61031.03125,
+                ["edge2name"] = "13",
+                ["edge1name"] = "31",
+                ["edge2y"] = 94672.84375,
+                ["edge1x"] = 59125.8671875,
+            }, -- end of [1]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["fueldepots"] = 
@@ -4357,6 +4439,29 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [30]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = -0.58720830779855,
+                ["edge1y"] = 184251.40625,
+                ["edge2x"] = 39879.078125,
+                ["edge2name"] = "15R",
+                ["edge1name"] = "33L",
+                ["edge2y"] = 182957.65625,
+                ["edge1x"] = 37935.109375,
+            }, -- end of [1]
+            [2] = 
+            {
+                ["course"] = -0.5870317544049,
+                ["edge1y"] = 184644.28125,
+                ["edge2x"] = 39959.4296875,
+                ["edge2name"] = "15L",
+                ["edge1name"] = "33R",
+                ["edge2y"] = 183064.40625,
+                ["edge1x"] = 37584.625,
+            }, -- end of [2]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["fueldepots"] = 
@@ -5378,6 +5483,19 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [38]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = -1.5583166745984,
+                ["edge1y"] = 100214.046875,
+                ["edge2x"] = 30181.90234375,
+                ["edge2name"] = "09",
+                ["edge1name"] = "27",
+                ["edge2y"] = 97398.359375,
+                ["edge1x"] = 30146.76171875,
+            }, -- end of [1]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["fueldepots"] = 
@@ -8007,6 +8125,29 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [142]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = -1.3216638524226,
+                ["edge1y"] = 328244.4375,
+                ["edge2x"] = 132192.40625,
+                ["edge2name"] = "10L",
+                ["edge1name"] = "28R",
+                ["edge2y"] = 326090.625,
+                ["edge1x"] = 131644.4375,
+            }, -- end of [1]
+            [2] = 
+            {
+                ["course"] = -1.3217305728378,
+                ["edge1y"] = 329036.25,
+                ["edge2x"] = 131172.96875,
+                ["edge2name"] = "10R",
+                ["edge1name"] = "28L",
+                ["edge2y"] = 326405.125,
+                ["edge1x"] = 130503.75,
+            }, -- end of [2]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["fueldepots"] = 
@@ -10471,6 +10612,39 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [115]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = 1.3228968384335,
+                ["edge1y"] = 359376,
+                ["edge2x"] = 129511.421875,
+                ["edge2name"] = "26L",
+                ["edge1name"] = "08R",
+                ["edge2y"] = 362439.96875,
+                ["edge1x"] = 128735.9140625,
+            }, -- end of [1]
+            [2] = 
+            {
+                ["course"] = 1.3231105865124,
+                ["edge1y"] = 359270.3125,
+                ["edge2x"] = 129669.984375,
+                ["edge2name"] = "26R",
+                ["edge1name"] = "08L",
+                ["edge2y"] = 361639.9375,
+                ["edge1x"] = 129070.7578125,
+            }, -- end of [2]
+            [3] = 
+            {
+                ["course"] = 1.3231354984694,
+                ["edge1y"] = 360172.65625,
+                ["edge2x"] = 127614.859375,
+                ["edge2name"] = "25",
+                ["edge1name"] = "07",
+                ["edge2y"] = 363654.65625,
+                ["edge1x"] = 126734.4296875,
+            }, -- end of [3]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["fueldepots"] = 
@@ -13028,6 +13202,29 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [125]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = 1.1533461479378,
+                ["edge1y"] = 327503.4375,
+                ["edge2x"] = 81338.90625,
+                ["edge2name"] = "25R",
+                ["edge1name"] = "07L",
+                ["edge2y"] = 329818.875,
+                ["edge1x"] = 80311.96875,
+            }, -- end of [1]
+            [2] = 
+            {
+                ["course"] = 1.1533667109455,
+                ["edge1y"] = 327628.4375,
+                ["edge2x"] = 81083.78125,
+                ["edge2name"] = "25L",
+                ["edge1name"] = "07R",
+                ["edge2y"] = 330112.09375,
+                ["edge1x"] = 79982.296875,
+            }, -- end of [2]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["fueldepots"] = 
@@ -16874,6 +17071,29 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [100]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = 0.36458572210247,
+                ["edge1y"] = 355454.96875,
+                ["edge2x"] = -10365.774414062,
+                ["edge2name"] = "21R",
+                ["edge1name"] = "03L",
+                ["edge2y"] = 356330.375,
+                ["edge1x"] = -12659.53125,
+            }, -- end of [1]
+            [2] = 
+            {
+                ["course"] = 0.36454962310655,
+                ["edge1y"] = 355717.0625,
+                ["edge2x"] = -10302.712890625,
+                ["edge2name"] = "21L",
+                ["edge1name"] = "03R",
+                ["edge2y"] = 356731.8125,
+                ["edge1x"] = -12961.869140625,
+            }, -- end of [2]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["fueldepots"] = 
@@ -18460,6 +18680,29 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [16]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = -0.76650416635824,
+                ["edge1y"] = 121139.2265625,
+                ["edge2x"] = 21473.390625,
+                ["edge2name"] = "14R",
+                ["edge1name"] = "32L",
+                ["edge2y"] = 119395.375,
+                ["edge1x"] = 19662.365234375,
+            }, -- end of [1]
+            [2] = 
+            {
+                ["course"] = -0.76642361678231,
+                ["edge1y"] = 121291.359375,
+                ["edge2x"] = 21612.939453125,
+                ["edge2name"] = "14L",
+                ["edge1name"] = "32R",
+                ["edge2y"] = 119540.515625,
+                ["edge1x"] = 19794.359375,
+            }, -- end of [2]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["fueldepots"] = 
@@ -19866,6 +20109,19 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [62]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = -1.3404418990888,
+                ["edge1y"] = 326180.5625,
+                ["edge2x"] = 134523.625,
+                ["edge2name"] = "10",
+                ["edge1name"] = "28",
+                ["edge2y"] = 324546.6875,
+                ["edge1x"] = 134140.453125,
+            }, -- end of [1]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["roadnet"] = "./Mods/terrains/Sinai/AirfieldsTaxiways/Hatzerim Heli Base.rn4",
@@ -21189,6 +21445,29 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [71]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = 0.27584355153906,
+                ["edge1y"] = 56304.88671875,
+                ["edge2x"] = 3744.5358886719,
+                ["edge2name"] = "19R",
+                ["edge1name"] = "01L",
+                ["edge2y"] = 57244.15625,
+                ["edge1x"] = 426.26037597656,
+            }, -- end of [1]
+            [2] = 
+            {
+                ["course"] = 0.27582233109975,
+                ["edge1y"] = 56800.00390625,
+                ["edge2x"] = 1002.8190917969,
+                ["edge2name"] = "19L",
+                ["edge1name"] = "01R",
+                ["edge2y"] = 57620.37890625,
+                ["edge1x"] = -1895.6574707031,
+            }, -- end of [2]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["fueldepots"] = 
@@ -22444,6 +22723,29 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [44]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = -0.70775341117282,
+                ["edge1y"] = 20321.48046875,
+                ["edge2x"] = 102539.78125,
+                ["edge2name"] = "14",
+                ["edge1name"] = "32",
+                ["edge2y"] = 18520.80078125,
+                ["edge1x"] = 100435.2734375,
+            }, -- end of [1]
+            [2] = 
+            {
+                ["course"] = -0.25111706751708,
+                ["edge1y"] = 20224.990234375,
+                ["edge2x"] = 103169.890625,
+                ["edge2name"] = "17",
+                ["edge1name"] = "35",
+                ["edge2y"] = 19582.4453125,
+                ["edge1x"] = 100665.15625,
+            }, -- end of [2]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["fueldepots"] = 
@@ -23336,6 +23638,29 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [29]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = 0.050290874529064,
+                ["edge1y"] = 41122.825500488,
+                ["edge2x"] = 61538.900268555,
+                ["edge2name"] = "18R",
+                ["edge1name"] = "36L",
+                ["edge2y"] = 41263.043395996,
+                ["edge1x"] = 58753.11328125,
+            }, -- end of [1]
+            [2] = 
+            {
+                ["course"] = 0.05034639467582,
+                ["edge1y"] = 41218.370269775,
+                ["edge2x"] = 61535.555908203,
+                ["edge2name"] = "18L",
+                ["edge1name"] = "36R",
+                ["edge2y"] = 41359.466911316,
+                ["edge1x"] = 58735.406921387,
+            }, -- end of [2]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["fueldepots"] = 
@@ -24382,6 +24707,39 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [49]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = -0.18016886020252,
+                ["edge1y"] = 35680.92578125,
+                ["edge2x"] = 39844.73046875,
+                ["edge2name"] = "17L",
+                ["edge1name"] = "35R",
+                ["edge2y"] = 35181.2265625,
+                ["edge1x"] = 37101.30078125,
+            }, -- end of [1]
+            [2] = 
+            {
+                ["course"] = -1.5087892050487,
+                ["edge1y"] = 35547.921875,
+                ["edge2x"] = 37378.8359375,
+                ["edge2name"] = "09R",
+                ["edge1name"] = "27L",
+                ["edge2y"] = 33164.9140625,
+                ["edge1x"] = 37230.8828125,
+            }, -- end of [2]
+            [3] = 
+            {
+                ["course"] = 0.78894836741201,
+                ["edge1y"] = 33090.640625,
+                ["edge2x"] = 39749.87890625,
+                ["edge2name"] = "22",
+                ["edge1name"] = "04",
+                ["edge2y"] = 35442.56640625,
+                ["edge1x"] = 37414.59375,
+            }, -- end of [3]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["fueldepots"] = 
@@ -27057,6 +27415,39 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [129]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = 0.87271336470523,
+                ["edge1y"] = 16982.169921875,
+                ["edge2x"] = 7788.9013671875,
+                ["edge2name"] = "23L",
+                ["edge1name"] = "05R",
+                ["edge2y"] = 19857.517578125,
+                ["edge1x"] = 5376.4370117188,
+            }, -- end of [1]
+            [2] = 
+            {
+                ["course"] = 0.87266736946936,
+                ["edge1y"] = 14969.047851562,
+                ["edge2x"] = 8088.7446289062,
+                ["edge2name"] = "23C",
+                ["edge1name"] = "05C",
+                ["edge2y"] = 17842.5703125,
+                ["edge1x"] = 5677.5864257812,
+            }, -- end of [2]
+            [3] = 
+            {
+                ["course"] = 0.87268300639735,
+                ["edge1y"] = 13260.485351562,
+                ["edge2x"] = 9877.80078125,
+                ["edge2name"] = "23R",
+                ["edge1name"] = "05L",
+                ["edge2y"] = 15604.784179688,
+                ["edge1x"] = 7910.7739257812,
+            }, -- end of [3]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["fueldepots"] = 
@@ -29086,6 +29477,39 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [103]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = -0.23007592436023,
+                ["edge1y"] = -33145.9921875,
+                ["edge2x"] = 9027.2451171875,
+                ["edge2name"] = "16R",
+                ["edge1name"] = "34L",
+                ["edge2y"] = -33931.94921875,
+                ["edge1x"] = 5671.6586914062,
+            }, -- end of [1]
+            [2] = 
+            {
+                ["course"] = -1.2692435960063,
+                ["edge1y"] = -29694.296875,
+                ["edge2x"] = 8474.6474609375,
+                ["edge2name"] = "10",
+                ["edge1name"] = "28",
+                ["edge2y"] = -32469.90234375,
+                ["edge1x"] = 7611.3276367188,
+            }, -- end of [2]
+            [3] = 
+            {
+                ["course"] = -0.23006157302542,
+                ["edge1y"] = -31356.751953125,
+                ["edge2x"] = 9912.859375,
+                ["edge2name"] = "16L",
+                ["edge1name"] = "34R",
+                ["edge2y"] = -32010.865234375,
+                ["edge1x"] = 7119.9897460938,
+            }, -- end of [3]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["fueldepots"] = 
@@ -30920,6 +31344,29 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [60]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = 1.5993421122407,
+                ["edge1y"] = 18785.248046875,
+                ["edge2x"] = 31009.798828125,
+                ["edge2name"] = "27",
+                ["edge1name"] = "09",
+                ["edge2y"] = 21221.802734375,
+                ["edge1x"] = 31079.37109375,
+            }, -- end of [1]
+            [2] = 
+            {
+                ["course"] = 0.83106321995212,
+                ["edge1y"] = 18998.921875,
+                ["edge2x"] = 32349.9140625,
+                ["edge2name"] = "22",
+                ["edge1name"] = "04",
+                ["edge2y"] = 20788.5390625,
+                ["edge1x"] = 30716.708984375,
+            }, -- end of [2]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["roadnet"] = "./Mods/terrains/Sinai/AirfieldsTaxiways/InshasAirbase.rn4",
@@ -32729,6 +33176,39 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [98]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = 0.93329376415744,
+                ["edge1y"] = 331737.0625,
+                ["edge2x"] = 190524.796875,
+                ["edge2name"] = "23",
+                ["edge1name"] = "05",
+                ["edge2y"] = 333507.0625,
+                ["edge1x"] = 189213.8125,
+            }, -- end of [1]
+            [2] = 
+            {
+                ["course"] = -1.2094630566289,
+                ["edge1y"] = 334455.78125,
+                ["edge2x"] = 190361,
+                ["edge2name"] = "11L",
+                ["edge1name"] = "29R",
+                ["edge2y"] = 332407.71875,
+                ["edge1x"] = 189586.984375,
+            }, -- end of [2]
+            [3] = 
+            {
+                ["course"] = -1.2095121557505,
+                ["edge1y"] = 334410.09375,
+                ["edge2x"] = 190202.765625,
+                ["edge2name"] = "11R",
+                ["edge1name"] = "29L",
+                ["edge2y"] = 332286.59375,
+                ["edge1x"] = 189400.359375,
+            }, -- end of [3]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["fueldepots"] = 
@@ -34859,6 +35339,19 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [78]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = 0.42070189355668,
+                ["edge1y"] = 328863.3125,
+                ["edge2x"] = 206473.34375,
+                ["edge2name"] = "21L",
+                ["edge1name"] = "03R",
+                ["edge2y"] = 329746.1875,
+                ["edge1x"] = 204500.0625,
+            }, -- end of [1]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["fueldepots"] = 
@@ -36199,6 +36692,19 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [42]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = -2.6779128743872,
+                ["edge1y"] = 337661.28125,
+                ["edge2x"] = 228641.140625,
+                ["edge2name"] = "03",
+                ["edge1name"] = "21",
+                ["edge2y"] = 337078.40625,
+                ["edge1x"] = 229806.796875,
+            }, -- end of [1]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["fueldepots"] = 
@@ -38720,6 +39226,39 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [133]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = 0.029006553782686,
+                ["edge1y"] = 341211.34375,
+                ["edge2x"] = 199488.625,
+                ["edge2name"] = "18",
+                ["edge1name"] = "36",
+                ["edge2y"] = 341275.28125,
+                ["edge1x"] = 197285,
+            }, -- end of [1]
+            [2] = 
+            {
+                ["course"] = -0.52867409968707,
+                ["edge1y"] = 342650.3125,
+                ["edge2x"] = 199563.890625,
+                ["edge2name"] = "15R",
+                ["edge1name"] = "33L",
+                ["edge2y"] = 341528.3125,
+                ["edge1x"] = 197643.109375,
+            }, -- end of [2]
+            [3] = 
+            {
+                ["course"] = -0.52849284256719,
+                ["edge1y"] = 343211.28125,
+                ["edge2x"] = 199629.1875,
+                ["edge2name"] = "15L",
+                ["edge1name"] = "33R",
+                ["edge2y"] = 342075.40625,
+                ["edge1x"] = 197683.84375,
+            }, -- end of [3]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["fueldepots"] = 
@@ -41519,6 +42058,39 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [89]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = 0.4845707670904,
+                ["edge1y"] = 347437.3125,
+                ["edge2x"] = 218605.453125,
+                ["edge2name"] = "21",
+                ["edge1name"] = "03",
+                ["edge2y"] = 348635,
+                ["edge1x"] = 216330.359375,
+            }, -- end of [1]
+            [2] = 
+            {
+                ["course"] = 1.3758814374466,
+                ["edge1y"] = 345071,
+                ["edge2x"] = 218638.5625,
+                ["edge2name"] = "26",
+                ["edge1name"] = "08",
+                ["edge2y"] = 347912.875,
+                ["edge1x"] = 218077.515625,
+            }, -- end of [2]
+            [3] = 
+            {
+                ["course"] = -1.0404616949624,
+                ["edge1y"] = 348099.65625,
+                ["edge2x"] = 218173.546875,
+                ["edge2name"] = "12",
+                ["edge1name"] = "30",
+                ["edge2y"] = 345616.78125,
+                ["edge1x"] = 216717.671875,
+            }, -- end of [3]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["fueldepots"] = 
@@ -41902,6 +42474,19 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [7]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = -0.15769006932193,
+                ["edge1y"] = 273187.75,
+                ["edge2x"] = -150798.875,
+                ["edge2name"] = "17",
+                ["edge1name"] = "35",
+                ["edge2y"] = 272886.71875,
+                ["edge1x"] = -152692.03125,
+            }, -- end of [1]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["fueldepots"] = 
@@ -42099,6 +42684,19 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [3]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = 2.2980958348233,
+                ["edge1y"] = 188252.484375,
+                ["edge2x"] = -129060.671875,
+                ["edge2name"] = "31",
+                ["edge1name"] = "13",
+                ["edge2y"] = 189644.796875,
+                ["edge1x"] = -127821.421875,
+            }, -- end of [1]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["fueldepots"] = 
@@ -42312,6 +42910,19 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [3]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = -1.8200171351271,
+                ["edge1y"] = 127329.7734375,
+                ["edge2x"] = 104131.6875,
+                ["edge2name"] = "07",
+                ["edge1name"] = "25",
+                ["edge2y"] = 125618.2265625,
+                ["edge1x"] = 104567.296875,
+            }, -- end of [1]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["fueldepots"] = 
@@ -42922,6 +43533,19 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [28]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = -1.0542459891465,
+                ["edge1y"] = 210204.53125,
+                ["edge2x"] = 15818.580078125,
+                ["edge2name"] = "12",
+                ["edge1name"] = "30",
+                ["edge2y"] = 207716.828125,
+                ["edge1x"] = 14405.588867188,
+            }, -- end of [1]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["fueldepots"] = 
@@ -43460,6 +44084,29 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [22]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = -0.4086628706373,
+                ["edge1y"] = 247954.0625,
+                ["edge2x"] = 110082.6328125,
+                ["edge2name"] = "16R",
+                ["edge1name"] = "34L",
+                ["edge2y"] = 246821.40625,
+                ["edge1x"] = 107467.0546875,
+            }, -- end of [1]
+            [2] = 
+            {
+                ["course"] = -0.40866124571533,
+                ["edge1y"] = 249524.75,
+                ["edge2x"] = 114007.2890625,
+                ["edge2name"] = "16L",
+                ["edge1name"] = "34R",
+                ["edge2y"] = 248393.015625,
+                ["edge1x"] = 111393.828125,
+            }, -- end of [2]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["fueldepots"] = 
@@ -43934,6 +44581,19 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [15]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = 1.3059417952627,
+                ["edge1y"] = 277761.6875,
+                ["edge2x"] = 113220.8984375,
+                ["edge2name"] = "26",
+                ["edge1name"] = "08",
+                ["edge2y"] = 279780.84375,
+                ["edge1x"] = 112673.25,
+            }, -- end of [1]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["fueldepots"] = 

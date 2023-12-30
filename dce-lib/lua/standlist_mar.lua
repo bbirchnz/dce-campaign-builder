@@ -158,6 +158,19 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [9]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = 1.6094256614159,
+                ["edge1y"] = 47660.0234375,
+                ["edge2x"] = 75848.921875,
+                ["edge2name"] = "27",
+                ["edge1name"] = "9",
+                ["edge2y"] = 49519.73046875,
+                ["edge1x"] = 75920.796875,
+            }, -- end of [1]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["fueldepots"] = 
@@ -622,6 +635,19 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [19]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = 1.1885718495945,
+                ["edge1y"] = 100754.421875,
+                ["edge2x"] = 180478.25,
+                ["edge2name"] = "25",
+                ["edge1name"] = "07",
+                ["edge2y"] = 102957.5,
+                ["edge1x"] = 179592.625,
+            }, -- end of [1]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["fueldepots"] = 
@@ -847,6 +873,19 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [4]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = 1.386391749828,
+                ["edge1y"] = 88791.390625,
+                ["edge2x"] = 167077.203125,
+                ["edge2name"] = "26",
+                ["edge1name"] = "08",
+                ["edge2y"] = 91121.859375,
+                ["edge1x"] = 166642.515625,
+            }, -- end of [1]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["fueldepots"] = 
@@ -1375,6 +1414,29 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [23]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = 1.1426905365411,
+                ["edge1y"] = -1375.5959472656,
+                ["edge2x"] = 568.50354003906,
+                ["edge2name"] = "24R",
+                ["edge1name"] = "06L",
+                ["edge2y"] = 1219.7153320312,
+                ["edge1x"] = -615.81585693359,
+            }, -- end of [1]
+            [2] = 
+            {
+                ["course"] = 1.1422346137694,
+                ["edge1y"] = -1282.4921875,
+                ["edge2x"] = 221.05908203125,
+                ["edge2name"] = "24L",
+                ["edge1name"] = "06R",
+                ["edge2y"] = 972.69720458984,
+                ["edge1x"] = -809.294921875,
+            }, -- end of [2]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["fueldepots"] = 
@@ -1647,6 +1709,19 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [4]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = -1.9677165699017,
+                ["edge1y"] = -16384.253566845,
+                ["edge2x"] = -5226.6774344256,
+                ["edge2name"] = "7",
+                ["edge1name"] = "25",
+                ["edge2y"] = -17354.616670613,
+                ["edge1x"] = -4819.932610589,
+            }, -- end of [1]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["roadnet"] = "./Mods/terrains/MarianaIslands/AirfieldsTaxiways/Olf_Orote_Field.rn4",
@@ -5018,6 +5093,29 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [194]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = 1.1583707576429,
+                ["edge1y"] = 13084.180664062,
+                ["edge2x"] = 11215.801757812,
+                ["edge2name"] = "24L",
+                ["edge1name"] = "06R",
+                ["edge2y"] = 16013.486328125,
+                ["edge1x"] = 9934.177734375,
+            }, -- end of [1]
+            [2] = 
+            {
+                ["course"] = 1.1584071978779,
+                ["edge1y"] = 12982.451171875,
+                ["edge2x"] = 11695.029296875,
+                ["edge2name"] = "24R",
+                ["edge1name"] = "06L",
+                ["edge2y"] = 15749.147460938,
+                ["edge1x"] = 10484.669921875,
+            }, -- end of [2]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["fueldepots"] = 
@@ -5335,6 +5433,19 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [3]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = 1.9427442331053,
+                ["edge1y"] = 107333.87537581,
+                ["edge2x"] = 512320.25214127,
+                ["edge2name"] = "29",
+                ["edge1name"] = "11",
+                ["edge2y"] = 107795.34175279,
+                ["edge1x"] = 512500.27285326,
+            }, -- end of [1]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["roadnet"] = "./Mods/terrains/MarianaIslands/AirfieldsTaxiways/Pagan_Airstrip.rn4",
@@ -5544,6 +5655,9 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [8]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["roadnet"] = "./Mods/terrains/MarianaIslands/AirfieldsTaxiways/North_West_Field.rn4",

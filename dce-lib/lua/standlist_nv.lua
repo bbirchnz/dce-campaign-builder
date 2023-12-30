@@ -872,6 +872,29 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [51]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = 1.5977416250049,
+                ["edge1y"] = -76519.390625,
+                ["edge2x"] = -360532.25,
+                ["edge2name"] = "26",
+                ["edge1name"] = "08",
+                ["edge2y"] = -74660.75,
+                ["edge1x"] = -360482.15625,
+            }, -- end of [1]
+            [2] = 
+            {
+                ["course"] = 2.5331667328815,
+                ["edge1y"] = -75643.5546875,
+                ["edge2x"] = -360248.125,
+                ["edge2name"] = "31",
+                ["edge1name"] = "13",
+                ["edge2y"] = -74935.4609375,
+                ["edge1x"] = -359231.59375,
+            }, -- end of [2]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["roadnet"] = "./Mods/terrains/Nevada/AirfieldsTaxiways/Creech.rn4",
@@ -1898,6 +1921,19 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [52]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = -0.41125796440055,
+                ["edge1y"] = -86199.796875,
+                ["edge2x"] = -287066.9375,
+                ["edge2name"] = "14",
+                ["edge1name"] = "32",
+                ["edge2y"] = -87541.09375,
+                ["edge1x"] = -290142.40625,
+            }, -- end of [1]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["roadnet"] = "./Mods/terrains/Nevada/AirfieldsTaxiways/groom.rn4",
@@ -2272,6 +2308,29 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [15]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = 1.551084114514,
+                ["edge1y"] = -28510.48046875,
+                ["edge2x"] = -415980.1875,
+                ["edge2name"] = "25R",
+                ["edge1name"] = "7L",
+                ["edge2y"] = -25348.193359375,
+                ["edge1x"] = -416042.53125,
+            }, -- end of [1]
+            [2] = 
+            {
+                ["course"] = 1.5512492733592,
+                ["edge1y"] = -28358.462890625,
+                ["edge2x"] = -416286.25,
+                ["edge2name"] = "25L",
+                ["edge1name"] = "7R",
+                ["edge2y"] = -25308.51953125,
+                ["edge1x"] = -416345.875,
+            }, -- end of [2]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["roadnet"] = "./Mods/terrains/Nevada/AirfieldsTaxiways/LasVegas.rn4",
@@ -6613,6 +6672,29 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [247]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = 0.7003113606967,
+                ["edge1y"] = -18160.181640625,
+                ["edge2x"] = -397095.5625,
+                ["edge2name"] = "21L",
+                ["edge1name"] = "03R",
+                ["edge2y"] = -16306.291992188,
+                ["edge1x"] = -399295.1875,
+            }, -- end of [1]
+            [2] = 
+            {
+                ["course"] = 0.70050551442126,
+                ["edge1y"] = -18395.984375,
+                ["edge2x"] = -396898.875,
+                ["edge2name"] = "21R",
+                ["edge1name"] = "03L",
+                ["edge2y"] = -16538.4921875,
+                ["edge1x"] = -399101.90625,
+            }, -- end of [2]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["roadnet"] = "./Mods/terrains/Nevada/AirfieldsTaxiways/nellis.rn4",
@@ -6792,6 +6874,19 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [3]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = 3.139115335691,
+                ["edge1y"] = -174960.5625,
+                ["edge2x"] = -331373.5625,
+                ["edge2name"] = "34",
+                ["edge1name"] = "16",
+                ["edge2y"] = -174956.5,
+                ["edge1x"] = -329733.6875,
+            }, -- end of [1]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["roadnet"] = "./Mods/terrains/Nevada/AirfieldsTaxiways/BeattyAirport.rn4",
@@ -7494,6 +7589,29 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [37]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = -0.2787306612839,
+                ["edge1y"] = -993.51629638672,
+                ["edge2x"] = -429117.75,
+                ["edge2name"] = "15",
+                ["edge1name"] = "33",
+                ["edge2y"] = -1303.9327392578,
+                ["edge1x"] = -430202.4375,
+            }, -- end of [1]
+            [2] = 
+            {
+                ["course"] = -1.4227881459026,
+                ["edge1y"] = -383.44528198242,
+                ["edge2x"] = -429811.13344882,
+                ["edge2name"] = "9",
+                ["edge1name"] = "27L",
+                ["edge2y"] = -1774.0379690603,
+                ["edge1x"] = -430018.46875,
+            }, -- end of [2]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["roadnet"] = "./Mods/terrains/Nevada/AirfieldsTaxiways/BoulderCityAirport.rn4",
@@ -7638,6 +7756,19 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [2]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = 1.3506365935223,
+                ["edge1y"] = 33217.22265625,
+                ["edge2x"] = -388484.90625,
+                ["edge2name"] = "24",
+                ["edge1name"] = "6",
+                ["edge2y"] = 34177.3984375,
+                ["edge1x"] = -388699.78125,
+            }, -- end of [1]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["roadnet"] = "./Mods/terrains/Nevada/AirfieldsTaxiways/EchoBayAirport.rn4",
@@ -8442,6 +8573,29 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [43]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = -0.0084149221653822,
+                ["edge1y"] = -25662.62109375,
+                ["edge2x"] = -426628.34375,
+                ["edge2name"] = "17L",
+                ["edge1name"] = "35R",
+                ["edge2y"] = -25674.8125,
+                ["edge1x"] = -428077.09375,
+            }, -- end of [1]
+            [2] = 
+            {
+                ["course"] = -0.0087440088995279,
+                ["edge1y"] = -25870.830078125,
+                ["edge2x"] = -426691.1875,
+                ["edge2name"] = "17R",
+                ["edge1name"] = "35L",
+                ["edge2y"] = -25886.818359375,
+                ["edge1x"] = -428519.625,
+            }, -- end of [2]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["roadnet"] = "./Mods/terrains/Nevada/AirfieldsTaxiways/HendersonExecutiveAirport.rn4",
@@ -8620,6 +8774,29 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [4]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = -2.6065624194685,
+                ["edge1y"] = -42685.52734375,
+                ["edge2x"] = -450924.21875,
+                ["edge2name"] = "2L",
+                ["edge1name"] = "20R",
+                ["edge2y"] = -43315.39453125,
+                ["edge1x"] = -449861.5,
+            }, -- end of [1]
+            [2] = 
+            {
+                ["course"] = -2.6064195365169,
+                ["edge1y"] = -42704.07421875,
+                ["edge2x"] = -450974.09375,
+                ["edge2name"] = "2R",
+                ["edge1name"] = "20L",
+                ["edge2y"] = -43238.265625,
+                ["edge1x"] = -450073.09375,
+            }, -- end of [2]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["roadnet"] = "./Mods/terrains/Nevada/AirfieldsTaxiways/JeanAirport.rn4",
@@ -8974,6 +9151,19 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [16]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = 3.0549501497116,
+                ["edge1y"] = 28212.16015625,
+                ["edge2x"] = -518030.34375,
+                ["edge2name"] = "34",
+                ["edge1name"] = "16",
+                ["edge2y"] = 28400.458984375,
+                ["edge1x"] = -515862.5,
+            }, -- end of [1]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["roadnet"] = "./Mods/terrains/Nevada/AirfieldsTaxiways/LaughlinAirport.rn4",
@@ -9177,6 +9367,19 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [6]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = -3.125384850425,
+                ["edge1y"] = 33210.82421875,
+                ["edge2x"] = -225342.109375,
+                ["edge2name"] = "35",
+                ["edge1name"] = "17",
+                ["edge2y"] = 33189.046875,
+                ["edge1x"] = -223998.59375,
+            }, -- end of [1]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["roadnet"] = "./Mods/terrains/Nevada/AirfieldsTaxiways/LincolnCountyAirport.rn4",
@@ -9437,6 +9640,19 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [11]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = 0.48182176884792,
+                ["edge1y"] = 68212.453125,
+                ["edge2x"] = -328955.28125,
+                ["edge2name"] = "19",
+                ["edge1name"] = "1",
+                ["edge2y"] = 68909.84375,
+                ["edge1x"] = -330288.90625,
+            }, -- end of [1]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["roadnet"] = "./Mods/terrains/Nevada/AirfieldsTaxiways/MesquiteAirport.rn4",
@@ -9510,6 +9726,19 @@ airports =
         ["standlist"] = 
         {
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = -0.48013195939777,
+                ["edge1y"] = -289487.53125,
+                ["edge2x"] = -160933.71875,
+                ["edge2name"] = "31",
+                ["edge1name"] = "13",
+                ["edge2y"] = -290082,
+                ["edge1x"] = -162075.21875,
+            }, -- end of [1]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["roadnet"] = "./Mods/terrains/Nevada/AirfieldsTaxiways/MinaAirport_3Q0.rn4",
@@ -10382,6 +10611,39 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [47]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = -1.6145350188641,
+                ["edge1y"] = -31006.154296875,
+                ["edge2x"] = -400923.03125,
+                ["edge2name"] = "7",
+                ["edge1name"] = "25",
+                ["edge2y"] = -32447.75,
+                ["edge1x"] = -400859.9375,
+            }, -- end of [1]
+            [2] = 
+            {
+                ["course"] = -0.81430506331271,
+                ["edge1y"] = -31411.158203125,
+                ["edge2x"] = -400804,
+                ["edge2name"] = "12R",
+                ["edge1name"] = "30L",
+                ["edge2y"] = -32402.302734375,
+                ["edge1x"] = -401739.4375,
+            }, -- end of [2]
+            [3] = 
+            {
+                ["course"] = 2.3266966328508,
+                ["edge1y"] = -31782.3828125,
+                ["edge2x"] = -401794.4375,
+                ["edge2name"] = "30R",
+                ["edge1name"] = "12L",
+                ["edge2y"] = -31041.97265625,
+                ["edge1x"] = -401096.46875,
+            }, -- end of [3]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["roadnet"] = "./Mods/terrains/Nevada/AirfieldsTaxiways/NorthLasVegasAirport.rn4",
@@ -10600,6 +10862,19 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [5]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = 0.2345734357877,
+                ["edge1y"] = -133129.921875,
+                ["edge2x"] = -302816.59375,
+                ["edge2name"] = "18",
+                ["edge1name"] = "36",
+                ["edge2y"] = -132745.9375,
+                ["edge1x"] = -304423.40625,
+            }, -- end of [1]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["roadnet"] = "./Mods/terrains/Nevada/AirfieldsTaxiways/PahuteMesaAirstrip.rn4",
@@ -11098,6 +11373,29 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [25]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = -0.95942317672686,
+                ["edge1y"] = -200639.65625,
+                ["edge2x"] = -196818,
+                ["edge2name"] = "11",
+                ["edge1name"] = "29",
+                ["edge2y"] = -201966.109375,
+                ["edge1x"] = -197747.796875,
+            }, -- end of [1]
+            [2] = 
+            {
+                ["course"] = -0.26130257223428,
+                ["edge1y"] = -201590.453125,
+                ["edge2x"] = -196790.578125,
+                ["edge2name"] = "15",
+                ["edge1name"] = "33",
+                ["edge2y"] = -202119.265625,
+                ["edge1x"] = -198768.0625,
+            }, -- end of [2]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["roadnet"] = "./Mods/terrains/Nevada/AirfieldsTaxiways/TonopahAirport.rn4",
@@ -12336,6 +12634,19 @@ airports =
                 }, -- end of ["params"]
             }, -- end of [68]
         }, -- end of ["standlist"]
+        ["runwayList"] = 
+        {
+            [1] = 
+            {
+                ["course"] = -0.40033165833209,
+                ["edge1y"] = -174007.546875,
+                ["edge2x"] = -224872.5625,
+                ["edge2name"] = "14",
+                ["edge1name"] = "32",
+                ["edge2y"] = -175389.421875,
+                ["edge1x"] = -228137.984375,
+            }, -- end of [1]
+        }, -- end of ["runwayList"]
         ["frequencies"] = 
         {
             ["roadnet"] = "./Mods/terrains/Nevada/AirfieldsTaxiways/TonopathAFB.rn4",

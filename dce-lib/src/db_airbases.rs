@@ -6,7 +6,7 @@ use std::{collections::HashMap, iter::repeat};
 use crate::{
     db_airbases_internal::DBAirbasesInternal,
     dcs_airbase_export::dcs_airbases_for_theatre,
-    dcs_beacon_export::{dcs_beacons_for_theatre, tacan_for_airport, ils_for_airport},
+    dcs_beacon_export::{dcs_beacons_for_theatre, ils_for_airport, tacan_for_airport},
     editable::{Editable, FieldType, HeaderField, ValidationError, ValidationResult},
     miz_environment::MizEnvironment,
     serde_utils::LuaFileBased,
@@ -74,6 +74,17 @@ pub struct FixedAirBase {
     pub _name: String,
     #[serde(default)]
     pub inactive: bool,
+    pub runways: Option<Vec<Runway>>,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
+pub struct Runway {
+    #[serde(rename = "hdg")]
+    pub heading: f64,
+    pub length: f64,
+    pub name: String,
+    pub x: f64,
+    pub y: f64,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
@@ -177,6 +188,19 @@ impl NewFromMission for DBAirbases {
                         limited_park_number: dcs_ab.stands.len() as u16,
                         _name: dcs_ab.frequencies.name.to_owned(),
                         inactive: false,
+                        runways: Some(
+                            dcs_ab
+                                .runways
+                                .iter()
+                                .map(|rw| Runway {
+                                    heading: rw.heading(),
+                                    length: rw.length(),
+                                    name: rw.name(),
+                                    x: rw.centre_x(),
+                                    y: rw.centre_y(),
+                                })
+                                .collect::<Vec<_>>(),
+                        ),
                     }),
                 )
             })

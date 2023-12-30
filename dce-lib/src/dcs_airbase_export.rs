@@ -15,6 +15,8 @@ pub struct AirportSet {
     #[serde(rename = "standlist")]
     #[serde(default)]
     pub stands: Vec<Stand>,
+    #[serde(rename = "runwayList")]
+    pub runways: Vec<Runway>,
 }
 
 impl AirportSet {
@@ -86,6 +88,44 @@ pub struct Stand {
     pub flag: u32,
     pub crossroad_index: u32,
     pub params: HashMap<String, String>,
+}
+
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+pub struct Runway {
+    pub course: f64,
+    pub edge1name: String,
+    pub edge1x: f64,
+    pub edge1y: f64,
+    pub edge2name: String,
+    pub edge2x: f64,
+    pub edge2y: f64,
+}
+
+impl Runway {
+    pub fn heading(&self) -> f64 {
+        let deg = self.course.to_degrees();
+        if deg < 0. {
+            return deg + 360.;
+        }
+
+        deg
+    }
+
+    pub fn length(&self) -> f64 {
+        ((self.edge1x - self.edge2x).powi(2) + (self.edge1y - self.edge2y).powi(2)).sqrt()
+    }
+
+    pub fn centre_x(&self) -> f64 {
+        (self.edge1x + self.edge2x) / 2.
+    }
+
+    pub fn centre_y(&self) -> f64 {
+        (self.edge1y + self.edge2y) / 2.
+    }
+
+    pub fn name(&self) -> String {
+        format!("{}-{}", self.edge1name, self.edge2name)
+    }
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]

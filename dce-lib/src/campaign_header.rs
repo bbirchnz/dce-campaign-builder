@@ -4,7 +4,9 @@ use chrono::Datelike;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    editable::{Editable, FieldType, HeaderField, ValidationError, ValidationResult, EntityTemplateAction},
+    editable::{
+        Editable, EntityTemplateAction, FieldType, HeaderField, ValidationError, ValidationResult,
+    },
     miz_environment::MizEnvironment,
     serde_utils::LuaFileBased,
     DCEInstance, NewFromMission,
@@ -264,27 +266,36 @@ impl Editable for HeaderInternal {
     }
 
     fn actions_one_entity() -> Vec<crate::editable::EntityTemplateAction<Self>>
-        where
-            Self: Sized, {
+    where
+        Self: Sized,
+    {
         vec![
-            EntityTemplateAction::new("Good Weather", "High chance of good weather", |header, _| {
-                header.weather_high_prob = 80.;
-                header.weather_low_prob = 20.;
-                header.weather_reference_temp = 28.;
-                Ok(())
-            }),
+            EntityTemplateAction::new(
+                "Good Weather",
+                "High chance of good weather",
+                |header, _| {
+                    header.weather_high_prob = 80.;
+                    header.weather_low_prob = 20.;
+                    header.weather_reference_temp = 28.;
+                    Ok(())
+                },
+            ),
             EntityTemplateAction::new("Bad Weather", "High chance of poor weather", |header, _| {
                 header.weather_high_prob = 70.;
                 header.weather_low_prob = 30.;
                 header.weather_reference_temp = 8.;
                 Ok(())
             }),
-            EntityTemplateAction::new("Neutral Weather", "50/50 chance of good weather", |header, _| {
-                header.weather_high_prob = 50.;
-                header.weather_low_prob = 50.;
-                header.weather_reference_temp = 18.;
-                Ok(())
-            }),
+            EntityTemplateAction::new(
+                "Neutral Weather",
+                "50/50 chance of good weather",
+                |header, _| {
+                    header.weather_high_prob = 50.;
+                    header.weather_low_prob = 50.;
+                    header.weather_reference_temp = 18.;
+                    Ok(())
+                },
+            ),
         ]
     }
 }

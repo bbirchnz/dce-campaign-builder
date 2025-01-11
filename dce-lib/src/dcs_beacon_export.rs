@@ -108,6 +108,10 @@ pub fn dcs_beacons_for_theatre(theatre: &str) -> Result<Beacons, anyhow::Error> 
             include_str!("..\\lua\\standlist_cauc.lua"),
             "beacons",
         )?),
+        "Kola" => Ok(Beacons::from_lua_str(
+            include_str!("..\\lua\\standlist_ko.lua"),
+            "beacons",
+        )?),
         "MarianaIslands" => Ok(Beacons::from_lua_str(
             include_str!("..\\lua\\standlist_mar.lua"),
             "beacons",

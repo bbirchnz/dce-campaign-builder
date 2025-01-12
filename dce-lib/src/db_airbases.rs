@@ -278,9 +278,7 @@ impl NewFromMission for DBAirbases {
                             helipad_id: first_unit.unit_id,
                             atc_frequency: first_unit
                                 .heliport_frequency
-                                .as_ref()
-                                .unwrap()
-                                .to_owned(),
+                                .to_string(),
                             side: side.to_owned(),
                             divert: false,
                             _name: sg.name.to_owned(),

@@ -1,3 +1,4 @@
+use serde_aux::prelude::*;
 use std::{collections::HashMap, fs::File, iter::repeat, slice::Iter};
 
 use bevy_reflect::{FromReflect, Reflect};
@@ -199,6 +200,7 @@ pub struct PlaneGroup {
     pub name: String,
     pub start_time: f64,
     pub units: Vec<PlaneUnit>,
+    pub route: PlaneRoute,
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
@@ -206,7 +208,8 @@ pub struct PlaneUnit {
     pub skill: String,
     #[serde(rename = "type")]
     pub _type: String,
-    pub livery_id: String,
+    #[serde(default)]
+    pub livery_id: String, // this can be missing sometimes?
     #[serde(rename = "unitId")]
     pub unit_id: u64,
     pub x: f64,
@@ -219,6 +222,7 @@ pub struct PlaneUnit {
 #[derive(Deserialize, Serialize, Debug, PartialEq, Clone, Reflect, FromReflect)]
 pub struct Payload {
     pub pylons: HashMap<u32, Pylon>,
+    #[serde(deserialize_with = "deserialize_number_from_string")]
     pub fuel: f64,
     pub flare: f64,
     pub chaff: f64,
@@ -250,6 +254,29 @@ pub struct StaticGroupPoint {
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
+pub struct PlaneRoute {
+    pub points: Vec<PlaneGroupPoint>,
+}
+
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+pub struct PlaneGroupPoint {
+    pub alt: f64,
+    pub action: String,
+    pub alt_type: String,
+    // properties
+    pub speed: f64,
+    // task
+    #[serde(rename = "type")]
+    pub _type: String,
+    // eta
+    #[serde(default)]
+    pub name: String, // this can be missing sometimes
+    pub x: f64,
+    pub y: f64,
+    pub formation_template: String,
+}
+
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
 pub struct StaticUnit {
     pub category: String,
     pub shape_name: Option<String>,
@@ -257,14 +284,18 @@ pub struct StaticUnit {
     pub _type: String,
     #[serde(rename = "unitId")]
     pub unit_id: u64,
-    pub rate: Option<u64>,
+    #[serde(deserialize_with = "deserialize_number_from_string")]
+    #[serde(default = "default_u64::<30>")]
+    pub rate: u64,
     pub x: f64,
     pub y: f64,
     pub name: String,
     pub heading: f64,
     pub heliport_callsign_id: Option<u32>,
     pub heliport_modulation: Option<u32>,
-    pub heliport_frequency: Option<String>,
+    #[serde(deserialize_with = "deserialize_number_from_string")]
+    #[serde(default)]
+    pub heliport_frequency: f64,
 }
 
 impl LuaFileBased<'_> for Mission {}
@@ -489,5 +520,19 @@ mod tests {
         loaded
             .to_lua_file("mission2".into(), "mission".into())
             .unwrap();
+    }
+
+    #[test]
+    fn load_get_route_for_group_name() {
+        let loaded =
+            Mission::from_miz("C:\\Users\\benbi\\Saved Games\\DCS.openbeta\\\\Tracks\\Multiplayer\\Training_Syria_1.6.4-20250111-205307.trk".into()).unwrap();
+    }
+
+    #[test]
+    fn load_get_route_for_group_name2() {
+        let loaded = Mission::from_miz(
+            "C:\\Users\\benbi\\AppData\\Local\\Temp\\DCS.openbeta\\tempMission.miz".into(),
+        )
+        .unwrap();
     }
 }

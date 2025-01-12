@@ -121,14 +121,14 @@ pub fn zones_to_farps(miz_zip: &[u8], base_freq: f64) -> Result<Vec<u8>, anyhow:
                         shape_name: Some("invisiblefarp".into()),
                         _type: "Invisible FARP".into(),
                         unit_id: next_unit_id,
-                        rate: Some(100),
+                        rate: 100,
                         x: z.x,
                         y: z.y,
                         name: z.name.to_owned(),
                         heading,
                         heliport_callsign_id: Some(next_callsign_id), // London
                         heliport_modulation: Some(0),                 // AM=0
-                        heliport_frequency: Some(format!("{next_freq:.1}")),
+                        heliport_frequency: next_freq,
                     };
                     next_unit_id += 1;
 

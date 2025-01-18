@@ -8,7 +8,7 @@ use crate::serde_utils::LuaFileBased;
 
 use std::io::prelude::*;
 use zip::ZipArchive;
-
+use crate::serde_utils::deserialize_as_string_regardless;
 use anyhow::anyhow;
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
@@ -59,6 +59,7 @@ pub struct CoalitionCollection {
 pub struct Coalition {
     #[serde(rename = "country")]
     pub countries: Vec<Country>,
+    pub bullseye: Bullseye
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
@@ -103,6 +104,7 @@ pub struct VehicleGroupDummy {
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 pub struct VehicleGroup {
     pub visible: bool,
+    #[serde(default)]
     pub uncontrollable: bool,
     pub task: Option<String>,
     // pub route: Route,
@@ -115,6 +117,13 @@ pub struct VehicleGroup {
     pub start_time: f64,
     pub units: Vec<VehicleUnit>,
 }
+
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+pub struct Bullseye {
+    pub x: f64,
+    pub y: f64
+}
+
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 pub struct ShipGroupDummy {
@@ -208,12 +217,14 @@ pub struct PlaneUnit {
     pub skill: String,
     #[serde(rename = "type")]
     pub _type: String,
+    #[serde(deserialize_with = "deserialize_as_string_regardless")] // seen as 37 on grayflag
     #[serde(default)]
     pub livery_id: String, // this can be missing sometimes?
     #[serde(rename = "unitId")]
     pub unit_id: u64,
     pub x: f64,
     pub y: f64,
+    #[serde(deserialize_with = "deserialize_as_string_regardless")] // seen as -1 on grayflag
     pub name: String,
     pub heading: f64,
     pub payload: Payload,

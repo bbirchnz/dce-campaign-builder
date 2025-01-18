@@ -64,3 +64,39 @@ pub trait LuaFileBased<'a>: Deserialize<'a> + Serialize {
         Ok(())
     }
 }
+
+pub fn deserialize_as_string_regardless<'de, D>(deserializer: D) -> Result<String, D::Error>
+where
+    D: serde::de::Deserializer<'de>,
+{
+    #[derive(Deserialize)]
+    #[serde(untagged)]
+    enum IntOrString<'a> {
+        Str(&'a str), // attempt no-copy deserialization
+        String(String),
+        Int(i32),
+    }
+
+    let s = match IntOrString::deserialize(deserializer) {
+        Ok(field) => {
+            match field {
+                IntOrString::Str(s) => return Ok(s.to_owned()),
+                IntOrString::String(s) => return Ok(s),
+                IntOrString::Int(i) => return Ok(i.to_string()),
+            }
+        },
+        Err(err) => {
+            return Err(err);
+        }
+    };
+
+    // let mut id_set = HashSet::new();
+
+    // if let Some(ids) = ids {
+    //     for id in ids {
+    //         id_set.insert(id);
+    //     }
+    // }
+
+    // Ok(id_set)
+}

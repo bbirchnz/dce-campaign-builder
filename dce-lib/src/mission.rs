@@ -6,10 +6,10 @@ use serde::{Deserialize, Serialize};
 
 use crate::serde_utils::LuaFileBased;
 
-use std::io::prelude::*;
-use zip::ZipArchive;
 use crate::serde_utils::deserialize_as_string_regardless;
 use anyhow::anyhow;
+use std::io::prelude::*;
+use zip::ZipArchive;
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 pub struct Mission {
@@ -18,10 +18,12 @@ pub struct Mission {
     pub triggers: Triggers,
     pub date: Date,
     pub sortie: String,
+    pub weather: Weather,
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 pub struct Triggers {
+    #[serde(default)]
     pub zones: Vec<TriggerZone>,
 }
 
@@ -36,6 +38,34 @@ pub struct Date {
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
+pub struct Weather {
+    pub wind: Wind,
+    pub qnh: f64,
+    pub season: Season,
+}
+
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+pub struct Season {
+    pub temperature: f64,
+}
+
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+pub struct Wind {
+    #[serde(rename = "atGround")]
+    pub at_ground: WindLayer,
+    #[serde(rename = "at2000")]
+    pub at_2000: WindLayer,
+    #[serde(rename = "at8000")]
+    pub at_8000: WindLayer,
+}
+
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+pub struct WindLayer {
+    pub speed: f64,
+    pub dir: f64,
+}
+
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
 pub struct TriggerZone {
     pub radius: f64,
     #[serde(rename = "zoneId")]
@@ -45,7 +75,7 @@ pub struct TriggerZone {
     pub hidden: bool,
     pub name: String,
     #[serde(rename = "type")]
-    pub _type: u64,
+    pub _type: Option<u64>,
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
@@ -59,7 +89,7 @@ pub struct CoalitionCollection {
 pub struct Coalition {
     #[serde(rename = "country")]
     pub countries: Vec<Country>,
-    pub bullseye: Bullseye
+    pub bullseye: Bullseye,
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
@@ -121,9 +151,8 @@ pub struct VehicleGroup {
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 pub struct Bullseye {
     pub x: f64,
-    pub y: f64
+    pub y: f64,
 }
-
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 pub struct ShipGroupDummy {
@@ -134,6 +163,7 @@ pub struct ShipGroupDummy {
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 pub struct ShipGroup {
     pub visible: bool,
+    #[serde(default)]
     pub uncontrollable: bool,
     #[serde(default)]
     #[serde(rename = "lateActivation")]
@@ -160,7 +190,9 @@ pub struct ShipUnit {
     pub y: f64,
     pub name: String,
     pub heading: f64,
+    #[serde(default)]
     pub frequency: u64,
+    #[serde(default)]
     pub modulation: u8,
 }
 
@@ -289,6 +321,7 @@ pub struct PlaneGroupPoint {
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 pub struct StaticUnit {
+    #[serde(default)]
     pub category: String,
     pub shape_name: Option<String>,
     #[serde(rename = "type")]
@@ -296,8 +329,8 @@ pub struct StaticUnit {
     #[serde(rename = "unitId")]
     pub unit_id: u64,
     #[serde(deserialize_with = "deserialize_number_from_string")]
-    #[serde(default = "default_u64::<30>")]
-    pub rate: u64,
+    #[serde(default = "default_i64::<30>")]
+    pub rate: i64,
     pub x: f64,
     pub y: f64,
     pub name: String,
@@ -321,6 +354,7 @@ impl Mission {
         archive.by_name("mission")?.read_to_string(&mut mission)?;
 
         Mission::from_lua_str(&mission, "mission")
+            .map_err(|e| anyhow::anyhow!("Failed to parse miz {} with error: {}", miz_filename, e))
     }
 
     pub fn get_vehicle_groups(&self) -> Vec<&VehicleGroup> {
@@ -536,7 +570,7 @@ mod tests {
     #[test]
     fn load_get_route_for_group_name() {
         let loaded =
-            Mission::from_miz("C:\\Users\\benbi\\Saved Games\\DCS.openbeta\\\\Tracks\\Multiplayer\\Training_Syria_1.6.4-20250111-205307.trk".into()).unwrap();
+            Mission::from_miz("C:\\Games\\Eagle Dynamics\\DCS World OpenBeta\\Mods\\aircraft\\Uh-1H\\Missions\\quickStart/UH-1H_MAR_IA_Free Flight.miz".into()).unwrap();
     }
 
     #[test]

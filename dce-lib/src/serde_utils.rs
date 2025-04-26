@@ -1,13 +1,16 @@
 use std::{
+    fmt::Display,
     fs,
     io::{self, Write},
+    str::FromStr,
 };
 
-use mlua::{serde::de, Lua, LuaSerdeExt};
-use serde::{Deserialize, Serialize};
-use zip::{write::FileOptions, ZipWriter};
-
 use crate::lua_utils::load_utils;
+use mlua::{serde::de, Lua, LuaSerdeExt};
+use serde::de::Error;
+use serde::ser::StdError;
+use serde::{Deserialize, Deserializer, Serialize};
+use zip::{write::FileOptions, ZipWriter};
 
 pub trait LuaFileBased<'a>: Deserialize<'a> + Serialize {
     fn from_lua_file(filename: String, key: &str) -> Result<Self, anyhow::Error> {
@@ -78,25 +81,47 @@ where
     }
 
     let s = match IntOrString::deserialize(deserializer) {
-        Ok(field) => {
-            match field {
-                IntOrString::Str(s) => return Ok(s.to_owned()),
-                IntOrString::String(s) => return Ok(s),
-                IntOrString::Int(i) => return Ok(i.to_string()),
-            }
+        Ok(field) => match field {
+            IntOrString::Str(s) => return Ok(s.to_owned()),
+            IntOrString::String(s) => return Ok(s),
+            IntOrString::Int(i) => return Ok(i.to_string()),
         },
         Err(err) => {
             return Err(err);
         }
     };
+}
 
-    // let mut id_set = HashSet::new();
+pub fn deserialize_as_number_regardless<'de, D, T>(deserializer: D) -> Result<T, D::Error>
+where
+    D: serde::de::Deserializer<'de>,
+    T: FromStr + serde::Deserialize<'de>,
+    <T as FromStr>::Err: std::fmt::Display + std::fmt::Debug,
+{
+    #[derive(Deserialize)]
+    #[serde(untagged)]
+    enum NumberOrString<'a, T> {
+        Str(&'a str), // attempt no-copy deserialization
+        String(String),
+        Number(T),
+    }
 
-    // if let Some(ids) = ids {
-    //     for id in ids {
-    //         id_set.insert(id);
-    //     }
-    // }
-
-    // Ok(id_set)
+    let s = match NumberOrString::deserialize(deserializer) {
+        Ok(field) => match field {
+            NumberOrString::Str(s) => {
+                return s
+                    .parse::<T>()
+                    .map_err(|e| D::Error::custom(format!("Failed to parse string: {}", e)))
+            }
+            NumberOrString::String(s) => {
+                return s
+                    .parse::<T>()
+                    .map_err(|e| D::Error::custom(format!("Failed to parse string: {}", e)))
+            }
+            NumberOrString::Number(n) => return Ok(n),
+        },
+        Err(err) => {
+            return Err(err);
+        }
+    };
 }

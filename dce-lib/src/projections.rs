@@ -74,17 +74,25 @@ pub const KO: TransverseMercator = TransverseMercator {
     scale_factor: 0.9996,
 };
 
+pub const GermanyCW: TransverseMercator = TransverseMercator {
+    central_meridian: 21,
+    false_easting: 35427.62,
+    false_northing: -6061633.128,
+    scale_factor: 0.9996,
+};
+
 pub fn projection_from_theatre(theatre: &str) -> Result<TransverseMercator, anyhow::Error> {
-    match theatre {
-        "PersianGulf" => Ok(PG),
-        "Falklands" => Ok(SA),
-        "Caucasus" => Ok(CAUC),
-        "MarianaIslands" => Ok(MAR),
-        "Nevada" => Ok(NV),
-        "Normandy" => Ok(NORM),
-        "Syria" => Ok(SY),
-        "SinaiMap" => Ok(SI),
-        "Kola" => Ok(KO),
+    match theatre.to_lowercase().as_str() {
+        "persiangulf" => Ok(PG),
+        "falklands" => Ok(SA),
+        "caucasus" => Ok(CAUC),
+        "marianaislands" => Ok(MAR),
+        "nevada" => Ok(NV),
+        "normandy" => Ok(NORM),
+        "syria" => Ok(SY),
+        "sinaimap" => Ok(SI),
+        "kola" => Ok(KO),
+        "germanycw" => Ok(GermanyCW),
         _ => Err(anyhow!("TransverseMercator not known for {}", theatre)),
     }
 }

@@ -81,18 +81,27 @@ pub const GermanyCW: TransverseMercator = TransverseMercator {
     scale_factor: 0.9996,
 };
 
+pub const Afghanistan: TransverseMercator = TransverseMercator {
+    central_meridian: 63,
+    false_easting: -300149.9999999864,
+    false_northing: -3759657.000000049,
+    scale_factor: 0.9996,
+};
+
 pub fn projection_from_theatre(theatre: &str) -> Result<TransverseMercator, anyhow::Error> {
     match theatre.to_lowercase().as_str() {
         "persiangulf" => Ok(PG),
         "falklands" => Ok(SA),
         "caucasus" => Ok(CAUC),
         "marianaislands" => Ok(MAR),
+        "marianaislandswwii" => Ok(MAR),
         "nevada" => Ok(NV),
         "normandy" => Ok(NORM),
         "syria" => Ok(SY),
         "sinaimap" => Ok(SI),
         "kola" => Ok(KO),
         "germanycw" => Ok(GermanyCW),
+        "afghanistan" => Ok(Afghanistan),
         _ => Err(anyhow!("TransverseMercator not known for {}", theatre)),
     }
 }

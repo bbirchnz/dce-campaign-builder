@@ -1,18 +1,16 @@
 use std::{
-    fmt::Display,
     fs,
     io::{self, Write},
     str::FromStr,
 };
 
 use crate::lua_utils::load_utils;
-use mlua::{serde::de, Lua, LuaSerdeExt};
-use serde::de::Error;
-use serde::ser::StdError;
-use serde::{Deserialize, Deserializer, Serialize};
+use mlua::{DeserializeOptions, Lua, LuaSerdeExt};
+use serde::de::{DeserializeOwned, Error};
+use serde::{Deserialize, Serialize};
 use zip::{write::FileOptions, ZipWriter};
 
-pub trait LuaFileBased<'a>: Deserialize<'a> + Serialize {
+pub trait LuaFileBased<'a>: Serialize + DeserializeOwned {
     fn from_lua_file(filename: String, key: &str) -> Result<Self, anyhow::Error> {
         // load file:
         let lua_str = fs::read_to_string(filename)?;
@@ -23,10 +21,16 @@ pub trait LuaFileBased<'a>: Deserialize<'a> + Serialize {
         let lua = Lua::new();
         lua.load(lua_str).exec()?;
 
-        let oob_de = de::Deserializer::new(lua.globals().get(key)?);
+        // let oob_de = de::Deserializer::new(lua.globals().get(key)?);
 
-        let oob = serde_path_to_error::deserialize::<de::Deserializer, Self>(oob_de)?;
+        // let oob = serde_path_to_error::deserialize::<de::Deserializer, Self>(oob_de)?;
 
+        let oob = lua.globals().get(key)?;
+        let options = DeserializeOptions::new()
+            .deny_unsupported_types(false)
+            .encode_empty_tables_as_array(true);
+        let oob = lua.from_value_with(oob, options)?;
+        // let u: User = lua.from_value_with(val, options)?;
         Ok(oob)
     }
 
@@ -80,7 +84,7 @@ where
         Int(i32),
     }
 
-    let s = match IntOrString::deserialize(deserializer) {
+    match IntOrString::deserialize(deserializer) {
         Ok(field) => match field {
             IntOrString::Str(s) => return Ok(s.to_owned()),
             IntOrString::String(s) => return Ok(s),
@@ -89,7 +93,7 @@ where
         Err(err) => {
             return Err(err);
         }
-    };
+    }
 }
 
 pub fn deserialize_as_number_regardless<'de, D, T>(deserializer: D) -> Result<T, D::Error>
@@ -106,7 +110,7 @@ where
         Number(T),
     }
 
-    let s = match NumberOrString::deserialize(deserializer) {
+    match NumberOrString::deserialize(deserializer) {
         Ok(field) => match field {
             NumberOrString::Str(s) => {
                 return s
@@ -123,5 +127,5 @@ where
         Err(err) => {
             return Err(err);
         }
-    };
+    }
 }

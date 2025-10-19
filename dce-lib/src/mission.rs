@@ -1,3 +1,4 @@
+use nestify::nest;
 use serde_aux::prelude::*;
 use std::{collections::HashMap, fs::File, iter::repeat, slice::Iter};
 
@@ -137,7 +138,7 @@ pub struct VehicleGroup {
     #[serde(default)]
     pub uncontrollable: bool,
     pub task: Option<String>,
-    // pub route: Route,
+    pub route: Route,
     #[serde(rename = "groupId")]
     pub group_id: u64,
     pub hidden: bool,
@@ -288,12 +289,51 @@ pub struct StaticGroupPoint {
     pub alt: f64,
     #[serde(rename = "type")]
     pub _type: String,
+    #[serde(default)]
     pub name: String,
     pub x: f64,
     pub y: f64,
     pub speed: f64,
     pub formation_template: String,
     pub action: String,
+    pub task: Option<VehicleTask>,
+}
+
+nest! {
+    #[derive(Deserialize, Serialize, Debug, PartialEq)]*
+    #[serde(tag = "id")]
+    pub enum VehicleTask {
+        ComboTask {
+                params: pub struct ComboTaskInner {
+                    pub tasks: Vec<VehicleTask>
+                }
+            },
+        WrappedAction {
+            enabled: bool,
+            number: u32,
+            params: pub struct ActionWrapper {
+                pub action: #[serde(tag = "id")] pub enum TaskAction {
+                    ActivateRSBN {
+                        params: pub struct ActivateRSBNParams {
+                            pub callsign: String,
+                            pub channel: u32
+                        }
+                    },
+                    ActivateBeacon {
+                        params: pub struct ActivateBeaconParams {
+                            pub callsign: String,
+                            pub channel: u32
+                        }
+                    },
+                    #[serde(other)]
+                    UNMAPPED
+                }
+            }
+        },
+        EWR, // TODO: handle this,
+        #[serde(other)]
+        UNMAPPED
+    }
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]

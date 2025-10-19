@@ -102,6 +102,7 @@ pub fn zones_to_farps(miz_zip: &[u8], base_freq: f64) -> Result<Vec<u8>, anyhow:
                     speed: 0.,
                     formation_template: "".into(),
                     action: "".into(),
+                    task: None
                 }],
             },
             units: zones

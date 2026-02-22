@@ -108,14 +108,20 @@ pub fn projection_from_theatre(theatre: &str) -> Result<TransverseMercator, anyh
 
 pub fn proj_from_map(map: &TransverseMercator) -> Result<Proj, anyhow::Error> {
     Proj::new_known_crs(
-        &format!(
-            "+proj=tmerc +lat_0=0 +lon_0={} +k_0={} +x_0={} +y_0={}",
-            map.central_meridian, map.scale_factor, map.false_easting, map.false_northing
-        ),
+        &map.to_proj_str(),
         "WGS84",
         None,
     )
     .map_err(|e| anyhow!("{:?}", e))
+}
+
+impl TransverseMercator {
+    pub fn to_proj_str(&self) -> String {
+        format!(
+            "+proj=tmerc +lat_0=0 +lon_0={} +k_0={} +x_0={} +y_0={}",
+            self.central_meridian, self.scale_factor, self.false_easting, self.false_northing
+        )
+    }
 }
 
 pub fn convert_dcs_lat_lon(x: f64, y: f64, proj: &Proj) -> (f64, f64) {

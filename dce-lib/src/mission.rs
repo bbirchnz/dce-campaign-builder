@@ -1,5 +1,6 @@
 use nestify::nest;
 use serde_aux::prelude::*;
+use std::result;
 use std::{collections::HashMap, fs::File, iter::repeat, slice::Iter};
 
 use bevy_reflect::{FromReflect, Reflect};
@@ -20,6 +21,7 @@ pub struct Mission {
     pub date: Date,
     pub sortie: String,
     pub weather: Weather,
+    pub drawings: Option<Drawings>,
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
@@ -336,6 +338,45 @@ nest! {
     }
 }
 
+nest! {
+    #[derive(Deserialize, Serialize, Debug, PartialEq, Clone)]*
+    pub struct Drawings {
+        pub layers: Vec<pub struct SideLayer {
+            pub visible: bool,
+            pub name: String,
+            pub objects: Vec<#[serde(tag = "primitiveType")] pub enum DrawingObject {
+                Polygon {
+                    visible: bool,
+                    radius: f64,
+                    mapX: f64,
+                    mapY: f64,
+                    thickness: i32,
+                    colorString: String,
+                    style: String,
+                    layerName: String,
+                    fillColorString: String,
+                    polygonMode: String,
+                },
+                Line {
+                    visible: bool,
+                    mapX: f64,
+                    mapY: f64,
+                    thickness: i32,
+                    colorString: String,
+                    style: String,
+                    layerName: String,
+                    closed: bool,
+                    points: Vec<pub struct Point {
+                        pub x: f64,
+                        pub y: f64,
+                    }>,
+                    lineMode: String,
+                }
+            }>
+        }>
+    }
+}
+
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 pub struct PlaneRoute {
     pub points: Vec<PlaneGroupPoint>,
@@ -395,6 +436,28 @@ impl Mission {
 
         Mission::from_lua_str(&mission, "mission")
             .map_err(|e| anyhow::anyhow!("Failed to parse miz {} with error: {}", miz_filename, e))
+    }
+
+    pub fn get_drawing_objects(
+        &self,
+        side: &str,
+        include_common: bool,
+    ) -> Result<Vec<DrawingObject>, anyhow::Error> {
+        if let Some(drawings) = &self.drawings {
+            let result = drawings
+                .layers
+                .iter()
+                .filter(|l| {
+                    l.name.to_lowercase() == side.to_lowercase()
+                        || (include_common && l.name.to_lowercase() == "common")
+                })
+                .flat_map(|sl| sl.objects.iter().map(|o| (*o).clone()))
+                .collect();
+
+            Ok(result)
+        } else {
+            Ok(Vec::default())
+        }
     }
 
     pub fn get_vehicle_groups(&self) -> Vec<&VehicleGroup> {
@@ -608,16 +671,16 @@ mod tests {
     }
 
     #[test]
-    fn load_get_route_for_group_name() {
+    fn get_drawings() {
         let loaded =
-            Mission::from_miz("C:\\Games\\Eagle Dynamics\\DCS World OpenBeta\\Mods\\aircraft\\Uh-1H\\Missions\\quickStart/UH-1H_MAR_IA_Free Flight.miz".into()).unwrap();
-    }
+            Mission::from_miz("test_resources\\[AAO] Vanguard - 0426 [07].miz".into()).unwrap();
+        loaded
+            .to_lua_file("mission2".into(), "mission".into())
+            .unwrap();
 
-    #[test]
-    fn load_get_route_for_group_name2() {
-        let loaded = Mission::from_miz(
-            "C:\\Users\\benbi\\AppData\\Local\\Temp\\DCS.openbeta\\tempMission.miz".into(),
-        )
-        .unwrap();
+        assert!(loaded.drawings.is_some());
+
+        assert!(loaded.get_drawing_objects("red", false).unwrap().len() == 0);
+        assert!(loaded.get_drawing_objects("red", true).unwrap().len() > 0);
     }
 }

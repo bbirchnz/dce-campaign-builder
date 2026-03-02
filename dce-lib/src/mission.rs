@@ -345,6 +345,10 @@ nest! {
             pub name: String,
             pub objects: Vec<#[serde(tag = "primitiveType")] pub enum DrawingObject {
                 Polygon {
+                    radius: Option<f64>,
+                    width: Option<f64>,
+                    height: Option<f64>,
+                    angle: Option<f64>,
                     visible: bool,
                     mapX: f64,
                     mapY: f64,
@@ -713,10 +717,9 @@ mod tests {
 
     #[test]
     fn get_drawings3() {
-        let loaded = Mission::from_miz(
-            "test_resources\\Grayflag_Sinai A-20260302-203615.trk".into(),
-        )
-        .unwrap();
+        let loaded =
+            Mission::from_miz("test_resources\\Grayflag_Sinai A-20260302-203615.trk".into())
+                .unwrap();
         loaded
             .to_lua_file("mission2".into(), "mission".into())
             .unwrap();

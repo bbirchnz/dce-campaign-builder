@@ -1,6 +1,5 @@
 use nestify::nest;
 use serde_aux::prelude::*;
-use std::result;
 use std::{collections::HashMap, fs::File, iter::repeat, slice::Iter};
 
 use bevy_reflect::{FromReflect, Reflect};
@@ -347,7 +346,6 @@ nest! {
             pub objects: Vec<#[serde(tag = "primitiveType")] pub enum DrawingObject {
                 Polygon {
                     visible: bool,
-                    radius: f64,
                     mapX: f64,
                     mapY: f64,
                     thickness: i32,
@@ -371,6 +369,19 @@ nest! {
                         pub y: f64,
                     }>,
                     lineMode: String,
+                },
+                TextBox {
+                    visible: bool,
+                    mapX: f64,
+                    mapY: f64,
+                    text: String,
+                    name: String,
+                    colorString: String,
+                    angle: f64,
+                    borderThickness: i32,
+                    fontSize: i32,
+                    fillColorString: String,
+                    font: String
                 }
             }>
         }>
@@ -674,6 +685,38 @@ mod tests {
     fn get_drawings() {
         let loaded =
             Mission::from_miz("test_resources\\[AAO] Vanguard - 0426 [07].miz".into()).unwrap();
+        loaded
+            .to_lua_file("mission2".into(), "mission".into())
+            .unwrap();
+
+        assert!(loaded.drawings.is_some());
+
+        assert!(loaded.get_drawing_objects("red", false).unwrap().len() == 0);
+        assert!(loaded.get_drawing_objects("red", true).unwrap().len() > 0);
+    }
+
+    #[test]
+    fn get_drawings2() {
+        let loaded = Mission::from_miz(
+            "test_resources\\[OCG] OP ALABAMA TICK 1.11-20260225-193147.trk".into(),
+        )
+        .unwrap();
+        loaded
+            .to_lua_file("mission2".into(), "mission".into())
+            .unwrap();
+
+        assert!(loaded.drawings.is_some());
+
+        assert!(loaded.get_drawing_objects("red", false).unwrap().len() == 0);
+        assert!(loaded.get_drawing_objects("red", true).unwrap().len() > 0);
+    }
+
+    #[test]
+    fn get_drawings3() {
+        let loaded = Mission::from_miz(
+            "test_resources\\Grayflag_Sinai A-20260302-203615.trk".into(),
+        )
+        .unwrap();
         loaded
             .to_lua_file("mission2".into(), "mission".into())
             .unwrap();

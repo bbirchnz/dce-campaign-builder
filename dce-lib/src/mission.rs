@@ -340,6 +340,7 @@ nest! {
 nest! {
     #[derive(Deserialize, Serialize, Debug, PartialEq, Clone)]*
     pub struct Drawings {
+        #[serde(default)]
         pub layers: Vec<pub struct SideLayer {
             pub visible: bool,
             pub name: String,
